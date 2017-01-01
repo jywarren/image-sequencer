@@ -1,0 +1,27 @@
+{
+  "name": "imageboard",
+  "version": "0.0.1",
+  "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
+  "main": "dist/imageboard.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jywarren/imageboard.git"
+  },
+  "keywords": [
+    "images",
+    "Public Lab"
+  ],
+  "author": "Public Lab",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/jywarren/imageboard/issues"
+  },
+  "dependencies": {
+    "font-awesome": "~4.5.0",
+    "bootstrap": "~3.2.0",
+    "jquery": "~2"
+  },
+  "devDependencies": {},
+  "homepage": "https://github.com/jywarren/imageboard"
+}

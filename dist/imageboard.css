@@ -1,0 +1,24 @@
+
+body {
+  padding: 20px;
+}
+
+.header {
+  text-align: center;
+}
+
+.panel {
+  padding: 10px;
+}
+
+#drop {
+  background: #efefef;
+  padding: 10px;
+  width: 100%;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+#drop.hover {
+  background: #ddd;
+}

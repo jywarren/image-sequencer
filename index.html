@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    
+    <title>ImageBoard</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="dist/imageboard.css" rel="stylesheet">
+
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="lib/imageselect.js"></script>
+    <script src="dist/imageboard.js"></script>
+
+  </head>
+
+  <body>
+
+    <div class="header">
+
+      <h1>ImageBoard</h1>
+
+    </div>
+
+    <p style="display:none;" class="spinner"><i class="fa fa-spinner fa-spin"></i></p>
+
+    <div id="drop"></div>
+    <span id="file-select" class="upload"><input type="file" /></span>
+    <p class="instructions">Select or drop an image here to begin.</p>
+
+    <div style="display:none;" class="controls">
+      <a class="btn btn-lg btn-inverse upload"><i class="fa fa-upload"></i></a>
+      <a style="display:none;" title="vectorcam.svg" class="btn btn-lg btn-inverse save" target="_blank"><i class="fa fa-save"></i></a>
+      <a style="display:none;" class="btn btn-lg btn-inverse btn-options"><i class="fa fa-cog"></i></a>
+    </div>
+
+    <script>
+    </script>
+  </body>
+</html>
