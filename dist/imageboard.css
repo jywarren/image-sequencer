@@ -8,17 +8,33 @@ body {
 }
 
 .panel {
-  padding: 10px;
+  padding: 20px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px dashed #ccc;
 }
 
-#drop {
+.instructions {
+  color: #aaa;
+}
+
+/* ImageSelect styles */
+
+
+.mod-image-select #drop {
   background: #efefef;
-  padding: 10px;
+  color: #aaa;
+  padding: 20px;
   width: 100%;
-  height: 50px;
   margin-bottom: 10px;
+  border: 4px dashed #ccc;
+  text-align: center;
 }
 
-#drop.hover {
+.mod-image-select #drop.hover {
   background: #ddd;
+}
+
+.mod-image-select #drop img {
+  width: 100%;
+  max-width: 800px;
 }

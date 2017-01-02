@@ -1,12 +1,11 @@
-function imageselect(options) {
-
-  // fake jQuery-like DOM selector
-  $ = $ || function $(query){
-    return document.querySelector(query);
-  }
+/*
+ * Special module to kick off the sequence
+ *  -- depends on jQuery for interface setup & drag & drop
+ */
+module.exports = function ImageSelect(options) {
 
   options = options || {};
-  options.selector = options.selector || "#dropzone";
+  options.selector = options.selector || "#drop";
   options.output = options.output || function output(image) {
     return image;
   }
@@ -15,11 +14,11 @@ function imageselect(options) {
 
   // CSS UI
 
-  $(options.selector).on('dragenter',function(e) {
+  $(options.selector).on('dragenter', function(e) {
     $(options.selector).addClass('hover');
   });
 
-  $(options.selector).on('dragleave',function(e) {
+  $(options.selector).on('dragleave', function(e) {
     $(options.selector).removeClass('hover');
   });
 
@@ -37,8 +36,13 @@ function imageselect(options) {
       reader.onload = function(e) {
         // we should trigger "load" event here
 
+        image = new Image();
+        image.src = event.target.result;
+
+        $(options.selector).html(image);
+
         // this is done once per image:
-        options.output(event.target.result);
+        options.output(image);
       }
       reader.readAsDataURL(f);
  
@@ -53,5 +57,13 @@ function imageselect(options) {
 
   $(options.selector).on('dragover', onDragOver, false);
   $(options.selector)[0].addEventListener('drop', onDrop, false);
+
+  function getImage() {
+    return image;
+  }
+
+  return {
+    getImage: getImage
+  }
 
 }

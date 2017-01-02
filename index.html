@@ -12,7 +12,6 @@
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="lib/imageselect.js"></script>
     <script src="dist/imageboard.js"></script>
 
   </head>
@@ -27,17 +26,36 @@
 
     <p style="display:none;" class="spinner"><i class="fa fa-spinner fa-spin"></i></p>
 
-    <div id="drop"></div>
-    <span id="file-select" class="upload"><input type="file" /></span>
-    <p class="instructions">Select or drop an image here to begin.</p>
+    <div class="panels">
 
-    <div style="display:none;" class="controls">
-      <a class="btn btn-lg btn-inverse upload"><i class="fa fa-upload"></i></a>
-      <a style="display:none;" title="vectorcam.svg" class="btn btn-lg btn-inverse save" target="_blank"><i class="fa fa-save"></i></a>
-      <a style="display:none;" class="btn btn-lg btn-inverse btn-options"><i class="fa fa-cog"></i></a>
+      <div class="panel mod-image-select">
+        <div id="drop">Drag image here</div>
+        <p class="instructions">Select or drop an image here to begin.</p>
+        <span class="file-select" class="upload"><input type="file" /></span>
+      </div>
+
     </div>
 
     <script>
+
+var pix;
+      var imageboard;
+
+      jQuery(document).ready(function($) {
+
+        imageboard = ImageBoard();
+
+        imageboard.loadImage('examples/grid.png', function() {
+
+          $('body').append(imageboard.run());
+
+        });
+
+        imageboard.addStep('passthrough');
+
+      });
+
     </script>
+
   </body>
 </html>
