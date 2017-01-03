@@ -37,14 +37,21 @@ ImageBoard = function ImageBoard(options) {
 
   setup();
 
+  function log(msg) {
+    $('.log').append(msg + ' at ' + new Date());
+    console.log(msg);
+  }
+
   function run() {
 
     var lastImage;
 
+// THIS MUST BE EVENT BASED OR CALLBACKED -- ITS ASYNCHRONOUS
     steps.forEach(function forEachStep(step) {
 
       step.module.run(lastImage, function onComplete(image) {
         lastImage = image;
+        log('completed step "' + step.module.title + '"');
       });
 
     });

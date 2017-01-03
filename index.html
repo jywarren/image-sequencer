@@ -5,6 +5,7 @@
     <title>ImageBoard</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
 
     <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
@@ -31,7 +32,7 @@
       <div class="panel mod-image-select">
         <div id="drop">Drag image here</div>
         <p class="instructions">Select or drop an image here to begin.</p>
-        <span class="file-select" class="upload"><input type="file" /></span>
+        <input id="file-select" type="file" />
       </div>
 
     </div>
@@ -42,9 +43,14 @@
         <select class="select-module form-control">
           <option value="ndvi-red">NDVI with red filter</option>
           <option value="green-channel">Green channel</option>
+          <option value="plot">Plot with colorbar</option>
         </select> 
         <p><button class="btn btn-default add-step">Add step</button></p>
       </form>
+    </div>
+
+    <div class="log">
+      <h4>Log</h4>
     </div>
 
     <script>
@@ -62,7 +68,7 @@
 //        });
 
         imageboard.addStep('ndvi-red');
-//        imageboard.addStep('green-channel');
+        imageboard.addStep('plot');
 
         $('.add-step').click(function(e) {
 

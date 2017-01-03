@@ -37,6 +37,7 @@ module.exports = {
 
   'green-channel': require('./modules/GreenChannel.js'),
   'ndvi-red': require('./modules/NdviRed.js'),
+  'plot': require('./modules/Plot.js'),
 
 /*
   'image-threshold': {

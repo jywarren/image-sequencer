@@ -6,6 +6,7 @@ module.exports = function ImageSelect(options) {
 
   options = options || {};
   options.selector = options.selector || "#drop";
+  options.inputSelector = options.inputSelector || "#file-select";
   options.output = options.output || function output(image) {
     return image;
   }
@@ -24,11 +25,14 @@ module.exports = function ImageSelect(options) {
 
   // Drag & Drop behavior
 
-  var onDrop = function(e) {
+  var onImage = function(e) {
     e.preventDefault();
     e.stopPropagation(); // stops the browser from redirecting.
 
-    var files = e.dataTransfer.files;
+    var files;
+    if (e.target && e.target.files) files = e.target.files;
+    else files = e.dataTransfer.files;
+
     for (var i = 0, f; f = files[i]; i++) {
       // Read the File objects in this FileList.
 
@@ -56,7 +60,8 @@ module.exports = function ImageSelect(options) {
   }
 
   $(options.selector).on('dragover', onDragOver, false);
-  $(options.selector)[0].addEventListener('drop', onDrop, false);
+  $(options.selector)[0].addEventListener('drop', onImage, false);
+  $(options.inputSelector).change(onImage);
 
   function getImage() {
     return image;

@@ -1,10 +1,15 @@
 
 body {
   padding: 20px;
+  margin: 0 auto;
+  max-width: 700px;
 }
 
 .header {
   text-align: center;
+}
+
+.panels {
 }
 
 .panel {
@@ -21,8 +26,20 @@ body {
   color: #aaa;
 }
 
-/* ImageSelect styles */
+.log h4 {
+  text-align: center;
+}
 
+.log {
+  margin-top: 20px;
+  padding: 10px;
+  font-size: 9px;
+  font-family: monospace;
+  color: #666;
+  background: #eee;
+}
+
+/* ImageSelect styles */
 
 .mod-image-select #drop {
   background: #efefef;
