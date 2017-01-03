@@ -3,6 +3,12 @@ ImageFlow
 
 ========
 
+* [ ] steps don't run on last step; they run on initial image
+
+* [ ] spinners before panels are complete
+* [ ] ability to start running at any point -- already works?
+  * [ ] setNextStep()?
+
 * [ ] figure out UI/functional separation -- ui is in module wrapper?
 * [ ] is there a module for generating forms from parameters?
 * [ ] commandline runnability?
@@ -20,3 +26,4 @@ ImageFlow
 * [ ] BUG: this doesn't work for defaults:  imageboard.loadImage('examples/grid.png', function() {
   * we should make defaults a config of the first module
 
+* [ ] output in animated Gif? 

@@ -35,77 +35,8 @@ module.exports = {
 
   },
 
-  'passthrough': function Passthrough(options) {
-
-    options = options || {};
-
-    var image,
-        selector = 'mod-passthrough',
-        random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000),
-        uniqueSelector = selector + '-' + random, 
-        el;
-
-    // should we just run setup on constructor?
-    function setup() {
-
-      $(options.container).append('<div class="panel ' + selector + ' ' + uniqueSelector + '"></div>');
-      el = $('.' + uniqueSelector);
-
-    }
-
-    function run(_image, onComplete, options) {
-
-      options = options || {};
-      options.format = options.format || "jpg";
-
-      var getPixels = require("get-pixels"),
-          savePixels = require("save-pixels"),
-          base64 = require('base64-stream');
-
-      getPixels(_image.src, function(err, pixels) {
-
-        if(err) {
-          console.log("Bad image path")
-          return
-        }
-
-        // iterate through pixels
-        for(var x = 1; x < pixels.shape[0]; x++) {
-          for(var y = 1; y < pixels.shape[1]; y++) {
-
-            // set each channel r, g, b, a
-            pixels.set(x, y, 0, pixels.get(x, y, 0));
-            pixels.set(x, y, 1, pixels.get(x, y, 0));
-            pixels.set(x, y, 2, pixels.get(x, y, 0));
-            pixels.set(x, y, 3, pixels.get(x, y, 3));
-
-          }
-        }
-
-        var buffer = base64.encode();
-        savePixels(pixels, options.format)
-          .on('end', function() {
-
-          var image = new Image();
-
-          el.html(image)
-          if (onComplete) onComplete(image);
-
-          image.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
-
-        }).pipe(buffer);
-
-      });
-
-    }
-
-    return {
-      title: "Pass through",
-      run: run,
-      setup: setup,
-      image: image
-    }
-  }
+  'green-channel': require('./modules/GreenChannel.js'),
+  'ndvi-red': require('./modules/NdviRed.js'),
 
 /*
   'image-threshold': {

@@ -24425,77 +24425,8 @@ module.exports = {
 
   },
 
-  'passthrough': function Passthrough(options) {
-
-    options = options || {};
-
-    var image,
-        selector = 'mod-passthrough',
-        random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000),
-        uniqueSelector = selector + '-' + random, 
-        el;
-
-    // should we just run setup on constructor?
-    function setup() {
-
-      $(options.container).append('<div class="panel ' + selector + ' ' + uniqueSelector + '"></div>');
-      el = $('.' + uniqueSelector);
-
-    }
-
-    function run(_image, onComplete, options) {
-
-      options = options || {};
-      options.format = options.format || "jpg";
-
-      var getPixels = require("get-pixels"),
-          savePixels = require("save-pixels"),
-          base64 = require('base64-stream');
-
-      getPixels(_image.src, function(err, pixels) {
-
-        if(err) {
-          console.log("Bad image path")
-          return
-        }
-
-        // iterate through pixels
-        for(var x = 1; x < pixels.shape[0]; x++) {
-          for(var y = 1; y < pixels.shape[1]; y++) {
-
-            // set each channel r, g, b, a
-            pixels.set(x, y, 0, pixels.get(x, y, 0));
-            pixels.set(x, y, 1, pixels.get(x, y, 0));
-            pixels.set(x, y, 2, pixels.get(x, y, 0));
-            pixels.set(x, y, 3, pixels.get(x, y, 3));
-
-          }
-        }
-
-        var buffer = base64.encode();
-        savePixels(pixels, options.format)
-          .on('end', function() {
-
-          var image = new Image();
-
-          el.html(image)
-          if (onComplete) onComplete(image);
-
-          image.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
-
-        }).pipe(buffer);
-
-      });
-
-    }
-
-    return {
-      title: "Pass through",
-      run: run,
-      setup: setup,
-      image: image
-    }
-  }
+  'green-channel': require('./modules/GreenChannel.js'),
+  'ndvi-red': require('./modules/NdviRed.js'),
 
 /*
   'image-threshold': {
@@ -24528,7 +24459,52 @@ module.exports = {
 */
 }
 
-},{"./modules/ImageSelect.js":136,"base64-stream":1,"get-pixels":63,"save-pixels":133}],136:[function(require,module,exports){
+},{"./modules/GreenChannel.js":136,"./modules/ImageSelect.js":137,"./modules/NdviRed.js":138}],136:[function(require,module,exports){
+/*
+ * Display only the green channel
+ */
+module.exports = function GreenChannel(options) {
+
+  options = options || {};
+
+  var image,
+      selector = 'mod-green-channel',
+      random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000),
+      uniqueSelector = selector + '-' + random, 
+      el;
+
+  // should we just run setup on constructor?
+  function setup() {
+
+    $(options.container).append('<div class="panel ' + selector + ' ' + uniqueSelector + '"></div>');
+    el = $('.' + uniqueSelector);
+
+  }
+
+  function run(_image, onComplete, options) {
+    require('./PixelManipulation.js')(_image, {
+      onComplete: function displayImage(image) {
+        el.html(image);
+        onComplete(image);
+      },
+      changePixel: changePixel
+    });
+
+  }
+
+  function changePixel(r, g, b, a) {
+    return [0, g, 0, a];
+  }
+
+  return {
+    title: "Green channel only",
+    run: run,
+    setup: setup,
+    image: image
+  }
+}
+
+},{"./PixelManipulation.js":139}],137:[function(require,module,exports){
 /*
  * Special module to kick off the sequence
  *  -- depends on jQuery for interface setup & drag & drop
@@ -24599,4 +24575,113 @@ module.exports = function ImageSelect(options) {
 
 }
 
-},{}]},{},[134]);
+},{}],138:[function(require,module,exports){
+/*
+ * NDVI with red filter (blue channel is infrared)
+ */
+module.exports = function NdviRed(options) {
+
+  options = options || {};
+
+  var image,
+      selector = 'mod-ndvi-red',
+      random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000),
+      uniqueSelector = selector + '-' + random, 
+      el;
+
+  // should we just run setup on constructor?
+  function setup() {
+
+    $(options.container).append('<div class="panel ' + selector + ' ' + uniqueSelector + '"></div>');
+    el = $('.' + uniqueSelector);
+
+  }
+
+  function run(_image, onComplete, options) {
+    require('./PixelManipulation.js')(_image, {
+      onComplete: function displayImage(image) {
+        el.html(image);
+        onComplete(image);
+      },
+      changePixel: changePixel
+    });
+
+  }
+
+  function changePixel(r, g, b, a) {
+    var ndvi = 255 * (b - r) / (1.00 * b + r);
+    return [ndvi, ndvi, ndvi, a];
+  }
+
+  return {
+    title: "NDVI for red-filtered cameras (blue is infrared)",
+    run: run,
+    setup: setup,
+    image: image
+  }
+}
+
+},{"./PixelManipulation.js":139}],139:[function(require,module,exports){
+/*
+ * General purpose per-pixel manipulation
+ * accepting a changePixel() method to remix a pixel's channels
+ */
+module.exports = function PixelManipulation(image, options) {
+
+  options = options || {};
+  options.changePixel = options.changePixel || function changePixel(r, g, b, a) {
+    return [r, g, b, a];
+  }
+  options.format = options.format || "jpg";
+
+  var getPixels = require("get-pixels"),
+      savePixels = require("save-pixels"),
+      base64 = require('base64-stream');
+
+  getPixels(image.src, function(err, pixels) {
+
+    if(err) {
+      console.log("Bad image path")
+      return
+    }
+
+    // iterate through pixels;
+    // this could possibly be more efficient; see 
+    // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
+    for(var x = 1; x < pixels.shape[0]; x++) {
+      for(var y = 1; y < pixels.shape[1]; y++) {
+
+        pixel = options.changePixel(
+          pixels.get(x, y, 0),
+          pixels.get(x, y, 1),
+          pixels.get(x, y, 2),
+          pixels.get(x, y, 3)
+        );
+
+        pixels.set(x, y, 0, pixel[0]);
+        pixels.set(x, y, 1, pixel[1]);
+        pixels.set(x, y, 2, pixel[2]);
+        pixels.set(x, y, 3, pixel[3]);
+
+      }
+    }
+
+    // there may be a more efficient means to encode an image object,
+    // but node modules and their documentation are essentially arcane on this point
+    var buffer = base64.encode();
+    savePixels(pixels, options.format)
+      .on('end', function() {
+
+      var image = new Image();
+
+      if (options.onComplete) options.onComplete(image);
+
+      image.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
+
+    }).pipe(buffer);
+
+  });
+
+}
+
+},{"base64-stream":1,"get-pixels":63,"save-pixels":133}]},{},[134]);
