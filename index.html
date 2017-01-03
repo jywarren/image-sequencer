@@ -36,6 +36,17 @@
 
     </div>
 
+    <div class="mod-new-panel">
+      <form class="mod-new-panel">
+        <p class="instructions">Add a new step</p>
+        <select class="select-module form-control">
+          <option value="ndvi-red">NDVI with red filter</option>
+          <option value="green-channel">Green channel</option>
+        </select> 
+        <p><button class="btn btn-default add-step">Add step</button></p>
+      </form>
+    </div>
+
     <script>
 
       var imageboard;
@@ -52,6 +63,14 @@
 
         imageboard.addStep('ndvi-red');
 //        imageboard.addStep('green-channel');
+
+        $('.add-step').click(function(e) {
+
+          e.preventDefault();
+          imageboard.addStep($('.select-module').val());
+          imageboard.run();
+
+        });
 
       });
 
