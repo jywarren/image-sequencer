@@ -17,13 +17,19 @@ ImageBoard = function ImageBoard(options) {
     steps[steps.length - 1].module.setup();
   }
 
+  // by default, always begin with an ImageSelect module
   addStep('image-select');
 
   function setup() {
 
     steps.forEach(function forEachStep(step, index) {
 
-      if (step.module.setup) step.module.setup();
+      // different behavior for first step:
+      var onComplete = (index !== 0) ? false : function (image) {
+        run(image); // begin run on image selection
+      }
+
+      if (step.module.setup) step.module.setup(onComplete);
 
     });
 
@@ -31,17 +37,19 @@ ImageBoard = function ImageBoard(options) {
 
   setup();
 
-  // need prev() next() functions
-
   function run() {
+
+    var lastImage;
 
     steps.forEach(function forEachStep(step) {
 
-      // step.module.run(onComplete);// initial image
+      step.module.run(lastImage, function onComplete(image) {
+        lastImage = image;
+      });
 
     });
 
-    // return image;
+    return lastImage;
 
   }
 

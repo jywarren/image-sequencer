@@ -9,8 +9,7 @@ module.exports = {
   // But 'image-select' is not set up that way; it's UI. But it's special.
   'image-select': function ImageSelect() {
 
-    var imageselect, 
-        image;
+    var imageselect;
 
     function setup(onComplete) {
       imageselect = require('./modules/ImageSelect.js')({
@@ -19,9 +18,8 @@ module.exports = {
       });
     }
 
-    function run() {
-      image = imageselect.getImage();
-      return image;
+    function run(image, onComplete) {
+      if (onComplete) onComplete(get());
     }
 
     function get() {
@@ -51,7 +49,7 @@ module.exports = {
     function setup() {
 
       $(options.container).append('<div class="panel ' + selector + ' ' + uniqueSelector + '"></div>');
-      el = $(uniqueSelector);
+      el = $('.' + uniqueSelector);
 
     }
 
@@ -59,9 +57,6 @@ module.exports = {
 
       options = options || {};
       options.format = options.format || "jpg";
-
-      // is global necessary? this is for browsers only
-      //global.Buffer = require('buffer');
 
       var getPixels = require("get-pixels"),
           savePixels = require("save-pixels"),
@@ -89,32 +84,16 @@ module.exports = {
 
         var buffer = base64.encode();
         savePixels(pixels, options.format)
-          .pipe(buffer)
+          .on('end', function() {
 
-// so this line needs time to run asynchronously. Look into how stream callbacks work, or if we can chain a .something(function(){}) to do the rest
+          var image = new Image();
 
-pix = buffer;
-        var image = new Image();
-
-/*
-// these two won't work if run on the same line -- something needs to load
-imageboard.steps[1].module.run(imageboard.steps[0].module.get());
-$('.panel').last().html('<img src="data:image/jpeg;base64,'+pix.read().toString()+'" />')
-*/
-
-
-// asynchronicity problem;
-// this doesn't work, what's a real event: 
-        buffer.on('write', function() {
-
-          image.src = buffer.read().toString();
- 
-    console.log(image)
           el.html(image)
           if (onComplete) onComplete(image);
 
-        });
+          image.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
 
+        }).pipe(buffer);
 
       });
 

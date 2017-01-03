@@ -13,6 +13,10 @@ body {
   border-bottom: 1px dashed #ccc;
 }
 
+.panel img {
+  max-width: 100%;
+}
+
 .instructions {
   color: #aaa;
 }
@@ -36,5 +40,4 @@ body {
 
 .mod-image-select #drop img {
   width: 100%;
-  max-width: 800px;
 }

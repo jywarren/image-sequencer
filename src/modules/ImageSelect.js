@@ -32,7 +32,7 @@ module.exports = function ImageSelect(options) {
     for (var i = 0, f; f = files[i]; i++) {
       // Read the File objects in this FileList.
 
-      reader = new FileReader()
+      reader = new FileReader();
       reader.onload = function(e) {
         // we should trigger "load" event here
 
@@ -45,7 +45,7 @@ module.exports = function ImageSelect(options) {
         options.output(image);
       }
       reader.readAsDataURL(f);
- 
+
     }
   }
 
