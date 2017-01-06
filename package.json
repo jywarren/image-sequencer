@@ -29,8 +29,8 @@
       "buffer": "^5.0.2",
     "plotly.js": "^1.21.2",
 
-    "image-filter-threshold": "^0.0.8",
-      "babelify": "^7.2.0",
+    "image-filter-threshold": "git+https://github.com/canastro/image-filter-threshold#prebundle",
+    "image-filter-core": "git+https://github.com/canastro/image-filter-core#prebundle",
 
     "browserify": "13.0.0",
     "grunt": "^0.4.5",

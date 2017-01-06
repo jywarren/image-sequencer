@@ -4,26 +4,20 @@
 module.exports = function Plot(options) {
 
   options = options || {};
+  options.colorscale = options.colorscale || 'Jet',//'RdBu';
+  options.type = options.type || 'contour'; // or 'heatmap'
 
-  var image,
-      selector = 'mod-plot',
-      random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000),
-      uniqueSelector = selector + '-' + random, 
-      el;
+  var image;
 
-  // should we just run setup on constructor?
   function setup() {
 
-    $(options.container).append('<div class="panel ' + selector + ' ' + uniqueSelector + '"></div>');
-    el = $('.' + uniqueSelector);
+    options.ui = options.createUserInterface({
+      selector: 'mod-plot'
+    });
 
   }
 
-  function run(_image, onComplete, options) {
-
-    options = options || {};
-    options.colorscale = options.colorscale || 'Jet',//'RdBu';
-    options.type = options.type || 'contour'; // or 'heatmap'
+  function draw(_image) {
 
     /* https://plot.ly/javascript/heatmap-and-contour-colorscales/#custom-colorscale
   type: 'contour',
@@ -41,7 +35,7 @@ module.exports = function Plot(options) {
     var data = [{
       z: [],
       colorscale: options.colorscale,
-      type: 'heatmap'
+      type: options.type
     }];
 
     getPixels(_image.src, function(err, pixels) {
@@ -61,19 +55,28 @@ module.exports = function Plot(options) {
       }
 
       var layout = { title: '' };
-      el.append('<div id="plot-' + random + '"></div>');
-      Plotly.newPlot('plot-' + random, data, layout);
+      random = parseInt(Math.random() * (new Date()).getTime() / 1000000);
 
-      // return Plotly.toImage(gd,{format:'jpeg',height:400,width:400});
+      options.ui.el.append('<div id="plot-' + random + '"></div>');
+      Plotly.newPlot('plot-' + random, data, layout)
+/*        .then(function afterPlot(graphData) {
 
+          options.onComplete(Plotly.toImage(graphData, {
+            format: 'jpeg',
+            height: _image.height,
+            width: _image.width 
+          }));
+
+      });
+*/
     });
 
   }
 
   return {
     title: "Plot with colorbar",
-    run: run,
-    setup: setup,
-    image: image
+    options: options,
+    draw: draw,
+    setup: setup
   }
 }

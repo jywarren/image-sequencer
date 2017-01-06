@@ -5,26 +5,17 @@ module.exports = function GreenChannel(options) {
 
   options = options || {};
 
-  var image,
-      selector = 'mod-green-channel',
-      random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000),
-      uniqueSelector = selector + '-' + random, 
-      el;
+  var image;
 
-  // should we just run setup on constructor?
   function setup() {
-
-    $(options.container).append('<div class="panel ' + selector + ' ' + uniqueSelector + '"></div>');
-    el = $('.' + uniqueSelector);
-
+    options.ui = options.createUserInterface({
+      selector: 'mod-green-channel'
+    });
   }
 
-  function run(_image, onComplete, options) {
+  function draw(_image) {
     require('./PixelManipulation.js')(_image, {
-      onComplete: function displayImage(image) {
-        el.html(image);
-        onComplete(image);
-      },
+      onComplete: options.onComplete,
       changePixel: changePixel
     });
 
@@ -36,8 +27,8 @@ module.exports = function GreenChannel(options) {
 
   return {
     title: "Green channel only",
-    run: run,
-    setup: setup,
-    image: image
+    options: options,
+    draw:  draw,
+    setup: setup
   }
 }

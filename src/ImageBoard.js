@@ -1,41 +1,51 @@
 ImageBoard = function ImageBoard(options) {
 
   options = options || {};
-  options.container = options.container || '.panels';
-
-  var image;
-  var modules = require('./Modules');
-  var steps = [];
-
-  function addStep(name, stepOptions) {
-    steps.push({
-      module: modules[name]({
-        container: options.container // this is a bit redundant
-      }),
-      options: stepOptions
-    });
-    steps[steps.length - 1].module.setup();
+  options.defaultSteps = options.defaultSteps || function defaultSteps() {
+    addStep('image-select');
   }
 
-  // by default, always begin with an ImageSelect module
-  addStep('image-select');
+  var image,
+      steps = [],
+      modules = require('./Modules'),
+      ui = require('./UserInterface')();
 
-  function setup() {
+  options.defaultSteps();
 
-    steps.forEach(function forEachStep(step, index) {
+  function addStep(name, o) {
+    console.log('adding step "' + name + '"');
 
-      // different behavior for first step:
-      var onComplete = (index !== 0) ? false : function (image) {
-        run(image); // begin run on image selection
+    o = o || {};
+    o.container = o.container || options.selector;
+    o.createUserInterface = o.createUserInterface || ui.create;
+
+    var module = modules[name](o);
+
+    steps.push(module);
+
+    if (steps.length > 1) {
+ 
+      if (module.setup) module.setup();
+
+      var lastStep = steps[steps.length - 2];
+ 
+      // connect last step to input of this step
+      lastStep.options.onComplete = function onComplete(_image) {
+        log('running module "' + name + '"');
+        if (lastStep.options.ui) lastStep.options.ui.el.html(_image);
+        module.draw(_image);
       }
 
-      if (step.module.setup) step.module.setup(onComplete);
+      module.options.onComplete = function onComplete(_image) {
+        if (module.options.ui) module.options.ui.el.html(_image);
+      }
 
-    });
+    } else {
 
+      module.setup(); // just set up initial ImageSelect
+
+    }
   }
-
-  setup();
 
   function log(msg) {
     $('.log').append(msg + ' at ' + new Date());
@@ -44,34 +54,21 @@ ImageBoard = function ImageBoard(options) {
 
   function run() {
 
-    var lastImage;
-
-// THIS MUST BE EVENT BASED OR CALLBACKED -- ITS ASYNCHRONOUS
-    steps.forEach(function forEachStep(step) {
-
-      step.module.run(lastImage, function onComplete(image) {
-        lastImage = image;
-        log('completed step "' + step.module.title + '"');
-      });
-
-    });
-
-    return lastImage;
+    steps[0].draw();
 
   }
 
   // load default starting image
   // i.e. from parameter
+  // this could send the image to ImageSelect, or something?
+// not currently working
   function loadImage(src, callback) {
 
     image = new Image();
 
     image.onload = function() {
-
       run();
-
       if (callback) callback(image);
-
     }
 
     image.src = src;
@@ -83,7 +80,8 @@ ImageBoard = function ImageBoard(options) {
     addStep: addStep,
     run: run,
     modules: modules,
-    steps: steps
+    steps: steps,
+    ui: ui
   }
 
 }

@@ -44,6 +44,7 @@
           <option value="ndvi-red">NDVI with red filter</option>
           <option value="green-channel">Green channel</option>
           <option value="plot">Plot with colorbar</option>
+          <option value="image-threshold">Threshold image</option>
         </select> 
         <p><button class="btn btn-default add-step">Add step</button></p>
       </form>
@@ -68,7 +69,8 @@
 //        });
 
         imageboard.addStep('ndvi-red');
-        imageboard.addStep('plot');
+        imageboard.addStep('image-threshold');
+        //imageboard.addStep('plot');
 
         $('.add-step').click(function(e) {
 
