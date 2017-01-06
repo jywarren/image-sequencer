@@ -7,68 +7,78 @@ module.exports = function ImageSelect(options) {
   options = options || {};
   options.selector = options.selector || "#drop";
   options.inputSelector = options.inputSelector || "#file-select";
-  options.output = options.output || function output(image) {
-    return image;
-  }
+  options.ui = options.ui || {};
+  options.ui.el = options.ui.el || $(options.selector);
 
-  var image;
+  var image,
+      el = options.ui.el;
 
-  // CSS UI
+  function setup() {
 
-  $(options.selector).on('dragenter', function(e) {
-    $(options.selector).addClass('hover');
-  });
+    // CSS UI
+    el.on('dragenter', function(e) {
+      el.addClass('hover');
+    });
 
-  $(options.selector).on('dragleave', function(e) {
-    $(options.selector).removeClass('hover');
-  });
+    el.on('dragleave', function(e) {
+      el.removeClass('hover');
+    });
 
-  // Drag & Drop behavior
+    // Drag & Drop behavior
+    function onImage(e) {
+      e.preventDefault();
+      e.stopPropagation(); // stops the browser from redirecting.
 
-  var onImage = function(e) {
-    e.preventDefault();
-    e.stopPropagation(); // stops the browser from redirecting.
+      var files;
+      if (e.target && e.target.files) files = e.target.files;
+      else files = e.dataTransfer.files;
 
-    var files;
-    if (e.target && e.target.files) files = e.target.files;
-    else files = e.dataTransfer.files;
+      for (var i = 0, f; f = files[i]; i++) {
+        // Read the File objects in this FileList.
 
-    for (var i = 0, f; f = files[i]; i++) {
-      // Read the File objects in this FileList.
+        reader = new FileReader();
+        reader.onload = function(e) {
+          // we should trigger "load" event here
 
-      reader = new FileReader();
-      reader.onload = function(e) {
-        // we should trigger "load" event here
+          image = new Image();
+          image.src = event.target.result;
 
-        image = new Image();
-        image.src = event.target.result;
+          el.html(image); // may be redundant
 
-        $(options.selector).html(image);
+          // this is done once per image:
+          options.onComplete(image);
+        }
+        reader.readAsDataURL(f);
 
-        // this is done once per image:
-        options.output(image);
       }
-      reader.readAsDataURL(f);
-
     }
+
+    function onDragOver(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    }
+
+    el.on('dragover', onDragOver, false);
+    el[0].addEventListener('drop', onImage, false);
+    $(options.inputSelector).change(onImage);
+
   }
 
-  function onDragOver(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+  function draw(_image) {
+    if (options.onComplete) options.onComplete(image);
   }
 
-  $(options.selector).on('dragover', onDragOver, false);
-  $(options.selector)[0].addEventListener('drop', onImage, false);
-  $(options.inputSelector).change(onImage);
-
-  function getImage() {
+  function get() {
     return image;
   }
 
   return {
-    getImage: getImage
+    title: "Select image",
+    options: options,
+    draw: draw,
+    setup: setup,
+    get: get
   }
 
 }

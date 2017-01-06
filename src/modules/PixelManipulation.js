@@ -48,11 +48,11 @@ module.exports = function PixelManipulation(image, options) {
     savePixels(pixels, options.format)
       .on('end', function() {
 
-      var image = new Image();
+      var img = new Image();
 
-      if (options.onComplete) options.onComplete(image);
+      img.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
 
-      image.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
+      if (options.onComplete) options.onComplete(img);
 
     }).pipe(buffer);
 

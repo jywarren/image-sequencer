@@ -5,29 +5,19 @@ module.exports = function NdviRed(options) {
 
   options = options || {};
 
-  var image,
-      selector = 'mod-ndvi-red',
-      random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000),
-      uniqueSelector = selector + '-' + random, 
-      el;
+  var image;
 
-  // should we just run setup on constructor?
   function setup() {
-
-    $(options.container).append('<div class="panel ' + selector + ' ' + uniqueSelector + '"></div>');
-    el = $('.' + uniqueSelector);
-
+    options.ui = options.createUserInterface({
+      selector: 'mod-ndvi-red'
+    });
   }
 
-  function run(_image, onComplete, options) {
+  function draw(_image) {
     require('./PixelManipulation.js')(_image, {
-      onComplete: function displayImage(image) {
-        el.html(image);
-        onComplete(image);
-      },
+      onComplete: options.onComplete,
       changePixel: changePixel
     });
-
   }
 
   function changePixel(r, g, b, a) {
@@ -37,8 +27,8 @@ module.exports = function NdviRed(options) {
 
   return {
     title: "NDVI for red-filtered cameras (blue is infrared)",
-    run: run,
-    setup: setup,
-    image: image
+    options: options,
+    draw: draw,
+    setup: setup
   }
 }
