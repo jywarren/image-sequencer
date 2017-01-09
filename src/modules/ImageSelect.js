@@ -4,6 +4,8 @@
  */
 module.exports = function ImageSelect(options) {
 
+//window.$ = window.jQuery = require('jquery');
+
   options = options || {};
   options.selector = options.selector || "#drop";
   options.inputSelector = options.inputSelector || "#file-select";
@@ -12,6 +14,8 @@ module.exports = function ImageSelect(options) {
 
   var image,
       el = options.ui.el;
+
+console.log(el,$('body'));
 
   function setup() {
 

@@ -14,11 +14,11 @@ module.exports = function GreenChannel(options) {
   }
 
   function draw(_image) {
+    // PixelManipulation returns an image
     require('./PixelManipulation.js')(_image, {
       onComplete: options.onComplete,
       changePixel: changePixel
     });
-
   }
 
   function changePixel(r, g, b, a) {
