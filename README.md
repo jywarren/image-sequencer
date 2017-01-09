@@ -38,6 +38,12 @@ function(image, onComplete) {
 }
 ```
 
+
+
+
+> No, let's instead do: `module.draw()` and `module.setOutput(fn)` or `module.setNext(fn)`
+
+
 See existing module `green-channel` for an example: https://github.com/jywarren/image-sequencer/tree/master/src/modules/GreenChannel.js
 
 For help integrating, please open an issue.
@@ -90,6 +96,10 @@ Make available as browserified OR `require()` includable...
 * https://github.com/linuxenko/rextract.js
 * https://www.npmjs.com/package/histogram
 * https://github.com/hughsk/flood-fill
+* https://www.npmjs.com/package/blink-diff
+* smaller and faster: https://www.npmjs.com/package/@schornio/pixelmatch
+* https://github.com/yahoo/pngjs-image has lots of useful general-purpose image getters like `image.getLuminosityAtIndex(idx)`
+* some way to add in a new image (respecting alpha) -- `add-image` (with blend mode, default `normal`?)
 
 ## Ideas
 
@@ -99,11 +109,22 @@ Make available as browserified OR `require()` includable...
 * or this: https://github.com/stackgl/headless-gl
 * https://github.com/mattdesl/fontpath-simple-renderer
 
+### Referencing earlier states
+
+Complex sequences with masking could require accessing previous states (or nonlinearity):
+
+* flood-fill an area
+* select only the flooded area
+  * roundabout: lighten everything to <50%, then flood-fill with black? Not 100% reliable.
+  * roundabout 2: `flood fill`, then `blink-diff` with original
+* then add step which recovers original image, repeat `flood-fill`/`blink-diff` for second region
+* reference above masked states in a `mask` module, with `maskModule.draw(image, { getMask: function() { return maskImg } })`
+
 ****
 
 **Notes:**
 
-Patterns in JS canvas:
+`pattern-fill` module to use patterns in JS canvas:
 
 ```js
 var c=document.getElementById("myCanvas");
@@ -114,3 +135,4 @@ ctx.rect(0,0,150,100);
 ctx.fillStyle=pat;
 ctx.fill();
 ```
+
