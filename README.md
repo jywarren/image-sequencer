@@ -1,6 +1,5 @@
 Image Sequencer
-
-========
+====
 
 aka "Consequencer"
 
