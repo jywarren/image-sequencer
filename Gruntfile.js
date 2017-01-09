@@ -5,45 +5,31 @@ module.exports = function(grunt) {
     require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
 
-        watch: {
-            options : {
-                livereload: true
-            },
-            source: {
-                files: [
-                    'src/*.js',
-                    'src/*/*.js',
-                    'Gruntfile.js'
-                ],
-                tasks: [ 'build:js' ]
-            }
-        },
+      pkg: grunt.file.readJSON('package.json'),
 
-        browserify: {
-            dist: {
-                src: [
-                    'src/ImageBoard.js'
-                ],
-                dest: 'dist/imageboard.js'
-            }
-        },
-
-/*
-        jasmine: {
-          imageboard: {
-            src: 'dist/*.js',
-            options: {
-              specs: 'spec/javascripts/*spec.js',
-              vendor: [
-                'node_modules/jquery/dist/jquery.min.js',
-                'node_modules/jasmine-jquery/lib/jasmine-jquery.js'
-              ]
-            }
+      watch: {
+          options : {
+              livereload: true
+          },
+          source: {
+              files: [
+                  'src/*.js',
+                  'src/*/*.js',
+                  'Gruntfile.js'
+              ],
+              tasks: [ 'build:js' ]
           }
-        }
-*/
+      },
+
+      browserify: {
+          dist: {
+              src: [
+                  'src/ImageSequencer.js'
+              ],
+              dest: 'dist/image-sequencer.js'
+          }
+      }
 
     });
 
@@ -53,7 +39,5 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'browserify:dist'
     ]);
-
-//    grunt.loadNpmTasks('grunt-contrib-jasmine');
 
 };
