@@ -19,8 +19,19 @@ module.exports = function UserInterface(options) {
     }
   }
 
+  // method to remove the UI for a given method, and remove the step
+  function remove() {
+
+  }
+
+  // method to reorder steps, and update the UI
+  //function move() {
+
+  //}
+
   return {
-    create: create
+    create: create,
+    remove: remove
   }
 
 }

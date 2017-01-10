@@ -3,6 +3,8 @@ Image Sequencer
 
 aka "Consequencer"
 
+[![Build Status](https://travis-ci.org/jywarren/image-sequencer.svg?branch=master)](https://travis-ci.org/jywarren/image-sequencer)
+
 ## Why
 
 Image Sequencer is different from other image processing systems in that it's non-destructive: instead of modifying the original image, it creates a new image at each step in a sequence. This is because it: 
@@ -72,6 +74,7 @@ Notes on development next steps:
 * [ ] click to expand for all images
 * [ ] `ImageSequencer.Renderer` class to manage image output formats and adapters
 * [ ] output in animated Gif? 
+* [ ] remove step
 
 ### Modularization
 
@@ -86,6 +89,7 @@ Notes on development next steps:
 * [ ] ...could we directly include package.json for module descriptions? At least as a fallback.
 * [ ] (for node-and-line style UIs) non-linear sequences with Y-splitters
 * [ ] `sequencer.addModule('path/to/module.js')` style module addition -- also to avoid browserifying all of Plotly :-P
+* [ ] remove step
 
 ### Testing
 
