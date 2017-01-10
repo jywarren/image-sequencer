@@ -1,4 +1,4 @@
-window.$ = window.jQuery = require('jquery');
+if (typeof window !== 'undefined') window.$ = window.jQuery = require('jquery');
 
 ImageSequencer = function ImageSequencer(options) {
 

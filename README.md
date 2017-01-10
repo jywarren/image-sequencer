@@ -72,6 +72,7 @@ Notes on development next steps:
 * [ ] click to expand for all images
 * [ ] `ImageSequencer.Renderer` class to manage image output formats and adapters
 * [ ] output in animated Gif? 
+* [ ] remove step
 
 ### Modularization
 
@@ -86,6 +87,7 @@ Notes on development next steps:
 * [ ] ...could we directly include package.json for module descriptions? At least as a fallback.
 * [ ] (for node-and-line style UIs) non-linear sequences with Y-splitters
 * [ ] `sequencer.addModule('path/to/module.js')` style module addition -- also to avoid browserifying all of Plotly :-P
+* [ ] remove step
 
 ### Testing
 
