@@ -3,7 +3,7 @@ Image Sequencer
 
 aka "Consequencer"
 
-![TravisCI badge](https://travis-ci.org/jywarren/image-sequencer.svg)
+[![Build Status](https://travis-ci.org/jywarren/image-sequencer.svg?branch=master)](https://travis-ci.org/jywarren/image-sequencer)
 
 ## Why
 
