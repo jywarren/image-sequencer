@@ -55,38 +55,46 @@ For help integrating, please open an issue.
 
 Notes on development next steps:
 
-
-Make available as browserified OR `require()` includable...
-
-
 ### UI
 
+* [ ] "add a new step" menu
 * [ ] add createUserInterface() which is set up by default to draw on ImageBoardUI, but could be swapped for nothing, or an equiv. lib
 * [ ] it could create the interface and use event listeners like module.on('draw', fn()); to update the interface
 
 * [ ] spinners before panels are complete
+* [ ] is there a module for generating forms from parameters?
+* [ ] click to expand for all images
+* [ ] `ImageSequencer.Renderer` class to manage image output formats and adapters
+* [ ] output in animated Gif? 
+
+### Modularization
+
 * [ ] ability to start running at any point -- already works?
   * [ ] setNextStep()?
-
 * [ ] figure out UI/functional separation -- ui is in module wrapper?
-* [ ] is there a module for generating forms from parameters?
 * [ ] commandline runnability?
-  * [ ] 
+  * [ ] Make available as browserified OR `require()` includable...
+* [ ] standardize panel addition with submodule that offers Panel.display(image)
+* [ ] allow passing data as data-uri or Image object, or stream, or ndarray or ImageData array, if both of neighboring pair has ability?
+  * see https://github.com/jywarren/image-sequencer/issues/1
+* [ ] ...could we directly include package.json for module descriptions? At least as a fallback.
+* [ ] (for node-and-line style UIs) non-linear sequences with Y-splitters
+* [ ] `sequencer.addModule('path/to/module.js')` style module addition -- also to avoid browserifying all of Plotly :-P
+
+### Testing
+
 * [ ] tests - modules headless; unit tests
 * [ ] comparisons with diff
   * [ ] testing a module's promised functionality: each module could offer before/after images as part of their API; by running the module on the before image, you should get exactly the after image, comparing with an image diff
-* [ ] standardize panel addition with submodule that offers Panel.display(image)
-* [ ] make an Infragram module that accepts a math expression
-* [ ] click to expand for all images
-* [ ] "add a new step" menu
 
-* [ ] allow passing data as data-uri or Image object, or stream, or ndarray or ImageData array, if both of neighboring pair has ability?
-* [ ] ...could we directly include package.json for module descriptions? At least as a fallback.
+### Use cases
+
+* [ ] make an Infragram module that accepts a math expression
+
+### Bugs
 
 * [ ] BUG: this doesn't work for defaults:  imageboard.loadImage('examples/grid.png', function() {
   * we should make defaults a config of the first module
-
-* [ ] output in animated Gif? 
 
 ****
 
@@ -135,3 +143,23 @@ ctx.fillStyle=pat;
 ctx.fill();
 ```
 
+Masking:
+
+```js
+ctx.save();
+ctx.beginPath();
+ctx.moveTo(0, 0);
+ctx.lineTo(160, 600);
+ctx.rect(0, 0, 160, 600);
+ctx.closePath();
+ctx.clip();
+ctx.drawImage(img, 0, 0);
+ctx.restore();
+```
+
+****
+
+## UI notes:
+
+* visual nodes-and-lines UI: https://github.com/flowhub/the-graph
+  * https://flowhub.github.io/the-graph/examples/demo-simple.html
