@@ -16,11 +16,11 @@ module.exports = function ImageThreshold(options) {
 
   function draw(_image) {
     var canvas = document.createElement('canvas');
-    canvas.width = _image.width;
-    canvas.height = _image.height;
+    canvas.width = _image.naturalWidth;
+    canvas.height = _image.naturalHeight;
     var context = canvas.getContext('2d');
     context.drawImage(_image, 0, 0 );
-    var imageData = context.getImageData(0, 0, _image.width, _image.height);
+    var imageData = context.getImageData(0, 0, _image.naturalWidth, _image.naturalHeight);
 
     var imageThreshold = require('image-filter-threshold');
     var imageFilterCore = require('image-filter-core');
