@@ -5,7 +5,7 @@ aka "Consequencer"
 
 ## Why
 
-Image Sequencer is different from other image processing systems in that instead of modifying the original image, it creates a new image at each step. This is because it: 
+Image Sequencer is different from other image processing systems in that it's non-destructive: instead of modifying the original image, it creates a new image at each step in a sequence. This is because it: 
 
 * produces a legible trail of operations, to "show your work" for evidential, educational, or reproducibility reasons
 * makes the creation of new tools or "modules" simpler -- each must accept an input image, and produce an output image
@@ -18,6 +18,12 @@ It is also for exploring some other related ideas:
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
 * "small modules"-based extensibility: see [Contributing](#contributing), below
 
+## Usage
+
+Examples:
+
+* [Basic example](https://jywarren.github.io/image-sequencer/)
+* [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
 
 ## Contributing
 
