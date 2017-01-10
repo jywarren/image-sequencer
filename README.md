@@ -3,6 +3,8 @@ Image Sequencer
 
 aka "Consequencer"
 
+![TravisCI badge](https://travis-ci.org/jywarren/image-sequencer.svg)
+
 ## Why
 
 Image Sequencer is different from other image processing systems in that it's non-destructive: instead of modifying the original image, it creates a new image at each step in a sequence. This is because it: 
