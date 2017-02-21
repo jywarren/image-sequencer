@@ -30,6 +30,12 @@ Examples:
 
 ## Contributing
 
+Happily accepting pull requests; to edit the core library, modify files in `/src/`. To build, run `npm install` and `grunt build`. 
+
+### Contributing modules
+
+Most contribution (we imagine) would be in the form of API-compatible modules, which need not be directly included.
+
 **This is a draft proposal: currently, onComplete assignment is done through `module.options.onComplete` -- clearly non-ideal.**
 
 To add a module to Image Sequencer, it must have the following method; you can wrap an existing module to add them:
