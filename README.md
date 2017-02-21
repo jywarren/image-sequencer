@@ -13,8 +13,9 @@ Image Sequencer is different from other image processing systems in that it's no
 * makes the creation of new tools or "modules" simpler -- each must accept an input image, and produce an output image
 * allows many images to be run through the same sequence of steps
 
-It is also for exploring some other related ideas:
+It is also for prototyping some other related ideas:
 
+* filter-like image processing -- applying a transform to any image from a given source, like a proxy. I.e. every image tile of a satellite imagery web map
 * test-based image processing -- the ability to create a sequence of steps that do the same task as some other image processing tool, provable with example before/after images to compare with
 * logging of each step to produce an evidentiary record of modifications to an original image
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
@@ -73,11 +74,14 @@ Notes on development next steps:
 * [ ] is there a module for generating forms from parameters?
 * [ ] click to expand for all images
 * [ ] `ImageSequencer.Renderer` class to manage image output formats and adapters
-* [ ] output in animated Gif? 
 * [ ] remove step
+
+* [ ] output besides an image -- like `message(txt)` to display to the step's UI
+
 
 ### Modularization
 
+* [ ] remotely includable modules, not compiled in -- see plugin structures in other libs
 * [ ] ability to start running at any point -- already works?
   * [ ] setNextStep()?
 * [ ] figure out UI/functional separation -- ui is in module wrapper?
@@ -117,6 +121,8 @@ Notes on development next steps:
 * smaller and faster: https://www.npmjs.com/package/@schornio/pixelmatch
 * https://github.com/yahoo/pngjs-image has lots of useful general-purpose image getters like `image.getLuminosityAtIndex(idx)`
 * some way to add in a new image (respecting alpha) -- `add-image` (with blend mode, default `normal`?)
+* https://github.com/yuta1984/CannyJS - edge detection
+* http://codepen.io/taylorcoffelt/pen/EsCcr - more edge detection
 
 ## Ideas
 
@@ -125,6 +131,7 @@ Notes on development next steps:
 * non graphics card GL functions could be shimmed with https://github.com/Overv/JSGL
 * or this: https://github.com/stackgl/headless-gl
 * https://github.com/mattdesl/fontpath-simple-renderer
+* output in animated Gif? as a module
 
 ### Referencing earlier states
 
@@ -173,3 +180,43 @@ ctx.restore();
 
 * visual nodes-and-lines UI: https://github.com/flowhub/the-graph
   * https://flowhub.github.io/the-graph/examples/demo-simple.html
+
+
+
+```js
+
+settings: {
+  'threshold': {
+    type: 'slider',
+    label: 'Threshold',
+    default: 50,
+    min: 0,
+    max: 100
+  },
+  'colors': {
+    type: 'select',
+    label: 'Colors',
+    options: [
+      { name: '0', value: '0', default: true },
+      { name: '1', value: '1' },
+      { name: '2', value: '2' }
+    ]
+  }
+}
+
+```
+
+Possible web-based commandline interface: https://hyper.is/?
+
+
+### Path cutting
+
+* threshold
+* vectorize
+  * edge detect
+  * direction find (vectorize and colorize)
+
+
+
+
+
