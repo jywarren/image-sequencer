@@ -36,33 +36,27 @@ Happily accepting pull requests; to edit the core library, modify files in `/src
 
 Most contribution (we imagine) would be in the form of API-compatible modules, which need not be directly included.
 
-**This is a draft proposal: currently, onComplete assignment is done through `module.options.onComplete` -- clearly non-ideal.**
-
 To add a module to Image Sequencer, it must have the following method; you can wrap an existing module to add them:
 
-* `module.draw(onComplete)`
+* `module.draw(image)`
 
-The `draw()` method should accept two paramters, `image` and `onComplete`. The `onComplete` parameter will be a function with one parameter, and will be set to the `draw()` method of the next step; for example:
+The `draw()` method should accept an `image` parameter, which will be a native JavaScript image object (i.e. `new Image()`). 
+
+The draw method must, when it is complete, pass the output image to the method `options.output(image)`, which will send the output to the next module in the chain. For example:
 
 ```js
-function(image, onComplete) {
+function draw(image) {
 
   // do some stuff with the image
+
+  options.output(image);
 
 }
 ```
 
-
-
-
-> No, let's instead do: `module.draw()` and `module.setOutput(fn)` or `module.setNext(fn)`
-
-
 See existing module `green-channel` for an example: https://github.com/jywarren/image-sequencer/tree/master/src/modules/GreenChannel.js
 
 For help integrating, please open an issue.
-
-* setup()
 
 ****
 
@@ -72,7 +66,6 @@ Notes on development next steps:
 
 ### UI
 
-* [ ] "add a new step" menu
 * [ ] add createUserInterface() which is set up by default to draw on ImageBoardUI, but could be swapped for nothing, or an equiv. lib
 * [ ] it could create the interface and use event listeners like module.on('draw', fn()); to update the interface
 
@@ -89,8 +82,6 @@ Notes on development next steps:
 
 * [ ] remotely includable modules, not compiled in -- see plugin structures in other libs
 * [ ] ability to start running at any point -- already works?
-  * [ ] setNextStep()?
-* [ ] figure out UI/functional separation -- ui is in module wrapper?
 * [ ] commandline runnability?
   * [ ] Make available as browserified OR `require()` includable...
 * [ ] standardize panel addition with submodule that offers Panel.display(image)
