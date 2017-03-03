@@ -9,14 +9,6 @@ module.exports = function Plot(options) {
 
   var image;
 
-  function setup() {
-
-    options.ui = options.createUserInterface({
-      selector: 'mod-plot'
-    });
-
-  }
-
   function draw(_image) {
 
     /* https://plot.ly/javascript/heatmap-and-contour-colorscales/#custom-colorscale
@@ -61,7 +53,7 @@ module.exports = function Plot(options) {
       Plotly.newPlot('plot-' + random, data, layout)
 /*        .then(function afterPlot(graphData) {
 
-          options.onComplete(Plotly.toImage(graphData, {
+          options.output(Plotly.toImage(graphData, {
             format: 'jpeg',
             height: _image.height,
             width: _image.width 
@@ -76,7 +68,6 @@ module.exports = function Plot(options) {
   return {
     title: "Plot with colorbar",
     options: options,
-    draw: draw,
-    setup: setup
+    draw: draw
   }
 }
