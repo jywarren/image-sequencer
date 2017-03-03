@@ -4,7 +4,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   options = options || {};
   options.inBrowser = options.inBrowser || typeof window !== 'undefined';
-  options.ui = options.ui || require('./UserInterface');
+  if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
 
   var image,
       steps = [],
@@ -34,7 +34,7 @@ ImageSequencer = function ImageSequencer(options) {
       else {
         setup.apply(module); // run default setup() in scope of module (is this right?)
         function setup() {
-          module.options.ui = options.ui({
+          if (module.options.ui) module.options.ui = options.ui({
             selector: o.selector
           });
         }
