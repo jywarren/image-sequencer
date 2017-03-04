@@ -62,7 +62,7 @@ h1 {
 
 /* ImageSelect styles */
 
-.mod-image-select #drop {
+.ismod-image-select .mod-drop {
   border-radius: 4px;
   background: #efeff6;
   color: #aaa;
@@ -73,10 +73,10 @@ h1 {
   text-align: center;
 }
 
-.mod-image-select #drop.hover {
+.ismod-image-select .mod-drop.hover {
   background: #ddd;
 }
 
-.mod-image-select #drop img {
+.ismod-image-select .mod-drop img {
   width: 100%;
 }

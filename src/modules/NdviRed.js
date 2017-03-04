@@ -4,6 +4,7 @@
 module.exports = function NdviRed(options) {
 
   options = options || {};
+  options.title = "NDVI for red-filtered cameras (blue is infrared)";
 
   //function setup() {} // optional
 
@@ -19,7 +20,6 @@ module.exports = function NdviRed(options) {
   }
 
   return {
-    title: "NDVI for red-filtered cameras (blue is infrared)",
     options: options,
     //setup: setup, // optional
     draw: draw

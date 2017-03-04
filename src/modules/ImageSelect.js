@@ -7,15 +7,11 @@ module.exports = function ImageSelect(options) {
   if (!window.hasOwnProperty('$')) window.$ = window.jQuery = require('jquery');
 
   options = options || {};
-  options.selector = options.selector || "#drop";
+  options.title = "Select image";
   options.inputSelector = options.inputSelector || "#file-select";
-  options.ui = options.ui || {};
-  options.ui.el = options.ui.el || $(options.selector);
-
-  if (options.ui.el.length === 0) console.log('No UI element found with given selector: ', options.selector);
 
   var image,
-      el = options.ui.el;
+      el = $('.' + options.selector + ' .mod-drop');
 
   function setup() {
 
@@ -71,20 +67,14 @@ module.exports = function ImageSelect(options) {
 
   // this module is unique because it creates the image
   function draw(image) {
-    options.ui.display(image);
+    options.el.html(image);
     if (options.output) options.output(image);
   }
 
-  function get() {
-    return image;
-  }
-
   return {
-    title: "Select image",
     options: options,
     draw: draw,
-    setup: setup,
-    get: get
+    setup: setup
   }
 
 }

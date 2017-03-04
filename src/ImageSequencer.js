@@ -11,7 +11,7 @@ ImageSequencer = function ImageSequencer(options) {
       modules = require('./Modules');
 
   // if in browser, prompt for an image
-  if (options.imageSelect || options.inBrowser) addStep('image-select', { selector: "#drop" });
+  if (options.imageSelect || options.inBrowser) addStep('image-select');
   else if (options.imageUrl) loadImage(imageUrl);
 
   // soon, detect local or URL?
@@ -27,17 +27,23 @@ ImageSequencer = function ImageSequencer(options) {
 
     steps.push(module);
 
-    if (module.name !== "image-select") {
+    function defaultSetupModule() {
+      if (options.ui) module.options.ui = options.ui({
+        selector: o.selector,
+        title: module.options.title
+      });
+    }
+
+    if (name === "image-select") {
+
+      module.setup(); // just set up initial ImageSelect; it has own UI
+
+    } else {
 
       // add a default UI, unless the module has one specified
       if (module.hasOwnProperty('setup')) module.setup();
       else {
-        setup.apply(module); // run default setup() in scope of module (is this right?)
-        function setup() {
-          if (module.options.ui) module.options.ui = options.ui({
-            selector: o.selector
-          });
-        }
+        defaultSetupModule.apply(module); // run default setup() in scope of module (is this right?)
       }
 
       var previousStep = steps[steps.length - 2];
@@ -51,10 +57,6 @@ ImageSequencer = function ImageSequencer(options) {
           module.draw(image);
         }
       }
-
-    } else {
-
-      module.setup(); // just set up initial ImageSelect
 
     }
 
@@ -92,6 +94,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   return {
+    options: options,
     loadImage: loadImage,
     addStep: addStep,
     run: run,

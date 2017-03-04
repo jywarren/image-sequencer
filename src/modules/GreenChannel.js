@@ -4,6 +4,8 @@
 module.exports = function GreenChannel(options) {
 
   options = options || {};
+  options.title = "Green channel only";
+  options.description = "Displays only the green channel of an image";
 
   //function setup() {} // optional
 
@@ -18,8 +20,6 @@ module.exports = function GreenChannel(options) {
   }
 
   return {
-    title: "Green channel only",
-    description: "Displays only the green channel of an image",
     options: options,
     //setup: setup, // optional
     draw:  draw

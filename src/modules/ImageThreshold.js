@@ -4,6 +4,7 @@
 module.exports = function ImageThreshold(options) {
 
   options = options || {};
+  options.title = "Threshold image";
   options.threshold = options.threshold || 30;
 
   var image;
@@ -36,7 +37,6 @@ module.exports = function ImageThreshold(options) {
   }
 
   return {
-    title: "Threshold image",
     options: options,
     draw: draw,
     get: get

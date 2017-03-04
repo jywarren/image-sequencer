@@ -36,6 +36,8 @@ Happily accepting pull requests; to edit the core library, modify files in `/src
 
 Most contribution (we imagine) would be in the form of API-compatible modules, which need not be directly included.
 
+#### draw()
+
 To add a module to Image Sequencer, it must have the following method; you can wrap an existing module to add them:
 
 * `module.draw(image)`
@@ -53,6 +55,12 @@ function draw(image) {
 
 }
 ```
+
+#### Title
+
+For display in the web-based UI, each module may also have a title like `options.title`.
+
+#### Module example
 
 See existing module `green-channel` for an example: https://github.com/jywarren/image-sequencer/tree/master/src/modules/GreenChannel.js
 

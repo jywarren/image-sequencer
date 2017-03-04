@@ -4,6 +4,7 @@
 module.exports = function Plot(options) {
 
   options = options || {};
+  options.title = "Plot with colorbar";
   options.colorscale = options.colorscale || 'Jet',//'RdBu';
   options.type = options.type || 'contour'; // or 'heatmap'
 
@@ -66,7 +67,6 @@ module.exports = function Plot(options) {
   }
 
   return {
-    title: "Plot with colorbar",
     options: options,
     draw: draw
   }
