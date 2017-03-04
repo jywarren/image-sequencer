@@ -4,31 +4,24 @@
 module.exports = function GreenChannel(options) {
 
   options = options || {};
+  options.title = "Green channel only";
+  options.description = "Displays only the green channel of an image";
 
-  var image;
+  //function setup() {} // optional
 
-  function setup() {
-    options.ui = options.createUserInterface({
-      selector: 'mod-green-channel'
-    });
-  }
-
-  function draw(_image) {
-    // PixelManipulation returns an image
-    require('./PixelManipulation.js')(_image, {
-      onComplete: options.onComplete,
+  function draw(image) {
+    function changePixel(r, g, b, a) {
+      return [0, g, 0, a];
+    }
+    return require('./PixelManipulation.js')(image, {
+      output: options.output,
       changePixel: changePixel
     });
   }
 
-  function changePixel(r, g, b, a) {
-    return [0, g, 0, a];
-  }
-
   return {
-    title: "Green channel only",
     options: options,
-    draw:  draw,
-    setup: setup
+    //setup: setup, // optional
+    draw:  draw
   }
 }

@@ -52,7 +52,7 @@ module.exports = function PixelManipulation(image, options) {
 
       img.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
 
-      if (options.onComplete) options.onComplete(img);
+      if (options.output) options.output(img);
 
     }).pipe(buffer);
 

@@ -4,23 +4,18 @@
 module.exports = function ImageThreshold(options) {
 
   options = options || {};
+  options.title = "Threshold image";
   options.threshold = options.threshold || 30;
 
   var image;
 
-  function setup() {
-    options.ui = options.createUserInterface({
-      selector: 'mod-image-threshold'
-    });
-  }
-
-  function draw(_image) {
+  function draw(inputImage) {
     var canvas = document.createElement('canvas');
-    canvas.width = _image.naturalWidth;
-    canvas.height = _image.naturalHeight;
+    canvas.width = inputImage.naturalWidth;
+    canvas.height = inputImage.naturalHeight;
     var context = canvas.getContext('2d');
-    context.drawImage(_image, 0, 0 );
-    var imageData = context.getImageData(0, 0, _image.naturalWidth, _image.naturalHeight);
+    context.drawImage(inputImage, 0, 0 );
+    var imageData = context.getImageData(0, 0, inputImage.naturalWidth, inputImage.naturalHeight);
 
     var imageThreshold = require('image-filter-threshold');
     var imageFilterCore = require('image-filter-core');
@@ -31,7 +26,7 @@ module.exports = function ImageThreshold(options) {
     }).then(function (imageData) {
       image = new Image();
       image.onload = function onLoad() {
-        if (options.onComplete) options.onComplete(image);
+        if (options.output) options.output(image);
       }
      image.src = imageFilterCore.convertImageDataToCanvasURL(imageData);
     });
@@ -42,9 +37,7 @@ module.exports = function ImageThreshold(options) {
   }
 
   return {
-    title: "Threshold image",
     options: options,
-    setup: setup,
     draw: draw,
     get: get
   }

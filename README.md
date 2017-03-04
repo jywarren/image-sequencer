@@ -13,8 +13,9 @@ Image Sequencer is different from other image processing systems in that it's no
 * makes the creation of new tools or "modules" simpler -- each must accept an input image, and produce an output image
 * allows many images to be run through the same sequence of steps
 
-It is also for exploring some other related ideas:
+It is also for prototyping some other related ideas:
 
+* filter-like image processing -- applying a transform to any image from a given source, like a proxy. I.e. every image tile of a satellite imagery web map
 * test-based image processing -- the ability to create a sequence of steps that do the same task as some other image processing tool, provable with example before/after images to compare with
 * logging of each step to produce an evidentiary record of modifications to an original image
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
@@ -29,33 +30,41 @@ Examples:
 
 ## Contributing
 
-**This is a draft proposal: currently, onComplete assignment is done through `module.options.onComplete` -- clearly non-ideal.**
+Happily accepting pull requests; to edit the core library, modify files in `/src/`. To build, run `npm install` and `grunt build`. 
+
+### Contributing modules
+
+Most contribution (we imagine) would be in the form of API-compatible modules, which need not be directly included.
+
+#### draw()
 
 To add a module to Image Sequencer, it must have the following method; you can wrap an existing module to add them:
 
-* `module.draw(onComplete)`
+* `module.draw(image)`
 
-The `draw()` method should accept two paramters, `image` and `onComplete`. The `onComplete` parameter will be a function with one parameter, and will be set to the `draw()` method of the next step; for example:
+The `draw()` method should accept an `image` parameter, which will be a native JavaScript image object (i.e. `new Image()`). 
+
+The draw method must, when it is complete, pass the output image to the method `options.output(image)`, which will send the output to the next module in the chain. For example:
 
 ```js
-function(image, onComplete) {
+function draw(image) {
 
   // do some stuff with the image
+
+  options.output(image);
 
 }
 ```
 
+#### Title
 
+For display in the web-based UI, each module may also have a title like `options.title`.
 
-
-> No, let's instead do: `module.draw()` and `module.setOutput(fn)` or `module.setNext(fn)`
-
+#### Module example
 
 See existing module `green-channel` for an example: https://github.com/jywarren/image-sequencer/tree/master/src/modules/GreenChannel.js
 
 For help integrating, please open an issue.
-
-* setup()
 
 ****
 
@@ -65,7 +74,6 @@ Notes on development next steps:
 
 ### UI
 
-* [ ] "add a new step" menu
 * [ ] add createUserInterface() which is set up by default to draw on ImageBoardUI, but could be swapped for nothing, or an equiv. lib
 * [ ] it could create the interface and use event listeners like module.on('draw', fn()); to update the interface
 
@@ -73,14 +81,15 @@ Notes on development next steps:
 * [ ] is there a module for generating forms from parameters?
 * [ ] click to expand for all images
 * [ ] `ImageSequencer.Renderer` class to manage image output formats and adapters
-* [ ] output in animated Gif? 
 * [ ] remove step
+
+* [ ] output besides an image -- like `message(txt)` to display to the step's UI
+
 
 ### Modularization
 
+* [ ] remotely includable modules, not compiled in -- see plugin structures in other libs
 * [ ] ability to start running at any point -- already works?
-  * [ ] setNextStep()?
-* [ ] figure out UI/functional separation -- ui is in module wrapper?
 * [ ] commandline runnability?
   * [ ] Make available as browserified OR `require()` includable...
 * [ ] standardize panel addition with submodule that offers Panel.display(image)
@@ -117,6 +126,8 @@ Notes on development next steps:
 * smaller and faster: https://www.npmjs.com/package/@schornio/pixelmatch
 * https://github.com/yahoo/pngjs-image has lots of useful general-purpose image getters like `image.getLuminosityAtIndex(idx)`
 * some way to add in a new image (respecting alpha) -- `add-image` (with blend mode, default `normal`?)
+* https://github.com/yuta1984/CannyJS - edge detection
+* http://codepen.io/taylorcoffelt/pen/EsCcr - more edge detection
 
 ## Ideas
 
@@ -125,6 +136,7 @@ Notes on development next steps:
 * non graphics card GL functions could be shimmed with https://github.com/Overv/JSGL
 * or this: https://github.com/stackgl/headless-gl
 * https://github.com/mattdesl/fontpath-simple-renderer
+* output in animated Gif? as a module
 
 ### Referencing earlier states
 
@@ -173,3 +185,43 @@ ctx.restore();
 
 * visual nodes-and-lines UI: https://github.com/flowhub/the-graph
   * https://flowhub.github.io/the-graph/examples/demo-simple.html
+
+
+
+```js
+
+settings: {
+  'threshold': {
+    type: 'slider',
+    label: 'Threshold',
+    default: 50,
+    min: 0,
+    max: 100
+  },
+  'colors': {
+    type: 'select',
+    label: 'Colors',
+    options: [
+      { name: '0', value: '0', default: true },
+      { name: '1', value: '1' },
+      { name: '2', value: '2' }
+    ]
+  }
+}
+
+```
+
+Possible web-based commandline interface: https://hyper.is/?
+
+
+### Path cutting
+
+* threshold
+* vectorize
+  * edge detect
+  * direction find (vectorize and colorize)
+
+
+
+
+

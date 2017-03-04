@@ -4,18 +4,11 @@
 module.exports = function Plot(options) {
 
   options = options || {};
+  options.title = "Plot with colorbar";
   options.colorscale = options.colorscale || 'Jet',//'RdBu';
   options.type = options.type || 'contour'; // or 'heatmap'
 
   var image;
-
-  function setup() {
-
-    options.ui = options.createUserInterface({
-      selector: 'mod-plot'
-    });
-
-  }
 
   function draw(_image) {
 
@@ -61,7 +54,7 @@ module.exports = function Plot(options) {
       Plotly.newPlot('plot-' + random, data, layout)
 /*        .then(function afterPlot(graphData) {
 
-          options.onComplete(Plotly.toImage(graphData, {
+          options.output(Plotly.toImage(graphData, {
             format: 'jpeg',
             height: _image.height,
             width: _image.width 
@@ -74,9 +67,7 @@ module.exports = function Plot(options) {
   }
 
   return {
-    title: "Plot with colorbar",
     options: options,
-    draw: draw,
-    setup: setup
+    draw: draw
   }
 }

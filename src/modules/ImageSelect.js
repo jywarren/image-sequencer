@@ -4,18 +4,14 @@
  */
 module.exports = function ImageSelect(options) {
 
-//window.$ = window.jQuery = require('jquery');
+  if (!window.hasOwnProperty('$')) window.$ = window.jQuery = require('jquery');
 
   options = options || {};
-  options.selector = options.selector || "#drop";
+  options.title = "Select image";
   options.inputSelector = options.inputSelector || "#file-select";
-  options.ui = options.ui || {};
-  options.ui.el = options.ui.el || $(options.selector);
 
   var image,
-      el = options.ui.el;
-
-console.log(el,$('body'));
+      el = $('.' + options.selector + ' .mod-drop');
 
   function setup() {
 
@@ -50,7 +46,7 @@ console.log(el,$('body'));
           el.html(image); // may be redundant
 
           // this is done once per image:
-          options.onComplete(image);
+          options.output(image);
         }
         reader.readAsDataURL(f);
 
@@ -69,20 +65,16 @@ console.log(el,$('body'));
 
   }
 
-  function draw(_image) {
-    if (options.onComplete) options.onComplete(image);
-  }
-
-  function get() {
-    return image;
+  // this module is unique because it creates the image
+  function draw(image) {
+    options.el.html(image);
+    if (options.output) options.output(image);
   }
 
   return {
-    title: "Select image",
     options: options,
     draw: draw,
-    setup: setup,
-    get: get
+    setup: setup
   }
 
 }
