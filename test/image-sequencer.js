@@ -27,7 +27,9 @@ test('Image Sequencer has tests', function (t) {
 test('addStep adds a step', function (t) {
   t.equal(sequencer.steps.length, 0);
   sequencer.addStep('ndvi-red');
-  t.equal(sequencer.steps.length, 1);
+  sequencer.addStep('green-channel');
+  sequencer.addStep('image-threshold');
+  t.equal(sequencer.steps.length, 3);
   t.end();
 });
 
@@ -37,13 +39,18 @@ test('each module conforms to base API except image-select', function (t) {
   });
   // should already have image-select:
   t.equal(sequencer.steps.length, Object.keys(sequencer.modules).length);
+  var images = [];
   sequencer.steps.forEach(function(step, i) {
     //t.equal(step.test(step.testInput),step.testOutput);
     // or check that it's equal with a diff method?
     // we could also test each type of output
-    t.equal(step.setup === 'undefined', false);
     t.equal(step.draw === 'undefined', false);
+    step.options.output = function moduleOutput(img) { images.push(image); }
+    t.equal(step.draw(image));
   });
+
+//and be sure they're all real images
+  t.equal(images.length, steps.length);
   t.end();
 });
 

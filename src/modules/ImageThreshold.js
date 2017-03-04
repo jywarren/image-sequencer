@@ -35,13 +35,9 @@ module.exports = function ImageThreshold(options) {
     });
   }
 
-  function get() {
-    return image;
-  }
-
   return {
     options: options,
-    draw: draw,
-    get: get
+    image: image,
+    draw: draw
   }
 }

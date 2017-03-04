@@ -7,9 +7,12 @@ module.exports = function GreenChannel(options) {
   options.title = "Green channel only";
   options.description = "Displays only the green channel of an image";
 
+  var image;
+
   //function setup() {} // optional
 
-  function draw(image) {
+  function draw(_image) {
+    image = _image;
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
     }
@@ -21,6 +24,7 @@ module.exports = function GreenChannel(options) {
 
   return {
     options: options,
+    image: image,
     //setup: setup, // optional
     draw:  draw
   }
