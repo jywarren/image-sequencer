@@ -72,6 +72,8 @@ For help integrating, please open an issue.
 
 Notes on development next steps:
 
+* use `Marty.isBrowser`
+
 ### UI
 
 * [ ] add createUserInterface() which is set up by default to draw on ImageBoardUI, but could be swapped for nothing, or an equiv. lib

@@ -16,7 +16,7 @@ module.exports = function GreenChannel(options) {
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
     }
-    return require('./PixelManipulation.js')(image, {
+    return require('./PixelManipulation.js')(_image, {
       output: options.output,
       changePixel: changePixel
     });

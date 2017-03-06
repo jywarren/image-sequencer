@@ -48,7 +48,7 @@ test('each core module has a draw() method which outputs an image via options.ou
     step.options.output = function moduleOutput(img) { images.push(image); }
     t.equal(step.draw(image));
   });
-  t.equal(images.length, steps.length);
+  t.equal(images.length, sequencer.steps.length);
   // and be sure they're all real images
   images.forEach(function forEachImage(img) {
     t.equal('Image', typeof img);
