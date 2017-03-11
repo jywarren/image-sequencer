@@ -2,7 +2,6 @@
  * Image thresholding with 'image-filter-threshold'
  */
 module.exports = function ImageThreshold(options) {
-
   options = options || {};
   options.title = "Threshold image";
   options.threshold = options.threshold || 30;

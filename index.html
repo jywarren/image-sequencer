@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
+
     <title>Image Sequencer</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +48,7 @@
           <option value="green-channel">Green channel</option>
           <option value="plot">Plot with colorbar</option>
           <option value="image-threshold">Threshold image</option>
-        </select> 
+        </select>
         <p><button class="btn btn-default add-step">Add step</button></p>
       </form>
     </div>
@@ -69,6 +69,7 @@
 
         sequencer.addStep('ndvi-red');
         sequencer.addStep('image-threshold');
+        sequencer.addStep('crop');
         //sequencer.addStep('plot');
 
         $('.add-step').click(function(e) {
