@@ -75,7 +75,7 @@
 
           e.preventDefault();
           sequencer.addStep($('.select-module').val());
-          sequencer.run();
+          sequencer.run(); // later we might only run this step, if we can fetch the image output from the previous
 
         });
 
