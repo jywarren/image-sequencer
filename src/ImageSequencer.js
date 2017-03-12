@@ -60,7 +60,7 @@ ImageSequencer = function ImageSequencer(options) {
 
     }
 
-    // Pre-set the initial output behavior of the final step, 
+    // Pre-set the initial output behavior of the final step,
     // which will be changed if an additional step is added.
     module.options.output = function output(image) {
       if (module.options.ui && module.options.ui.display) module.options.ui.display(image);
@@ -68,7 +68,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   }
 
-  // passed image is optional but you can pass a 
+  // passed image is optional but you can pass a
   // non-stored image through the whole steps chain
   function run(image) {
     if (image) steps[1].draw(image);
@@ -89,6 +89,7 @@ ImageSequencer = function ImageSequencer(options) {
     image.onload = function() {
       run(image);
       if (callback) callback(image);
+      document.image = image;
     }
     image.src = src;
   }

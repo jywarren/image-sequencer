@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    
+
     <title>Image Sequencer</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,7 +48,7 @@
           <option value="green-channel">Green channel</option>
           <option value="plot">Plot with colorbar</option>
           <option value="image-threshold">Threshold image</option>
-        </select> 
+        </select>
         <p><button class="btn btn-default add-step">Add step</button></p>
       </form>
     </div>
@@ -72,10 +72,9 @@
         //sequencer.addStep('plot');
 
         $('.add-step').click(function(e) {
-
           e.preventDefault();
           sequencer.addStep($('.select-module').val());
-          sequencer.run(); // later we might only run this step, if we can fetch the image output from the previous
+          sequencer.run(document.image); // later we might only run this step, if we can fetch the image output from the previous
 
         });
 
