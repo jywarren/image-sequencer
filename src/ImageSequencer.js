@@ -89,7 +89,7 @@ ImageSequencer = function ImageSequencer(options) {
     image.onload = function() {
       run(image);
       if (callback) callback(image);
-      document.image = image;
+      document.sequencer_image = image;
     }
     image.src = src;
   }
