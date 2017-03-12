@@ -14,10 +14,10 @@
 
      getPixels(image.src,function(err,pixels){
        var newdata = [];
-       var ox = options.cropX || 0; //Where to begin the crop on X axis
-       var oy = options.cropY || 0; //Where to begin the crop on Y axis
-       var w = options.cropL || Math.floor(0.5*pixels.shape[0]); //Length of crop
-       var h = options.cropH || Math.floor(0.5*pixels.shape[1]); //Height of crop
+       var ox = options.x || 0; //Where to begin the crop on X axis
+       var oy = options.y || 0; //Where to begin the crop on Y axis
+       var w = options.l || Math.floor(0.5*pixels.shape[0]); //Length of crop
+       var h = options.h || Math.floor(0.5*pixels.shape[1]); //Height of crop
        var iw = pixels.shape[0]; //Width of Original Image
        newarray = new Uint8Array(4*w*h);
        for (var n = oy; n < oy + h; n++) {
