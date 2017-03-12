@@ -42,7 +42,7 @@ module.exports = function ImageSelect(options) {
 
           image = new Image();
           image.src = e.target.result;
-          document.sequencer_image = image;
+          options.initial_image = image;
           el.html(image); // may be redundant
 
           // this is done once per image:
