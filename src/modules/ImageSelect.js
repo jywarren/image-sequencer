@@ -41,7 +41,7 @@ module.exports = function ImageSelect(options) {
           // we should trigger "load" event here
 
           image = new Image();
-          image.src = event.target.result;
+          image.src = e.target.result;
           document.sequencer_image = image;
           el.html(image); // may be redundant
 
