@@ -5,7 +5,7 @@ ImageSequencer = function ImageSequencer(options) {
   options = options || {};
   options.inBrowser = options.inBrowser || typeof window !== 'undefined';
   if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
-  options.initial_image = "";
+  options.initialImage = "";
 
   var image,
       steps = [],
@@ -52,8 +52,8 @@ ImageSequencer = function ImageSequencer(options) {
       if (previousStep) {
         // connect output of last step to input of this step
         previousStep.options.output = function output(image) {
-          if (sequencer.steps[0].options.initial_image) {
-            options.initial_image = sequencer.steps[0].options.initial_image;
+          if (sequencer.steps[0].options.initialImage) {
+            options.initialImage = sequencer.steps[0].options.initialImage;
           }
           log('running module "' + name + '"');
           // display the image in any available ui
@@ -93,7 +93,7 @@ ImageSequencer = function ImageSequencer(options) {
     image.onload = function() {
       run(image);
       if (callback) callback(image);
-      options.initial_image = image;
+      options.initialImage = image;
     }
     image.src = src;
   }

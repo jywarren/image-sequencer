@@ -42,7 +42,7 @@ module.exports = function ImageSelect(options) {
 
           image = new Image();
           image.src = e.target.result;
-          options.initial_image = image;
+          options.initialImage = image;
           el.html(image); // may be redundant
 
           // this is done once per image:
@@ -68,7 +68,7 @@ module.exports = function ImageSelect(options) {
   // this module is unique because it creates the image
   function draw(image) {
     el.html(image);
-    options.initial_image = image;
+    options.initialImage = image;
     if (options.output) options.output(image);
   }
 
