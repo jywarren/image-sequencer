@@ -13,25 +13,6 @@ ImageSequencer = function ImageSequencer(options) {
 
   // if in browser, prompt for an image
   if (options.imageSelect || options.inBrowser) addStep('image-select');
-  // {
-  //   console.log('adding step "image-select"');
-  //   o = {};
-  //   o.name = 'image-select';
-  //   o.selector = 'ismod-image-select';
-  //   o.container = o.container || options.selector;
-  //
-  //   var module = modules['image-select'](o);
-  //
-  //   steps.push(module);
-  //
-  //   module.setup();
-  //
-  //   // Pre-set the initial output behavior of the final step,
-  //   // which will be changed if an additional step is added.
-  //   module.options.output = function output(image) {
-  //     if (module.options.ui && module.options.ui.display) module.options.ui.display(image);
-  //   }
-  // }
   else if (options.imageUrl) loadImage(imageUrl);
 
   // soon, detect local or URL?
