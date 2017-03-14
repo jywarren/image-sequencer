@@ -1,5 +1,17 @@
 /*
  * Image Cropping module
+ * Usage:
+ *    Expected Inputs:
+ *      options.x : x-coordinate of image where the modules starts cropping | default : 0
+ *      options.y : y-coordinate of image where the modules starts cropping | default : 0
+ *      options.w : width of the resulting cropped image | default : 50% of input image width
+ *      options.h : height of the resulting cropped image | default : 50% of input image height
+ *    Output:
+ *      The cropped image, which is essentially a rectangle bounded by the lines:
+ *          x = options.x
+ *          x = options.x + options.w
+ *          y = options.y
+ *          y = options.y + options.h
  */
  module.exports = function Crop(options){
 
@@ -14,10 +26,10 @@
 
      getPixels(image.src,function(err,pixels){
        var newdata = [];
-       var ox = options.x || 0; //Where to begin the crop on X axis
-       var oy = options.y || 0; //Where to begin the crop on Y axis
-       var w = options.l || Math.floor(0.5*pixels.shape[0]); //Length of crop
-       var h = options.h || Math.floor(0.5*pixels.shape[1]); //Height of crop
+       var ox = options.x || 0;
+       var oy = options.y || 0;
+       var w = options.w || Math.floor(0.5*pixels.shape[0]);
+       var h = options.h || Math.floor(0.5*pixels.shape[1]);
        var iw = pixels.shape[0]; //Width of Original Image
        newarray = new Uint8Array(4*w*h);
        for (var n = oy; n < oy + h; n++) {
