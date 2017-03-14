@@ -5,10 +5,11 @@ module.exports = function UserInterface(options) {
 
   options = options || {};
   options.container = options.container || ".panels";
-
+  options.id = options.id;
+  options.instanceName = options.instanceName;
   options.random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000);
-  options.uniqueSelector = options.uniqueSelector || options.selector + '-' + options.random; 
-  $(options.container).append('<div class="panel ' + options.selector + ' ' + options.uniqueSelector + '"><div class="image"></div></div>');
+  options.uniqueSelector = options.uniqueSelector || options.selector + '-' + options.random;
+  $(options.container).append('<div class="panel ' + options.selector + ' ' + options.uniqueSelector + '" id="sequencer-'+options.id+'"><div class="image"></div></div>');
   options.el = options.el || $('.' + options.uniqueSelector);
   createLabel(options.el);
 
@@ -24,7 +25,7 @@ module.exports = function UserInterface(options) {
   //function move() {}
 
   function createLabel(el) {
-    if (options.title) el.prepend('<h3 class="title">' + options.title + '</h3>');
+    if (options.title) el.prepend('<h3 class="title">' + options.title + '</h3> <button class="btn btn-default" onclick="'+options.instanceName+'.removeStep('+options.id+')">Remove Step</button>');
   }
 
   return {
