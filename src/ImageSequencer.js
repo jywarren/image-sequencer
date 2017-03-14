@@ -51,6 +51,9 @@ ImageSequencer = function ImageSequencer(options) {
       if (previousStep) {
         // connect output of last step to input of this step
         previousStep.options.output = function output(image) {
+          if (sequencer.steps[0].options.initialImage) {
+            options.initialImage = sequencer.steps[0].options.initialImage;
+          }
           log('running module "' + name + '"');
           // display the image in any available ui
           if (previousStep.options.ui && previousStep.options.ui.display) previousStep.options.ui.display(image);
@@ -83,12 +86,12 @@ ImageSequencer = function ImageSequencer(options) {
   // load default starting image
   // i.e. from parameter
   // this could send the image to ImageSelect, or something?
-// not currently working
   function loadImage(src, callback) {
     image = new Image();
     image.onload = function() {
       run(image);
       if (callback) callback(image);
+      options.initialImage = image;
     }
     image.src = src;
   }

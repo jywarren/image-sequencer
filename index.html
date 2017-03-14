@@ -73,10 +73,9 @@
         //sequencer.addStep('plot');
 
         $('.add-step').click(function(e) {
-
           e.preventDefault();
           sequencer.addStep($('.select-module').val());
-          sequencer.run(); // later we might only run this step, if we can fetch the image output from the previous
+          sequencer.run(sequencer.options.initialImage); // later we might only run this step, if we can fetch the image output from the previous
 
         });
 

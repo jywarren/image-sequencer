@@ -41,8 +41,8 @@ module.exports = function ImageSelect(options) {
           // we should trigger "load" event here
 
           image = new Image();
-          image.src = event.target.result;
-
+          image.src = e.target.result;
+          options.initialImage = image;
           el.html(image); // may be redundant
 
           // this is done once per image:
@@ -68,6 +68,7 @@ module.exports = function ImageSelect(options) {
   // this module is unique because it creates the image
   function draw(image) {
     el.html(image);
+    options.initialImage = image;
     if (options.output) options.output(image);
   }
 
