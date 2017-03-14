@@ -6,7 +6,6 @@ ImageSequencer = function ImageSequencer(options) {
   options.inBrowser = options.inBrowser || typeof window !== 'undefined';
   if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
   options.sequencer_counter = 0;
-  options.initialImage = "";
 
   var image,
       steps = [],
