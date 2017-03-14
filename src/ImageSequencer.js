@@ -86,7 +86,6 @@ ImageSequencer = function ImageSequencer(options) {
   // load default starting image
   // i.e. from parameter
   // this could send the image to ImageSelect, or something?
-// not currently working
   function loadImage(src, callback) {
     image = new Image();
     image.onload = function() {
