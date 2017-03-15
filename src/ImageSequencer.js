@@ -5,7 +5,7 @@ ImageSequencer = function ImageSequencer(options) {
   options = options || {};
   options.inBrowser = options.inBrowser || typeof window !== 'undefined';
   if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
-  options.sequencer_counter = 0;
+  options.sequencerCounter = 0;
 
   var image,
       steps = [],
@@ -25,7 +25,7 @@ ImageSequencer = function ImageSequencer(options) {
           options.instanceName = variable;
 
     o = o || {};
-    o.id = options.sequencer_counter++; //Gives a Unique ID to each step
+    o.id = options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o.name || name;
     o.selector = o.selector || 'ismod-' + name;
     o.container = o.container || options.selector;
@@ -106,7 +106,6 @@ ImageSequencer = function ImageSequencer(options) {
   // load default starting image
   // i.e. from parameter
   // this could send the image to ImageSelect, or something?
-// not currently working
   function loadImage(src, callback) {
     if (!(options.instanceName) && this != window)
       for(var variable in window)
