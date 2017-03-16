@@ -19,7 +19,7 @@ ImageSequencer = function ImageSequencer(options) {
   function addStep(name, o) {
     console.log('adding step "' + name + '"');
 
-    if (typeof(window) != undefined)
+    if (typeof(window) != "undefined")
       for(var variable in window)
         if(window[variable] == this)
           options.instanceName = variable;
@@ -107,7 +107,7 @@ ImageSequencer = function ImageSequencer(options) {
   // i.e. from parameter
   // this could send the image to ImageSelect, or something?
   function loadImage(src, callback) {
-    if (typeof(window) != undefined)
+    if (typeof(window) != "undefined")
       for(var variable in window)
         if(window[variable] == this)
           options.instanceName = variable;
