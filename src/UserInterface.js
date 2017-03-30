@@ -19,7 +19,9 @@ module.exports = function UserInterface(options) {
   }
 
   // method to remove the UI for a given method, and remove the step
-  function remove() {}
+  function remove() {
+    $('div#sequencer-'+options.id).remove();
+  }
 
   // method to reorder steps, and update the UI
   //function move() {}

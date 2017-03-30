@@ -84,7 +84,7 @@ ImageSequencer = function ImageSequencer(options) {
     for (i=0;i<steps.length;i++) {
       if (steps[i].options.id == id && steps[i].options.name != 'image-select'){
         console.log('removing step "'+steps[i].options.name+'"');
-        if (options.inBrowser) $('div#sequencer-'+id).remove();
+        if (options.inBrowser) steps[i].options.ui.remove();
         steps.splice(i,1);
         run(options.initialImage);
       }
