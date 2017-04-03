@@ -2,5 +2,5 @@
  * Core modules
  */
 module.exports = {
-  'image-threshold': require('./modules/ImageThresholdNode')
+  'do-nothing': require('./modules/DoNothingNode')
 }

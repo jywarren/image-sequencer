@@ -20,8 +20,8 @@
     "url": "https://github.com/publiclab/image-sequencer/issues"
   },
   "dependencies": {
-    "font-awesome": "~4.5.0",
     "bootstrap": "~3.2.0",
+    "font-awesome": "~4.5.0",
     "jquery": "~2",
     "sharp": "~0.17.2"
   },

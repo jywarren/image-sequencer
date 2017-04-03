@@ -1,10 +1,8 @@
-var sharp = require('sharp');
-
 ImageSequencer = function ImageSequencer(options) {
 
   options = options || {};
   options.inBrowser = options.inBrowser || typeof window !== 'undefined';
-  if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
+  // if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
   options.sequencerCounter = 0;
 
   var image,
@@ -17,8 +15,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   // soon, detect local or URL?
   function addStep(name, o) {
-    console.log('adding step "' + name + '"');
-
+    console.log('\x1b[36m%s\x1b[0m','adding step "' + name + '"');
     if (typeof(global) != "undefined")
       for(var variable in global)
         if(global[variable] == this)
@@ -34,14 +31,14 @@ ImageSequencer = function ImageSequencer(options) {
 
     steps.push(module);
 
-    // function defaultSetupModule() {
-    //   if (options.ui) module.options.ui = options.ui({
-    //     selector: o.selector,
-    //     title: module.options.title,
-    //     id: o.id,
-    //     instanceName: options.instanceName
-    //   });
-    // }
+    function defaultSetupModule() {
+      if (options.ui) module.options.ui = options.ui({
+        selector: o.selector,
+        title: module.options.title,
+        id: o.id,
+        instanceName: options.instanceName
+      });
+    }
 
     if (name === "image-select") {
 
@@ -55,20 +52,20 @@ ImageSequencer = function ImageSequencer(options) {
         defaultSetupModule.apply(module); // run default setup() in scope of module (is this right?)
       }
 
-      var previousStep = steps[steps.length - 2];
-
-      if (previousStep) {
-        // connect output of last step to input of this step
-        previousStep.options.output = function output(image) {
-          if (sequencer.steps[0].options.initialImage) {
-            options.initialImage = sequencer.steps[0].options.initialImage;
-          }
-          log('running module "' + name + '"');
-          // display the image in any available ui
-          if (previousStep.options.ui && previousStep.options.ui.display) previousStep.options.ui.display(image);
-          module.draw(image);
-        }
-      }
+      // var previousStep = steps[steps.length - 2];
+      //
+      // if (previousStep) {
+      //   // connect output of last step to input of this step
+      //   previousStep.options.output = function output(image) {
+      //     if (sequencer.steps[0].options.initialImage) {
+      //       options.initialImage = sequencer.steps[0].options.initialImage;
+      //     }
+      //     log('running module "' + name + '"');
+      //     // display the image in any available ui
+      //     if (previousStep.options.ui && previousStep.options.ui.display) previousStep.options.ui.display(image);
+      //     module.draw(image);
+      //   }
+      // }
 
     }
 
@@ -78,28 +75,29 @@ ImageSequencer = function ImageSequencer(options) {
       // if (module.options.ui && module.options.ui.display) module.options.ui.display(image);
     }
 
+    return 'Addded.';
   }
 
   function removeStep (id) {
     for (i=0;i<steps.length;i++) {
       if (steps[i].options.id == id && steps[i].options.name != 'image-select'){
-        console.log('removing step "'+steps[i].options.name+'"');
+        console.log('\x1b[36m%s\x1b[0m','removing step "'+steps[i].options.name+'"');
         // if (options.inBrowser) steps[i].options.ui.remove();
         steps.splice(i,1);
-        run(options.initialImage);
+        if (steps.length != 0)
+          run(options.initialImage);
       }
     }
+    return "Removed.";
   }
 
   // passed image is optional but you can pass a
   // non-stored image through the whole steps chain
   function run(image) {
-    if (image) steps[1].draw(image);
-    else steps[0].draw();
+    steps[0].draw(image);
   }
 
   function log(msg) {
-    $('.log').append(msg + ' at ' + new Date());
     console.log(msg);
   }
 
@@ -111,13 +109,6 @@ ImageSequencer = function ImageSequencer(options) {
       for(var variable in global)
         if(global[variable] == this)
           options.instanceName = variable;
-    // image = new Image();
-    // image.onload = function() {
-    //   run(image);
-    //   if (callback) callback(image);
-    //   options.initialImage = image;
-    // }
-    // image.src = src;
     image = {};
     image.src = src;
     image.width = 0;
@@ -128,9 +119,9 @@ ImageSequencer = function ImageSequencer(options) {
       image.height = metadata.height;
       image.naturalWidth = metadata.width;
       image.naturalHeight = metadata.height;
+      options.initialImage = image;
       run(image);
       if(callback) callback(image);
-      options.initialImage = image;
     });
 
   }
