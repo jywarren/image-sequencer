@@ -23,7 +23,7 @@
     "bootstrap": "~3.2.0",
     "font-awesome": "~4.5.0",
     "jquery": "~2",
-    "sharp": "~0.17.2"
+    "sharp": "^0.17.3"
   },
   "devDependencies": {
     "get-pixels": "~3.3.0",
