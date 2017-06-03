@@ -19,7 +19,7 @@ module.exports = function GreenChannel(options) {
     var newdata = JSON.parse(JSON.stringify(olddata));
 
     function changePixel(r, g, b, a) {
-      return [0, g, 0, a];
+      return [r, g, b, a];
     }
     function output(image,datauri,mimetype){
       images[image].steps[i].output = {src:datauri,mimeType:mimetype}

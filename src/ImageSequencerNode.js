@@ -1,84 +1,99 @@
+if (typeof window !== 'undefined') {window.$ = window.jQuery = require('jquery'); isBrowser = true}
+else {window = global; var isBrowser = false}
+
 ImageSequencer = function ImageSequencer(options) {
 
   options = options || {};
-  options.inBrowser = options.inBrowser || typeof window !== 'undefined';
+  options.inBrowser = options.inBrowser || isBrowser;
   // if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
   options.sequencerCounter = 0;
 
+  function CImage(src) {
+    datauri = (options.inBrowser)?(src):require('urify')(src);
+    image = {
+      src: datauri,
+      mimeType: datauri.split(':')[1].split(';')[0]
+    }
+    return image;
+  }
+
   var image,
       steps = [],
-      modules = require('./ModulesNode');
+      modules = require('./ModulesNode'),
+      images = {};
 
   // if in browser, prompt for an image
-  if (options.imageSelect || options.inBrowser) addStep('image-select');
-  else if (options.imageUrl) loadImage(imageUrl);
+  // if (options.imageSelect || options.inBrowser) addStep('image-select');
+  // else if (options.imageUrl) loadImage(imageUrl);
 
   // soon, detect local or URL?
-  function addStep(name, o) {
-    console.log('\x1b[36m%s\x1b[0m','adding step "' + name + '"');
-    if (typeof(global) != "undefined")
-      for(var variable in global)
-        if(global[variable] == this)
-          options.instanceName = variable;
+  function addStep(image, name, o) {
+    console.log('\x1b[36m%s\x1b[0m','adding step \"' + name + '\" to \"' + image + '\".');
 
     o = o || {};
     o.id = options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o.name || name;
     o.selector = o.selector || 'ismod-' + name;
     o.container = o.container || options.selector;
+    o.image = image;
 
     var module = modules[name](o);
-
-    steps.push(module);
+    images[image].steps.push(module);
 
     function defaultSetupModule() {
       if (options.ui) module.options.ui = options.ui({
         selector: o.selector,
         title: module.options.title,
-        id: o.id,
-        instanceName: options.instanceName
+        id: o.id
       });
     }
+    if (module.hasOwnProperty('setup')) module.setup(); // add a default UI, unless the module has one specified
+    else defaultSetupModule.apply(module); // run default setup() in scope of module (is this right?)
 
-    if (name === "image-select") {
+    // run the draw method.
+    module.draw.call(this);
 
-      module.setup(); // just set up initial ImageSelect; it has own UI
+    // tell the UI that a step has been added.
 
-    } else {
-
-      // add a default UI, unless the module has one specified
-      if (module.hasOwnProperty('setup')) module.setup();
-      else {
-        defaultSetupModule.apply(module); // run default setup() in scope of module (is this right?)
-      }
-
-      // var previousStep = steps[steps.length - 2];
-      //
-      // if (previousStep) {
-      //   // connect output of last step to input of this step
-      //   previousStep.options.output = function output(image) {
-      //     if (sequencer.steps[0].options.initialImage) {
-      //       options.initialImage = sequencer.steps[0].options.initialImage;
-      //     }
-      //     log('running module "' + name + '"');
-      //     // display the image in any available ui
-      //     if (previousStep.options.ui && previousStep.options.ui.display) previousStep.options.ui.display(image);
-      //     module.draw(image);
-      //   }
-      // }
-
-    }
-
-    // Pre-set the initial output behavior of the final step,
-    // which will be changed if an additional step is added.
-    module.options.output = function output(image) {
-      // if (module.options.ui && module.options.ui.display) module.options.ui.display(image);
-    }
-
-    return 'Addded.';
+    return true;
   }
 
-  function removeStep (id) {
+  function objTypeOf(object){
+    return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
+  }
+
+  function addSteps(){
+      argtype = [];
+      json_q = {};
+      for (i in images) {
+        lastimage = i;
+      }
+      for (var arg in arguments) {
+        argtype.push(objTypeOf(arguments[arg]));
+      }
+      if (arguments.length == 1) {
+        if(argtype[0] == "Object")
+          json_q = arguments[0];
+        else
+          for (i in images)
+            json_q[i] = [arguments[0]];
+      }
+      else if (arguments.length == 2) {
+        if(argtype[1]=="String") arguments[1] = [arguments[1]];
+        if(argtype[0]=="String")
+          json_q[arguments[0]] = arguments[1];
+        else if(argtype[0]=="Array")
+          for (var i in arguments[0]) {
+            json_q[arguments[0][i]] = arguments[1];
+          }
+      }
+      for (i in json_q)
+        for (j in json_q[i])
+          addStep.call(this,i,json_q[i][j]);
+
+    }
+
+  function removeStep(image,index) {
     for (i=0;i<steps.length;i++) {
       if (steps[i].options.id == id && steps[i].options.name != 'image-select'){
         console.log('\x1b[36m%s\x1b[0m','removing step "'+steps[i].options.name+'"');
@@ -91,49 +106,65 @@ ImageSequencer = function ImageSequencer(options) {
     return "Removed.";
   }
 
-  // passed image is optional but you can pass a
-  // non-stored image through the whole steps chain
-  function run(image) {
-    steps[0].draw(image);
+  function removeSteps() {
+    if(arguments.length==1) {
+
+    }
+  }
+
+  function run() {
+    if (arguments.length == 0)
+      for (image in images) {
+        for (i in images[image].steps)
+          images[image].steps[i].draw.call(this);
+      }
+    else if (objTypeOf[arguments[0]]=="Array")
+      for (image in arguments[0]) {
+        for (i in images[image].steps)
+          images[image].steps[i].draw.call(this);
+      }
+    else if (objTypeOf(arguments[0])=="String" && (image = arguments[0])) {
+      for (i in images[image].steps)
+        images[image].steps[i].draw.call(this);
+    }
   }
 
   function log(msg) {
     console.log(msg);
   }
 
-  // load default starting image
-  // i.e. from parameter
-  // this could send the image to ImageSelect, or something?
-  function loadImage(src, callback) {
-    if (typeof(global) != "undefined")
-      for(var variable in global)
-        if(global[variable] == this)
-          options.instanceName = variable;
-    image = {};
-    image.src = src;
-    image.width = 0;
-    image.height = 0;
-    img = sharp(image.src);
-    img.metadata().then(function(metadata){
-      image.width = metadata.width;
-      image.height = metadata.height;
-      image.naturalWidth = metadata.width;
-      image.naturalHeight = metadata.height;
-      options.initialImage = image;
-      run(image);
-      if(callback) callback(image);
-    });
-
+  function loadImage(name, src, callback) {
+    image = {
+      src: src,
+      steps: [{
+        options: {
+          id: options.sequencerCounter++,
+          name: "load-image",
+          title: "Load Image"
+        },
+        draw: function() {
+          if(arguments.length==1){
+            this.outputData = CImage(arguments[0]);
+            return true;
+          }
+          return false;
+        },
+        output: CImage(src)
+      }]
+    };
+    images[name] = image;
+    if (callback) callback();
   }
 
   return {
     options: options,
     loadImage: loadImage,
-    addStep: addStep,
-    removeStep: removeStep,
+    addSteps: addSteps,
+    removeSteps: removeSteps,
     run: run,
     modules: modules,
     steps: steps,
+    images: images,
     ui: options.ui
   }
 

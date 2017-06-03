@@ -8,8 +8,6 @@ module.exports = function PixelManipulation(image, options) {
   options.changePixel = options.changePixel || function changePixel(r, g, b, a) {
     return [r, g, b, a];
   }
-  options.format = options.format || "jpg";
-
   var getPixels = require("get-pixels"),
       savePixels = require("save-pixels"),
       base64 = require('base64-stream');
@@ -48,11 +46,9 @@ module.exports = function PixelManipulation(image, options) {
     savePixels(pixels, options.format)
       .on('end', function() {
 
-      var img = new Image();
+      datauri = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
 
-      img.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
-
-      if (options.output) options.output(img);
+      if (options.output) options.output(options.image,datauri,options.format);
 
     }).pipe(buffer);
 

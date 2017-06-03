@@ -23,10 +23,10 @@ module.exports = function(grunt) {
       },
 
       browserify: {
-          dist: {
-              src: ['src/ImageSequencer.js'],
-              dest: 'dist/image-sequencer.js'
-          },
+          // dist: {
+          //     src: ['src/ImageSequencer.js'],
+          //     dest: 'dist/image-sequencer.js'
+          // },
           node: {
             src: ['src/ImageSequencerNode.js'],
             dest: 'dist/image-sequencer-node.js'

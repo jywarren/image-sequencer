@@ -1,15 +1,17 @@
 if (typeof window !== 'undefined') window.$ = window.jQuery = require('jquery');
+else {window = global; var isBrowser = false}
 
 ImageSequencer = function ImageSequencer(options) {
 
   options = options || {};
-  options.inBrowser = options.inBrowser || typeof window !== 'undefined';
+  options.inBrowser = options.inBrowser || isBrowser;
   if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
   options.sequencerCounter = 0;
 
   var image,
       steps = [],
-      modules = require('./Modules');
+      modules = require('./Modules'),
+      images = [];
 
   // if in browser, prompt for an image
   if (options.imageSelect || options.inBrowser) addStep('image-select');
@@ -99,7 +101,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function log(msg) {
-    $('.log').append(msg + ' at ' + new Date());
+    // $('.log').append(msg + ' at ' + new Date());
     console.log(msg);
   }
 
@@ -107,10 +109,6 @@ ImageSequencer = function ImageSequencer(options) {
   // i.e. from parameter
   // this could send the image to ImageSelect, or something?
   function loadImage(src, callback) {
-    if (typeof(window) != "undefined")
-      for(var variable in window)
-        if(window[variable] == this)
-          options.instanceName = variable;
     image = new Image();
     image.onload = function() {
       run(image);
@@ -123,6 +121,7 @@ ImageSequencer = function ImageSequencer(options) {
   return {
     options: options,
     loadImage: loadImage,
+    images: images,
     addStep: addStep,
     removeStep: removeStep,
     run: run,
