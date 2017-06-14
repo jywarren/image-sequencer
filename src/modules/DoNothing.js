@@ -8,14 +8,12 @@ module.exports = function DoNothing(options) {
   var image;
   var output;
 
-  function draw() {
-    thisimage = this.images[options.image];
-    for (i in thisimage.steps){
-      if (thisimage.steps[i].options.id == options.id) pos = i;
-    }
-    olddata = thisimage.steps[i-1].output;
-    var newdata = JSON.parse(JSON.stringify(olddata));
-    thisimage.steps[i].output = {src:newdata.src,mimeType:newdata.mimeType};
+  function draw(callback) {
+    step = require('./_Step')(this,options);
+    newdata = step[0];
+    pos = step[1];
+    thisimage.steps[pos].output = {src:newdata.src,format:newdata.format};
+    callback();
   }
 
   function get() {

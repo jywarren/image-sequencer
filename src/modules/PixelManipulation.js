@@ -43,13 +43,11 @@ module.exports = function PixelManipulation(image, options) {
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
     var buffer = base64.encode();
-    savePixels(pixels, options.format)
-      .on('end', function() {
-
-      datauri = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
-
-      if (options.output) options.output(options.image,datauri,options.format);
-
+    savePixels(pixels, (options.format=="png"?"jpeg":options.format)).on('end', function() {
+      data = buffer.read().toString();
+      datauri = 'data:image/' + (options.format=="png"?"jpeg":options.format) + ';base64,' + data;
+      if (options.output) options.output(options.image,datauri,(options.format=="png"?"jpeg":options.format));
+      if (options.callback) options.callback();
     }).pipe(buffer);
 
   });
