@@ -6,7 +6,7 @@ var test = require('tape');
 // We should only test headless code here.
 // http://stackoverflow.com/questions/21358015/error-jquery-requires-a-window-with-a-document#25622933
 
-require('../src/ImageSequencerNode.js');
+require('../src/ImageSequencer.js');
 
 var sequencer = ImageSequencer({ ui: "none" });
 
@@ -24,7 +24,7 @@ test('Image Sequencer has tests', function (t) {
 });
 
 test('loadImages loads a step', function (t){
-  sequencer.loadImages('test','examples/SundarPichai.jpeg');
+  sequencer.loadImages('test','examples/red.jpg');
   t.equal(sequencer.images.test.steps.length, 1, "It Does!");
   t.end();
 });
@@ -56,4 +56,3 @@ test('run creates output of steps', function (t) {
   t.equal(type,"object");
   t.end();
 });
- 

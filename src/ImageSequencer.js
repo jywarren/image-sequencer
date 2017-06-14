@@ -30,7 +30,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   var image,
       steps = [],
-      modules = require('./ModulesNode'),
+      modules = require('./Modules'),
       images = {};
 
   // if in browser, prompt for an image
@@ -170,6 +170,24 @@ ImageSequencer = function ImageSequencer(options) {
     run = {};
     this_ = this;
 
+    if (arguments.length==2 || arguments.length==3) {
+      if (typeof(arguments[0])=="number") {
+        if (typeof(arguments[1])=="string" || objTypeOf(arguments[1])=="Array") {
+          var p = arguments[0];
+          var m = arguments[1];
+          var o = arguments[2];
+          arguments = [];
+          arguments[0] = {};
+          for (image in this_.images) {
+            arguments[0][image] = {
+              index: p,
+              name: m,
+              o: o
+            };
+          }
+        }
+      } // end if argument is string
+    }
     if(arguments.length==4 || arguments.length==3) {
       o = o || {};
       size = this_.images[image].steps.length;
@@ -182,13 +200,22 @@ ImageSequencer = function ImageSequencer(options) {
       if (objTypeOf(arguments[0])=='Object') {
         for (img in arguments[0]) {
           var details = arguments[0][img];
-          if (objTypeOf(details) == "Object")
-            {insertStep(img,details.index,details.name,details.o); run[img]=details.index;}
+          if (objTypeOf(details) == "Object") {
+            size = this_.images[img].steps.length;
+            details.index = (details.index==size)?details.index:details.index%size;
+            if (details.index<0) details.index += size+1;
+            insertStep(img,details.index,details.name,details.o);
+            run[img]=details.index;
+          }
           else if (objTypeOf(details) == "Array") {
             details = details.sort(function(a,b){return b.index-a.index});
             run[img] = details[details.length-1].index;
-            for (i in details)
+            for (i in details) {
+              size = this_.images[img].steps.length;
+              details[i].index = (details[i].index==size)?details[i].index:details[i].index%size;
+              if (details[i].index<0) details[i].index += size+1;
               insertStep(img,details[i].index,details[i].name,details[i].o);
+            }
           }
         }
       } // end if argument is object
@@ -198,7 +225,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function run(t_image,t_from) {
-    log('\x1b[31m%s\x1b[0m',"Running the Sequencer!");
+    log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
     this_ = this;
     runimg = {};
     json_q = {};
