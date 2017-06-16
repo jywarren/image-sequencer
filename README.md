@@ -7,7 +7,7 @@ aka "Consequencer"
 
 ## Why
 
-Image Sequencer is different from other image processing systems in that it's non-destructive: instead of modifying the original image, it creates a new image at each step in a sequence. This is because it: 
+Image Sequencer is different from other image processing systems in that it's non-destructive: instead of modifying the original image, it creates a new image at each step in a sequence. This is because it:
 
 * produces a legible trail of operations, to "show your work" for evidential, educational, or reproducibility reasons
 * makes the creation of new tools or "modules" simpler -- each must accept an input image, and produce an output image
@@ -28,9 +28,78 @@ Examples:
 * [Basic example](https://jywarren.github.io/image-sequencer/)
 * [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
 
+Using the library:
+The Image Sequencer Library exports a function ImageSequencer which initializes a sequencer.
+```js
+var sequencer = ImageSequencer();
+```
+Image Sequencer has an array of images which gets stored in `sequencer.images` in this case.
+Images can be loaded into this array by the method `loadImages`.
+loadImages accepts 1, 2, or 3 parameters.
+3/2 parameters :
+```js
+sequencer.loadImages(image_name,image_src,optional_callback);
+```
+1/2 parameters (JSON) :
+```js
+sequencer.loadImages({
+  image_name_1: image_src,
+  image_name_2: image_src,
+  ...
+}, optional_callback);
+```
+
+After loading the image, we can add modules to the image using the addSteps method.
+The options argument (object) is an optional parameter to pass in arguments to the module.
+In all the following examples, `image_name` and `module_name` may be a string or an array of strings.
+```js
+sequencer.addSteps(image_name,module_name,optional_options);
+```
+If no Image Name is specified, the module is added to **all** images.
+```js
+sequencer.addSteps(module_name,optional_options);
+```
+All this can be passed in as JSON:
+```js
+sequencer.addSteps({
+  image_name: {name: module_name, o: optional_options},
+  image_name: {name: module_name, o: optional_options},
+  ...
+});
+```
+
+After adding the steps, now we must generate output for each of the step via the `run` method.
+The `run` method accepts parameters `image` and `from`. `from` is the index from where the function starts generating output. By default, it will run across all the steps. (from = 1) If no image is specified, the sequencer will be run over all the images.
+```js
+sequencer.run(); //All images from first step
+```
+```js
+sequencer.run(image,from); //Image 'image' from 'from'
+```
+image may either be an array or a string.
+An optional callback may also be passed.
+
+
+Steps can be removed using the `removeSteps` method. It accepts `image` and `index` as parameters.
+Either, both, or none of them can be an array. JSON input is also accepted. This method automatically triggers the `run` method as a callback.
+```js
+sequencer.removeSteps("image",[steps]);
+```
+```js
+sequencer.removeSteps("image",step);
+```
+```js
+sequencer.removeSteps({
+  image: [steps],
+  image: [steps],
+  ...
+});
+```
+
+
 ## Contributing
 
-Happily accepting pull requests; to edit the core library, modify files in `/src/`. To build, run `npm install` and `grunt build`. 
+Happily accepting pull requests; to edit the core library, modify files in `/src/`. To build, run `npm install` and `grunt build`.
 
 ### Contributing modules
 
@@ -42,7 +111,7 @@ To add a module to Image Sequencer, it must have the following method; you can w
 
 * `module.draw(image)`
 
-The `draw()` method should accept an `image` parameter, which will be a native JavaScript image object (i.e. `new Image()`). 
+The `draw()` method should accept an `image` parameter, which will be a native JavaScript image object (i.e. `new Image()`).
 
 The draw method must, when it is complete, pass the output image to the method `options.output(image)`, which will send the output to the next module in the chain. For example:
 
@@ -220,8 +289,3 @@ Possible web-based commandline interface: https://hyper.is/?
 * vectorize
   * edge detect
   * direction find (vectorize and colorize)
-
-
-
-
-
