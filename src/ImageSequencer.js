@@ -226,21 +226,17 @@ ImageSequencer = function ImageSequencer(options) {
         for (img in arguments[0]) {
           var details = arguments[0][img];
           if (objTypeOf(details) == "Object") {
-            size = this_.images[img].steps.length;
-            details.index = (details.index==size)?details.index:details.index%size;
-            if (details.index<0) details.index += size+1;
-            insertStep(img,details.index,details.name,details.o);
-            run[img]=details.index;
+            details = makeArray(details);
           }
-          else if (objTypeOf(details) == "Array") {
+          if (objTypeOf(details) == "Array") {
             details = details.sort(function(a,b){return b.index-a.index});
-            run[img] = details[details.length-1].index;
             for (i in details) {
               size = this_.images[img].steps.length;
               details[i].index = (details[i].index==size)?details[i].index:details[i].index%size;
               if (details[i].index<0) details[i].index += size+1;
               insertStep(img,details[i].index,details[i].name,details[i].o);
             }
+            run[img] = details[details.length-1].index;
           }
         }
       } // end if argument is object

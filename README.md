@@ -96,6 +96,23 @@ sequencer.removeSteps({
 });
 ```
 
+Steps can be inserted using the `insertSteps` method. It accepts `image`, `index`, `module_name` and `optional_options` as parameters. `image` may be an array. `optional_options` is an object. The rest are literals. JSON Input is supported too. If no image is provided, Steps will be inserted on all images. Indexes can be negative. Negative sign with an index means that counting will be done in reverse order. If the index is out of bounds, the counting will wrap in the original direction of counting.
+```js
+sequencer.insertSteps("image",index,"module_name",o);
+```
+```js
+sequencer.insertSteps([image],index,"module_name",o);
+```
+```js
+sequencer.insertSteps({
+  image1: [
+    {index:index1, name: module_name1, o:optional_options1},
+    {index:index2, name: module_name2, o:optional_options2},
+    ...
+  ]
+});
+```
+
 
 ## Contributing
 
