@@ -58,8 +58,9 @@ ImageSequencer = function ImageSequencer(options) {
     o.container = o_.container || options.selector;
     o.image = image;
 
-    var module = modules[name](o);
+    var module = modules[name].call(this.images,o);
     images[image].steps.push(module);
+
 
     function defaultSetupModule() {
       if (options.ui && options.ui!="none") module.options.ui = options.ui({
@@ -160,7 +161,7 @@ ImageSequencer = function ImageSequencer(options) {
       for (i in indices)
         removeStep(img,indices[i]);
     }
-    this.run(run)
+    // this.run(run); // This is creating problems
   }
 
   function insertStep(image, index, name, o) {
@@ -242,28 +243,25 @@ ImageSequencer = function ImageSequencer(options) {
       } // end if argument is object
     }
 
-    this.run(run)
+    // this.run(run); // This is Creating issues
   }
 
   function run(t_image,t_from) {
     log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
     this_ = this;
-    runimg = {};
     json_q = {};
     args = [];
     for (var arg in arguments) args.push(copy(arguments[arg]));
     for (var arg in args)
       if(objTypeOf(args[arg]) == "Function")
         var callback = args.splice(arg,1)[0];
-    for (image in images) {
-      runimg[image] = 0;
-    }
     function drawStep(drawarray,pos) {
       if(pos==drawarray.length) if(objTypeOf(callback)=='Function') callback();
       if(pos>=drawarray.length) return true;
       image = drawarray[pos].image;
       i = drawarray[pos].i;
-      images[image].steps[i].draw.call(this_,function(){
+      input = images[image].steps[i-1].output;
+      images[image].steps[i].draw(copy(input),function(){
         drawStep(drawarray,++pos);
       });
     }
@@ -279,6 +277,11 @@ ImageSequencer = function ImageSequencer(options) {
       drawStep(drawarray,0);
     }
     function filter(json_q){
+      for (image in json_q) {
+        if (json_q[image]==0 && this_.images[image].steps.length==1)
+          delete json_q[image];
+        else json_q[image]++;
+      }
       for (image in json_q) {
         prevstep = images[image].steps[json_q[image]-1];
         while (typeof(prevstep) == "undefined" || typeof(prevstep.output) == "undefined") {

@@ -1,11 +1,9 @@
-module.exports = function(ref,options) {
+module.exports = function(ref,image,pos) {
   images = ref.images;
-  thisimage = images[options.image];
-  for (i in thisimage.steps){
-    if (thisimage.steps[i].options.id == options.id) pos = i;
+  thisimage = images[image];
+  var thisstep = thisimage[pos];
+  console.log(thisstep);
+  return function(img) {
+    thisstep.output = img;
   }
-  olddata = thisimage.steps[pos-1].output;
-  if (typeof(olddata) == 'undefined') return false;
-  var newdata = JSON.parse(JSON.stringify(olddata));
-  return [newdata,pos];
 }

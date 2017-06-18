@@ -21,45 +21,60 @@ It is also for prototyping some other related ideas:
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
 * "small modules"-based extensibility: see [Contributing](#contributing), below
 
-## Usage
-
-Examples:
+## Examples:
 
 * [Basic example](https://jywarren.github.io/image-sequencer/)
 * [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
 
-Using the library:
+## Using the library:
+
+
+### Initializing the Sequencer
+
 The Image Sequencer Library exports a function ImageSequencer which initializes a sequencer.
+
 ```js
 var sequencer = ImageSequencer();
 ```
+
+### Loading Images into the Sequencer
+
 Image Sequencer has an array of images which gets stored in `sequencer.images` in this case.
 Images can be loaded into this array by the method `loadImages`.
 loadImages accepts 1, 2, or 3 parameters.
-3/2 parameters :
-```js
-sequencer.loadImages(image_name,image_src,optional_callback);
-```
-1/2 parameters (JSON) :
-```js
-sequencer.loadImages({
-  image_name_1: image_src,
-  image_name_2: image_src,
-  ...
-}, optional_callback);
-```
+
+* 3/2 parameters :
+    ```js
+    sequencer.loadImages(image_name,
+      image_src,optional_callback);
+    ```
+* 1/2 parameters (JSON) :
+    ```js
+    sequencer.loadImages({
+      image_name_1: image_src,
+      image_name_2: image_src,
+      ...
+    }, optional_callback);
+    ```
+
+### Adding Steps on Images
 
 After loading the image, we can add modules to the image using the addSteps method.
 The options argument (object) is an optional parameter to pass in arguments to the module.
 In all the following examples, `image_name` and `module_name` may be a string or an array of strings.
+
 ```js
 sequencer.addSteps(image_name,module_name,optional_options);
 ```
+
 If no Image Name is specified, the module is added to **all** images.
+
 ```js
 sequencer.addSteps(module_name,optional_options);
 ```
+
 All this can be passed in as JSON:
+
 ```js
 sequencer.addSteps({
   image_name: {name: module_name, o: optional_options},
@@ -68,26 +83,36 @@ sequencer.addSteps({
 });
 ```
 
+### Running the Sequencer
+
 After adding the steps, now we must generate output for each of the step via the `run` method.
-The `run` method accepts parameters `image` and `from`. `from` is the index from where the function starts generating output. By default, it will run across all the steps. (from = 1) If no image is specified, the sequencer will be run over all the images.
+The `run` method accepts parameters `image` and `from`.
+`from` is the index from where the function starts generating output. By default, it will run across all the steps. (from = 1) If no image is specified, the sequencer will be run over all the images.
+
 ```js
 sequencer.run(); //All images from first step
 ```
+
 ```js
 sequencer.run(image,from); //Image 'image' from 'from'
 ```
+
 image may either be an array or a string.
 An optional callback may also be passed.
 
+### Removing Steps from an Image
 
 Steps can be removed using the `removeSteps` method. It accepts `image` and `index` as parameters.
-Either, both, or none of them can be an array. JSON input is also accepted. This method automatically triggers the `run` method as a callback.
+Either, both, or none of them can be an array. JSON input is also accepted.
+
 ```js
 sequencer.removeSteps("image",[steps]);
 ```
+
 ```js
 sequencer.removeSteps("image",step);
 ```
+
 ```js
 sequencer.removeSteps({
   image: [steps],
@@ -95,6 +120,8 @@ sequencer.removeSteps({
   ...
 });
 ```
+
+### Inserting steps on an image
 
 Steps can be inserted using the `insertSteps` method. It accepts `image`, `index`, `module_name` and `optional_options` as parameters. `image` may be an array. `optional_options` is an object. The rest are literals. JSON Input is supported too. If no image is provided, Steps will be inserted on all images. Indexes can be negative. Negative sign with an index means that counting will be done in reverse order. If the index is out of bounds, the counting will wrap in the original direction of counting.
 ```js
@@ -126,19 +153,28 @@ Most contribution (we imagine) would be in the form of API-compatible modules, w
 
 To add a module to Image Sequencer, it must have the following method; you can wrap an existing module to add them:
 
-* `module.draw(image)`
+* `module.draw()`
 
-The `draw()` method should accept an `image` parameter, which will be a native JavaScript image object (i.e. `new Image()`).
+The `draw(input,callback)` method should accept an `input` parameter, which will be an object of the form:
 
-The draw method must, when it is complete, pass the output image to the method `options.output(image)`, which will send the output to the next module in the chain. For example:
+```js
+input = {
+  src: "datauri here",
+  format: "jpeg/png/etc"
+}
+```
+
+The  `image` object is essentially the output of the previous step.
+
+The draw method must, when it is complete, pass the output image to the method `this.output = modified_input`, which will send the output to the next module in the chain. For example:
 
 ```js
 function draw(image) {
 
   // do some stuff with the image
 
-  options.output(image);
-
+  this.output = image;
+  callback();
 }
 ```
 
