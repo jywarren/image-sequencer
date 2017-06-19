@@ -3,12 +3,12 @@
 var fs = require('fs');
 var test = require('tape');
 
-// We should only test headless code here. 
-// http://stackoverflow.com/questions/21358015/error-jquery-requires-a-window-with-a-document#25622933 
+// We should only test headless code here.
+// http://stackoverflow.com/questions/21358015/error-jquery-requires-a-window-with-a-document#25622933
 
-require('../dist/image-sequencer.js');
+require('../src/ImageSequencer.js');
 
-var sequencer = ImageSequencer({ ui: false });
+var sequencer = ImageSequencer({ ui: "none" });
 
 //function read (file) {
 //  return fs.readFileSync('./test/fixtures/' + file, 'utf8').trim();
@@ -19,38 +19,62 @@ var sequencer = ImageSequencer({ ui: false });
 //}
 
 test('Image Sequencer has tests', function (t) {
-  // read('something.html')
   t.equal(true, true);
   t.end();
 });
 
-test('addStep adds a step', function (t) {
-  t.equal(sequencer.steps.length, 0);
-  sequencer.addStep('ndvi-red');
-  t.equal(sequencer.steps.length, 1);
+test('loadImages loads a step', function (t){
+  sequencer.loadImages('test','examples/red.jpg');
+  t.equal(sequencer.images.test.steps.length, 1, "It Does!");
   t.end();
 });
 
-test('each module conforms to base API except image-select', function (t) {
-  Object.keys(sequencer.modules).forEach(function(moduleName, i) {
-    if (moduleName != "image-select") sequencer.addStep(moduleName);
-  });
-  // should already have image-select:
-  t.equal(sequencer.steps.length, Object.keys(sequencer.modules).length);
-  sequencer.steps.forEach(function(step, i) {
-    //t.equal(step.test(step.testInput),step.testOutput);
-    // or check that it's equal with a diff method?
-    // we could also test each type of output
-    t.equal(step.setup === 'undefined', false);
-    t.equal(step.draw === 'undefined', false);
-  });
+test('addSteps("image","name") adds a step', function (t) {
+  sequencer.addSteps('test','do-nothing');
+  t.equal(sequencer.images.test.steps[1].options.name, "do-nothing");
+  t.equal(sequencer.images.test.steps.length, 2, "It Does!")
   t.end();
 });
 
-//test('a blank module does not modify an image, according to diff', function (t) {
-  
-//});
+test('addSteps("name") adds a step', function (t) {
+  sequencer.addSteps('do-nothing');
+  t.equal(sequencer.images.test.steps[2].options.name, "do-nothing");
+  t.equal(sequencer.images.test.steps.length, 3, "It Does!")
+  t.end();
+});
 
-//test('a module modifies an image', function (t) {
-  
-//});
+test('addSteps(["name"]) adds a step', function (t) {
+  sequencer.addSteps(['do-nothing','do-nothing-pix']);
+  t.equal(sequencer.images.test.steps[3].options.name, "do-nothing");
+  t.equal(sequencer.images.test.steps[4].options.name, "do-nothing-pix");
+  t.equal(sequencer.images.test.steps.length, 5, "It Does!")
+  t.end();
+});
+
+test('addSteps("name",o) adds a step', function (t) {
+  sequencer.addSteps('do-nothing',{});
+  t.equal(sequencer.images.test.steps[5].options.name, "do-nothing");
+  t.equal(sequencer.images.test.steps.length, 6, "It Does!")
+  t.end();
+});
+
+test('addSteps("image","name",o) adds a step', function (t) {
+  sequencer.addSteps('test','do-nothing',{});
+  t.equal(sequencer.images.test.steps[6].options.name, "do-nothing");
+  t.equal(sequencer.images.test.steps.length, 7, "It Does!")
+  t.end();
+});
+
+
+test('removeSteps removes a step', function (t) {
+  sequencer.removeSteps('test',1);
+  t.equal(sequencer.images.test.steps.length, 6, "It Does!");
+  t.end();
+});
+
+test('insertStep inserts a step', function (t) {
+  sequencer.insertSteps('test',1,'do-nothing');
+  t.equal(sequencer.images.test.steps[1].options.name, "do-nothing");
+  t.equal(sequencer.images.test.steps.length, 7, "It Does!");
+  t.end();
+});
