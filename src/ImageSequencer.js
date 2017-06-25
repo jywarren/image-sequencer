@@ -39,6 +39,8 @@ ImageSequencer = function ImageSequencer(options) {
     return (objTypeOf(input)=="Array")?input:[input];
   }
 
+  formatInput = require('./FormatInput');
+
   var image,
       steps = [],
       modules = require('./Modules'),
@@ -79,43 +81,8 @@ ImageSequencer = function ImageSequencer(options) {
   function addSteps(){
       args = [];
       json_q = {};
-      for (i in images) {
-        lastimage = i;
-      }
-      for (var arg in arguments) {
-        args.push(copy(arguments[arg]));
-      }
-      if (args.length == 1) {
-        if(objTypeOf(args[0]) == "Object") //addSteps(JSON)
-          json_q = arguments[0];
-        else { //addSteps(name) => addSteps([image],[name])
-          args.splice(0,0,[]);
-          for (img in images) args[0].push(img);
-        }
-      }
-      if (args.length == 2) {
-        //addSteps(name,o) => addSteps([image],[name],o)
-        if (objTypeOf(args[1])=="Object") {
-          args.splice(0,0,[]);
-          for (img in images) args[0].push(img);
-        }
-        else { //addSteps(image,name) => addSteps([image],[name],o)
-          args[2] = {};
-        }
-      }
-      if (args.length == 3) { //addSteps(image,name,o) => addSteps(JSON)
-        args[0] = makeArray(args[0]);
-        args[1] = makeArray(args[1]);
-        for (img in args[0]) {
-          json_q[args[0][img]] = [];
-          for (step in args[1]) {
-            json_q[args[0][img]].push({
-              name: args[1][step],
-              o: args[2]
-            });
-          }
-        }
-      }
+      for(arg in arguments){args.push(copy(arguments[arg]));}
+      json_q = formatInput.call(this,args,"+");
       for (i in json_q)
         for (j in json_q[i])
           addStep.call(this,i,json_q[i][j].name,json_q[i][j].o);
@@ -134,29 +101,10 @@ ImageSequencer = function ImageSequencer(options) {
 
   function removeSteps(image,index) {
     run = {};
-    this_ = this;
     args = [];
-    for(var arg in arguments) args.push(copy(arguments[arg]));
-    json_q = {};
+    for(arg in arguments) args.push(copy(arguments[arg]));
+    json_q = formatInput.call(this,args,"-");
 
-    if(args.length==1) {
-      if (objTypeOf(args[0])=="Object") { //removeSteps(JSON)
-        for (img in args[0]) {
-          json_q[img] = makeArray(args[0][img]);
-        }
-      }
-      else { //removeSteps(index) => removeSteps([image],[index])
-        args.splice(0,0,[]);
-        for(img in images) args[0].push(img);
-      }
-    }
-    if(args.length==2) { //removeSteps(image,index) => removeSteps(JSON)
-      args[0] = makeArray(args[0]);
-      args[1] = makeArray(args[1]);
-      for(img in args[0]) {
-        json_q[args[0][img]] = args[1];
-      }
-    }
     for (img in json_q) {
       indices = json_q[img].sort(function(a,b){return b-a});
       run[img] = indices[indices.length-1];
@@ -197,61 +145,24 @@ ImageSequencer = function ImageSequencer(options) {
   function insertSteps(image, index, name, o) {
     run = {};
     this_ = this;
+    args = [];
+    for (arg in arguments) args.push(arguments[arg]);
 
-    if (arguments.length==2 || arguments.length==3) {
-      if (typeof(arguments[0])=="number") {
-        if (typeof(arguments[1])=="string" || objTypeOf(arguments[1])=="Array") {
-          var p = arguments[0];
-          var m = arguments[1];
-          var o = arguments[2];
-          arguments = [];
-          arguments[0] = {};
-          for (image in this_.images) {
-            arguments[0][image] = {
-              index: p,
-              name: m,
-              o: o
-            };
-          }
-        }
-      } // end if argument is string
-    }
-    if(arguments.length==4 || arguments.length==3) {
-      o = o || {};
-      size = this_.images[image].steps.length;
-      index = (index==size)?index:index%size;
-      if (index<0) index += size+1;
-      insertStep(image,index,name, o);
-      run[image] = index;
-    }
-    else if(arguments.length==1) {
-      if (objTypeOf(arguments[0])=='Object') {
-        for (img in arguments[0]) {
-          var details = arguments[0][img];
-          if (objTypeOf(details) == "Object") {
-            details = makeArray(details);
-          }
-          if (objTypeOf(details) == "Array") {
-            details = details.sort(function(a,b){return b.index-a.index});
-            for (i in details) {
-              size = this_.images[img].steps.length;
-              details[i].index = (details[i].index==size)?details[i].index:details[i].index%size;
-              if (details[i].index<0) details[i].index += size+1;
-              insertStep(img,details[i].index,details[i].name,details[i].o);
-            }
-            run[img] = details[details.length-1].index;
-          }
-        }
-      } // end if argument is object
-    }
+    json_q = formatInput.call(this,args,"^");
 
+    for (img in json_q) {
+      var details = json_q[img];
+      details = details.sort(function(a,b){return b.index-a.index});
+      for (i in details)
+        insertStep(img,details[i].index,details[i].name,details[i].o);
+      // run[img] = details[details.length-1].index;
+    }
     // this.run(run); // This is Creating issues
   }
 
   function run(t_image,t_from) {
     log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
     this_ = this;
-    json_q = {};
     args = [];
     for (var arg in arguments) args.push(copy(arguments[arg]));
     for (var arg in args)
@@ -292,25 +203,8 @@ ImageSequencer = function ImageSequencer(options) {
       }
       return json_q;
     }
-    if (arguments.length == 0) {
-      for (image in images)
-        json_q[image] = 1;
-    }
-    else if (arguments.length == 1) {
-      if (typeof(arguments[0]) == "string")
-        json_q[arguments[0]] = 1;
-      else if (typeof(arguments[0]) == "number")
-        for (image in images)
-          json_q[image] = arguments[0];
-      else if (objTypeOf(arguments[0]) == "Array")
-        for (image in arguments[0])
-          json_q[arguments[0][image]] = 1;
-      else if (objTypeOf(arguments[0]) == "Object")
-        json_q = arguments[0];
-    }
-    else if (arguments.length == 2) {
-      json_q[t_image] = t_from;
-    }
+
+    json_q = formatInput.call(this,args,"r");
     json_q = filter(json_q);
     drawSteps(json_q);
   }
