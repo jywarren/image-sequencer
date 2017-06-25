@@ -141,7 +141,9 @@ ImageSequencer = function ImageSequencer(options) {
 
     if(args.length==1) {
       if (objTypeOf(args[0])=="Object") { //removeSteps(JSON)
-        json_q = args[0];
+        for (img in args[0]) {
+          json_q[img] = makeArray(args[0][img]);
+        }
       }
       else { //removeSteps(index) => removeSteps([image],[index])
         args.splice(0,0,[]);
