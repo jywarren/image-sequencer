@@ -13,7 +13,13 @@ function makeArray(input) {
 function copy(a) {
   if (!typeof(a) == "object") return a;
   if (objTypeOf(a) == "Array") return a.slice();
-  if (objTypeOf(a) == "Object") return JSON.parse(JSON.stringify(a));
+  if (objTypeOf(a) == "Object") {
+    var b = {};
+    for (v in a) {
+      b[v] = copy(a[v]);
+    }
+    return b;
+  }
   return a;
 }
 
@@ -32,6 +38,9 @@ function formatInput(args,format,images) {
     format = ['o_string_a', 'number', 'string', 'o_object'];
   else if (format == "r")
     format = ['o_string_a', 'o_number'];
+  else if (format == "l")
+    format = ['string','string','o_function'];
+
   /*
     formats:
       addSteps :: o_image_a, name_a, o_o
@@ -42,11 +51,14 @@ function formatInput(args,format,images) {
         o_string_a, number, string, o_object => { image: [{index,name,o}] }
       run :: o_image_a, o_from
         o_string_a, o_number => { image: index }
+      loadImages :: image, src, o_function
+        string, string, o_function => { images: [{image:src}], callback }
 
     optionals:
       image: o_string_a
       options: o_object
       from: o_number
+      callback: o_function
   */
 
   if(format[format.length-1] == "o_object") {
@@ -57,6 +69,11 @@ function formatInput(args,format,images) {
     if(typeof(args[args.length-1]) != "number" && objTypeOf(args[0])!="Object")
       args.push(1);
   }
+  else if (format[format.length-1] == "o_function") {
+    if(objTypeOf(args[args.length-1]) != "Function" && objTypeOf(args[0])!="Object")
+      args.push(function(){});
+  }
+
   if(format[0] == "o_string_a") {
     if(args.length == format.length - 1) {
       insert = false;
@@ -80,13 +97,21 @@ function formatInput(args,format,images) {
 
   if (args.length == 1) {
     json_q = copy(args[0]);
-    if(!(format_i == "r"))
-      for (img in json_q) {
+    if(!(format_i == "r" || format_i == "l")) {
+      for (img in json_q)
         json_q[img] = makeArray(json_q[img]);
-      }
+    }
   }
-  else if (format_i == "r")
+  else if (format_i == "r") {
     for (img in args[0]) json_q[args[0][img]] = args[1];
+  }
+  else if (format_i == "l") {
+    json_q = {
+      images: {},
+      callback: args[2]
+    }
+    json_q.images[args[0]] = args[1];
+  }
   else {
     for (img in args[0]) {
       image = args[0][img];

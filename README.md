@@ -51,10 +51,13 @@ loadImages accepts 1, 2, or 3 parameters.
 * 1/2 parameters (JSON) :
     ```js
     sequencer.loadImages({
-      image_name_1: image_src,
-      image_name_2: image_src,
-      ...
-    }, optional_callback);
+      images: {
+        image_name_1: image_src,
+        image_name_2: image_src,
+        ...
+      },
+      callback: optional_callback
+    });
     ```
 
 ### Adding Steps on Images
