@@ -23,13 +23,9 @@ module.exports = function(grunt) {
       },
 
       browserify: {
-          // dist: {
-          //     src: ['src/ImageSequencer.js'],
-          //     dest: 'dist/image-sequencer.js'
-          // },
-          node: {
-            src: ['src/ImageSequencerNode.js'],
-            dest: 'dist/image-sequencer-node.js'
+          dist: {
+            src: ['src/ImageSequencer.js'],
+            dest: 'dist/image-sequencer.js'
           }
       }
 
@@ -39,8 +35,7 @@ module.exports = function(grunt) {
     grunt.registerTask('default', ['watch']);
 
     grunt.registerTask('build', [
-        // 'browserify:dist',
-        'browserify:node'
+        'browserify:dist'
     ]);
 
 };

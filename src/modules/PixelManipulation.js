@@ -22,8 +22,8 @@ module.exports = function PixelManipulation(image, options) {
     // iterate through pixels;
     // this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
-    for(var x = 1; x < pixels.shape[0]; x++) {
-      for(var y = 1; y < pixels.shape[1]; y++) {
+    for(var x = 0; x < pixels.shape[0]; x++) {
+      for(var y = 0; y < pixels.shape[1]; y++) {
 
         pixel = options.changePixel(
           pixels.get(x, y, 0),
@@ -40,15 +40,18 @@ module.exports = function PixelManipulation(image, options) {
       }
     }
 
+    options.format = "jpeg";
+
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
-    var buffer = base64.encode();
-    savePixels(pixels, (options.format=="png"?"jpeg":options.format)).on('end', function() {
-      data = buffer.read().toString();
-      datauri = 'data:image/' + (options.format=="png"?"jpeg":options.format) + ';base64,' + data;
-      if (options.output) options.output(options.image,datauri,(options.format=="png"?"jpeg":options.format));
+    w = base64.encode();
+    var r = savePixels(pixels, options.format);
+    r.pipe(w).on('finish',function(){
+      data = w.read().toString();
+      datauri = 'data:image/' + options.format + ';base64,' + data;
+      if (options.output) options.output(options.image,datauri,options.format);
       if (options.callback) options.callback();
-    }).pipe(buffer);
+    });
 
   });
 

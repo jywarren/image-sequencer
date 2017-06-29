@@ -1,6 +1,6 @@
 function LoadImage(ref, name, src) {
   function CImage(src) {
-    datauri = (ref.options.inBrowser)?(src):require('urify')(src);
+    datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
     image = {
       src: datauri,
       format: datauri.split(':')[1].split(';')[0].split('/')[1]
