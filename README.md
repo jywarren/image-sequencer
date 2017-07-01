@@ -38,7 +38,6 @@ var sequencer = ImageSequencer();
 ```
 
 ### Loading Images into the Sequencer
-
 Image Sequencer has an array of images which gets stored in `sequencer.images` in this case.
 Images can be loaded into this array by the method `loadImages`.
 loadImages accepts 1, 2, or 3 parameters.
@@ -61,7 +60,6 @@ loadImages accepts 1, 2, or 3 parameters.
     ```
 
 ### Adding Steps on Images
-
 After loading the image, we can add modules to the image using the addSteps method.
 The options argument (object) is an optional parameter to pass in arguments to the module.
 In all the following examples, `image_name` and `module_name` may be a string or an array of strings.
@@ -87,7 +85,6 @@ sequencer.addSteps({
 ```
 
 ### Running the Sequencer
-
 After adding the steps, now we must generate output for each of the step via the `run` method.
 The `run` method accepts parameters `image` and `from`.
 `from` is the index from where the function starts generating output. By default, it will run across all the steps. (from = 1) If no image is specified, the sequencer will be run over all the images.
@@ -104,7 +101,6 @@ image may either be an array or a string.
 An optional callback may also be passed.
 
 ### Removing Steps from an Image
-
 Steps can be removed using the `removeSteps` method. It accepts `image` and `index` as parameters.
 Either, both, or none of them can be an array. JSON input is also accepted.
 
@@ -125,7 +121,6 @@ sequencer.removeSteps({
 ```
 
 ### Inserting steps on an image
-
 Steps can be inserted using the `insertSteps` method. It accepts `image`, `index`, `module_name` and `optional_options` as parameters. `image` may be an array. `optional_options` is an object. The rest are literals. JSON Input is supported too. If no image is provided, Steps will be inserted on all images. Indexes can be negative. Negative sign with an index means that counting will be done in reverse order. If the index is out of bounds, the counting will wrap in the original direction of counting.
 ```js
 sequencer.insertSteps("image",index,"module_name",o);
@@ -141,6 +136,12 @@ sequencer.insertSteps({
     ...
   ]
 });
+```
+
+### Replacing an Image
+An existing image can be replaced with another image, retaining the steps of the initial image. This has a very straightforward syntax.
+```js
+sequencer.replaceImage('image_name',image_src);
 ```
 
 

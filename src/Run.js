@@ -1,5 +1,4 @@
 function Run(ref, json_q, callback) {
-
   function drawStep(drawarray,pos) {
     if(pos==drawarray.length) if(ref.objTypeOf(callback)=='Function') callback();
     if(pos>=drawarray.length) return true;
@@ -25,7 +24,7 @@ function Run(ref, json_q, callback) {
     for (image in json_q) {
       if (json_q[image]==0 && ref.images[image].steps.length==1)
         delete json_q[image];
-      else json_q[image]++;
+      else if (json_q[image]==0) json_q[image]++;
     }
     for (image in json_q) {
       prevstep = ref.images[image].steps[json_q[image]-1];

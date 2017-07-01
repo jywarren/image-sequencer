@@ -94,7 +94,7 @@ ImageSequencer = function ImageSequencer(options) {
       details = details.sort(function(a,b){return b.index-a.index});
       for (i in details)
         require("./InsertStep")(this,img,details[i].index,details[i].name,details[i].o);
-      // run[img] = details[details.length-1].index;
+      run[img] = details[details.length-1].index;
     }
     // this.run(run); // This is Creating issues
   }
@@ -125,12 +125,20 @@ ImageSequencer = function ImageSequencer(options) {
     json_q.callback();
   }
 
+  function replaceImage(image,src) {
+    this_ = this;
+    this_.images[image].steps[0].draw(src,function(){
+      this_.run();
+    });
+  }
+
   return {
     options: options,
     loadImages: loadImages,
     addSteps: addSteps,
     removeSteps: removeSteps,
     insertSteps: insertSteps,
+    replaceImage: replaceImage,
     run: run,
     modules: modules,
     images: images,
