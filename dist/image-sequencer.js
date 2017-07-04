@@ -34518,7 +34518,7 @@ ImageSequencer = function ImageSequencer(options) {
       details = details.sort(function(a,b){return b.index-a.index});
       for (i in details)
         require("./InsertStep")(this,img,details[i].index,details[i].name,details[i].o);
-      // run[img] = details[details.length-1].index;
+      run[img] = details[details.length-1].index;
     }
     // this.run(run); // This is Creating issues
   }
@@ -34549,12 +34549,20 @@ ImageSequencer = function ImageSequencer(options) {
     json_q.callback();
   }
 
+  function replaceImage(image,src) {
+    this_ = this;
+    this_.images[image].steps[0].draw(src,function(){
+      this_.run();
+    });
+  }
+
   return {
     options: options,
     loadImages: loadImages,
     addSteps: addSteps,
     removeSteps: removeSteps,
     insertSteps: insertSteps,
+    replaceImage: replaceImage,
     run: run,
     modules: modules,
     images: images,
@@ -34627,7 +34635,12 @@ function LoadImage(ref, name, src) {
         },
         draw: function() {
           if(arguments.length==1){
-            this.outputData = CImage(arguments[0]);
+            this.output = CImage(arguments[0]);
+            return true;
+          }
+          else if(arguments.length==2) {
+            this.output = CImage(arguments[0]);
+            arguments[1]();
             return true;
           }
           return false;
@@ -34657,7 +34670,6 @@ module.exports = {
 
 },{"./modules/DoNothing":121,"./modules/DoNothingPix":122,"./modules/GreenChannel":123,"./modules/Invert":124,"./modules/NdviRed":125}],120:[function(require,module,exports){
 function Run(ref, json_q, callback) {
-
   function drawStep(drawarray,pos) {
     if(pos==drawarray.length) if(ref.objTypeOf(callback)=='Function') callback();
     if(pos>=drawarray.length) return true;
@@ -34683,7 +34695,7 @@ function Run(ref, json_q, callback) {
     for (image in json_q) {
       if (json_q[image]==0 && ref.images[image].steps.length==1)
         delete json_q[image];
-      else json_q[image]++;
+      else if (json_q[image]==0) json_q[image]++;
     }
     for (image in json_q) {
       prevstep = ref.images[image].steps[json_q[image]-1];
@@ -34918,9 +34930,7 @@ module.exports = function PixelManipulation(image, options) {
 
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
-    // w = base64.encode();
     w = base64.encode();
-    // var w = require('fs').createWriteStream('output.png');
     var r = savePixels(pixels, options.format);
     r.pipe(w).on('finish',function(){
       data = w.read().toString();
@@ -34928,9 +34938,6 @@ module.exports = function PixelManipulation(image, options) {
       if (options.output) options.output(options.image,datauri,options.format);
       if (options.callback) options.callback();
     });
-
-
-
 
   });
 
