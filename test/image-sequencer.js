@@ -108,16 +108,3 @@ test('run() runs the sequencer', function (t) {
   t.equal(typeof(sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output), "object", "It Does!");
   t.end();
 });
-
-test('replaceImage() replaces the image and runs the sequencer', function (t) {
-  var testarray = [];
-  for (i in sequencer.images.test.steps) {
-    testarray.push(sequencer.images.test.steps[i].output.src);
-  }
-  t.equal(true,true);
-  sequencer.replaceImage('test','examples/cyan.jpg');
-  for (i in testarray) {
-    t.notEqual(testarray[i],sequencer.images.test.steps[i].output.src);
-  }
-  t.end();
-});

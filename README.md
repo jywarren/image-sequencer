@@ -138,13 +138,6 @@ sequencer.insertSteps({
 });
 ```
 
-### Replacing an Image
-An existing image can be replaced with another image, retaining the steps of the initial image. This has a very straightforward syntax.
-```js
-sequencer.replaceImage('image_name',image_src);
-```
-
-
 ## Contributing
 
 Happily accepting pull requests; to edit the core library, modify files in `/src/`. To build, run `npm install` and `grunt build`.

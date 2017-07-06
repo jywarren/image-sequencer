@@ -125,13 +125,6 @@ ImageSequencer = function ImageSequencer(options) {
     json_q.callback();
   }
 
-  function replaceImage(image,src) {
-    this_ = this;
-    this_.images[image].steps[0].draw(src,function(){
-      this_.run();
-    });
-  }
-
   return {
     options: options,
     loadImages: loadImages,
