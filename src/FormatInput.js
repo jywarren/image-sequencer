@@ -39,7 +39,7 @@ function formatInput(args,format,images) {
   else if (format == "r")
     format = ['o_string_a', 'o_number'];
   else if (format == "l")
-    format = ['string','string','o_function'];
+    format = ['o_string','string','o_function'];
 
   /*
     formats:
@@ -86,6 +86,10 @@ function formatInput(args,format,images) {
       if(insert)
         args.splice(0,0,copy(images));
     }
+  }
+  else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
+    if (typeof(args[0]) == "string")
+      args.splice(0,0,"default");
   }
 
   if(args.length == format.length) {
