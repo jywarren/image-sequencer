@@ -1,8 +1,15 @@
 function Run(ref, json_q, callback) {
 
   function drawStep(drawarray,pos) {
-    if(pos==drawarray.length) if(ref.objTypeOf(callback)=='Function') callback();
-    if(pos>=drawarray.length) return true;
+    if(pos==drawarray.length) {
+      image = drawarray[pos-1].image;
+      if(ref.objTypeOf(callback)=='Function'){
+        steps = ref.images[image].steps;
+        out = steps[steps.length-1].output.src;
+        callback(out);
+        return;
+      }
+    }
     image = drawarray[pos].image;
     i = drawarray[pos].i;
     input = ref.images[image].steps[i-1].output;

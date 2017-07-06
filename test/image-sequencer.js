@@ -103,8 +103,10 @@ test('insertSteps({image: {index: index, name: "module", o: options} }) inserts 
   t.end();
 });
 
-test('run() runs the sequencer', function (t) {
-  sequencer.run();
-  t.equal(typeof(sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output), "object", "It Does!");
+test('run() runs the sequencer and returns output to callback', function (t) {
+  sequencer.run(function(out){
+    t.equal(typeof(sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output), "object", "It Does!");
+    t.equal(out,sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output.src, "It Does!");
+  });
   t.end();
 });
