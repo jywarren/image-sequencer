@@ -115,6 +115,8 @@ ImageSequencer = function ImageSequencer(options) {
     json_q = formatInput.call(this,args,"r");
 
     require('./Run')(this, json_q, callback);
+
+    return this;
   }
 
   function loadImages() {

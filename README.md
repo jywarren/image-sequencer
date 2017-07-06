@@ -75,10 +75,19 @@ Once all steps are added, This method is used to generate the output of all thes
 modules.
 
 ```js
-sequencer.run()
+sequencer.run();
 ```
 
 Additionally, an optional callback can be passed to this method.
+
+```js
+sequencer.run(function(out){
+  // this gets called back.
+  // "out" is the DataURL of the final image.
+});
+```
+
+return value: **`sequencer`** (To allow method chaining)
 
 
 ### Removing a step from the sequencer
@@ -205,8 +214,9 @@ sequencer.run(image_name,from); //Image 'image' from 'from'
 The `run` method also accepts an optional callback just like before:
 
 ```js
-  sequencer.run(image_name,from,function(){
+  sequencer.run(image_name,from,function(out){
     // This gets called back.
+    // "out" is the DataURL of final image.
   });
 ```
 
@@ -219,6 +229,9 @@ sequencer.run({
   ...
 });
 ```
+
+return value: **`sequencer`** (To allow method chaining)
+
 
 ### Removing Steps from an Image
 
