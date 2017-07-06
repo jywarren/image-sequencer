@@ -55,6 +55,7 @@ ImageSequencer = function ImageSequencer(options) {
       for (i in json_q)
         for (j in json_q[i])
           require("./AddStep")(this,i,json_q[i][j].name,json_q[i][j].o);
+      return this;
     }
 
   function removeStep(image,index) {
@@ -79,6 +80,7 @@ ImageSequencer = function ImageSequencer(options) {
         removeStep(img,indices[i]);
     }
     // this.run(run); // This is creating problems
+    return this;
   }
 
   function insertSteps(image, index, name, o) {
@@ -97,6 +99,7 @@ ImageSequencer = function ImageSequencer(options) {
       run[img] = details[details.length-1].index;
     }
     // this.run(run); // This is Creating issues
+    return this;
   }
 
   function run(t_image,t_from) {
@@ -123,11 +126,13 @@ ImageSequencer = function ImageSequencer(options) {
       require('./LoadImage')(this,i,json_q.images[i])
 
     json_q.callback();
+    return this;
   }
 
   return {
     options: options,
     loadImages: loadImages,
+    loadImage: loadImages,
     addSteps: addSteps,
     removeSteps: removeSteps,
     insertSteps: insertSteps,

@@ -3,7 +3,7 @@ Image Sequencer
 
 aka "Consequencer"
 
-[![Build Status](https://travis-ci.org/jywarren/image-sequencer.svg?branch=master)](https://travis-ci.org/jywarren/image-sequencer)
+[![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer)
 
 ## Why
 
@@ -26,8 +26,7 @@ It is also for prototyping some other related ideas:
 * [Basic example](https://jywarren.github.io/image-sequencer/)
 * [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
 
-## Using the library:
-
+## Usage
 
 ### Initializing the Sequencer
 
@@ -37,10 +36,106 @@ The Image Sequencer Library exports a function ImageSequencer which initializes 
 var sequencer = ImageSequencer();
 ```
 
-### Loading Images into the Sequencer
-Image Sequencer has an array of images which gets stored in `sequencer.images` in this case.
-Images can be loaded into this array by the method `loadImages`.
-loadImages accepts 1, 2, or 3 parameters.
+### Loading an Image into the Sequencer
+
+The `loadImage` method is used to load an image into the sequencer. It accepts
+a name and an image. The method also accepts an optional callback.
+
+```js
+sequencer.loadImage(image_src,optional_callback);
+```
+On `Node.js` the `image_src` may be a DataURI or a local path. On browsers, it
+must be a DatURI (or 'selector to image' -- Work in Progress)
+
+return value: **`sequencer`** (To allow method chaining)
+
+
+### Adding steps to the image
+
+The `addSteps` method is used to add steps on the image. One or more steps can
+be added at a time. Each step is called a module.
+
+```js
+sequencer.addSteps(modules, optional_options);
+```
+
+If only one module is to be added, `modules` is simply the name of the module.
+If multiple images are to be added, `modules` is an array of the names of modules
+which are to be added, in that particular order.
+
+optional_otions is just additional parameters, in object form, which you might
+want to provide to the modules. It's an optional parameter.
+
+return value: **`sequencer`** (To allow method chaining)
+
+
+### Running the Sequencer
+
+Once all steps are added, This method is used to generate the output of all these
+modules.
+
+```js
+sequencer.run()
+```
+
+Additionally, an optional callback can be passed to this method.
+
+
+### Removing a step from the sequencer
+
+The `removeSteps` method is used to remove unwanted steps from the sequencer.
+It accepts the index of the step as an input, or an array of the unwanted indices
+if there are more than one.
+
+For example, if the modules ['ndvi-red','crop','invert'] were added in this order,
+and I wanted to remove 'crop' and 'invert', I can either do this:
+```js
+sequencer.removeSteps(2);
+sequencer.removeSteps(3);
+```
+or:
+```js
+sequencer.removeSteps([2,3]);
+```
+
+return value: **`sequencer`** (To allow method chaining)
+
+
+### Inserting a step in between the sequencer
+
+The `insertSteps` method can be used to insert one or more steps at a given index
+in the sequencer. It accepts the index where the module is to be inserted, name of
+the module, and an optional options parameter. `index` is the index of the inserted
+step. Only one step can be inserted at a time. `optional_options` plays the same
+role it played in `addSteps`.
+
+Indexes can be negative. Negative sign with an index means that counting will be
+done in reverse order. If the index is out of bounds, the counting will wrap in
+the original direction of counting. So, an `index` of -1 means that the module is
+inserted at the end.
+
+```js
+sequencer.insertSteps(index,module_name,optional_options);
+```
+
+return value: **`sequencer`** (To allow method chaining)
+
+
+
+## Multiple Images
+Image Sequencer is capable of handling multiple images at once.
+
+### Initializing a sequencer with multiple images.
+This is just like before.
+```js
+var sequencer = ImageSequencer();
+```
+
+### Loading Multiple Images into the Sequencer
+
+Multiple images can be loaded by the method `loadImages`. Everything is the same,
+except that now, a unique identification called `image_name` has to be provided
+with each image. This is a string literal.
 
 * 3/2 parameters :
     ```js
@@ -51,18 +146,22 @@ loadImages accepts 1, 2, or 3 parameters.
     ```js
     sequencer.loadImages({
       images: {
-        image_name_1: image_src,
-        image_name_2: image_src,
+        image1_name: image_src,
+        image2_name: image_src,
         ...
       },
       callback: optional_callback
     });
     ```
 
-### Adding Steps on Images
-After loading the image, we can add modules to the image using the addSteps method.
-The options argument (object) is an optional parameter to pass in arguments to the module.
-In all the following examples, `image_name` and `module_name` may be a string or an array of strings.
+return value: **`sequencer`** (To allow method chaining)
+
+
+### Adding Steps on Multiple Images
+
+The same method `addSteps` is used for this. There's just a slight obvious change
+in the syntax that the image name has to be supplied too. `image_name` as well as
+`module_name` in the following examples can be either strings or arrays of strings.
 
 ```js
 sequencer.addSteps(image_name,module_name,optional_options);
@@ -78,50 +177,77 @@ All this can be passed in as JSON:
 
 ```js
 sequencer.addSteps({
-  image_name: {name: module_name, o: optional_options},
-  image_name: {name: module_name, o: optional_options},
+  image1_name: {name: module_name, o: optional_options},
+  image2_name: {name: module_name, o: optional_options},
   ...
 });
 ```
 
-### Running the Sequencer
-After adding the steps, now we must generate output for each of the step via the `run` method.
-The `run` method accepts parameters `image` and `from`.
-`from` is the index from where the function starts generating output. By default, it will run across all the steps. (from = 1) If no image is specified, the sequencer will be run over all the images.
+return value: **`sequencer`** (To allow method chaining)
+
+
+### Running a Sequencer with multiple images
+
+The same `run` method can be used with a slight change in syntax.
+The `run` method accepts parameters `image` and `from`. `from` is the index from
+where the function starts generating output. By default, it will run across all
+the steps. (from = 1) If no image is specified, the sequencer will be run over **all
+the images**. `image_name` may be an array of image names.
 
 ```js
 sequencer.run(); //All images from first step
 ```
 
 ```js
-sequencer.run(image,from); //Image 'image' from 'from'
+sequencer.run(image_name,from); //Image 'image' from 'from'
 ```
 
-image may either be an array or a string.
-An optional callback may also be passed.
-
-### Removing Steps from an Image
-Steps can be removed using the `removeSteps` method. It accepts `image` and `index` as parameters.
-Either, both, or none of them can be an array. JSON input is also accepted.
+The `run` method also accepts an optional callback just like before:
 
 ```js
-sequencer.removeSteps("image",[steps]);
+  sequencer.run(image_name,from,function(){
+    // This gets called back.
+  });
 ```
 
-```js
-sequencer.removeSteps("image",step);
-```
+JSON Input is also acceptable.
 
 ```js
-sequencer.removeSteps({
-  image: [steps],
-  image: [steps],
+sequencer.run({
+  image1_name: from,
+  image2_name: from,
   ...
 });
 ```
 
+### Removing Steps from an Image
+
+Similarly, `removeSteps` can also accept an `image_name` parameter. Either, both,
+or none of `image_name` and `steps` them may be an array. JSON input is also acceptable.
+
+```js
+sequencer.removeSteps("image_name",[steps]);
+```
+
+```js
+sequencer.removeSteps("image_name",step);
+```
+
+```js
+sequencer.removeSteps({
+  image1_name: [steps],
+  image2_name: [steps],
+  ...
+});
+```
+return value: **`sequencer`** (To allow method chaining)
+
+
 ### Inserting steps on an image
-Steps can be inserted using the `insertSteps` method. It accepts `image`, `index`, `module_name` and `optional_options` as parameters. `image` may be an array. `optional_options` is an object. The rest are literals. JSON Input is supported too. If no image is provided, Steps will be inserted on all images. Indexes can be negative. Negative sign with an index means that counting will be done in reverse order. If the index is out of bounds, the counting will wrap in the original direction of counting.
+
+The `insertSteps` method can also accept an `image_name` parameter. `image_name`
+may be an array. Everything else remains the same. JSON Inout is acceptable too.
+
 ```js
 sequencer.insertSteps("image",index,"module_name",o);
 ```
@@ -137,6 +263,8 @@ sequencer.insertSteps({
   ]
 });
 ```
+return value: **`sequencer`** (To allow method chaining)
+
 
 ## Contributing
 
@@ -208,16 +336,16 @@ Notes on development next steps:
 ### Modularization
 
 * [ ] remotely includable modules, not compiled in -- see plugin structures in other libs
-* [ ] ability to start running at any point -- already works?
-* [ ] commandline runnability?
-  * [ ] Make available as browserified OR `require()` includable...
+* [x] ability to start running at any point -- already works?
+* [x] commandline runnability?
+  * [x] Make available as browserified OR `require()` includable...
 * [ ] standardize panel addition with submodule that offers Panel.display(image)
 * [ ] allow passing data as data-uri or Image object, or stream, or ndarray or ImageData array, if both of neighboring pair has ability?
   * see https://github.com/jywarren/image-sequencer/issues/1
 * [ ] ...could we directly include package.json for module descriptions? At least as a fallback.
 * [ ] (for node-and-line style UIs) non-linear sequences with Y-splitters
 * [ ] `sequencer.addModule('path/to/module.js')` style module addition -- also to avoid browserifying all of Plotly :-P
-* [ ] remove step
+* [x] remove step
 
 ### Testing
 
@@ -231,7 +359,7 @@ Notes on development next steps:
 
 ### Bugs
 
-* [ ] BUG: this doesn't work for defaults:  imageboard.loadImage('examples/grid.png', function() {
+* [x] BUG: this doesn't work for defaults:  imageboard.loadImage('examples/grid.png', function() {});
   * we should make defaults a config of the first module
 
 ****
