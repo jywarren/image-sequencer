@@ -26,7 +26,21 @@ It is also for prototyping some other related ideas:
 * [Basic example](https://jywarren.github.io/image-sequencer/)
 * [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
 
-## Usage
+## Quick Usage
+
+Image Sequencer can be used to run modules on an HTML Image Element using the
+`replaceImage` method. The method accepts two parameters - `selector` and `steps`.
+`selector` is a CSS selector. If it matches multiple images, all images will be
+modified. `steps` may be the name of a module or array of names of modules.
+
+Note: Local images will work only if they are in the same directory or a subdirectory.
+
+```js
+  sequencer.replaceImage(selector,steps);
+```
+
+
+## Classic Usage
 
 ### Initializing the Sequencer
 

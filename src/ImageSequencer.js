@@ -1,5 +1,5 @@
 if (typeof window !== 'undefined') {window.$ = window.jQuery = require('jquery'); isBrowser = true}
-else {window = global; var isBrowser = false}
+else {var isBrowser = false}
 
 ImageSequencer = function ImageSequencer(options) {
 
@@ -129,6 +129,10 @@ ImageSequencer = function ImageSequencer(options) {
 
     json_q.callback();
     return this;
+  }
+
+  function replaceImage(selector,steps) {
+    require('./ReplaceImage')(this,selector,steps);
   }
 
   return {
