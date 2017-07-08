@@ -37,8 +37,10 @@ Note: Browser CORS Restrictions apply. Some browsers may not allow local images
 form other folders, and throw a Security Error instead.
 
 ```js
-  sequencer.replaceImage(selector,steps);
+  sequencer.replaceImage(selector,steps,optional_options);
 ```
+
+`optional_options` allows to pass additional arguments to the module itself.
 
 For example:
 

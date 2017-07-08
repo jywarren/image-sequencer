@@ -1,4 +1,4 @@
-function ReplaceImage(ref,selector,steps) {
+function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return; // This isn't for Node.js
   this_ = ref;
   var input = document.querySelectorAll(selector);
@@ -25,7 +25,7 @@ function ReplaceImage(ref,selector,steps) {
     else make(url);
 
     function make(url) {
-      this_.loadImage(url).addSteps('default',steps).run(function(out){
+      this_.loadImage('default',url).addSteps('default',steps,options).run(function(out){
         the_image.src = out;
       });
     }

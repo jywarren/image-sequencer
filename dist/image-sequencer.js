@@ -34884,7 +34884,8 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
-  function replaceImage(selector,steps) {
+  function replaceImage(selector,steps,options) {
+    options = options || {};
     require('./ReplaceImage')(this,selector,steps);
   }
 
@@ -35001,7 +35002,7 @@ module.exports = {
 }
 
 },{"./modules/DoNothing":122,"./modules/DoNothingPix":123,"./modules/GreenChannel":124,"./modules/Invert":125,"./modules/NdviRed":126}],120:[function(require,module,exports){
-function ReplaceImage(ref,selector,steps) {
+function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return; // This isn't for Node.js
   this_ = ref;
   var input = document.querySelectorAll(selector);
@@ -35028,7 +35029,7 @@ function ReplaceImage(ref,selector,steps) {
     else make(url);
 
     function make(url) {
-      this_.loadImage(url).addSteps('default',steps).run(function(out){
+      this_.loadImage('default',url).addSteps('default',steps,options).run(function(out){
         the_image.src = out;
       });
     }

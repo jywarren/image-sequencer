@@ -131,7 +131,8 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
-  function replaceImage(selector,steps) {
+  function replaceImage(selector,steps,options) {
+    options = options || {};
     require('./ReplaceImage')(this,selector,steps);
   }
 
