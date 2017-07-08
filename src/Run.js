@@ -1,5 +1,4 @@
 function Run(ref, json_q, callback) {
-
   function drawStep(drawarray,pos) {
     if(pos==drawarray.length) {
       image = drawarray[pos-1].image;

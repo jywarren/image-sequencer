@@ -1,5 +1,5 @@
 if (typeof window !== 'undefined') {window.$ = window.jQuery = require('jquery'); isBrowser = true}
-else {window = global; var isBrowser = false}
+else {var isBrowser = false}
 
 ImageSequencer = function ImageSequencer(options) {
 
@@ -96,7 +96,7 @@ ImageSequencer = function ImageSequencer(options) {
       details = details.sort(function(a,b){return b.index-a.index});
       for (i in details)
         require("./InsertStep")(this,img,details[i].index,details[i].name,details[i].o);
-      // run[img] = details[details.length-1].index;
+      run[img] = details[details.length-1].index;
     }
     // this.run(run); // This is Creating issues
     return this;
@@ -131,6 +131,11 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
+  function replaceImage(selector,steps,options) {
+    options = options || {};
+    require('./ReplaceImage')(this,selector,steps);
+  }
+
   return {
     options: options,
     loadImages: loadImages,
@@ -138,6 +143,7 @@ ImageSequencer = function ImageSequencer(options) {
     addSteps: addSteps,
     removeSteps: removeSteps,
     insertSteps: insertSteps,
+    replaceImage: replaceImage,
     run: run,
     modules: modules,
     images: images,

@@ -34751,9 +34751,8 @@ function formatInput(args,format,images) {
 module.exports = formatInput;
 
 },{}],116:[function(require,module,exports){
-(function (global){
 if (typeof window !== 'undefined') {window.$ = window.jQuery = require('jquery'); isBrowser = true}
-else {window = global; var isBrowser = false}
+else {var isBrowser = false}
 
 ImageSequencer = function ImageSequencer(options) {
 
@@ -34850,7 +34849,7 @@ ImageSequencer = function ImageSequencer(options) {
       details = details.sort(function(a,b){return b.index-a.index});
       for (i in details)
         require("./InsertStep")(this,img,details[i].index,details[i].name,details[i].o);
-      // run[img] = details[details.length-1].index;
+      run[img] = details[details.length-1].index;
     }
     // this.run(run); // This is Creating issues
     return this;
@@ -34885,6 +34884,11 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
+  function replaceImage(selector,steps,options) {
+    options = options || {};
+    require('./ReplaceImage')(this,selector,steps);
+  }
+
   return {
     options: options,
     loadImages: loadImages,
@@ -34892,6 +34896,7 @@ ImageSequencer = function ImageSequencer(options) {
     addSteps: addSteps,
     removeSteps: removeSteps,
     insertSteps: insertSteps,
+    replaceImage: replaceImage,
     run: run,
     modules: modules,
     images: images,
@@ -34904,8 +34909,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./AddStep":114,"./FormatInput":115,"./InsertStep":117,"./LoadImage":118,"./Modules":119,"./Run":120,"jquery":44}],117:[function(require,module,exports){
+},{"./AddStep":114,"./FormatInput":115,"./InsertStep":117,"./LoadImage":118,"./Modules":119,"./ReplaceImage":120,"./Run":121,"jquery":44}],117:[function(require,module,exports){
 function InsertStep(ref, image, index, name, o) {
 
   function insertStep(image, index, name, o) {
@@ -34964,7 +34968,12 @@ function LoadImage(ref, name, src) {
         },
         draw: function() {
           if(arguments.length==1){
-            this.outputData = CImage(arguments[0]);
+            this.output = CImage(arguments[0]);
+            return true;
+          }
+          else if(arguments.length==2) {
+            this.output = CImage(arguments[0]);
+            arguments[1]();
             return true;
           }
           return false;
@@ -34992,9 +35001,45 @@ module.exports = {
   'invert': require('./modules/Invert')
 }
 
-},{"./modules/DoNothing":121,"./modules/DoNothingPix":122,"./modules/GreenChannel":123,"./modules/Invert":124,"./modules/NdviRed":125}],120:[function(require,module,exports){
-function Run(ref, json_q, callback) {
+},{"./modules/DoNothing":122,"./modules/DoNothingPix":123,"./modules/GreenChannel":124,"./modules/Invert":125,"./modules/NdviRed":126}],120:[function(require,module,exports){
+function ReplaceImage(ref,selector,steps,options) {
+  if(!ref.options.inBrowser) return; // This isn't for Node.js
+  this_ = ref;
+  var input = document.querySelectorAll(selector);
+  var images = [];
+  for (i = 0; i < input.length; i++)
+    if (input[i] instanceof HTMLImageElement) images.push(input[i]);
+  for (i in images) {
+    the_image = images[i];
+    var url = images[i].src;
+    var ext = url.split('.').pop();
 
+    var xmlHTTP = new XMLHttpRequest();
+    xmlHTTP.open('GET', url, true);
+    xmlHTTP.responseType = 'arraybuffer';
+    xmlHTTP.onload = function(e) {
+      var arr = new Uint8Array(this.response);
+      var raw = String.fromCharCode.apply(null,arr);
+      var base64 = btoa(raw);
+      var dataURL="data:image/"+ext+";base64," + base64;
+      make(dataURL);
+    };
+
+    if(url.substr(0,11).toLowerCase()!="data:image/") xmlHTTP.send();
+    else make(url);
+
+    function make(url) {
+      this_.loadImage('default',url).addSteps('default',steps,options).run(function(out){
+        the_image.src = out;
+      });
+    }
+  }
+}
+
+module.exports = ReplaceImage;
+
+},{}],121:[function(require,module,exports){
+function Run(ref, json_q, callback) {
   function drawStep(drawarray,pos) {
     if(pos==drawarray.length) {
       image = drawarray[pos-1].image;
@@ -35042,7 +35087,7 @@ function Run(ref, json_q, callback) {
 }
 module.exports = Run;
 
-},{}],121:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 /*
  * Demo Module. Does nothing.
  */
@@ -35064,7 +35109,7 @@ module.exports = function DoNothing(options) {
   }
 }
 
-},{}],122:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35102,7 +35147,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":126}],123:[function(require,module,exports){
+},{"./PixelManipulation.js":127}],124:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35140,7 +35185,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":126}],124:[function(require,module,exports){
+},{"./PixelManipulation.js":127}],125:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35178,7 +35223,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":126}],125:[function(require,module,exports){
+},{"./PixelManipulation.js":127}],126:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -35215,7 +35260,7 @@ module.exports = function NdviRed(options) {
   }
 }
 
-},{"./PixelManipulation.js":126}],126:[function(require,module,exports){
+},{"./PixelManipulation.js":127}],127:[function(require,module,exports){
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
