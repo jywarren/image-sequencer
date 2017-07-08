@@ -33,10 +33,18 @@ Image Sequencer can be used to run modules on an HTML Image Element using the
 `selector` is a CSS selector. If it matches multiple images, all images will be
 modified. `steps` may be the name of a module or array of names of modules.
 
-Note: Local images will work only if they are in the same directory or a subdirectory.
+Note: Browser CORS Restrictions apply. Some browsers may not allow local images
+form other folders, and throw a Security Error instead.
 
 ```js
   sequencer.replaceImage(selector,steps);
+```
+
+For example:
+
+```js
+  sequencer.replaceImage('#photo','invert');
+  sequencer.replaceImage('#photo',['invert','ndvi-red']);
 ```
 
 
