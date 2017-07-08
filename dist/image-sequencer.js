@@ -35029,7 +35029,7 @@ function ReplaceImage(ref,selector,steps,options) {
     else make(url);
 
     function make(url) {
-      this_.loadImage('default',url).addSteps('default',steps,options).run(function(out){
+      this_.loadImage('default',url).addSteps('default',steps).run(function(out){
         the_image.src = out;
       });
     }
