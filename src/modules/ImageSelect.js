@@ -69,6 +69,7 @@ module.exports = function ImageSelect(options) {
   function draw(image) {
     el.html(image);
     options.initialImage = image;
+    options.el.html(image);
     if (options.output) options.output(image);
   }
 
