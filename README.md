@@ -159,6 +159,8 @@ Methods can be chained on the Image Sequencer:
 * run() can not be in the middle of the chain.
 * If the chain starts with loadImage() or loadImages(), the following methods are
 applied only to the newly loaded images.
+* If no name is provided to the image, a name will be generated for it. The name will
+be of the form "image<number>". For ex: "image1", "image2", "image3", etc.
 
 Valid Chains:
 ```js

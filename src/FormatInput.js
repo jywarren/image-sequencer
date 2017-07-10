@@ -88,8 +88,12 @@ function formatInput(args,format,images) {
     }
   }
   else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
-    if (typeof(args[0]) == "string")
-      args.splice(0,0,"default");
+    if (typeof(args[0]) == "string") {
+      identifier = "image";
+      number = 1;
+      while (this.images.hasOwnProperty(identifier+number)) number++;
+      args.splice(0,0,identifier+number);
+    }
   }
 
   if(args.length == format.length) {
