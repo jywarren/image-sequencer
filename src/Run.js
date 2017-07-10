@@ -6,7 +6,7 @@ function Run(ref, json_q, callback) {
         steps = ref.images[image].steps;
         out = steps[steps.length-1].output.src;
         callback(out);
-        return;
+        return true;
       }
     }
     image = drawarray[pos].image;
@@ -42,6 +42,6 @@ function Run(ref, json_q, callback) {
     return json_q;
   }
   json_q = filter(json_q);
-  drawSteps(json_q);
+  return drawSteps(json_q);
 }
 module.exports = Run;
