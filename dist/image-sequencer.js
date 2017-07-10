@@ -34620,7 +34620,7 @@ function copy(a) {
 }
 
 function formatInput(args,format,images) {
-  images = images || [];
+  images = [];
   for (image in this.images) {
     images.push(image);
   }
@@ -34745,6 +34745,11 @@ function formatInput(args,format,images) {
     }
   }
 
+  if(format_i == "l") {
+    json_q.loadedimages = [];
+    for (i in json_q.images) json_q.loadedimages.push(i);
+  }
+
   return json_q;
 
 }
@@ -34801,15 +34806,18 @@ ImageSequencer = function ImageSequencer(options) {
   // else if (options.imageUrl) loadImage(imageUrl);
 
   function addSteps(){
-      args = [];
-      json_q = {};
-      for(arg in arguments){args.push(copy(arguments[arg]));}
-      json_q = formatInput.call(this,args,"+");
-      for (i in json_q)
-        for (j in json_q[i])
-          require("./AddStep")(this,i,json_q[i][j].name,json_q[i][j].o);
-      return this;
-    }
+    thiss = (this.name == "ImageSequencer")?this:this.sequencer;
+    args = (this.name == "ImageSequencer")?[]:[this.images];
+    json_q = {};
+    for(arg in arguments){args.push(copy(arguments[arg]));}
+    json_q = formatInput.call(thiss,args,"+");
+
+    for (i in json_q)
+      for (j in json_q[i])
+        require("./AddStep")(thiss,i,json_q[i][j].name,json_q[i][j].o);
+
+    return this;
+  }
 
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
@@ -34822,9 +34830,10 @@ ImageSequencer = function ImageSequencer(options) {
 
   function removeSteps(image,index) {
     run = {};
-    args = [];
+    this_ = (this.name == "ImageSequencer")?this:this.sequencer;
+    args = (this.name == "ImageSequencer")?[]:[this.images];
     for(arg in arguments) args.push(copy(arguments[arg]));
-    json_q = formatInput.call(this,args,"-");
+    json_q = formatInput.call(this_,args,"-");
 
     for (img in json_q) {
       indices = json_q[img].sort(function(a,b){return b-a});
@@ -34838,17 +34847,17 @@ ImageSequencer = function ImageSequencer(options) {
 
   function insertSteps(image, index, name, o) {
     run = {};
-    this_ = this;
-    args = [];
+    this_ = (this.name == "ImageSequencer")?this:this.sequencer;
+    args = (this.name == "ImageSequencer")?[]:[this.images];
     for (arg in arguments) args.push(arguments[arg]);
 
-    json_q = formatInput.call(this,args,"^");
+    json_q = formatInput.call(this_,args,"^");
 
     for (img in json_q) {
       var details = json_q[img];
       details = details.sort(function(a,b){return b.index-a.index});
       for (i in details)
-        require("./InsertStep")(this,img,details[i].index,details[i].name,details[i].o);
+        require("./InsertStep")(this_,img,details[i].index,details[i].name,details[i].o);
       run[img] = details[details.length-1].index;
     }
     // this.run(run); // This is Creating issues
@@ -34857,19 +34866,19 @@ ImageSequencer = function ImageSequencer(options) {
 
   function run(t_image,t_from) {
     log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
-    this_ = this;
-    args = [];
+    this_ = (this.name == "ImageSequencer")?this:this.sequencer;
+    args = (this.name == "ImageSequencer")?[]:[this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
     callback = function() {};
     for (var arg in args)
       if(objTypeOf(args[arg]) == "Function")
         callback = args.splice(arg,1)[0];
 
-    json_q = formatInput.call(this,args,"r");
+    json_q = formatInput.call(this_,args,"r");
 
-    require('./Run')(this, json_q, callback);
+    require('./Run')(this_, json_q, callback);
 
-    return this;
+    return true;
   }
 
   function loadImages() {
@@ -34877,11 +34886,21 @@ ImageSequencer = function ImageSequencer(options) {
     for (arg in arguments) args.push(copy(arguments[arg]));
     json_q = formatInput.call(this,args,"l");
 
+    loadedimages = this.copy(json_q.loadedimages);
+
     for (i in json_q.images)
       require('./LoadImage')(this,i,json_q.images[i])
 
     json_q.callback();
-    return this;
+    return {
+      name: "ImageSequencer Wrapper",
+      sequencer: this,
+      addSteps: this.addSteps,
+      removeSteps: this.removeSteps,
+      insertSteps: this.insertSteps,
+      run: this.run,
+      images: loadedimages
+    };
   }
 
   function replaceImage(selector,steps,options) {
@@ -34890,6 +34909,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   return {
+    name: "ImageSequencer",
     options: options,
     loadImages: loadImages,
     loadImage: loadImages,
@@ -35047,7 +35067,7 @@ function Run(ref, json_q, callback) {
         steps = ref.images[image].steps;
         out = steps[steps.length-1].output.src;
         callback(out);
-        return;
+        return true;
       }
     }
     image = drawarray[pos].image;
@@ -35083,7 +35103,7 @@ function Run(ref, json_q, callback) {
     return json_q;
   }
   json_q = filter(json_q);
-  drawSteps(json_q);
+  return drawSteps(json_q);
 }
 module.exports = Run;
 

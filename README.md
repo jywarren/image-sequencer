@@ -154,6 +154,26 @@ sequencer.insertSteps(index,module_name,optional_options);
 return value: **`sequencer`** (To allow method chaining)
 
 
+## Method Chaining
+Methods can be chained on the Image Sequencer:
+* run() can not be in the middle of the chain.
+* If the chain starts with loadImage() or loadImages(), the following methods are
+applied only to the newly loaded images.
+
+Valid Chains:
+```js
+sequencer.loadImage('red').addSteps('invert').run(function(out){
+  //do something with otuput.
+});
+sequencer.addSteps(['ndvi-red','invert']).run();
+et cetra.
+```
+
+Invalid Chains:
+```js
+sequencer.addSteps('invert').run().addSteps('ndvi-red');
+```
+
 
 ## Multiple Images
 Image Sequencer is capable of handling multiple images at once.

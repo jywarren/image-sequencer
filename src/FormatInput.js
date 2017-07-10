@@ -24,7 +24,7 @@ function copy(a) {
 }
 
 function formatInput(args,format,images) {
-  images = images || [];
+  images = [];
   for (image in this.images) {
     images.push(image);
   }
@@ -147,6 +147,11 @@ function formatInput(args,format,images) {
       }
 
     }
+  }
+
+  if(format_i == "l") {
+    json_q.loadedimages = [];
+    for (i in json_q.images) json_q.loadedimages.push(i);
   }
 
   return json_q;
