@@ -131,7 +131,7 @@ test('run() runs the sequencer and returns output to callback', function (t) {
 });
 
 test('replaceImage returns false in NodeJS', function (t) {
-  var returnvalue = sequencer.replaceImage("#selector","test");
+  var returnvalue = (sequencer.options.inBrowser)?false:sequencer.replaceImage("#selector","test");
   t.equal(returnvalue,false);
   t.end();
 });
