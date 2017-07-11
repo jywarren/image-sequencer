@@ -7,7 +7,11 @@ node_js:
   - '8'
 env:
   - CXX=g++-4.8
-script: npm test
+before_script:
+  - npm install grunt-cli -g
+script:
+  - npm test
+  - grunt build
 addons:
   apt:
     sources:

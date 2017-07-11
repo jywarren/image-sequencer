@@ -34810,15 +34810,15 @@ ImageSequencer = function ImageSequencer(options) {
   // else if (options.imageUrl) loadImage(imageUrl);
 
   function addSteps(){
-    thiss = (this.name == "ImageSequencer")?this:this.sequencer;
+    const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     args = (this.name == "ImageSequencer")?[]:[this.images];
     json_q = {};
     for(arg in arguments){args.push(copy(arguments[arg]));}
-    json_q = formatInput.call(thiss,args,"+");
+    json_q = formatInput.call(this_,args,"+");
 
     for (i in json_q)
       for (j in json_q[i])
-        require("./AddStep")(thiss,i,json_q[i][j].name,json_q[i][j].o);
+        require("./AddStep")(this_,i,json_q[i][j].name,json_q[i][j].o);
 
     return this;
   }
@@ -34834,7 +34834,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   function removeSteps(image,index) {
     run = {};
-    this_ = (this.name == "ImageSequencer")?this:this.sequencer;
+    const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     args = (this.name == "ImageSequencer")?[]:[this.images];
     for(arg in arguments) args.push(copy(arguments[arg]));
     json_q = formatInput.call(this_,args,"-");
@@ -34851,7 +34851,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   function insertSteps(image, index, name, o) {
     run = {};
-    this_ = (this.name == "ImageSequencer")?this:this.sequencer;
+    const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     args = (this.name == "ImageSequencer")?[]:[this.images];
     for (arg in arguments) args.push(arguments[arg]);
 
@@ -34870,7 +34870,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   function run(t_image,t_from) {
     log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
-    this_ = (this.name == "ImageSequencer")?this:this.sequencer;
+    const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     args = (this.name == "ImageSequencer")?[]:[this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
     callback = function() {};
@@ -34909,7 +34909,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   function replaceImage(selector,steps,options) {
     options = options || {};
-    require('./ReplaceImage')(this,selector,steps);
+    return require('./ReplaceImage')(this,selector,steps);
   }
 
   return {
@@ -35027,7 +35027,7 @@ module.exports = {
 
 },{"./modules/DoNothing":122,"./modules/DoNothingPix":123,"./modules/GreenChannel":124,"./modules/Invert":125,"./modules/NdviRed":126}],120:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
-  if(!ref.options.inBrowser) return; // This isn't for Node.js
+  if(!ref.options.inBrowser) return false; // This isn't for Node.js
   this_ = ref;
   var input = document.querySelectorAll(selector);
   var images = [];
