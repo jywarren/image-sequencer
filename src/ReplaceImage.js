@@ -1,5 +1,5 @@
 function ReplaceImage(ref,selector,steps,options) {
-  if(!ref.options.inBrowser) return; // This isn't for Node.js
+  if(!ref.options.inBrowser) return false; // This isn't for Node.js
   this_ = ref;
   var input = document.querySelectorAll(selector);
   var images = [];
