@@ -39,6 +39,7 @@
     "matchdep": "^0.3.0",
     "plotly.js": "~1.21.2",
     "save-pixels": "~2.3.4",
+    "tap-spec": "^4.1.1",
     "tape": ">=4.7.0",
     "tape-run": "^3.0.0"
   },

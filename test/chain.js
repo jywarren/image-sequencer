@@ -13,64 +13,64 @@ var red = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQ
 
 test('loadImages/loadImage has a name generator.', function (t){
   sequencer.loadImage(red);
-  t.equal(sequencer.images.image1.steps.length, 1, "It Does!");
+  t.equal(sequencer.images.image1.steps.length, 1, "Initial Step Created");
   t.end();
 });
 
 test('loadImages/loadImage returns a wrapper.', function (t){
   var returnval = sequencer.loadImage(red);
-  t.equal(returnval.name,"ImageSequencer Wrapper", "It Does!");
-  t.equal(returnval.images[0],"image2");
+  t.equal(returnval.name,"ImageSequencer Wrapper", "Wrapper is returned");
+  t.equal(returnval.images[0],"image2","Image scope is defined");
   t.end();
 });
 
 test('addSteps is two-way chainable.', function (t){
   var returnval = sequencer.loadImage(red).addSteps('invert');
-  t.equal(returnval.name,"ImageSequencer Wrapper");
-  t.equal(returnval.images[0],"image3");
-  t.equal(sequencer.images.image3.steps.length,2);
-  t.equal(sequencer.images.image3.steps[1].options.name,"invert");
-  t.equal(sequencer.images.image2.steps.length,1);
-  t.equal(sequencer.images.image1.steps.length,1);
+  t.equal(returnval.name,"ImageSequencer Wrapper", "Wrapper is returned");
+  t.equal(returnval.images[0],"image3","Image scope is defined");
+  t.equal(sequencer.images.image3.steps.length,2,"Loaded image is affected");
+  t.equal(sequencer.images.image3.steps[1].options.name,"invert","Correct Step Added");
+  t.equal(sequencer.images.image2.steps.length,1,"Other images are not affected");
+  t.equal(sequencer.images.image1.steps.length,1,"Other images are not affected");
   t.end();
 });
 
 test('addSteps is two-way chainable without loadImages.', function (t){
   var returnval = sequencer.addSteps("image3","ndvi-red");
-  t.equal(returnval.name,"ImageSequencer");
-  t.equal(sequencer.images.image3.steps.length,3);
-  t.equal(sequencer.images.image3.steps[2].options.name,"ndvi-red");
+  t.equal(returnval.name,"ImageSequencer","Sequencer is returned");
+  t.equal(sequencer.images.image3.steps.length,3,"Step length increased");
+  t.equal(sequencer.images.image3.steps[2].options.name,"ndvi-red","Correct Step Added");
   t.end();
 });
 
 test('removeSteps is two-way chainable.', function (t){
   var returnval = sequencer.loadImage(red).addSteps('invert').removeSteps(1);
-  t.equal(returnval.name,"ImageSequencer Wrapper");
-  t.equal(returnval.images[0],"image4");
+  t.equal(returnval.name,"ImageSequencer Wrapper", "Wrapper is returned");
+  t.equal(returnval.images[0],"image4","Image scope is defined");
   t.equal(sequencer.images.image4.steps.length,1);
   t.end();
 });
 
 test('removeSteps is two-way chainable without loadImages.', function (t){
   var returnval = sequencer.removeSteps("image3",1);
-  t.equal(returnval.name,"ImageSequencer");
+  t.equal(returnval.name,"ImageSequencer","Sequencer is returned");
   t.equal(sequencer.images.image3.steps.length,2);
   t.end();
 });
 
 test('insertSteps is two-way chainable.', function (t){
   var returnval = sequencer.loadImage(red).insertSteps(1,'invert');
-  t.equal(returnval.name,"ImageSequencer Wrapper");
-  t.equal(returnval.images[0],"image5");
+  t.equal(returnval.name,"ImageSequencer Wrapper","Wrapper is returned");
+  t.equal(returnval.images[0],"image5","Image scope is defined");
   t.equal(sequencer.images.image5.steps.length,2);
-  t.equal(sequencer.images.image5.steps[1].options.name,"invert");
+  t.equal(sequencer.images.image5.steps[1].options.name,"invert","Correct Step Inserrted");
   t.end();
 });
 
 test('insertSteps is two-way chainable without loadImages.', function (t){
   var returnval = sequencer.insertSteps("image5",1,"ndvi-red");
-  t.equal(returnval.name,"ImageSequencer");
+  t.equal(returnval.name,"ImageSequencer","Sequencer is returned");
   t.equal(sequencer.images.image5.steps.length,3);
-  t.equal(sequencer.images.image5.steps[1].options.name,"ndvi-red");
+  t.equal(sequencer.images.image5.steps[1].options.name,"ndvi-red","Correct Step Inserrted");
   t.end();
 });
