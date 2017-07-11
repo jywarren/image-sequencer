@@ -34564,7 +34564,7 @@ function AddStep(ref, image, name, o) {
   function addStep(image, name, o_) {
     ref.log('\x1b[36m%s\x1b[0m','adding step \"' + name + '\" to \"' + image + '\".');
 
-    o = {};
+    o = ref.copy(o_);
     o.id = ref.options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o_.name || name;
     o.selector = o_.selector || 'ismod-' + name;
@@ -35022,10 +35022,11 @@ module.exports = {
   'green-channel': require('./modules/GreenChannel'),
   'ndvi-red': require('./modules/NdviRed'),
   'do-nothing-pix': require('./modules/DoNothingPix'),
-  'invert': require('./modules/Invert')
+  'invert': require('./modules/Invert'),
+  'crop': require('./modules/Crop')
 }
 
-},{"./modules/DoNothing":122,"./modules/DoNothingPix":123,"./modules/GreenChannel":124,"./modules/Invert":125,"./modules/NdviRed":126}],120:[function(require,module,exports){
+},{"./modules/Crop":122,"./modules/DoNothing":123,"./modules/DoNothingPix":124,"./modules/GreenChannel":125,"./modules/Invert":126,"./modules/NdviRed":127}],120:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   this_ = ref;
@@ -35113,6 +35114,71 @@ module.exports = Run;
 
 },{}],122:[function(require,module,exports){
 /*
+ * Image Cropping module
+ * Usage:
+ *    Expected Inputs:
+ *      options.x : x-coordinate of image where the modules starts cropping | default : 0
+ *      options.y : y-coordinate of image where the modules starts cropping | default : 0
+ *      options.w : width of the resulting cropped image | default : 50% of input image width
+ *      options.h : height of the resulting cropped image | default : 50% of input image height
+ *    Output:
+ *      The cropped image, which is essentially a rectangle bounded by the lines:
+ *          x = options.x
+ *          x = options.x + options.w
+ *          y = options.y
+ *          y = options.y + options.h
+ */
+ module.exports = function Crop(options) {
+   options = options || {};
+   options.title = "Do Nothing";
+   this_ = this;
+   var output
+   var getPixels = require("get-pixels"),
+       savePixels = require("save-pixels"),
+       base64 = require('base64-stream');
+
+   function draw(input,callback) {
+
+     const this_ = this;
+
+     getPixels(input.src,function(err,pixels){
+       var newdata = [];
+       var ox = options.x || 0;
+       var oy = options.y || 0;
+       var w = options.w || Math.floor(0.5*pixels.shape[0]);
+       var h = options.h || Math.floor(0.5*pixels.shape[1]);
+       var iw = pixels.shape[0]; //Width of Original Image
+       newarray = new Uint8Array(4*w*h);
+       for (var n = oy; n < oy + h; n++) {
+         newarray.set(pixels.data.slice(n*4*iw + ox, n*4*iw + ox + 4*w),4*w*(n-oy));
+       }
+       pixels.data = newarray;
+       pixels.shape = [w,h,4];
+       pixels.stride[1] = 4*w;
+
+       options.format = "jpeg";
+
+       w = base64.encode();
+       var r = savePixels(pixels, options.format);
+       r.pipe(w).on('finish',function(){
+         data = w.read().toString();
+         datauri = 'data:image/' + options.format + ';base64,' + data;
+         this_.output = {src:datauri,format:options.format};
+         callback();
+       });
+     });
+
+   }
+
+   return {
+     options: options,
+     draw: draw,
+     output: output
+   }
+ }
+
+},{"base64-stream":3,"get-pixels":27,"save-pixels":104}],123:[function(require,module,exports){
+/*
  * Demo Module. Does nothing.
  */
 module.exports = function DoNothing(options) {
@@ -35133,7 +35199,7 @@ module.exports = function DoNothing(options) {
   }
 }
 
-},{}],123:[function(require,module,exports){
+},{}],124:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35171,7 +35237,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":127}],124:[function(require,module,exports){
+},{"./PixelManipulation.js":128}],125:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35209,7 +35275,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":127}],125:[function(require,module,exports){
+},{"./PixelManipulation.js":128}],126:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35247,7 +35313,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":127}],126:[function(require,module,exports){
+},{"./PixelManipulation.js":128}],127:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -35284,7 +35350,7 @@ module.exports = function NdviRed(options) {
   }
 }
 
-},{"./PixelManipulation.js":127}],127:[function(require,module,exports){
+},{"./PixelManipulation.js":128}],128:[function(require,module,exports){
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
