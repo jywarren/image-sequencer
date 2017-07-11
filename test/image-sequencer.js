@@ -9,15 +9,34 @@ var test = require('tape');
 require('../src/ImageSequencer.js');
 
 var sequencer = ImageSequencer({ ui: "none" });
+var red = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z";
 
 test('Image Sequencer has tests', function (t) {
   t.equal(true, true);
   t.end();
 });
 
-test('loadImages loads an image and creates a step.', function (t){
-  sequencer.loadImages('test','examples/red.jpg');
+test('loadImages loads a DataURL image and creates a step.', function (t){
+  sequencer.loadImages('test',red);
   t.equal(sequencer.images.test.steps.length, 1, "It Does!");
+  t.end();
+});
+
+test('loadImages loads a PATH image and creates a step. (NodeJS)', function (t){
+  if(sequencer.options.inBrowser){
+    t.equal("not applicable","not applicable");
+    t.end();
+  }
+  else {
+    sequencer.loadImages(red);
+    t.equal(sequencer.images.test.steps.length, 1, "It Does!");
+    t.end();
+  }
+});
+
+test('loadImage works too.', function (t){
+  sequencer.loadImage('test2',red);
+  t.equal(sequencer.images.test2.steps.length, 1, "It Does!");
   t.end();
 });
 
@@ -104,9 +123,15 @@ test('insertSteps({image: {index: index, name: "module", o: options} }) inserts 
 });
 
 test('run() runs the sequencer and returns output to callback', function (t) {
-  sequencer.run(function(out){
+  sequencer.run('test',function(out){
     t.equal(typeof(sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output), "object", "It Does!");
     t.equal(out,sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output.src, "It Does!");
   });
+  t.end();
+});
+
+test('replaceImage returns false in NodeJS', function (t) {
+  var returnvalue = sequencer.replaceImage("#selector","test");
+  t.equal(returnvalue,false);
   t.end();
 });
