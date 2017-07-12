@@ -1,11 +1,10 @@
 /*
  * Display only the green channel
  */
-module.exports = function GreenChannel(options) {
+module.exports = function DoNothingPix(options) {
 
   options = options || {};
-  options.title = "Green channel only";
-  options.description = "Displays only the green channel of an image";
+  options.title = "Do Nothing with pixels";
   var output;
 
   //function setup() {} // optional
