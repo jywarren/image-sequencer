@@ -3,6 +3,9 @@ module.exports = function SegmentedColormap(options) {
   options = options || {};
   options.title = "Segmented Colormap";
   options.colormap = options.colormap || "default";
+  if(typeof(options.colormap) == "object")
+    options.colormap = segmented_colormap(options.colormap);
+  else options.colormap = colormaps[options.colormap];
   var output;
 
   function draw(input,callback) {
@@ -10,7 +13,7 @@ module.exports = function SegmentedColormap(options) {
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (r + b);
       var normalized = (ndvi + 1) / 2;
-      var res = colormaps[options.colormap](normalized);
+      var res = options.colormap(normalized);
       return [res[0], res[1], res[2], 255];
     }
     function output(image,datauri,mimetype){
