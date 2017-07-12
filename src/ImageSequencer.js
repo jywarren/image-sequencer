@@ -41,7 +41,8 @@ ImageSequencer = function ImageSequencer(options) {
   var image,
       steps = [],
       modules = require('./Modules'),
-      images = {};
+      images = {},
+      inputlog = [];
 
   // if in browser, prompt for an image
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
@@ -53,6 +54,8 @@ ImageSequencer = function ImageSequencer(options) {
     json_q = {};
     for(arg in arguments){args.push(copy(arguments[arg]));}
     json_q = formatInput.call(this_,args,"+");
+
+    inputlog.push({method:"addSteps", json_q:copy(json_q)});
 
     for (i in json_q)
       for (j in json_q[i])
@@ -75,7 +78,9 @@ ImageSequencer = function ImageSequencer(options) {
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     args = (this.name == "ImageSequencer")?[]:[this.images];
     for(arg in arguments) args.push(copy(arguments[arg]));
+
     json_q = formatInput.call(this_,args,"-");
+    inputlog.push({method:"removeSteps", json_q:copy(json_q)});
 
     for (img in json_q) {
       indices = json_q[img].sort(function(a,b){return b-a});
@@ -94,6 +99,7 @@ ImageSequencer = function ImageSequencer(options) {
     for (arg in arguments) args.push(arguments[arg]);
 
     json_q = formatInput.call(this_,args,"^");
+    inputlog.push({method:"insertSteps", json_q:copy(json_q)});
 
     for (img in json_q) {
       var details = json_q[img];
@@ -111,6 +117,7 @@ ImageSequencer = function ImageSequencer(options) {
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     args = (this.name == "ImageSequencer")?[]:[this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
+
     callback = function() {};
     for (var arg in args)
       if(objTypeOf(args[arg]) == "Function")
@@ -128,6 +135,7 @@ ImageSequencer = function ImageSequencer(options) {
     for (arg in arguments) args.push(copy(arguments[arg]));
     json_q = formatInput.call(this,args,"l");
 
+    inputlog.push({method:"loadImages", json_q:copy(json_q)});
     loadedimages = this.copy(json_q.loadedimages);
 
     for (i in json_q.images)
@@ -160,6 +168,7 @@ ImageSequencer = function ImageSequencer(options) {
     insertSteps: insertSteps,
     replaceImage: replaceImage,
     run: run,
+    inputlog: inputlog,
     modules: modules,
     images: images,
     ui: options.ui,
