@@ -1,5 +1,5 @@
 /*
- * Display only the green channel
+ * This module extracts pixels and saves them as it is.
  */
 module.exports = function DoNothingPix(options) {
 
