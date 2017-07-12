@@ -2,14 +2,15 @@ module.exports = function SegmentedColormap(options) {
 
   options = options || {};
   options.title = "Segmented Colormap";
-  var output
+  options.colormap = options.colormap || "default";
+  var output;
 
   function draw(input,callback) {
     this_ = this;
     function changePixel(r, g, b, a) {
-      var ndvi = (r - b) / (r + b);
+      var ndvi = (b - r) / (r + b);
       var normalized = (ndvi + 1) / 2;
-      var res = default_colormap(normalized);
+      var res = colormaps[options.colormap](normalized);
       return [res[0], res[1], res[2], 255];
     }
     function output(image,datauri,mimetype){
@@ -38,6 +39,13 @@ var default_colormap = segmented_colormap([[0, [0, 0, 255], [38, 195, 195]], [0.
 var stretched_colormap = segmented_colormap([[0, [0, 0, 255], [0, 0, 255]], [0.1, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.7, [255, 255, 0], [255, 50, 50]], [0.9, [255, 50, 50], [255, 50, 50]]]);
 
 var fastie_colormap = segmented_colormap([[0, [255, 255, 255], [0, 0, 0]], [0.167, [0, 0, 0], [255, 255, 255]], [0.33, [255, 255, 255], [0, 0, 0]], [0.5, [0, 0, 0], [140, 140, 255]], [0.55, [140, 140, 255], [0, 255, 0]], [0.63, [0, 255, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 0, 0]], [0.95, [255, 0, 0], [255, 0, 255]]]);
+
+var colormaps = {
+  greyscale: greyscale_colormap,
+  default: default_colormap,
+  stretched: stretched_colormap,
+  fastie: fastie_colormap
+}
 
 function segmented_colormap(segments) {
   return function(x) {
