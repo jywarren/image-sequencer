@@ -19,7 +19,12 @@ function LoadImage(ref, name, src) {
         },
         draw: function() {
           if(arguments.length==1){
-            this.outputData = CImage(arguments[0]);
+            this.output = CImage(arguments[0]);
+            return true;
+          }
+          else if(arguments.length==2) {
+            this.output = CImage(arguments[0]);
+            arguments[1]();
             return true;
           }
           return false;

@@ -1,6 +1,6 @@
 
 /* https://github.com/theleagueof/league-spartan */
-@font-face {
+/*@font-face {
     font-family: 'League Spartan';
     src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot');
     src: url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.eot?#iefix') format('embedded-opentype'),
@@ -10,7 +10,7 @@
          url('https://raw.githubusercontent.com/theleagueof/league-spartan/master/_webfonts/leaguespartan-bold.svg#league_spartanbold') format('svg');
     font-weight: bold;
     font-style: normal;
-}
+}*/
 
 body {
   padding: 20px;

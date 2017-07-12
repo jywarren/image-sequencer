@@ -24,7 +24,7 @@ function copy(a) {
 }
 
 function formatInput(args,format,images) {
-  images = images || [];
+  images = [];
   for (image in this.images) {
     images.push(image);
   }
@@ -39,7 +39,7 @@ function formatInput(args,format,images) {
   else if (format == "r")
     format = ['o_string_a', 'o_number'];
   else if (format == "l")
-    format = ['string','string','o_function'];
+    format = ['o_string','string','o_function'];
 
   /*
     formats:
@@ -85,6 +85,14 @@ function formatInput(args,format,images) {
       }
       if(insert)
         args.splice(0,0,copy(images));
+    }
+  }
+  else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
+    if (typeof(args[0]) == "string") {
+      identifier = "image";
+      number = 1;
+      while (this.images.hasOwnProperty(identifier+number)) number++;
+      args.splice(0,0,identifier+number);
     }
   }
 
@@ -143,6 +151,11 @@ function formatInput(args,format,images) {
       }
 
     }
+  }
+
+  if(format_i == "l") {
+    json_q.loadedimages = [];
+    for (i in json_q.images) json_q.loadedimages.push(i);
   }
 
   return json_q;

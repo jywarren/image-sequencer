@@ -1,9 +1,9 @@
 function AddStep(ref, image, name, o) {
 
   function addStep(image, name, o_) {
-    ref.clog('\x1b[36m%s\x1b[0m','adding step \"' + name + '\" to \"' + image + '\".');
+    ref.log('\x1b[36m%s\x1b[0m','adding step \"' + name + '\" to \"' + image + '\".');
 
-    o = {};
+    o = ref.copy(o_);
     o.id = ref.options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o_.name || name;
     o.selector = o_.selector || 'ismod-' + name;

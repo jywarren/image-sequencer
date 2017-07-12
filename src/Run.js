@@ -1,8 +1,14 @@
 function Run(ref, json_q, callback) {
-
   function drawStep(drawarray,pos) {
-    if(pos==drawarray.length) if(ref.objTypeOf(callback)=='Function') callback();
-    if(pos>=drawarray.length) return true;
+    if(pos==drawarray.length) {
+      image = drawarray[pos-1].image;
+      if(ref.objTypeOf(callback)=='Function'){
+        steps = ref.images[image].steps;
+        out = steps[steps.length-1].output.src;
+        callback(out);
+        return true;
+      }
+    }
     image = drawarray[pos].image;
     i = drawarray[pos].i;
     input = ref.images[image].steps[i-1].output;
@@ -25,7 +31,7 @@ function Run(ref, json_q, callback) {
     for (image in json_q) {
       if (json_q[image]==0 && ref.images[image].steps.length==1)
         delete json_q[image];
-      else json_q[image]++;
+      else if (json_q[image]==0) json_q[image]++;
     }
     for (image in json_q) {
       prevstep = ref.images[image].steps[json_q[image]-1];
@@ -36,6 +42,6 @@ function Run(ref, json_q, callback) {
     return json_q;
   }
   json_q = filter(json_q);
-  drawSteps(json_q);
+  return drawSteps(json_q);
 }
 module.exports = Run;

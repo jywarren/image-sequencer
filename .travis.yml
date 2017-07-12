@@ -2,12 +2,23 @@ language: node_js
 node_js:
   - '4'
   - '5'
+  - '6'
+  - '7' # Node.js 7 is most stable version
 env:
   - CXX=g++-4.8
-script: npm test
+before_script:
+  - npm install grunt-cli -g # for "grunt build"
+script:
+  - npm test
+  - grunt build
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+      - xvfb # for tape-run
+install:
+  - export DISPLAY=':99.0' # for tape-run
+  - Xvfb :99 -screen 0 1024x768x24 > /dev/null 2>&1 & # for tape-run
+  - npm install # for tape-run

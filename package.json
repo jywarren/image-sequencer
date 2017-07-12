@@ -4,7 +4,7 @@
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "dist/image-sequencer.js",
   "scripts": {
-    "test": "tape test/*.js"
+    "test": "tape test/*.js | tap-spec; browserify test/image-sequencer.js test/chain.js | tape-run --render=\"tap-spec\""
   },
   "repository": {
     "type": "git",
@@ -39,7 +39,9 @@
     "matchdep": "^0.3.0",
     "plotly.js": "~1.21.2",
     "save-pixels": "~2.3.4",
-    "tape": "^3.5.0"
+    "tap-spec": "^4.1.1",
+    "tape": ">=4.7.0",
+    "tape-run": "^3.0.0"
   },
   "homepage": "https://github.com/publiclab/image-sequencer"
 }
