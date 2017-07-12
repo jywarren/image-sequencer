@@ -6,5 +6,6 @@ module.exports = {
   'green-channel': require('./modules/GreenChannel'),
   'ndvi-red': require('./modules/NdviRed'),
   'do-nothing-pix': require('./modules/DoNothingPix'),
-  'invert': require('./modules/Invert')
+  'invert': require('./modules/Invert'),
+  'crop': require('./modules/Crop')
 }

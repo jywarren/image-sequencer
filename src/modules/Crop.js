@@ -13,18 +13,20 @@
  *          y = options.y
  *          y = options.y + options.h
  */
- module.exports = function Crop(options){
-
+ module.exports = function Crop(options) {
    options = options || {};
-   options.title = "Crop Image";
-   options.format = options.format || "png";
+   options.title = "Do Nothing";
+   this_ = this;
+   var output
+   var getPixels = require("get-pixels"),
+       savePixels = require("save-pixels"),
+       base64 = require('base64-stream');
 
-   function draw(image) {
-     var getPixels = require("get-pixels"),
-         savePixels = require("save-pixels"),
-         base64 = require('base64-stream');
+   function draw(input,callback) {
 
-     getPixels(image.src,function(err,pixels){
+     const this_ = this;
+
+     getPixels(input.src,function(err,pixels){
        var newdata = [];
        var ox = options.x || 0;
        var oy = options.y || 0;
@@ -39,23 +41,23 @@
        pixels.shape = [w,h,4];
        pixels.stride[1] = 4*w;
 
-       var buffer = base64.encode();
-       savePixels(pixels, options.format)
-         .on('end', function() {
+       options.format = "jpeg";
 
-         var img = new Image();
-
-         img.src = 'data:image/' + options.format + ';base64,' + buffer.read().toString();
-
-         if (options.output) options.output(img);
-
-       }).pipe(buffer);
-
+       w = base64.encode();
+       var r = savePixels(pixels, options.format);
+       r.pipe(w).on('finish',function(){
+         data = w.read().toString();
+         datauri = 'data:image/' + options.format + ';base64,' + data;
+         this_.output = {src:datauri,format:options.format};
+         callback();
+       });
      });
+
    }
 
    return {
      options: options,
-     draw: draw
+     draw: draw,
+     output: output
    }
  }
