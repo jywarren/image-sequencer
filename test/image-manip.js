@@ -9,20 +9,17 @@ require('../src/ImageSequencer.js');
 
 var sequencer = ImageSequencer({ ui: "none" });
 var image = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z";
-sequencer.loadImages({images:{
-  test1: image,
-  test2: image
-}, callback:function(){}});
+sequencer.loadImages(image);
 
-sequencer.addSteps("test1", ['do-nothing-pix','invert','invert']);
+sequencer.addSteps(['do-nothing-pix','invert','invert']);
 sequencer.run();
 
 test("Inverted image isn't identical", function (t) {
-  t.notEqual(sequencer.images.test1.steps[1].output.src, sequencer.images.test1.steps[2].output.src);
+  t.notEqual(sequencer.images.image1.steps[1].output.src, sequencer.images.image1.steps[2].output.src);
   t.end();
 });
 
 test("Twice inverted image is identical to original image", function (t) {
-  t.equal(sequencer.images.test1.steps[1].output.src, sequencer.images.test1.steps[3].output.src);
+  t.equal(sequencer.images.image1.steps[1].output.src, sequencer.images.image1.steps[3].output.src);
   t.end();
 });
