@@ -7,5 +7,6 @@ module.exports = {
   'ndvi-red': require('./modules/NdviRed'),
   'do-nothing-pix': require('./modules/DoNothingPix'),
   'invert': require('./modules/Invert'),
-  'crop': require('./modules/Crop')
+  'crop': require('./modules/Crop'),
+  'segmented-colormap': require('./modules/SegmentedColormap')
 }
