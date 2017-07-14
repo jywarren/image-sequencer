@@ -1,5 +1,5 @@
 /*
- * Demo Module. Does nothing.
+ * Demo Module. Does nothing. Adds a step where output is equal to input.
  */
 module.exports = function DoNothing(options) {
   options = options || {};
