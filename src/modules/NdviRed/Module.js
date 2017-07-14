@@ -1,23 +1,23 @@
 /*
- * This module extracts pixels and saves them as it is.
+ * NDVI with red filter (blue channel is infrared)
  */
-module.exports = function DoNothingPix(options) {
+module.exports = function NdviRed(options) {
 
   options = options || {};
-  options.title = "Do Nothing with pixels";
+  options.title = "NDVI for red-filtered cameras (blue is infrared)";
   var output;
-
-  //function setup() {} // optional
 
   function draw(input,callback) {
     this_ = this;
     function changePixel(r, g, b, a) {
-      return [r, g, b, a];
+      var ndvi = (b - r) / (1.00 * b + r);
+      var x = 255 * (ndvi + 1) / 2;
+      return [x, x, x, a];
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -28,8 +28,6 @@ module.exports = function DoNothingPix(options) {
 
   return {
     options: options,
-    //setup: setup, // optional
-    draw:  draw,
-    output: output
+    draw: draw
   }
 }

@@ -35027,16 +35027,16 @@ module.exports = LoadImage;
  * Core modules
  */
 module.exports = {
-  'do-nothing': require('./modules/DoNothing'),
-  'green-channel': require('./modules/GreenChannel'),
-  'ndvi-red': require('./modules/NdviRed'),
-  'do-nothing-pix': require('./modules/DoNothingPix'),
-  'invert': require('./modules/Invert'),
-  'crop': require('./modules/Crop'),
-  'segmented-colormap': require('./modules/SegmentedColormap')
+  'do-nothing': require('./modules/DoNothing/Module'),
+  'green-channel': require('./modules/GreenChannel/Module'),
+  'ndvi-red': require('./modules/NdviRed/Module'),
+  'do-nothing-pix': require('./modules/DoNothingPix/Module.js'),
+  'invert': require('./modules/Invert/Module'),
+  'crop': require('./modules/Crop/Module'),
+  'segmented-colormap': require('./modules/SegmentedColormap/Module')
 }
 
-},{"./modules/Crop":122,"./modules/DoNothing":123,"./modules/DoNothingPix":124,"./modules/GreenChannel":125,"./modules/Invert":126,"./modules/NdviRed":127,"./modules/SegmentedColormap":129}],120:[function(require,module,exports){
+},{"./modules/Crop/Module":123,"./modules/DoNothing/Module":124,"./modules/DoNothingPix/Module.js":125,"./modules/GreenChannel/Module":126,"./modules/Invert/Module":127,"./modules/NdviRed/Module":128,"./modules/SegmentedColormap/Module":129}],120:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   this_ = ref;
@@ -35123,6 +35123,41 @@ function Run(ref, json_q, callback) {
 module.exports = Run;
 
 },{}],122:[function(require,module,exports){
+module.exports = function Crop(input,options,callback) {
+
+  var getPixels = require("get-pixels"),
+      savePixels = require("save-pixels"),
+      base64 = require('base64-stream');
+
+  getPixels(input.src,function(err,pixels){
+    var newdata = [];
+    var ox = options.x || 0;
+    var oy = options.y || 0;
+    var w = options.w || Math.floor(0.5*pixels.shape[0]);
+    var h = options.h || Math.floor(0.5*pixels.shape[1]);
+    var iw = pixels.shape[0]; //Width of Original Image
+    newarray = new Uint8Array(4*w*h);
+    for (var n = oy; n < oy + h; n++) {
+      newarray.set(pixels.data.slice(n*4*iw + ox, n*4*iw + ox + 4*w),4*w*(n-oy));
+    }
+    pixels.data = newarray;
+    pixels.shape = [w,h,4];
+    pixels.stride[1] = 4*w;
+
+    options.format = "jpeg";
+
+    w = base64.encode();
+    var r = savePixels(pixels, options.format);
+    r.pipe(w).on('finish',function(){
+      data = w.read().toString();
+      datauri = 'data:image/' + options.format + ';base64,' + data;
+      callback(datauri,options.format);
+    });
+  });
+
+}
+
+},{"base64-stream":3,"get-pixels":27,"save-pixels":104}],123:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -35138,45 +35173,24 @@ module.exports = Run;
  *          y = options.y
  *          y = options.y + options.h
  */
- module.exports = function Crop(options) {
+ module.exports = function CropModule(options) {
    options = options || {};
-   options.title = "Do Nothing";
+   options.title = "Crop Image";
    this_ = this;
    var output
-   var getPixels = require("get-pixels"),
-       savePixels = require("save-pixels"),
-       base64 = require('base64-stream');
 
    function draw(input,callback) {
 
      const this_ = this;
 
-     getPixels(input.src,function(err,pixels){
-       var newdata = [];
-       var ox = options.x || 0;
-       var oy = options.y || 0;
-       var w = options.w || Math.floor(0.5*pixels.shape[0]);
-       var h = options.h || Math.floor(0.5*pixels.shape[1]);
-       var iw = pixels.shape[0]; //Width of Original Image
-       newarray = new Uint8Array(4*w*h);
-       for (var n = oy; n < oy + h; n++) {
-         newarray.set(pixels.data.slice(n*4*iw + ox, n*4*iw + ox + 4*w),4*w*(n-oy));
+     require('./Crop')(input,options,function(out,format){
+       this_.output = {
+         src: out,
+         format: format
        }
-       pixels.data = newarray;
-       pixels.shape = [w,h,4];
-       pixels.stride[1] = 4*w;
-
-       options.format = "jpeg";
-
-       w = base64.encode();
-       var r = savePixels(pixels, options.format);
-       r.pipe(w).on('finish',function(){
-         data = w.read().toString();
-         datauri = 'data:image/' + options.format + ';base64,' + data;
-         this_.output = {src:datauri,format:options.format};
-         callback();
-       });
+       callback();
      });
+
 
    }
 
@@ -35187,9 +35201,9 @@ module.exports = Run;
    }
  }
 
-},{"base64-stream":3,"get-pixels":27,"save-pixels":104}],123:[function(require,module,exports){
+},{"./Crop":122}],124:[function(require,module,exports){
 /*
- * Demo Module. Does nothing.
+ * Demo Module. Does nothing. Adds a step where output is equal to input.
  */
 module.exports = function DoNothing(options) {
   options = options || {};
@@ -35209,17 +35223,15 @@ module.exports = function DoNothing(options) {
   }
 }
 
-},{}],124:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 /*
- * Display only the green channel
+ * This module extracts pixels and saves them as it is.
  */
 module.exports = function DoNothingPix(options) {
 
   options = options || {};
   options.title = "Do Nothing with pixels";
   var output;
-
-  //function setup() {} // optional
 
   function draw(input,callback) {
     this_ = this;
@@ -35229,7 +35241,7 @@ module.exports = function DoNothingPix(options) {
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -35240,13 +35252,12 @@ module.exports = function DoNothingPix(options) {
 
   return {
     options: options,
-    //setup: setup, // optional
     draw:  draw,
     output: output
   }
 }
 
-},{"./PixelManipulation.js":128}],125:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":131}],126:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35267,7 +35278,7 @@ module.exports = function GreenChannel(options) {
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -35284,7 +35295,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":128}],126:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":131}],127:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35305,7 +35316,7 @@ module.exports = function GreenChannel(options) {
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -35322,7 +35333,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":128}],127:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":131}],128:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -35332,18 +35343,17 @@ module.exports = function NdviRed(options) {
   options.title = "NDVI for red-filtered cameras (blue is infrared)";
   var output;
 
-  //function setup() {} // optional
-
   function draw(input,callback) {
     this_ = this;
     function changePixel(r, g, b, a) {
-      var ndvi = 255 * (b - r) / (1.00 * b + r);
-      return [ndvi, ndvi, ndvi, a];
+      var ndvi = (b - r) / (1.00 * b + r);
+      var x = 255 * (ndvi + 1) / 2;
+      return [x, x, x, a];
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -35354,12 +35364,104 @@ module.exports = function NdviRed(options) {
 
   return {
     options: options,
-    //setup: setup, // optional
     draw: draw
   }
 }
 
-},{"./PixelManipulation.js":128}],128:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":131}],129:[function(require,module,exports){
+module.exports = function SegmentedColormap(options) {
+
+  options = options || {};
+  options.title = "Segmented Colormap";
+  var output;
+
+  function draw(input,callback) {
+    this_ = this;
+    function changePixel(r, g, b, a) {
+      var ndvi = (b - r) / (r + b);
+      var normalized = (ndvi + 1) / 2;
+      var res = require('./SegmentedColormap')(normalized,options);
+      return [res[0], res[1], res[2], 255];
+    }
+    function output(image,datauri,mimetype){
+      this_.output = {src:datauri,format:mimetype}
+    }
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      callback: callback
+    });
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output
+  }
+}
+
+},{"../_nomodule/PixelManipulation.js":131,"./SegmentedColormap":130}],130:[function(require,module,exports){
+/*
+ * Accepts a normalized ndvi and returns the new color-mapped pixel
+ */
+
+module.exports = function SegmentedColormap(normalized,options) {
+  options.colormap = options.colormap || "default";
+  if(typeof(options.colormap) == "object")
+    colormapFunction = segmented_colormap(options.colormap);
+  else if(colormaps.hasOwnProperty(options.colormap))
+    colormapFunction = colormaps[options.colormap];
+  else colormapFunction = colormaps.default;
+
+  return colormapFunction(normalized);
+}
+
+function segmented_colormap(segments) {
+  return function(x) {
+    var i, result, x0, x1, xstart, y0, y1, _i, _j, _len, _ref, _ref1, _ref2, _ref3;
+    _ref = [0, 0], y0 = _ref[0], y1 = _ref[1];
+    _ref1 = [segments[0][0], 1], x0 = _ref1[0], x1 = _ref1[1];
+    if (x < x0) {
+      return y0;
+    }
+    for (i = _i = 0, _len = segments.length; _i < _len; i = ++_i) {
+      _ref2 = segments[i], xstart = _ref2[0], y0 = _ref2[1], y1 = _ref2[2];
+      x0 = xstart;
+      if (i === segments.length - 1) {
+        x1 = 1;
+        break;
+      }
+      x1 = segments[i + 1][0];
+      if ((xstart <= x && x < x1)) {
+        break;
+      }
+    }
+    result = [];
+    for (i = _j = 0, _ref3 = y0.length; 0 <= _ref3 ? _j < _ref3 : _j > _ref3; i = 0 <= _ref3 ? ++_j : --_j) {
+      result[i] = (x - x0) / (x1 - x0) * (y1[i] - y0[i]) + y0[i];
+    }
+    return result;
+  };
+};
+
+var greyscale_colormap = segmented_colormap([[0, [0, 0, 0], [255, 255, 255]], [1, [255, 255, 255], [255, 255, 255]]]);
+
+var default_colormap = segmented_colormap([[0, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 50, 50]]]);
+
+var stretched_colormap = segmented_colormap([[0, [0, 0, 255], [0, 0, 255]], [0.1, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.7, [255, 255, 0], [255, 50, 50]], [0.9, [255, 50, 50], [255, 50, 50]]]);
+
+var fastie_colormap = segmented_colormap([[0, [255, 255, 255], [0, 0, 0]], [0.167, [0, 0, 0], [255, 255, 255]], [0.33, [255, 255, 255], [0, 0, 0]], [0.5, [0, 0, 0], [140, 140, 255]], [0.55, [140, 140, 255], [0, 255, 0]], [0.63, [0, 255, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 0, 0]], [0.95, [255, 0, 0], [255, 0, 255]]]);
+
+var colormaps = {
+  greyscale: greyscale_colormap,
+  default: default_colormap,
+  stretched: stretched_colormap,
+  fastie: fastie_colormap
+}
+
+},{}],131:[function(require,module,exports){
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
@@ -35419,82 +35521,4 @@ module.exports = function PixelManipulation(image, options) {
 
 }
 
-},{"base64-stream":3,"get-pixels":27,"save-pixels":104}],129:[function(require,module,exports){
-module.exports = function SegmentedColormap(options) {
-
-  options = options || {};
-  options.title = "Segmented Colormap";
-  options.colormap = options.colormap || "default";
-  var output;
-
-  function draw(input,callback) {
-    this_ = this;
-    function changePixel(r, g, b, a) {
-      var ndvi = (b - r) / (r + b);
-      var normalized = (ndvi + 1) / 2;
-      var res = colormaps[options.colormap](normalized);
-      return [res[0], res[1], res[2], 255];
-    }
-    function output(image,datauri,mimetype){
-      this_.output = {src:datauri,format:mimetype}
-    }
-    return require('./PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      format: input.format,
-      image: options.image,
-      callback: callback
-    });
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output
-  }
-}
-
-var greyscale_colormap = segmented_colormap([[0, [0, 0, 0], [255, 255, 255]], [1, [255, 255, 255], [255, 255, 255]]]);
-
-var default_colormap = segmented_colormap([[0, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 50, 50]]]);
-
-var stretched_colormap = segmented_colormap([[0, [0, 0, 255], [0, 0, 255]], [0.1, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.7, [255, 255, 0], [255, 50, 50]], [0.9, [255, 50, 50], [255, 50, 50]]]);
-
-var fastie_colormap = segmented_colormap([[0, [255, 255, 255], [0, 0, 0]], [0.167, [0, 0, 0], [255, 255, 255]], [0.33, [255, 255, 255], [0, 0, 0]], [0.5, [0, 0, 0], [140, 140, 255]], [0.55, [140, 140, 255], [0, 255, 0]], [0.63, [0, 255, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 0, 0]], [0.95, [255, 0, 0], [255, 0, 255]]]);
-
-var colormaps = {
-  greyscale: greyscale_colormap,
-  default: default_colormap,
-  stretched: stretched_colormap,
-  fastie: fastie_colormap
-}
-
-function segmented_colormap(segments) {
-  return function(x) {
-    var i, result, x0, x1, xstart, y0, y1, _i, _j, _len, _ref, _ref1, _ref2, _ref3;
-    _ref = [0, 0], y0 = _ref[0], y1 = _ref[1];
-    _ref1 = [segments[0][0], 1], x0 = _ref1[0], x1 = _ref1[1];
-    if (x < x0) {
-      return y0;
-    }
-    for (i = _i = 0, _len = segments.length; _i < _len; i = ++_i) {
-      _ref2 = segments[i], xstart = _ref2[0], y0 = _ref2[1], y1 = _ref2[2];
-      x0 = xstart;
-      if (i === segments.length - 1) {
-        x1 = 1;
-        break;
-      }
-      x1 = segments[i + 1][0];
-      if ((xstart <= x && x < x1)) {
-        break;
-      }
-    }
-    result = [];
-    for (i = _j = 0, _ref3 = y0.length; 0 <= _ref3 ? _j < _ref3 : _j > _ref3; i = 0 <= _ref3 ? ++_j : --_j) {
-      result[i] = (x - x0) / (x1 - x0) * (y1[i] - y0[i]) + y0[i];
-    }
-    return result;
-  };
-};
-
-},{"./PixelManipulation.js":128}]},{},[116]);
+},{"base64-stream":3,"get-pixels":27,"save-pixels":104}]},{},[116]);

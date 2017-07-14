@@ -1,24 +1,21 @@
 /*
- * Display only the green channel
+ * This module extracts pixels and saves them as it is.
  */
-module.exports = function GreenChannel(options) {
+module.exports = function DoNothingPix(options) {
 
   options = options || {};
-  options.title = "Green channel only";
-  options.description = "Displays only the green channel of an image";
+  options.title = "Do Nothing with pixels";
   var output;
-
-  //function setup() {} // optional
 
   function draw(input,callback) {
     this_ = this;
     function changePixel(r, g, b, a) {
-      return [0, g, 0, a];
+      return [r, g, b, a];
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -29,7 +26,6 @@ module.exports = function GreenChannel(options) {
 
   return {
     options: options,
-    //setup: setup, // optional
     draw:  draw,
     output: output
   }

@@ -1,10 +1,11 @@
 /*
- * NDVI with red filter (blue channel is infrared)
+ * Display only the green channel
  */
-module.exports = function NdviRed(options) {
+module.exports = function GreenChannel(options) {
 
   options = options || {};
-  options.title = "NDVI for red-filtered cameras (blue is infrared)";
+  options.title = "Green channel only";
+  options.description = "Displays only the green channel of an image";
   var output;
 
   //function setup() {} // optional
@@ -12,13 +13,12 @@ module.exports = function NdviRed(options) {
   function draw(input,callback) {
     this_ = this;
     function changePixel(r, g, b, a) {
-      var ndvi = 255 * (b - r) / (1.00 * b + r);
-      return [ndvi, ndvi, ndvi, a];
+      return [0, g, 0, a];
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -30,6 +30,7 @@ module.exports = function NdviRed(options) {
   return {
     options: options,
     //setup: setup, // optional
-    draw: draw
+    draw:  draw,
+    output: output
   }
 }
