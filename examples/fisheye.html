@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+    <title>Replace Image Demo | Image Sequencer</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../dist/image-sequencer.css" rel="stylesheet">
+
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../dist/image-sequencer.js"></script>
+
+  </head>
+
+  <body>
+
+    <div class="header">
+
+      <h1>Image Sequencer</h1>
+      <h3>
+        <a href="https://github.com/publiclab/image-sequencer"><i class="fa fa-github"></i></a>
+      </h3>
+
+    </div>
+
+    <p style="display:none;" class="spinner"><i class="fa fa-spinner fa-spin"></i></p>
+
+    <div class="panels">
+
+      <div class="panel ismod-image-select" style="display:flex;justify-content:center">
+        <img src="grid.png" id="grid" style="cursor:pointer" class="original">
+      </div>
+
+    </div>
+
+    <div class="mod-new-panel" style="display:flex;justify-content:center">
+      <p class="lead" style="text-align:center">
+        Click on the image above to remove the FishEye Effect<br>
+        (This may take a few seconds)</p>
+    </div>
+
+    <!-- <div class="log">
+      <h4>var sequencer = new ImageSequencer();</h4><br>
+      <h4>sequencer.replaceImage('#pencils','invert');</h4>
+    </div> -->
+
+    <script>
+
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      var image = document.querySelector('#grid');
+      var datauri;
+      image.onload = function() {
+        canvas.width = image.width;
+        canvas.height = image.height;
+        context.drawImage(image,0,0);
+        datauri = canvas.toDataURL();
+      }
+
+      var sequencer = ImageSequencer();
+      document.querySelector('#grid').onclick = function() {
+	if (image.className == "original") {
+          sequencer.loadImage(datauri).addSteps('fisheye-gl',{Fx:0.04,Fy:0.11,scale:1.1}).run(function(out){
+	    document.querySelector('#grid').src = out;
+	  });
+	  image.className = "processed";
+          document.querySelector("#lead").innerHTML = "Click on image to restore original";
+        }
+	else {
+	  image.src = "grid.png";
+	  image.className = "original";
+	}
+      }
+
+    </script>
+
+  </body>
+</html>
