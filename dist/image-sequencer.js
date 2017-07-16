@@ -34570,6 +34570,7 @@ function AddStep(ref, image, name, o) {
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
     o.image = image;
+    o.inBrowser = ref.options.inBrowser;
 
     var module = ref.modules[name].call(ref.images,o);
     ref.images[image].steps.push(module);
@@ -35033,10 +35034,11 @@ module.exports = {
   'do-nothing-pix': require('./modules/DoNothingPix/Module.js'),
   'invert': require('./modules/Invert/Module'),
   'crop': require('./modules/Crop/Module'),
-  'segmented-colormap': require('./modules/SegmentedColormap/Module')
+  'segmented-colormap': require('./modules/SegmentedColormap/Module'),
+  'fisheye-gl': require('./modules/FisheyeGl/Module')
 }
 
-},{"./modules/Crop/Module":123,"./modules/DoNothing/Module":124,"./modules/DoNothingPix/Module.js":125,"./modules/GreenChannel/Module":126,"./modules/Invert/Module":127,"./modules/NdviRed/Module":128,"./modules/SegmentedColormap/Module":129}],120:[function(require,module,exports){
+},{"./modules/Crop/Module":123,"./modules/DoNothing/Module":124,"./modules/DoNothingPix/Module.js":125,"./modules/FisheyeGl/Module":126,"./modules/GreenChannel/Module":130,"./modules/Invert/Module":131,"./modules/NdviRed/Module":132,"./modules/SegmentedColormap/Module":133}],120:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   this_ = ref;
@@ -35257,7 +35259,408 @@ module.exports = function DoNothingPix(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131}],126:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135}],126:[function(require,module,exports){
+/*
+ * Creates Fisheye Effect
+ */
+module.exports = function DoNothing(options) {
+  options = options || {};
+  options.title = "Fisheye GL";
+  var output
+
+  function draw(input,callback) {
+    this_ = this;
+    if (!options.inBrowser) { // This module is only for browser
+      this.output = input;
+      callback();
+    }
+    else {
+
+      if (!document.querySelector('#image-sequencer-canvas')) {
+        var canvas = document.createElement('canvas');
+        canvas.style.display = "none";
+        canvas.setAttribute('id','image-sequencer-canvas');
+        document.body.append(canvas);
+      }
+
+      distorter = require('./fisheyegl.js')({
+        selector: "#image-sequencer-canvas"
+      });
+
+      distorter.lens.a = options.a || distorter.lens.a;
+      distorter.lens.b = options.b || distorter.lens.b;
+      distorter.lens.Fx = options.Fx || distorter.lens.Fx;
+      distorter.lens.Fy = options.Fy || distorter.lens.Fy;
+      distorter.lens.scale = options.scale || distorter.lens.scale;
+      distorter.fov.x = options.x || distorter.fov.x;
+      distorter.fov.y = options.y || distorter.fov.y;
+
+      distorter.setImage(input.src,function(){
+        this_.output = {src: canvas.toDataURL(), format: input.format};
+        callback();
+      });
+
+    }
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output
+  }
+}
+
+},{"./fisheyegl.js":127}],127:[function(require,module,exports){
+module.exports = function FisheyeGl (options){
+
+  // Defaults:
+  options = options || {};
+
+  options.width = options.width || 800;
+  options.height = options.height || 600;
+
+  var model = options.model || {
+    vertex :[
+      -1.0, -1.0, 0.0,
+       1.0, -1.0, 0.0,
+       1.0,  1.0, 0.0,
+      -1.0,  1.0, 0.0
+    ],
+    indices :[
+      0, 1, 2,
+      0, 2, 3,
+      2, 1, 0,
+      3, 2, 0
+    ],
+    textureCoords : [
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0
+    ]
+  };
+
+  var lens = options.lens || {
+    a : 1.0,
+    b : 1.0,
+    Fx : 0.0,
+    Fy : 0.0,
+    scale : 1.5
+  };
+  var fov = options.fov || {
+    x : 1.0,
+    y : 1.0
+  }
+  var image = options.image || "images/barrel-distortion.png";
+
+  var selector = options.selector || "#canvas";
+  var gl = getGLContext(selector);
+
+  var vertexSrc = require("./shaders/vertex.glvs");
+  var fragmentSrc = require("./shaders/fragment3.glfs");
+
+  var program = compileShader(gl, vertexSrc, fragmentSrc)
+  gl.useProgram(program);
+
+  var aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
+  var aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
+  var uSampler = gl.getUniformLocation(program, "uSampler");
+  var uLensS = gl.getUniformLocation(program, "uLensS");
+  var uLensF = gl.getUniformLocation(program, "uLensF");
+  var uFov = gl.getUniformLocation(program, "uFov");
+
+  var vertexBuffer,
+      indexBuffer,
+      textureBuffer;
+
+  function createBuffers() {
+
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.vertex), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+    indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(model.indices), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+    textureBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.textureCoords), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+  }
+
+  createBuffers();
+
+  function getGLContext(selector){
+    var canvas = document.querySelector(selector);
+
+    if(canvas == null){
+      throw new Error("there is no canvas on this page");
+    }
+
+    var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+    for (var i = 0; i < names.length; ++i) {
+      var gl;
+      try {
+        gl = canvas.getContext(names[i], { preserveDrawingBuffer: true });
+      } catch(e) {
+        continue;
+      }
+      if (gl) return gl;
+    }
+
+    throw new Error("WebGL is not supported!");
+  }
+
+  function compileShader(gl, vertexSrc, fragmentSrc){
+    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vertexShader, vertexSrc);
+    gl.compileShader(vertexShader);
+
+    _checkCompile(vertexShader);
+
+    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fragmentShader, fragmentSrc);
+    gl.compileShader(fragmentShader);
+
+    _checkCompile(fragmentShader);
+
+    var program = gl.createProgram();
+
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+
+    gl.linkProgram(program);
+
+    return program;
+
+    function _checkCompile(shader){
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        throw new Error(gl.getShaderInfoLog(shader));
+      }
+    }
+  }
+
+  function loadFile(url, callback){
+    var ajax = new XMLHttpRequest();
+
+    if(callback) {
+      ajax.addEventListener("readystatechange", on)
+      ajax.open("GET", url, true);
+      ajax.send(null);
+    } else {
+      ajax.open("GET", url, false);
+      ajax.send(null);
+
+      if(ajax.status == 200){
+        return ajax.responseText;
+      }
+    }
+
+    function on(){
+      if(ajax.readyState === 4){
+        //complete requset
+        if(ajax.status === 200){
+          //not error
+          callback(null, ajax.responseText);
+        } else {
+          callback(new Error("fail to load!"));
+        }
+      }
+    }
+  }
+
+  function loadImage(gl, img, callback, texture){
+    texture = texture || gl.createTexture();
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); //gl.NEAREST is also allowed, instead of gl.LINEAR, as neither mipmap.
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); //Prevents s-coordinate wrapping (repeating).
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); //Prevents t-coordinate wrapping (repeating).
+    //gl.generateMipmap(gl.TEXTURE_2D);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    if(callback) callback(null, texture);
+    return texture;
+  }
+
+  function loadImageFromUrl(gl, url, callback){
+    var texture = gl.createTexture();
+    var img = new Image();
+    img.addEventListener("load", function onload(){
+      loadImage(gl, img, callback, texture);
+      options.width = img.width;
+      options.height = img.height;
+      resize(
+        options.width,
+        options.height
+      )
+    });
+    img.src = url;
+    return texture;
+  }
+
+  function run(animate, callback){
+    var f = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+      window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+    // ugh
+    if(animate === true){
+      if(f){
+        f(on);
+      } else {
+        throw new Error("do not support 'requestAnimationFram'");
+      }
+    } else {
+      f(on);
+    }
+
+    var current = null;
+    function on(t){
+      if(!current) current = t;
+      var dt = t - current;
+      current = t;
+      options.runner(dt);
+      if (callback) callback();
+      if (animate === true) f(on);
+    }
+  }
+
+  function resize(w, h) {
+    gl.viewport(0, 0, w, h);
+    gl.canvas.width = w;
+    gl.canvas.height = h;
+  }
+
+  options.runner = options.runner|| function runner(dt){
+
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.enable(gl.DEPTH_TEST);
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    gl.enableVertexAttribArray(aVertexPosition);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.vertexAttribPointer(aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+
+    gl.enableVertexAttribArray(aTextureCoord);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+    gl.vertexAttribPointer(aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.uniform1i(uSampler, 0);
+
+    gl.uniform3fv(uLensS, [lens.a, lens.b, lens.scale]);
+    gl.uniform2fv(uLensF, [lens.Fx, lens.Fy]);
+    gl.uniform2fv(uFov, [fov.x, fov.y]);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.drawElements(gl.TRIANGLES, model.indices.length, gl.UNSIGNED_SHORT, 0);
+
+  }
+
+  var texture;
+
+  function setImage(imageUrl, callback) {
+    texture = loadImageFromUrl(gl, imageUrl, function onImageLoad() {
+
+      run(options.animate, callback);
+
+    });
+  }
+
+  // setImage(image);
+
+  // asynchronous!
+  function getImage(format) {
+
+    var img = new Image();
+
+    img.src = gl.canvas.toDataURL(format || 'image/jpeg');
+
+    return img;
+
+  }
+
+  // external API:
+  var distorter = {
+    options:  options,
+    gl:       gl,
+    lens:     lens,
+    fov:      fov,
+    run:      run,
+    getImage: getImage,
+    setImage: setImage
+  }
+
+  return distorter;
+
+}
+
+},{"./shaders/fragment3.glfs":128,"./shaders/vertex.glvs":129}],128:[function(require,module,exports){
+module.exports = "#ifdef GL_ES\n\
+precision highp float;\n\
+#endif\n\
+\n\
+uniform vec3 uLensS;\n\
+uniform vec2 uLensF;\n\
+uniform vec2 uFov;\n\
+\n\
+uniform sampler2D uSampler;\n\
+\n\
+varying vec3 vPosition;\n\
+varying vec2 vTextureCoord;\n\
+\n\
+vec2 GLCoord2TextureCoord(vec2 glCoord) {\n\
+	return glCoord  * vec2(1.0, -1.0)/ 2.0 + vec2(0.5, 0.5);\n\
+}\n\
+\n\
+void main(void){\n\
+	float scale = uLensS.z;\n\
+	vec3 vPos = vPosition;\n\
+	float Fx = uLensF.x;\n\
+	float Fy = uLensF.y;\n\
+\n\
+	vec2 vMapping = vPos.xy;\n\
+	vMapping.x = vMapping.x + ((pow(vPos.y, 2.0)/scale)*vPos.x/scale)*-Fx;\n\
+	vMapping.y = vMapping.y + ((pow(vPos.x, 2.0)/scale)*vPos.y/scale)*-Fy;\n\
+	vMapping = vMapping * uLensS.xy;\n\
+\n\
+	vMapping = GLCoord2TextureCoord(vMapping/scale);\n\
+\n\
+	vec4 texture = texture2D(uSampler, vMapping);\n\
+	if(vMapping.x > 0.99 || vMapping.x < 0.01 || vMapping.y > 0.99 || vMapping.y < 0.01){\n\
+		texture = vec4(0.0, 0.0, 0.0, 1.0);\n\
+	}\n\
+	gl_FragColor = texture;\n\
+}\n\
+";
+
+},{}],129:[function(require,module,exports){
+module.exports = "#ifdef GL_ES\n\
+precision highp float;\n\
+#endif\n\
+attribute vec3 aVertexPosition;\n\
+attribute vec2 aTextureCoord;\n\
+varying vec3 vPosition;\n\
+varying vec2 vTextureCoord;\n\
+void main(void){\n\
+	vPosition = aVertexPosition;\n\
+	vTextureCoord = aTextureCoord;\n\
+	gl_Position = vec4(vPosition,1.0);\n\
+}";
+
+},{}],130:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35295,7 +35698,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131}],127:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135}],131:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35333,7 +35736,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131}],128:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135}],132:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -35368,7 +35771,7 @@ module.exports = function NdviRed(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131}],129:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135}],133:[function(require,module,exports){
 module.exports = function SegmentedColormap(options) {
 
   options = options || {};
@@ -35402,7 +35805,7 @@ module.exports = function SegmentedColormap(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131,"./SegmentedColormap":130}],130:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135,"./SegmentedColormap":134}],134:[function(require,module,exports){
 /*
  * Accepts a normalized ndvi and returns the new color-mapped pixel
  */
@@ -35461,7 +35864,7 @@ var colormaps = {
   fastie: fastie_colormap
 }
 
-},{}],131:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels

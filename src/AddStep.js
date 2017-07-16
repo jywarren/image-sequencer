@@ -9,6 +9,7 @@ function AddStep(ref, image, name, o) {
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
     o.image = image;
+    o.inBrowser = ref.options.inBrowser;
 
     var module = ref.modules[name].call(ref.images,o);
     ref.images[image].steps.push(module);
