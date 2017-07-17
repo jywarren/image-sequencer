@@ -34720,6 +34720,7 @@ function formatInput(args,format,images) {
   else {
     for (img in args[0]) {
       image = args[0][img];
+      image1 = "";
       json_q[image] = [];
 
       if(format_i == "+") {
@@ -35282,6 +35283,7 @@ module.exports = function DoNothing(options) {
         canvas.setAttribute('id','image-sequencer-canvas');
         document.body.append(canvas);
       }
+      else var canvas = document.querySelector('#image-sequencer-canvas');
 
       distorter = require('./fisheyegl.js')({
         selector: "#image-sequencer-canvas"
