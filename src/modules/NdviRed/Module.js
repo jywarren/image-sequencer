@@ -8,7 +8,7 @@ module.exports = function NdviRed(options) {
   var output;
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (1.00 * b + r);
       var x = 255 * (ndvi + 1) / 2;

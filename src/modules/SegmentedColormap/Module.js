@@ -5,7 +5,7 @@ module.exports = function SegmentedColormap(options) {
   var output;
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (r + b);
       var normalized = (ndvi + 1) / 2;
