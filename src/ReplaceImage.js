@@ -1,12 +1,12 @@
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
-  this_ = ref;
+  var this_ = ref;
   var input = document.querySelectorAll(selector);
   var images = [];
-  for (i = 0; i < input.length; i++)
+  for (var i = 0; i < input.length; i++)
     if (input[i] instanceof HTMLImageElement) images.push(input[i]);
-  for (i in images) {
-    the_image = images[i];
+  for (var i in images) {
+    var the_image = images[i];
     var url = images[i].src;
     var ext = url.split('.').pop();
 

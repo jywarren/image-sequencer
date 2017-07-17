@@ -15,7 +15,7 @@ function copy(a) {
   if (objTypeOf(a) == "Array") return a.slice();
   if (objTypeOf(a) == "Object") {
     var b = {};
-    for (v in a) {
+    for (var v in a) {
       b[v] = copy(a[v]);
     }
     return b;
@@ -25,11 +25,11 @@ function copy(a) {
 
 function formatInput(args,format,images) {
   images = [];
-  for (image in this.images) {
+  for (var image in this.images) {
     images.push(image);
   }
-  json_q = {};
-  format_i = format;
+  var json_q = {};
+  var format_i = format;
   if (format == "+")
     format = ['o_string_a', 'string_a', 'o_object'];
   else if (format == "-")
@@ -76,8 +76,8 @@ function formatInput(args,format,images) {
 
   if(format[0] == "o_string_a") {
     if(args.length == format.length - 1) {
-      insert = false;
-      for (i in args) {
+      var insert = false;
+      for (var i in args) {
         if (format[parseInt(i)+1].includes( typeof(getPrimitive(args[i])) )){
           insert = true;
         }
@@ -89,15 +89,15 @@ function formatInput(args,format,images) {
   }
   else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
     if (typeof(args[0]) == "string") {
-      identifier = "image";
-      number = 1;
+      var identifier = "image";
+      var number = 1;
       while (this.images.hasOwnProperty(identifier+number)) number++;
       args.splice(0,0,identifier+number);
     }
   }
 
   if(args.length == format.length) {
-    for (i in format) {
+    for (var i in format) {
       if (format[i].substr(format[i].length-2,2)=="_a")
         args[i] = makeArray(args[i]);
     }
@@ -106,12 +106,12 @@ function formatInput(args,format,images) {
   if (args.length == 1) {
     json_q = copy(args[0]);
     if(!(format_i == "r" || format_i == "l")) {
-      for (img in json_q)
+      for (var img in json_q)
         json_q[img] = makeArray(json_q[img]);
     }
   }
   else if (format_i == "r") {
-    for (img in args[0]) json_q[args[0][img]] = args[1];
+    for (var img in args[0]) json_q[args[0][img]] = args[1];
   }
   else if (format_i == "l") {
     json_q = {
@@ -121,12 +121,12 @@ function formatInput(args,format,images) {
     json_q.images[args[0]] = args[1];
   }
   else {
-    for (img in args[0]) {
-      image = args[0][img];
+    for (var img in args[0]) {
+      var image = args[0][img];
       json_q[image] = [];
 
       if(format_i == "+") {
-        for(s in args[1]) {
+        for(var s in args[1]) {
           json_q[image].push({
             name: args[1][s],
             o: args[2]
@@ -139,8 +139,8 @@ function formatInput(args,format,images) {
       }
 
       if(format_i == "^") {
-        size = this.images[image].steps.length;
-        index = args[1];
+        var size = this.images[image].steps.length;
+        var index = args[1];
         index = (index==size)?index:index%size;
         if (index<0) index += size+1;
         json_q[image].push({
@@ -155,7 +155,7 @@ function formatInput(args,format,images) {
 
   if(format_i == "l") {
     json_q.loadedimages = [];
-    for (i in json_q.images) json_q.loadedimages.push(i);
+    for (var i in json_q.images) json_q.loadedimages.push(i);
   }
 
   return json_q;

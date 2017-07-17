@@ -34564,7 +34564,7 @@ function AddStep(ref, image, name, o) {
   function addStep(image, name, o_) {
     ref.log('\x1b[36m%s\x1b[0m','adding step \"' + name + '\" to \"' + image + '\".');
 
-    o = ref.copy(o_);
+    var o = ref.copy(o_);
     o.id = ref.options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o_.name || name;
     o.selector = o_.selector || 'ismod-' + name;
@@ -34612,7 +34612,7 @@ function copy(a) {
   if (objTypeOf(a) == "Array") return a.slice();
   if (objTypeOf(a) == "Object") {
     var b = {};
-    for (v in a) {
+    for (var v in a) {
       b[v] = copy(a[v]);
     }
     return b;
@@ -34622,11 +34622,11 @@ function copy(a) {
 
 function formatInput(args,format,images) {
   images = [];
-  for (image in this.images) {
+  for (var image in this.images) {
     images.push(image);
   }
-  json_q = {};
-  format_i = format;
+  var json_q = {};
+  var format_i = format;
   if (format == "+")
     format = ['o_string_a', 'string_a', 'o_object'];
   else if (format == "-")
@@ -34673,8 +34673,8 @@ function formatInput(args,format,images) {
 
   if(format[0] == "o_string_a") {
     if(args.length == format.length - 1) {
-      insert = false;
-      for (i in args) {
+      var insert = false;
+      for (var i in args) {
         if (format[parseInt(i)+1].includes( typeof(getPrimitive(args[i])) )){
           insert = true;
         }
@@ -34686,15 +34686,15 @@ function formatInput(args,format,images) {
   }
   else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
     if (typeof(args[0]) == "string") {
-      identifier = "image";
-      number = 1;
+      var identifier = "image";
+      var number = 1;
       while (this.images.hasOwnProperty(identifier+number)) number++;
       args.splice(0,0,identifier+number);
     }
   }
 
   if(args.length == format.length) {
-    for (i in format) {
+    for (var i in format) {
       if (format[i].substr(format[i].length-2,2)=="_a")
         args[i] = makeArray(args[i]);
     }
@@ -34703,12 +34703,12 @@ function formatInput(args,format,images) {
   if (args.length == 1) {
     json_q = copy(args[0]);
     if(!(format_i == "r" || format_i == "l")) {
-      for (img in json_q)
+      for (var img in json_q)
         json_q[img] = makeArray(json_q[img]);
     }
   }
   else if (format_i == "r") {
-    for (img in args[0]) json_q[args[0][img]] = args[1];
+    for (var img in args[0]) json_q[args[0][img]] = args[1];
   }
   else if (format_i == "l") {
     json_q = {
@@ -34718,12 +34718,12 @@ function formatInput(args,format,images) {
     json_q.images[args[0]] = args[1];
   }
   else {
-    for (img in args[0]) {
-      image = args[0][img];
+    for (var img in args[0]) {
+      var image = args[0][img];
       json_q[image] = [];
 
       if(format_i == "+") {
-        for(s in args[1]) {
+        for(var s in args[1]) {
           json_q[image].push({
             name: args[1][s],
             o: args[2]
@@ -34736,8 +34736,8 @@ function formatInput(args,format,images) {
       }
 
       if(format_i == "^") {
-        size = this.images[image].steps.length;
-        index = args[1];
+        var size = this.images[image].steps.length;
+        var index = args[1];
         index = (index==size)?index:index%size;
         if (index<0) index += size+1;
         json_q[image].push({
@@ -34752,7 +34752,7 @@ function formatInput(args,format,images) {
 
   if(format_i == "l") {
     json_q.loadedimages = [];
-    for (i in json_q.images) json_q.loadedimages.push(i);
+    for (var i in json_q.images) json_q.loadedimages.push(i);
   }
 
   return json_q;
@@ -34787,7 +34787,7 @@ ImageSequencer = function ImageSequencer(options) {
     if (objTypeOf(a) == "Array") return a.slice();
     if (objTypeOf(a) == "Object") {
       var b = {};
-      for (v in a) {
+      for (var v in a) {
         b[v] = copy(a[v]);
       }
       return b;
@@ -34799,11 +34799,10 @@ ImageSequencer = function ImageSequencer(options) {
     return (objTypeOf(input)=="Array")?input:[input];
   }
 
-  formatInput = require('./FormatInput');
-
   var image,
       steps = [],
       modules = require('./Modules'),
+      formatInput = require('./FormatInput'),
       images = {},
       inputlog = [];
 
@@ -34813,15 +34812,15 @@ ImageSequencer = function ImageSequencer(options) {
 
   function addSteps(){
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    args = (this.name == "ImageSequencer")?[]:[this.images];
-    json_q = {};
-    for(arg in arguments){args.push(copy(arguments[arg]));}
+    var args = (this.name == "ImageSequencer")?[]:[this.images];
+    var json_q = {};
+    for(var arg in arguments){args.push(copy(arguments[arg]));}
     json_q = formatInput.call(this_,args,"+");
 
     inputlog.push({method:"addSteps", json_q:copy(json_q)});
 
-    for (i in json_q)
-      for (j in json_q[i])
+    for (var i in json_q)
+      for (var j in json_q[i])
         require("./AddStep")(this_,i,json_q[i][j].name,json_q[i][j].o);
 
     return this;
@@ -34837,18 +34836,18 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function removeSteps(image,index) {
-    run = {};
+    var run = {}, indices;
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    args = (this.name == "ImageSequencer")?[]:[this.images];
-    for(arg in arguments) args.push(copy(arguments[arg]));
+    var args = (this.name == "ImageSequencer")?[]:[this.images];
+    for(var arg in arguments) args.push(copy(arguments[arg]));
 
-    json_q = formatInput.call(this_,args,"-");
+    var json_q = formatInput.call(this_,args,"-");
     inputlog.push({method:"removeSteps", json_q:copy(json_q)});
 
-    for (img in json_q) {
+    for (var img in json_q) {
       indices = json_q[img].sort(function(a,b){return b-a});
       run[img] = indices[indices.length-1];
-      for (i in indices)
+      for (var i in indices)
         removeStep(img,indices[i]);
     }
     // this.run(run); // This is creating problems
@@ -34856,18 +34855,18 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function insertSteps(image, index, name, o) {
-    run = {};
+    var run = {};
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    args = (this.name == "ImageSequencer")?[]:[this.images];
-    for (arg in arguments) args.push(arguments[arg]);
+    var args = (this.name == "ImageSequencer")?[]:[this.images];
+    for (var arg in arguments) args.push(arguments[arg]);
 
-    json_q = formatInput.call(this_,args,"^");
+    var json_q = formatInput.call(this_,args,"^");
     inputlog.push({method:"insertSteps", json_q:copy(json_q)});
 
-    for (img in json_q) {
+    for (var img in json_q) {
       var details = json_q[img];
       details = details.sort(function(a,b){return b.index-a.index});
-      for (i in details)
+      for (var i in details)
         require("./InsertStep")(this_,img,details[i].index,details[i].name,details[i].o);
       run[img] = details[details.length-1].index;
     }
@@ -34878,15 +34877,15 @@ ImageSequencer = function ImageSequencer(options) {
   function run(t_image,t_from) {
     log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    args = (this.name == "ImageSequencer")?[]:[this.images];
+    var args = (this.name == "ImageSequencer")?[]:[this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
-    callback = function() {};
+    var callback = function() {};
     for (var arg in args)
       if(objTypeOf(args[arg]) == "Function")
         callback = args.splice(arg,1)[0];
 
-    json_q = formatInput.call(this_,args,"r");
+    var json_q = formatInput.call(this_,args,"r");
 
     require('./Run')(this_, json_q, callback);
 
@@ -34894,14 +34893,14 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function loadImages() {
-    args = [];
-    for (arg in arguments) args.push(copy(arguments[arg]));
-    json_q = formatInput.call(this,args,"l");
+    var args = [];
+    for (var arg in arguments) args.push(copy(arguments[arg]));
+    var json_q = formatInput.call(this,args,"l");
 
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
-    loadedimages = this.copy(json_q.loadedimages);
+    var loadedimages = this.copy(json_q.loadedimages);
 
-    for (i in json_q.images)
+    for (var i in json_q.images)
       require('./LoadImage')(this,i,json_q.images[i])
 
     json_q.callback();
@@ -34949,7 +34948,7 @@ function InsertStep(ref, image, index, name, o) {
   function insertStep(image, index, name, o_) {
     ref.log('\x1b[36m%s\x1b[0m','inserting step \"' + name + '\" to \"' + image + '\" at \"'+index+'\".');
 
-    o = ref.copy(o_);
+    var o = ref.copy(o_);
     o.id = ref.options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o.name || name;
     o.selector = o.selector || 'ismod-' + name;
@@ -34983,8 +34982,8 @@ module.exports = InsertStep;
 },{}],118:[function(require,module,exports){
 function LoadImage(ref, name, src) {
   function CImage(src) {
-    datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
-    image = {
+    var datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
+    var image = {
       src: datauri,
       format: datauri.split(':')[1].split(';')[0].split('/')[1]
     }
@@ -34992,7 +34991,7 @@ function LoadImage(ref, name, src) {
   }
 
   function loadImage(name, src) {
-    image = {
+    var image = {
       src: src,
       steps: [{
         options: {
@@ -35041,13 +35040,13 @@ module.exports = {
 },{"./modules/Crop/Module":123,"./modules/DoNothing/Module":124,"./modules/DoNothingPix/Module.js":125,"./modules/FisheyeGl/Module":126,"./modules/GreenChannel/Module":130,"./modules/Invert/Module":131,"./modules/NdviRed/Module":132,"./modules/SegmentedColormap/Module":133}],120:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
-  this_ = ref;
+  var this_ = ref;
   var input = document.querySelectorAll(selector);
   var images = [];
-  for (i = 0; i < input.length; i++)
+  for (var i = 0; i < input.length; i++)
     if (input[i] instanceof HTMLImageElement) images.push(input[i]);
-  for (i in images) {
-    the_image = images[i];
+  for (var i in images) {
+    var the_image = images[i];
     var url = images[i].src;
     var ext = url.split('.').pop();
 
@@ -35079,47 +35078,47 @@ module.exports = ReplaceImage;
 function Run(ref, json_q, callback) {
   function drawStep(drawarray,pos) {
     if(pos==drawarray.length) {
-      image = drawarray[pos-1].image;
+      var image = drawarray[pos-1].image;
       if(ref.objTypeOf(callback)=='Function'){
-        steps = ref.images[image].steps;
-        out = steps[steps.length-1].output.src;
+        var steps = ref.images[image].steps;
+        var out = steps[steps.length-1].output.src;
         callback(out);
         return true;
       }
     }
-    image = drawarray[pos].image;
-    i = drawarray[pos].i;
-    input = ref.images[image].steps[i-1].output;
+    var image = drawarray[pos].image;
+    var i = drawarray[pos].i;
+    var input = ref.images[image].steps[i-1].output;
     ref.images[image].steps[i].draw(ref.copy(input),function(){
       drawStep(drawarray,++pos);
     });
   }
   function drawSteps(json_q) {
-    drawarray = [];
-    for (image in json_q) {
-      no_steps = ref.images[image].steps.length;
-      init = json_q[image];
-      for(i = 0; i < no_steps-init; i++) {
+    var drawarray = [];
+    for (var image in json_q) {
+      var no_steps = ref.images[image].steps.length;
+      var init = json_q[image];
+      for(var i = 0; i < no_steps-init; i++) {
         drawarray.push({image: image,i: init+i});
       }
     }
     drawStep(drawarray,0);
   }
   function filter(json_q){
-    for (image in json_q) {
+    for (var image in json_q) {
       if (json_q[image]==0 && ref.images[image].steps.length==1)
         delete json_q[image];
       else if (json_q[image]==0) json_q[image]++;
     }
-    for (image in json_q) {
-      prevstep = ref.images[image].steps[json_q[image]-1];
+    for (var image in json_q) {
+      var prevstep = ref.images[image].steps[json_q[image]-1];
       while (typeof(prevstep) == "undefined" || typeof(prevstep.output) == "undefined") {
         prevstep = ref.images[image].steps[(--json_q[image]) - 1];
       }
     }
     return json_q;
   }
-  json_q = filter(json_q);
+  var json_q = filter(json_q);
   return drawSteps(json_q);
 }
 module.exports = Run;
@@ -35178,7 +35177,7 @@ module.exports = function Crop(input,options,callback) {
  module.exports = function CropModule(options) {
    options = options || {};
    options.title = "Crop Image";
-   this_ = this;
+   var this_ = this;
    var output
 
    function draw(input,callback) {
@@ -35210,7 +35209,7 @@ module.exports = function Crop(input,options,callback) {
 module.exports = function DoNothing(options) {
   options = options || {};
   options.title = "Do Nothing";
-  this_ = this;
+  var this_ = this;
   var output
 
   function draw(input,callback) {
@@ -35236,7 +35235,7 @@ module.exports = function DoNothingPix(options) {
   var output;
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       return [r, g, b, a];
     }
@@ -35675,7 +35674,7 @@ module.exports = function GreenChannel(options) {
   //function setup() {} // optional
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
     }
@@ -35713,7 +35712,7 @@ module.exports = function GreenChannel(options) {
   //function setup() {} // optional
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       return [255-r, 255-g, 255-b, a];
     }
@@ -35748,7 +35747,7 @@ module.exports = function NdviRed(options) {
   var output;
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (1.00 * b + r);
       var x = 255 * (ndvi + 1) / 2;
@@ -35780,7 +35779,7 @@ module.exports = function SegmentedColormap(options) {
   var output;
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (r + b);
       var normalized = (ndvi + 1) / 2;

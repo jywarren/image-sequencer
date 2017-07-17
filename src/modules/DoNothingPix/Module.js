@@ -8,7 +8,7 @@ module.exports = function DoNothingPix(options) {
   var output;
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       return [r, g, b, a];
     }

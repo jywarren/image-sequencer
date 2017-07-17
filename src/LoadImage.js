@@ -1,7 +1,7 @@
 function LoadImage(ref, name, src) {
   function CImage(src) {
-    datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
-    image = {
+    var datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
+    var image = {
       src: datauri,
       format: datauri.split(':')[1].split(';')[0].split('/')[1]
     }
@@ -9,7 +9,7 @@ function LoadImage(ref, name, src) {
   }
 
   function loadImage(name, src) {
-    image = {
+    var image = {
       src: src,
       steps: [{
         options: {
