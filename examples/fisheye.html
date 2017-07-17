@@ -34,7 +34,6 @@
 
       <div class="panel ismod-image-select" style="display:flex;justify-content:center">
         <img src="grid.png" id="grid" style="cursor:pointer" class="original">
-        <img src="grid.png" id="demo" style="display:none">
       </div>
 
     </div>
@@ -55,30 +54,31 @@
       var canvas = document.createElement('canvas');
       var context = canvas.getContext('2d');
       var image = document.querySelector('#grid');
-      var demoimage = document.querySelector('#demo');
       var insrc;
-      demoimage.onload = function() {
-        canvas.width = image.width;
-        canvas.height = image.height;
+      image.onload = function() {
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
         context.drawImage(image,0,0);
         insrc = canvas.toDataURL();
+        image.onload = null;
+        image.height = image.width * 99 / 130; // Android Chrome Fix
       }
-      demoimage.src = image.src;
-      const text = document.querySelector(".lead").innerHTML;
+      var desc = document.querySelector(".lead");
+      const text = desc.innerHTML;
 
       var sequencer = ImageSequencer();
       image.onclick = function() {
-	      if (document.querySelector('#grid').getAttribute('class') == "original") {
-          sequencer.loadImage(insrc).addSteps('fisheye-gl',{Fx:0.04,Fy:0.11,scale:1.1}).run(function(out){
-	          document.querySelector('#grid').src = out;
-	        });
-	        document.querySelector('#grid').className = "processed";
-          document.querySelector(".lead").innerHTML = "Click on image to restore original";
+	      if (desc.innerHTML == text) {
+          sequencer.loadImage(insrc)
+                   .addSteps('fisheye-gl',{Fx:0.04,Fy:0.11,scale:1.1})
+                   .run(function(out){
+                     image.src = out;
+	                 });
+          desc.innerHTML = "Click on image to restore original";
         }
 	      else {
-	        document.querySelector('#grid').src = "grid.png";
-	        document.querySelector('#grid').className = "original";
-          document.querySelector(".lead").innerHTML = text;
+	        image.src = "grid.png";
+          desc.innerHTML = text;
 	      }
       }
 
