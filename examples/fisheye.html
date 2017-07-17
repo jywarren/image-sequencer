@@ -56,11 +56,12 @@
       var image = document.querySelector('#grid');
       var insrc;
       image.onload = function() {
-        canvas.width = image.width;
-        canvas.height = image.height;
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
         context.drawImage(image,0,0);
         insrc = canvas.toDataURL();
         image.onload = null;
+        image.height = image.width * 99 / 130; // Android Chrome Fix
       }
       var desc = document.querySelector(".lead");
       const text = desc.innerHTML;
@@ -71,7 +72,7 @@
           sequencer.loadImage(insrc)
                    .addSteps('fisheye-gl',{Fx:0.04,Fy:0.11,scale:1.1})
                    .run(function(out){
-	                   image.src = out;
+                     image.src = out;
 	                 });
           desc.innerHTML = "Click on image to restore original";
         }
