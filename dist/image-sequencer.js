@@ -35282,6 +35282,7 @@ module.exports = function DoNothing(options) {
         canvas.setAttribute('id','image-sequencer-canvas');
         document.body.append(canvas);
       }
+      else var canvas = document.querySelector('#image-sequencer-canvas');
 
       distorter = require('./fisheyegl.js')({
         selector: "#image-sequencer-canvas"
