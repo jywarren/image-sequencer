@@ -24,7 +24,7 @@ ImageSequencer = function ImageSequencer(options) {
     if (objTypeOf(a) == "Array") return a.slice();
     if (objTypeOf(a) == "Object") {
       var b = {};
-      for (v in a) {
+      for (var v in a) {
         b[v] = copy(a[v]);
       }
       return b;
@@ -36,11 +36,10 @@ ImageSequencer = function ImageSequencer(options) {
     return (objTypeOf(input)=="Array")?input:[input];
   }
 
-  formatInput = require('./FormatInput');
-
   var image,
       steps = [],
       modules = require('./Modules'),
+      formatInput = require('./FormatInput'),
       images = {},
       inputlog = [];
 
@@ -50,15 +49,15 @@ ImageSequencer = function ImageSequencer(options) {
 
   function addSteps(){
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    args = (this.name == "ImageSequencer")?[]:[this.images];
-    json_q = {};
-    for(arg in arguments){args.push(copy(arguments[arg]));}
+    var args = (this.name == "ImageSequencer")?[]:[this.images];
+    var json_q = {};
+    for(var arg in arguments){args.push(copy(arguments[arg]));}
     json_q = formatInput.call(this_,args,"+");
 
     inputlog.push({method:"addSteps", json_q:copy(json_q)});
 
-    for (i in json_q)
-      for (j in json_q[i])
+    for (var i in json_q)
+      for (var j in json_q[i])
         require("./AddStep")(this_,i,json_q[i][j].name,json_q[i][j].o);
 
     return this;
@@ -74,18 +73,18 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function removeSteps(image,index) {
-    run = {};
+    var run = {}, indices;
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    args = (this.name == "ImageSequencer")?[]:[this.images];
-    for(arg in arguments) args.push(copy(arguments[arg]));
+    var args = (this.name == "ImageSequencer")?[]:[this.images];
+    for(var arg in arguments) args.push(copy(arguments[arg]));
 
-    json_q = formatInput.call(this_,args,"-");
+    var json_q = formatInput.call(this_,args,"-");
     inputlog.push({method:"removeSteps", json_q:copy(json_q)});
 
-    for (img in json_q) {
+    for (var img in json_q) {
       indices = json_q[img].sort(function(a,b){return b-a});
       run[img] = indices[indices.length-1];
-      for (i in indices)
+      for (var i in indices)
         removeStep(img,indices[i]);
     }
     // this.run(run); // This is creating problems
@@ -93,18 +92,18 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function insertSteps(image, index, name, o) {
-    run = {};
+    var run = {};
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    args = (this.name == "ImageSequencer")?[]:[this.images];
-    for (arg in arguments) args.push(arguments[arg]);
+    var args = (this.name == "ImageSequencer")?[]:[this.images];
+    for (var arg in arguments) args.push(arguments[arg]);
 
-    json_q = formatInput.call(this_,args,"^");
+    var json_q = formatInput.call(this_,args,"^");
     inputlog.push({method:"insertSteps", json_q:copy(json_q)});
 
-    for (img in json_q) {
+    for (var img in json_q) {
       var details = json_q[img];
       details = details.sort(function(a,b){return b.index-a.index});
-      for (i in details)
+      for (var i in details)
         require("./InsertStep")(this_,img,details[i].index,details[i].name,details[i].o);
       run[img] = details[details.length-1].index;
     }
@@ -115,15 +114,15 @@ ImageSequencer = function ImageSequencer(options) {
   function run(t_image,t_from) {
     log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    args = (this.name == "ImageSequencer")?[]:[this.images];
+    var args = (this.name == "ImageSequencer")?[]:[this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
-    callback = function() {};
+    var callback = function() {};
     for (var arg in args)
       if(objTypeOf(args[arg]) == "Function")
         callback = args.splice(arg,1)[0];
 
-    json_q = formatInput.call(this_,args,"r");
+    var json_q = formatInput.call(this_,args,"r");
 
     require('./Run')(this_, json_q, callback);
 
@@ -131,14 +130,14 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function loadImages() {
-    args = [];
-    for (arg in arguments) args.push(copy(arguments[arg]));
-    json_q = formatInput.call(this,args,"l");
+    var args = [];
+    for (var arg in arguments) args.push(copy(arguments[arg]));
+    var json_q = formatInput.call(this,args,"l");
 
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
-    loadedimages = this.copy(json_q.loadedimages);
+    var loadedimages = this.copy(json_q.loadedimages);
 
-    for (i in json_q.images)
+    for (var i in json_q.images)
       require('./LoadImage')(this,i,json_q.images[i])
 
     json_q.callback();

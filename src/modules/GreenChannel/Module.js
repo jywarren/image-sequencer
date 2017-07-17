@@ -11,7 +11,7 @@ module.exports = function GreenChannel(options) {
   //function setup() {} // optional
 
   function draw(input,callback) {
-    this_ = this;
+    var this_ = this;
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
     }

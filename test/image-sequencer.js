@@ -8,6 +8,23 @@ var test = require('tape');
 
 require('../src/ImageSequencer.js');
 
+// This function is used to test whether or not any additional global variables are being created
+function copy(g,a) {
+  var b = {};
+  var i = 0;
+  for (var v in a)
+    if(g) {
+      if(v != "sequencer") b[v] = a[v];
+    }
+    else {
+      if(v != "sequencer" && v!="global1" && v!="global2" && !global1.hasOwnProperty(v)) i++;
+    }
+  if(g) return b;
+  else return i;
+}
+var parent = (typeof(global)==="undefined")?window:global;
+var global1 = copy(true,parent);
+
 var sequencer = ImageSequencer({ ui: "none" });
 var red = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z";
 
@@ -136,5 +153,11 @@ test('run() runs the sequencer and returns output to callback', function (t) {
 test('replaceImage returns false in NodeJS', function (t) {
   var returnvalue = (sequencer.options.inBrowser)?false:sequencer.replaceImage("#selector","test");
   t.equal(returnvalue,false,"It does.");
+  t.end();
+});
+
+var global2 = copy(false,parent);
+test('No Global Variables Created', function (t) {
+  t.equal(0,global2,"None Created.");
   t.end();
 });

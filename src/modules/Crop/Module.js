@@ -16,7 +16,7 @@
  module.exports = function CropModule(options) {
    options = options || {};
    options.title = "Crop Image";
-   this_ = this;
+   var this_ = this;
    var output
 
    function draw(input,callback) {
