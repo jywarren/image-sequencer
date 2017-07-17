@@ -34720,7 +34720,6 @@ function formatInput(args,format,images) {
   else {
     for (img in args[0]) {
       image = args[0][img];
-      image1 = "";
       json_q[image] = [];
 
       if(format_i == "+") {
