@@ -18,7 +18,7 @@ module.exports = function GreenChannel(options) {
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,

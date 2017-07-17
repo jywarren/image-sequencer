@@ -5,7 +5,7 @@ sequencer.loadImages({images:{red:'examples/red.jpg'},callback:function(){
   sequencer.addSteps(['do-nothing-pix','ndvi-red','invert']);
   sequencer.removeSteps(1);
   sequencer.insertSteps({
-    red: [{index: -1, name: 'do-nothing', o:{}}]
+    red: [{index: -1, name: 'do-nothing-pix', o:{}}]
   });
   sequencer.run();
 }});

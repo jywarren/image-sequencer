@@ -55790,12 +55790,13 @@ function AddStep(ref, image, name, o) {
   function addStep(image, name, o_) {
     ref.log('\x1b[36m%s\x1b[0m','adding step \"' + name + '\" to \"' + image + '\".');
 
-    o = {};
+    o = ref.copy(o_);
     o.id = ref.options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o_.name || name;
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
     o.image = image;
+    o.inBrowser = ref.options.inBrowser;
 
     var module = ref.modules[name].call(ref.images,o);
     ref.images[image].steps.push(module);
@@ -55945,6 +55946,7 @@ function formatInput(args,format,images) {
   else {
     for (img in args[0]) {
       image = args[0][img];
+      image1 = "";
       json_q[image] = [];
 
       if(format_i == "+") {
@@ -56029,7 +56031,8 @@ ImageSequencer = function ImageSequencer(options) {
   var image,
       steps = [],
       modules = require('./Modules'),
-      images = {};
+      images = {},
+      inputlog = [];
 
   // if in browser, prompt for an image
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
@@ -56041,6 +56044,8 @@ ImageSequencer = function ImageSequencer(options) {
     json_q = {};
     for(arg in arguments){args.push(copy(arguments[arg]));}
     json_q = formatInput.call(this_,args,"+");
+
+    inputlog.push({method:"addSteps", json_q:copy(json_q)});
 
     for (i in json_q)
       for (j in json_q[i])
@@ -56063,7 +56068,9 @@ ImageSequencer = function ImageSequencer(options) {
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     args = (this.name == "ImageSequencer")?[]:[this.images];
     for(arg in arguments) args.push(copy(arguments[arg]));
+
     json_q = formatInput.call(this_,args,"-");
+    inputlog.push({method:"removeSteps", json_q:copy(json_q)});
 
     for (img in json_q) {
       indices = json_q[img].sort(function(a,b){return b-a});
@@ -56082,6 +56089,7 @@ ImageSequencer = function ImageSequencer(options) {
     for (arg in arguments) args.push(arguments[arg]);
 
     json_q = formatInput.call(this_,args,"^");
+    inputlog.push({method:"insertSteps", json_q:copy(json_q)});
 
     for (img in json_q) {
       var details = json_q[img];
@@ -56099,6 +56107,7 @@ ImageSequencer = function ImageSequencer(options) {
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     args = (this.name == "ImageSequencer")?[]:[this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
+
     callback = function() {};
     for (var arg in args)
       if(objTypeOf(args[arg]) == "Function")
@@ -56116,6 +56125,7 @@ ImageSequencer = function ImageSequencer(options) {
     for (arg in arguments) args.push(copy(arguments[arg]));
     json_q = formatInput.call(this,args,"l");
 
+    inputlog.push({method:"loadImages", json_q:copy(json_q)});
     loadedimages = this.copy(json_q.loadedimages);
 
     for (i in json_q.images)
@@ -56148,6 +56158,7 @@ ImageSequencer = function ImageSequencer(options) {
     insertSteps: insertSteps,
     replaceImage: replaceImage,
     run: run,
+    inputlog: inputlog,
     modules: modules,
     images: images,
     ui: options.ui,
@@ -56162,10 +56173,10 @@ module.exports = ImageSequencer;
 },{"./AddStep":114,"./FormatInput":115,"./InsertStep":117,"./LoadImage":118,"./Modules":119,"./ReplaceImage":120,"./Run":121,"jquery":44}],117:[function(require,module,exports){
 function InsertStep(ref, image, index, name, o) {
 
-  function insertStep(image, index, name, o) {
+  function insertStep(image, index, name, o_) {
     ref.log('\x1b[36m%s\x1b[0m','inserting step \"' + name + '\" to \"' + image + '\" at \"'+index+'\".');
 
-    o = o || {};
+    o = ref.copy(o_);
     o.id = ref.options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o.name || name;
     o.selector = o.selector || 'ismod-' + name;
@@ -56244,14 +56255,17 @@ module.exports = LoadImage;
  * Core modules
  */
 module.exports = {
-  'do-nothing': require('./modules/DoNothing'),
-  'green-channel': require('./modules/GreenChannel'),
-  'ndvi-red': require('./modules/NdviRed'),
-  'do-nothing-pix': require('./modules/DoNothingPix'),
-  'invert': require('./modules/Invert')
+  'do-nothing': require('./modules/DoNothing/Module'),
+  'green-channel': require('./modules/GreenChannel/Module'),
+  'ndvi-red': require('./modules/NdviRed/Module'),
+  'do-nothing-pix': require('./modules/DoNothingPix/Module.js'),
+  'invert': require('./modules/Invert/Module'),
+  'crop': require('./modules/Crop/Module'),
+  'segmented-colormap': require('./modules/SegmentedColormap/Module'),
+  'fisheye-gl': require('./modules/FisheyeGl/Module')
 }
 
-},{"./modules/DoNothing":122,"./modules/DoNothingPix":123,"./modules/GreenChannel":124,"./modules/Invert":125,"./modules/NdviRed":126}],120:[function(require,module,exports){
+},{"./modules/Crop/Module":123,"./modules/DoNothing/Module":124,"./modules/DoNothingPix/Module.js":125,"./modules/FisheyeGl/Module":126,"./modules/GreenChannel/Module":130,"./modules/Invert/Module":131,"./modules/NdviRed/Module":132,"./modules/SegmentedColormap/Module":133}],120:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   this_ = ref;
@@ -56338,8 +56352,87 @@ function Run(ref, json_q, callback) {
 module.exports = Run;
 
 },{}],122:[function(require,module,exports){
+module.exports = function Crop(input,options,callback) {
+
+  var getPixels = require("get-pixels"),
+      savePixels = require("save-pixels"),
+      base64 = require('base64-stream');
+
+  getPixels(input.src,function(err,pixels){
+    var newdata = [];
+    var ox = options.x || 0;
+    var oy = options.y || 0;
+    var w = options.w || Math.floor(0.5*pixels.shape[0]);
+    var h = options.h || Math.floor(0.5*pixels.shape[1]);
+    var iw = pixels.shape[0]; //Width of Original Image
+    newarray = new Uint8Array(4*w*h);
+    for (var n = oy; n < oy + h; n++) {
+      newarray.set(pixels.data.slice(n*4*iw + ox, n*4*iw + ox + 4*w),4*w*(n-oy));
+    }
+    pixels.data = newarray;
+    pixels.shape = [w,h,4];
+    pixels.stride[1] = 4*w;
+
+    options.format = "jpeg";
+
+    w = base64.encode();
+    var r = savePixels(pixels, options.format);
+    r.pipe(w).on('finish',function(){
+      data = w.read().toString();
+      datauri = 'data:image/' + options.format + ';base64,' + data;
+      callback(datauri,options.format);
+    });
+  });
+
+}
+
+},{"base64-stream":3,"get-pixels":27,"save-pixels":104}],123:[function(require,module,exports){
 /*
- * Demo Module. Does nothing.
+ * Image Cropping module
+ * Usage:
+ *    Expected Inputs:
+ *      options.x : x-coordinate of image where the modules starts cropping | default : 0
+ *      options.y : y-coordinate of image where the modules starts cropping | default : 0
+ *      options.w : width of the resulting cropped image | default : 50% of input image width
+ *      options.h : height of the resulting cropped image | default : 50% of input image height
+ *    Output:
+ *      The cropped image, which is essentially a rectangle bounded by the lines:
+ *          x = options.x
+ *          x = options.x + options.w
+ *          y = options.y
+ *          y = options.y + options.h
+ */
+ module.exports = function CropModule(options) {
+   options = options || {};
+   options.title = "Crop Image";
+   this_ = this;
+   var output
+
+   function draw(input,callback) {
+
+     const this_ = this;
+
+     require('./Crop')(input,options,function(out,format){
+       this_.output = {
+         src: out,
+         format: format
+       }
+       callback();
+     });
+
+
+   }
+
+   return {
+     options: options,
+     draw: draw,
+     output: output
+   }
+ }
+
+},{"./Crop":122}],124:[function(require,module,exports){
+/*
+ * Demo Module. Does nothing. Adds a step where output is equal to input.
  */
 module.exports = function DoNothing(options) {
   options = options || {};
@@ -56359,18 +56452,15 @@ module.exports = function DoNothing(options) {
   }
 }
 
-},{}],123:[function(require,module,exports){
+},{}],125:[function(require,module,exports){
 /*
- * Display only the green channel
+ * This module extracts pixels and saves them as it is.
  */
-module.exports = function GreenChannel(options) {
+module.exports = function DoNothingPix(options) {
 
   options = options || {};
-  options.title = "Green channel only";
-  options.description = "Displays only the green channel of an image";
+  options.title = "Do Nothing with pixels";
   var output;
-
-  //function setup() {} // optional
 
   function draw(input,callback) {
     this_ = this;
@@ -56380,7 +56470,7 @@ module.exports = function GreenChannel(options) {
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -56391,13 +56481,414 @@ module.exports = function GreenChannel(options) {
 
   return {
     options: options,
-    //setup: setup, // optional
     draw:  draw,
     output: output
   }
 }
 
-},{"./PixelManipulation.js":127}],124:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135}],126:[function(require,module,exports){
+/*
+ * Creates Fisheye Effect
+ */
+module.exports = function DoNothing(options) {
+  options = options || {};
+  options.title = "Fisheye GL";
+  var output
+
+  function draw(input,callback) {
+    this_ = this;
+    if (!options.inBrowser) { // This module is only for browser
+      this.output = input;
+      callback();
+    }
+    else {
+
+      if (!document.querySelector('#image-sequencer-canvas')) {
+        var canvas = document.createElement('canvas');
+        canvas.style.display = "none";
+        canvas.setAttribute('id','image-sequencer-canvas');
+        document.body.append(canvas);
+      }
+      else var canvas = document.querySelector('#image-sequencer-canvas');
+
+      distorter = require('./fisheyegl.js')({
+        selector: "#image-sequencer-canvas"
+      });
+
+      distorter.lens.a = options.a || distorter.lens.a;
+      distorter.lens.b = options.b || distorter.lens.b;
+      distorter.lens.Fx = options.Fx || distorter.lens.Fx;
+      distorter.lens.Fy = options.Fy || distorter.lens.Fy;
+      distorter.lens.scale = options.scale || distorter.lens.scale;
+      distorter.fov.x = options.x || distorter.fov.x;
+      distorter.fov.y = options.y || distorter.fov.y;
+
+      distorter.setImage(input.src,function(){
+        this_.output = {src: canvas.toDataURL(), format: input.format};
+        callback();
+      });
+
+    }
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output
+  }
+}
+
+},{"./fisheyegl.js":127}],127:[function(require,module,exports){
+module.exports = function FisheyeGl (options){
+
+  // Defaults:
+  options = options || {};
+
+  options.width = options.width || 800;
+  options.height = options.height || 600;
+
+  var model = options.model || {
+    vertex :[
+      -1.0, -1.0, 0.0,
+       1.0, -1.0, 0.0,
+       1.0,  1.0, 0.0,
+      -1.0,  1.0, 0.0
+    ],
+    indices :[
+      0, 1, 2,
+      0, 2, 3,
+      2, 1, 0,
+      3, 2, 0
+    ],
+    textureCoords : [
+      0.0, 0.0,
+      1.0, 0.0,
+      1.0, 1.0,
+      0.0, 1.0
+    ]
+  };
+
+  var lens = options.lens || {
+    a : 1.0,
+    b : 1.0,
+    Fx : 0.0,
+    Fy : 0.0,
+    scale : 1.5
+  };
+  var fov = options.fov || {
+    x : 1.0,
+    y : 1.0
+  }
+  var image = options.image || "images/barrel-distortion.png";
+
+  var selector = options.selector || "#canvas";
+  var gl = getGLContext(selector);
+
+  var vertexSrc = require("./shaders/vertex.glvs");
+  var fragmentSrc = require("./shaders/fragment3.glfs");
+
+  var program = compileShader(gl, vertexSrc, fragmentSrc)
+  gl.useProgram(program);
+
+  var aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
+  var aTextureCoord = gl.getAttribLocation(program, "aTextureCoord");
+  var uSampler = gl.getUniformLocation(program, "uSampler");
+  var uLensS = gl.getUniformLocation(program, "uLensS");
+  var uLensF = gl.getUniformLocation(program, "uLensF");
+  var uFov = gl.getUniformLocation(program, "uFov");
+
+  var vertexBuffer,
+      indexBuffer,
+      textureBuffer;
+
+  function createBuffers() {
+
+    vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.vertex), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+    indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(model.indices), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, null);
+
+    textureBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(model.textureCoords), gl.STATIC_DRAW);
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+
+  }
+
+  createBuffers();
+
+  function getGLContext(selector){
+    var canvas = document.querySelector(selector);
+
+    if(canvas == null){
+      throw new Error("there is no canvas on this page");
+    }
+
+    var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+    for (var i = 0; i < names.length; ++i) {
+      var gl;
+      try {
+        gl = canvas.getContext(names[i], { preserveDrawingBuffer: true });
+      } catch(e) {
+        continue;
+      }
+      if (gl) return gl;
+    }
+
+    throw new Error("WebGL is not supported!");
+  }
+
+  function compileShader(gl, vertexSrc, fragmentSrc){
+    var vertexShader = gl.createShader(gl.VERTEX_SHADER);
+    gl.shaderSource(vertexShader, vertexSrc);
+    gl.compileShader(vertexShader);
+
+    _checkCompile(vertexShader);
+
+    var fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+    gl.shaderSource(fragmentShader, fragmentSrc);
+    gl.compileShader(fragmentShader);
+
+    _checkCompile(fragmentShader);
+
+    var program = gl.createProgram();
+
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+
+    gl.linkProgram(program);
+
+    return program;
+
+    function _checkCompile(shader){
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        throw new Error(gl.getShaderInfoLog(shader));
+      }
+    }
+  }
+
+  function loadFile(url, callback){
+    var ajax = new XMLHttpRequest();
+
+    if(callback) {
+      ajax.addEventListener("readystatechange", on)
+      ajax.open("GET", url, true);
+      ajax.send(null);
+    } else {
+      ajax.open("GET", url, false);
+      ajax.send(null);
+
+      if(ajax.status == 200){
+        return ajax.responseText;
+      }
+    }
+
+    function on(){
+      if(ajax.readyState === 4){
+        //complete requset
+        if(ajax.status === 200){
+          //not error
+          callback(null, ajax.responseText);
+        } else {
+          callback(new Error("fail to load!"));
+        }
+      }
+    }
+  }
+
+  function loadImage(gl, img, callback, texture){
+    texture = texture || gl.createTexture();
+
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); //gl.NEAREST is also allowed, instead of gl.LINEAR, as neither mipmap.
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); //Prevents s-coordinate wrapping (repeating).
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); //Prevents t-coordinate wrapping (repeating).
+    //gl.generateMipmap(gl.TEXTURE_2D);
+    gl.bindTexture(gl.TEXTURE_2D, null);
+
+    if(callback) callback(null, texture);
+    return texture;
+  }
+
+  function loadImageFromUrl(gl, url, callback){
+    var texture = gl.createTexture();
+    var img = new Image();
+    img.addEventListener("load", function onload(){
+      loadImage(gl, img, callback, texture);
+      options.width = img.width;
+      options.height = img.height;
+      resize(
+        options.width,
+        options.height
+      )
+    });
+    img.src = url;
+    return texture;
+  }
+
+  function run(animate, callback){
+    var f = window.requestAnimationFrame || window.mozRequestAnimationFrame ||
+      window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+    // ugh
+    if(animate === true){
+      if(f){
+        f(on);
+      } else {
+        throw new Error("do not support 'requestAnimationFram'");
+      }
+    } else {
+      f(on);
+    }
+
+    var current = null;
+    function on(t){
+      if(!current) current = t;
+      var dt = t - current;
+      current = t;
+      options.runner(dt);
+      if (callback) callback();
+      if (animate === true) f(on);
+    }
+  }
+
+  function resize(w, h) {
+    gl.viewport(0, 0, w, h);
+    gl.canvas.width = w;
+    gl.canvas.height = h;
+  }
+
+  options.runner = options.runner|| function runner(dt){
+
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    gl.enable(gl.DEPTH_TEST);
+
+    gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+    gl.enableVertexAttribArray(aVertexPosition);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.vertexAttribPointer(aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+
+    gl.enableVertexAttribArray(aTextureCoord);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, textureBuffer);
+    gl.vertexAttribPointer(aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+    gl.uniform1i(uSampler, 0);
+
+    gl.uniform3fv(uLensS, [lens.a, lens.b, lens.scale]);
+    gl.uniform2fv(uLensF, [lens.Fx, lens.Fy]);
+    gl.uniform2fv(uFov, [fov.x, fov.y]);
+
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.drawElements(gl.TRIANGLES, model.indices.length, gl.UNSIGNED_SHORT, 0);
+
+  }
+
+  var texture;
+
+  function setImage(imageUrl, callback) {
+    texture = loadImageFromUrl(gl, imageUrl, function onImageLoad() {
+
+      run(options.animate, callback);
+
+    });
+  }
+
+  // setImage(image);
+
+  // asynchronous!
+  function getImage(format) {
+
+    var img = new Image();
+
+    img.src = gl.canvas.toDataURL(format || 'image/jpeg');
+
+    return img;
+
+  }
+
+  // external API:
+  var distorter = {
+    options:  options,
+    gl:       gl,
+    lens:     lens,
+    fov:      fov,
+    run:      run,
+    getImage: getImage,
+    setImage: setImage
+  }
+
+  return distorter;
+
+}
+
+},{"./shaders/fragment3.glfs":128,"./shaders/vertex.glvs":129}],128:[function(require,module,exports){
+module.exports = "#ifdef GL_ES\n\
+precision highp float;\n\
+#endif\n\
+\n\
+uniform vec3 uLensS;\n\
+uniform vec2 uLensF;\n\
+uniform vec2 uFov;\n\
+\n\
+uniform sampler2D uSampler;\n\
+\n\
+varying vec3 vPosition;\n\
+varying vec2 vTextureCoord;\n\
+\n\
+vec2 GLCoord2TextureCoord(vec2 glCoord) {\n\
+	return glCoord  * vec2(1.0, -1.0)/ 2.0 + vec2(0.5, 0.5);\n\
+}\n\
+\n\
+void main(void){\n\
+	float scale = uLensS.z;\n\
+	vec3 vPos = vPosition;\n\
+	float Fx = uLensF.x;\n\
+	float Fy = uLensF.y;\n\
+\n\
+	vec2 vMapping = vPos.xy;\n\
+	vMapping.x = vMapping.x + ((pow(vPos.y, 2.0)/scale)*vPos.x/scale)*-Fx;\n\
+	vMapping.y = vMapping.y + ((pow(vPos.x, 2.0)/scale)*vPos.y/scale)*-Fy;\n\
+	vMapping = vMapping * uLensS.xy;\n\
+\n\
+	vMapping = GLCoord2TextureCoord(vMapping/scale);\n\
+\n\
+	vec4 texture = texture2D(uSampler, vMapping);\n\
+	if(vMapping.x > 0.99 || vMapping.x < 0.01 || vMapping.y > 0.99 || vMapping.y < 0.01){\n\
+		texture = vec4(0.0, 0.0, 0.0, 1.0);\n\
+	}\n\
+	gl_FragColor = texture;\n\
+}\n\
+";
+
+},{}],129:[function(require,module,exports){
+module.exports = "#ifdef GL_ES\n\
+precision highp float;\n\
+#endif\n\
+attribute vec3 aVertexPosition;\n\
+attribute vec2 aTextureCoord;\n\
+varying vec3 vPosition;\n\
+varying vec2 vTextureCoord;\n\
+void main(void){\n\
+	vPosition = aVertexPosition;\n\
+	vTextureCoord = aTextureCoord;\n\
+	gl_Position = vec4(vPosition,1.0);\n\
+}";
+
+},{}],130:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -56418,7 +56909,7 @@ module.exports = function GreenChannel(options) {
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -56435,7 +56926,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":127}],125:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135}],131:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -56456,7 +56947,7 @@ module.exports = function GreenChannel(options) {
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -56473,7 +56964,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"./PixelManipulation.js":127}],126:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135}],132:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -56483,18 +56974,17 @@ module.exports = function NdviRed(options) {
   options.title = "NDVI for red-filtered cameras (blue is infrared)";
   var output;
 
-  //function setup() {} // optional
-
   function draw(input,callback) {
     this_ = this;
     function changePixel(r, g, b, a) {
-      var ndvi = 255 * (b - r) / (1.00 * b + r);
-      return [ndvi, ndvi, ndvi, a];
+      var ndvi = (b - r) / (1.00 * b + r);
+      var x = 255 * (ndvi + 1) / 2;
+      return [x, x, x, a];
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
     }
-    return require('./PixelManipulation.js')(input, {
+    return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
       format: input.format,
@@ -56505,12 +56995,104 @@ module.exports = function NdviRed(options) {
 
   return {
     options: options,
-    //setup: setup, // optional
     draw: draw
   }
 }
 
-},{"./PixelManipulation.js":127}],127:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":135}],133:[function(require,module,exports){
+module.exports = function SegmentedColormap(options) {
+
+  options = options || {};
+  options.title = "Segmented Colormap";
+  var output;
+
+  function draw(input,callback) {
+    this_ = this;
+    function changePixel(r, g, b, a) {
+      var ndvi = (b - r) / (r + b);
+      var normalized = (ndvi + 1) / 2;
+      var res = require('./SegmentedColormap')(normalized,options);
+      return [res[0], res[1], res[2], 255];
+    }
+    function output(image,datauri,mimetype){
+      this_.output = {src:datauri,format:mimetype}
+    }
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      callback: callback
+    });
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output
+  }
+}
+
+},{"../_nomodule/PixelManipulation.js":135,"./SegmentedColormap":134}],134:[function(require,module,exports){
+/*
+ * Accepts a normalized ndvi and returns the new color-mapped pixel
+ */
+
+module.exports = function SegmentedColormap(normalized,options) {
+  options.colormap = options.colormap || "default";
+  if(typeof(options.colormap) == "object")
+    colormapFunction = segmented_colormap(options.colormap);
+  else if(colormaps.hasOwnProperty(options.colormap))
+    colormapFunction = colormaps[options.colormap];
+  else colormapFunction = colormaps.default;
+
+  return colormapFunction(normalized);
+}
+
+function segmented_colormap(segments) {
+  return function(x) {
+    var i, result, x0, x1, xstart, y0, y1, _i, _j, _len, _ref, _ref1, _ref2, _ref3;
+    _ref = [0, 0], y0 = _ref[0], y1 = _ref[1];
+    _ref1 = [segments[0][0], 1], x0 = _ref1[0], x1 = _ref1[1];
+    if (x < x0) {
+      return y0;
+    }
+    for (i = _i = 0, _len = segments.length; _i < _len; i = ++_i) {
+      _ref2 = segments[i], xstart = _ref2[0], y0 = _ref2[1], y1 = _ref2[2];
+      x0 = xstart;
+      if (i === segments.length - 1) {
+        x1 = 1;
+        break;
+      }
+      x1 = segments[i + 1][0];
+      if ((xstart <= x && x < x1)) {
+        break;
+      }
+    }
+    result = [];
+    for (i = _j = 0, _ref3 = y0.length; 0 <= _ref3 ? _j < _ref3 : _j > _ref3; i = 0 <= _ref3 ? ++_j : --_j) {
+      result[i] = (x - x0) / (x1 - x0) * (y1[i] - y0[i]) + y0[i];
+    }
+    return result;
+  };
+};
+
+var greyscale_colormap = segmented_colormap([[0, [0, 0, 0], [255, 255, 255]], [1, [255, 255, 255], [255, 255, 255]]]);
+
+var default_colormap = segmented_colormap([[0, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 50, 50]]]);
+
+var stretched_colormap = segmented_colormap([[0, [0, 0, 255], [0, 0, 255]], [0.1, [0, 0, 255], [38, 195, 195]], [0.5, [0, 150, 0], [255, 255, 0]], [0.7, [255, 255, 0], [255, 50, 50]], [0.9, [255, 50, 50], [255, 50, 50]]]);
+
+var fastie_colormap = segmented_colormap([[0, [255, 255, 255], [0, 0, 0]], [0.167, [0, 0, 0], [255, 255, 255]], [0.33, [255, 255, 255], [0, 0, 0]], [0.5, [0, 0, 0], [140, 140, 255]], [0.55, [140, 140, 255], [0, 255, 0]], [0.63, [0, 255, 0], [255, 255, 0]], [0.75, [255, 255, 0], [255, 0, 0]], [0.95, [255, 0, 0], [255, 0, 255]]]);
+
+var colormaps = {
+  greyscale: greyscale_colormap,
+  default: default_colormap,
+  stretched: stretched_colormap,
+  fastie: fastie_colormap
+}
+
+},{}],135:[function(require,module,exports){
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
