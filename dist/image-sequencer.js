@@ -35152,7 +35152,10 @@ module.exports = function UserInterface(UI,options) {
     }
 
     UI.drawing = UI.drawing || function() {
-      if(options.inBrowser) {
+      if (options.ui == "none") {
+        // No UI
+      }
+      else if(options.inBrowser) {
         // Overlay a loading spinner
         console.log("Drawing Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
       }
@@ -35163,7 +35166,10 @@ module.exports = function UserInterface(UI,options) {
     }
 
     UI.drawn = UI.drawn || function(output) {
-      if(options.inBrowser) {
+      if (options.ui == "none") {
+        // No UI
+      }
+      else if(options.inBrowser) {
         // Update the DIV Element
         // Hide the laoding spinner
         console.log("Drawn Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
@@ -35174,11 +35180,13 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.remove = UI.remove || function() {
-      if(options.inBrowser) {
+    UI.remove = UI.remove || function(callback) {
+      if(options.ui == "null"){
+        // No UI
+      }
+      else if(options.inBrowser) {
         // Remove the DIV Element
         console.log("Removing Step \""+identity.stepName+"\" of \""+identity.imageName+"\".");
-        image.remove();
       }
       else {
         // Delete the NodeJS Object
