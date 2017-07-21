@@ -1,41 +1,64 @@
 /*
  * Default UI for each image-sequencer module
  */
-module.exports = function UserInterface(options) {
+module.exports = function UserInterface(UI,options) {
 
-  options = options || {};
-  options.container = options.container || ".panels";
-  options.id = options.id;
-  options.instanceName = options.instanceName;
-  options.random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000);
-  options.uniqueSelector = options.uniqueSelector || options.selector + '-' + options.random;
-  $(options.container).append('<div class="panel ' + options.selector + ' ' + options.uniqueSelector + '" id="sequencer-'+options.id+'"><div class="image"></div></div>');
-  options.el = options.el || $('.' + options.uniqueSelector);
-  createLabel(options.el);
+  return function userInterface(identity) {
 
-  // method to remove the UI for a given method, and remove the step
-  function display(image) {
-    options.el.find('.image').html(image);
-  }
+    var UI = UI || {};
 
-  // method to remove the UI for a given method, and remove the step
-  function remove() {
-    $('div#sequencer-'+options.id).remove();
-  }
+    UI.setup = UI.setup || function() {
+      if(options.ui == "none") {
+        // No UI
+      }
+      else if(options.inBrowser) {
+        // Create and append an HTML Element
+        console.log("Added Step \""+identity.stepName+"\" to \""+identity.imageName+"\".");
+      }
+      else {
+        // Create a NodeJS Object
+        console.log('\x1b[36m%s\x1b[0m',"Added Step \""+identity.stepName+"\" to \""+identity.imageName+"\".");
 
-  // method to reorder steps, and update the UI
-  //function move() {}
+      }
+    }
 
-  function createLabel(el) {
-    if (options.title) el.prepend('<h3 class="title">' + options.title + '</h3> <button class="btn btn-default" onclick="'+options.instanceName+'.removeStep('+options.id+')">Remove Step</button>');
-  }
+    UI.drawing = UI.drawing || function() {
+      if(options.inBrowser) {
+        // Overlay a loading spinner
+        console.log("Drawing Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
+      }
+      else {
+        // Don't do anything
+        console.log('\x1b[33m%s\x1b[0m',"Drawing Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
+      }
+    }
 
-  return {
-    el: options.el,
-    uniqueSelector: options.uniqueSelector,
-    selector: options.selector,
-    display: display,
-    remove: remove
+    UI.drawn = UI.drawn || function(output) {
+      if(options.inBrowser) {
+        // Update the DIV Element
+        // Hide the laoding spinner
+        console.log("Drawn Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
+      }
+      else {
+        // Update the NodeJS Object
+        console.log('\x1b[32m%s\x1b[0m',"Drawn Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
+      }
+    }
+
+    UI.remove = UI.remove || function() {
+      if(options.inBrowser) {
+        // Remove the DIV Element
+        console.log("Removing Step \""+identity.stepName+"\" of \""+identity.imageName+"\".");
+        image.remove();
+      }
+      else {
+        // Delete the NodeJS Object
+        console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+identity.stepName+"\" of \""+identity.imageName+"\".");
+      }
+    }
+
+    return UI;
+
   }
 
 }
