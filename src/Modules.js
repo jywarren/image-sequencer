@@ -8,5 +8,6 @@ module.exports = {
   'do-nothing-pix': require('./modules/DoNothingPix/Module.js'),
   'invert': require('./modules/Invert/Module'),
   'crop': require('./modules/Crop/Module'),
-  'segmented-colormap': require('./modules/SegmentedColormap/Module')
+  'segmented-colormap': require('./modules/SegmentedColormap/Module'),
+  'decode-qr': require('./modules/DecodeQr/Module')
 }

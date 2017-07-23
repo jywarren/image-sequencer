@@ -359,7 +359,7 @@ var objectKeys = Object.keys || function (obj) {
   return keys;
 };
 
-},{"util/":113}],2:[function(require,module,exports){
+},{"util/":114}],2:[function(require,module,exports){
 'use strict'
 
 exports.byteLength = byteLength
@@ -551,7 +551,7 @@ Base64Decode.prototype._flush = function (cb) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":10,"readable-stream":97,"stream":105,"util":113}],5:[function(require,module,exports){
+},{"buffer":10,"readable-stream":98,"stream":106,"util":114}],5:[function(require,module,exports){
 (function (Buffer){
 module.exports = Base64Encode;
 
@@ -653,7 +653,7 @@ Base64Encode.prototype._flush = function (cb) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":10,"readable-stream":97,"stream":105,"util":113}],6:[function(require,module,exports){
+},{"buffer":10,"readable-stream":98,"stream":106,"util":114}],6:[function(require,module,exports){
 
 },{}],7:[function(require,module,exports){
 (function (process,Buffer){
@@ -895,7 +895,7 @@ Zlib.prototype._error = function(status) {
 exports.Zlib = Zlib;
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":86,"buffer":10,"pako/lib/zlib/constants":54,"pako/lib/zlib/deflate.js":56,"pako/lib/zlib/inflate.js":58,"pako/lib/zlib/messages":60,"pako/lib/zlib/zstream":62}],8:[function(require,module,exports){
+},{"_process":87,"buffer":10,"pako/lib/zlib/constants":55,"pako/lib/zlib/deflate.js":57,"pako/lib/zlib/inflate.js":59,"pako/lib/zlib/messages":61,"pako/lib/zlib/zstream":63}],8:[function(require,module,exports){
 (function (process,Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -1509,7 +1509,7 @@ util.inherits(InflateRaw, Zlib);
 util.inherits(Unzip, Zlib);
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./binding":7,"_process":86,"_stream_transform":98,"assert":1,"buffer":10,"util":113}],9:[function(require,module,exports){
+},{"./binding":7,"_process":87,"_stream_transform":99,"assert":1,"buffer":10,"util":114}],9:[function(require,module,exports){
 arguments[4][6][0].apply(exports,arguments)
 },{"dup":6}],10:[function(require,module,exports){
 (function (global){
@@ -3360,7 +3360,7 @@ ContentStream.prototype._read = function (n) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":10,"readable-stream":19,"util":113}],13:[function(require,module,exports){
+},{"buffer":10,"readable-stream":19,"util":114}],13:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
@@ -3458,7 +3458,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":16,"./_stream_writable":18,"_process":86,"core-util-is":21,"inherits":40}],15:[function(require,module,exports){
+},{"./_stream_readable":16,"./_stream_writable":18,"_process":87,"core-util-is":21,"inherits":40}],15:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -4492,7 +4492,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"_process":86,"buffer":10,"core-util-is":21,"events":26,"inherits":40,"isarray":13,"stream":105,"string_decoder/":20}],17:[function(require,module,exports){
+},{"_process":87,"buffer":10,"core-util-is":21,"events":26,"inherits":40,"isarray":13,"stream":106,"string_decoder/":20}],17:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5094,7 +5094,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":14,"_process":86,"buffer":10,"core-util-is":21,"inherits":40,"stream":105}],19:[function(require,module,exports){
+},{"./_stream_duplex":14,"_process":87,"buffer":10,"core-util-is":21,"inherits":40,"stream":106}],19:[function(require,module,exports){
 (function (process){
 var Stream = require('stream'); // hack to fix a circular dependency issue when used with browserify
 exports = module.exports = require('./lib/_stream_readable.js');
@@ -5109,7 +5109,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":14,"./lib/_stream_passthrough.js":15,"./lib/_stream_readable.js":16,"./lib/_stream_transform.js":17,"./lib/_stream_writable.js":18,"_process":86,"stream":105}],20:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":14,"./lib/_stream_passthrough.js":15,"./lib/_stream_readable.js":16,"./lib/_stream_transform.js":17,"./lib/_stream_writable.js":18,"_process":87,"stream":106}],20:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5914,7 +5914,7 @@ function generateCWiseOp(proc, typesig) {
 }
 module.exports = generateCWiseOp
 
-},{"uniq":108}],24:[function(require,module,exports){
+},{"uniq":109}],24:[function(require,module,exports){
 "use strict"
 
 // The function below is called when constructing a cwise function object, and does the following:
@@ -6502,7 +6502,7 @@ module.exports = function getPixels(url, type, cb) {
   }
 }
 }).call(this,{"isBuffer":require("../is-buffer/index.js")},require('_process'))
-},{"../is-buffer/index.js":42,"_process":86,"data-uri-to-buffer":25,"ndarray":50,"ndarray-pack":48,"omggif":51,"path":63,"through":107}],28:[function(require,module,exports){
+},{"../is-buffer/index.js":42,"_process":87,"data-uri-to-buffer":25,"ndarray":51,"ndarray-pack":49,"omggif":52,"path":64,"through":108}],28:[function(require,module,exports){
 (function (Buffer){
 /*
   GIFEncoder.js
@@ -6975,7 +6975,7 @@ GIFEncoder.ByteCapacitor = ByteCapacitor;
 module.exports = GIFEncoder;
 
 }).call(this,require("buffer").Buffer)
-},{"./LZWEncoder.js":29,"./TypedNeuQuant.js":30,"assert":1,"buffer":10,"events":26,"readable-stream":37,"util":113}],29:[function(require,module,exports){
+},{"./LZWEncoder.js":29,"./TypedNeuQuant.js":30,"assert":1,"buffer":10,"events":26,"readable-stream":37,"util":114}],29:[function(require,module,exports){
 /*
   LZWEncoder.js
 
@@ -7626,7 +7626,7 @@ module.exports = NeuQuant;
 arguments[4][13][0].apply(exports,arguments)
 },{"dup":13}],32:[function(require,module,exports){
 arguments[4][14][0].apply(exports,arguments)
-},{"./_stream_readable":34,"./_stream_writable":36,"_process":86,"core-util-is":21,"dup":14,"inherits":40}],33:[function(require,module,exports){
+},{"./_stream_readable":34,"./_stream_writable":36,"_process":87,"core-util-is":21,"dup":14,"inherits":40}],33:[function(require,module,exports){
 arguments[4][15][0].apply(exports,arguments)
 },{"./_stream_transform":35,"core-util-is":21,"dup":15,"inherits":40}],34:[function(require,module,exports){
 (function (process){
@@ -8583,7 +8583,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":32,"_process":86,"buffer":10,"core-util-is":21,"events":26,"inherits":40,"isarray":31,"stream":105,"string_decoder/":38,"util":6}],35:[function(require,module,exports){
+},{"./_stream_duplex":32,"_process":87,"buffer":10,"core-util-is":21,"events":26,"inherits":40,"isarray":31,"stream":106,"string_decoder/":38,"util":6}],35:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -9275,7 +9275,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":32,"_process":86,"buffer":10,"core-util-is":21,"inherits":40,"stream":105}],37:[function(require,module,exports){
+},{"./_stream_duplex":32,"_process":87,"buffer":10,"core-util-is":21,"inherits":40,"stream":106}],37:[function(require,module,exports){
 (function (process){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
@@ -9289,7 +9289,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":32,"./lib/_stream_passthrough.js":33,"./lib/_stream_readable.js":34,"./lib/_stream_transform.js":35,"./lib/_stream_writable.js":36,"_process":86,"stream":105}],38:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":32,"./lib/_stream_passthrough.js":33,"./lib/_stream_readable.js":34,"./lib/_stream_transform.js":35,"./lib/_stream_writable.js":36,"_process":87,"stream":106}],38:[function(require,module,exports){
 arguments[4][20][0].apply(exports,arguments)
 },{"buffer":10,"dup":20}],39:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
@@ -19256,6 +19256,2732 @@ return jQuery;
 }));
 
 },{}],45:[function(require,module,exports){
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["jsQR"] = factory();
+	else
+		root["jsQR"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId])
+/******/ 			return installedModules[moduleId].exports;
+
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			exports: {},
+/******/ 			id: moduleId,
+/******/ 			loaded: false
+/******/ 		};
+
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+
+/******/ 		// Flag the module as loaded
+/******/ 		module.loaded = true;
+
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+
+
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/// <reference path="./common/types.d.ts" />
+	var binarizer_1 = __webpack_require__(1);
+	var locator_1 = __webpack_require__(3);
+	var extractor_1 = __webpack_require__(4);
+	var decoder_1 = __webpack_require__(9);
+	var bitmatrix_1 = __webpack_require__(2);
+	var binarizeImage = binarizer_1.binarize;
+	exports.binarizeImage = binarizeImage;
+	var locateQRInBinaryImage = locator_1.locate;
+	exports.locateQRInBinaryImage = locateQRInBinaryImage;
+	var extractQRFromBinaryImage = extractor_1.extract;
+	exports.extractQRFromBinaryImage = extractQRFromBinaryImage;
+	function decodeQR(matrix) {
+	    return byteArrayToString(decoder_1.decode(matrix));
+	}
+	exports.decodeQR = decodeQR;
+	// return bytes.reduce((p, b) => p + String.fromCharCode(b), "");
+	function byteArrayToString(bytes) {
+	    var str = "";
+	    if (bytes != null && bytes != undefined) {
+	        for (var i = 0; i < bytes.length; i++) {
+	            str += String.fromCharCode(bytes[i]);
+	        }
+	    }
+	    return str;
+	}
+	function createBitMatrix(data, width) {
+	    return new bitmatrix_1.BitMatrix(data, width);
+	}
+	exports.createBitMatrix = createBitMatrix;
+	function decodeQRFromImage(data, width, height) {
+	    return byteArrayToString(decodeQRFromImageAsByteArray(data, width, height));
+	}
+	exports.decodeQRFromImage = decodeQRFromImage;
+	function decodeQRFromImageAsByteArray(data, width, height) {
+	    var binarizedImage = binarizeImage(data, width, height);
+	    var location = locator_1.locate(binarizedImage);
+	    if (!location) {
+	        return null;
+	    }
+	    var rawQR = extractor_1.extract(binarizedImage, location);
+	    if (!rawQR) {
+	        return null;
+	    }
+	    return decoder_1.decode(rawQR);
+	}
+	exports.decodeQRFromImageAsByteArray = decodeQRFromImageAsByteArray;
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var bitmatrix_1 = __webpack_require__(2);
+	// Magic Constants
+	var BLOCK_SIZE_POWER = 3;
+	var BLOCK_SIZE = 1 << BLOCK_SIZE_POWER;
+	var BLOCK_SIZE_MASK = BLOCK_SIZE - 1;
+	var MIN_DYNAMIC_RANGE = 24;
+	function calculateBlackPoints(luminances, subWidth, subHeight, width, height) {
+	    var blackPoints = new Array(subHeight);
+	    for (var i = 0; i < subHeight; i++) {
+	        blackPoints[i] = new Array(subWidth);
+	    }
+	    for (var y = 0; y < subHeight; y++) {
+	        var yoffset = y << BLOCK_SIZE_POWER;
+	        var maxYOffset = height - BLOCK_SIZE;
+	        if (yoffset > maxYOffset) {
+	            yoffset = maxYOffset;
+	        }
+	        for (var x = 0; x < subWidth; x++) {
+	            var xoffset = x << BLOCK_SIZE_POWER;
+	            var maxXOffset = width - BLOCK_SIZE;
+	            if (xoffset > maxXOffset) {
+	                xoffset = maxXOffset;
+	            }
+	            var sum = 0;
+	            var min = 0xFF;
+	            var max = 0;
+	            for (var yy = 0, offset = yoffset * width + xoffset; yy < BLOCK_SIZE; yy++, offset += width) {
+	                for (var xx = 0; xx < BLOCK_SIZE; xx++) {
+	                    var pixel = luminances[offset + xx] & 0xFF;
+	                    // still looking for good contrast
+	                    sum += pixel;
+	                    if (pixel < min) {
+	                        min = pixel;
+	                    }
+	                    if (pixel > max) {
+	                        max = pixel;
+	                    }
+	                }
+	                // short-circuit min/max tests once dynamic range is met
+	                if (max - min > MIN_DYNAMIC_RANGE) {
+	                    // finish the rest of the rows quickly
+	                    for (yy++, offset += width; yy < BLOCK_SIZE; yy++, offset += width) {
+	                        for (var xx = 0; xx < BLOCK_SIZE; xx++) {
+	                            sum += luminances[offset + xx] & 0xFF;
+	                        }
+	                    }
+	                }
+	            }
+	            // The default estimate is the average of the values in the block.
+	            var average = sum >> (BLOCK_SIZE_POWER * 2);
+	            if (max - min <= MIN_DYNAMIC_RANGE) {
+	                // If variation within the block is low, assume this is a block with only light or only
+	                // dark pixels. In that case we do not want to use the average, as it would divide this
+	                // low contrast area into black and white pixels, essentially creating data out of noise.
+	                //
+	                // The default assumption is that the block is light/background. Since no estimate for
+	                // the level of dark pixels exists locally, use half the min for the block.
+	                average = min >> 1;
+	                if (y > 0 && x > 0) {
+	                    // Correct the "white background" assumption for blocks that have neighbors by comparing
+	                    // the pixels in this block to the previously calculated black points. This is based on
+	                    // the fact that dark barcode symbology is always surrounded by some amount of light
+	                    // background for which reasonable black point estimates were made. The bp estimated at
+	                    // the boundaries is used for the interior.
+	                    // The (min < bp) is arbitrary but works better than other heuristics that were tried.
+	                    var averageNeighborBlackPoint = (blackPoints[y - 1][x] + (2 * blackPoints[y][x - 1]) + blackPoints[y - 1][x - 1]) >> 2;
+	                    if (min < averageNeighborBlackPoint) {
+	                        average = averageNeighborBlackPoint;
+	                    }
+	                }
+	            }
+	            blackPoints[y][x] = average;
+	        }
+	    }
+	    return blackPoints;
+	}
+	function calculateThresholdForBlock(luminances, subWidth, subHeight, width, height, blackPoints) {
+	    function cap(value, min, max) {
+	        return value < min ? min : value > max ? max : value;
+	    }
+	    // var outArray = new Array(width * height);
+	    var outMatrix = bitmatrix_1.BitMatrix.createEmpty(width, height);
+	    function thresholdBlock(luminances, xoffset, yoffset, threshold, stride) {
+	        var offset = (yoffset * stride) + xoffset;
+	        for (var y = 0; y < BLOCK_SIZE; y++, offset += stride) {
+	            for (var x = 0; x < BLOCK_SIZE; x++) {
+	                var pixel = luminances[offset + x] & 0xff;
+	                // Comparison needs to be <= so that black == 0 pixels are black even if the threshold is 0.
+	                outMatrix.set(xoffset + x, yoffset + y, pixel <= threshold);
+	            }
+	        }
+	    }
+	    for (var y = 0; y < subHeight; y++) {
+	        var yoffset = y << BLOCK_SIZE_POWER;
+	        var maxYOffset = height - BLOCK_SIZE;
+	        if (yoffset > maxYOffset) {
+	            yoffset = maxYOffset;
+	        }
+	        for (var x = 0; x < subWidth; x++) {
+	            var xoffset = x << BLOCK_SIZE_POWER;
+	            var maxXOffset = width - BLOCK_SIZE;
+	            if (xoffset > maxXOffset) {
+	                xoffset = maxXOffset;
+	            }
+	            var left = cap(x, 2, subWidth - 3);
+	            var top = cap(y, 2, subHeight - 3);
+	            var sum = 0;
+	            for (var z = -2; z <= 2; z++) {
+	                var blackRow = blackPoints[top + z];
+	                sum += blackRow[left - 2];
+	                sum += blackRow[left - 1];
+	                sum += blackRow[left];
+	                sum += blackRow[left + 1];
+	                sum += blackRow[left + 2];
+	            }
+	            var average = sum / 25;
+	            thresholdBlock(luminances, xoffset, yoffset, average, width);
+	        }
+	    }
+	    return outMatrix;
+	}
+	function binarize(data, width, height) {
+	    if (data.length !== width * height * 4) {
+	        throw new Error("Binarizer data.length != width * height * 4");
+	    }
+	    var gsArray = new Array(width * height);
+	    for (var x = 0; x < width; x++) {
+	        for (var y = 0; y < height; y++) {
+	            var startIndex = (y * width + x) * 4;
+	            var r = data[startIndex];
+	            var g = data[startIndex + 1];
+	            var b = data[startIndex + 2];
+	            // Magic lumosity constants
+	            var lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+	            gsArray[y * width + x] = lum;
+	        }
+	    }
+	    var subWidth = width >> BLOCK_SIZE_POWER;
+	    if ((width & BLOCK_SIZE_MASK) != 0) {
+	        subWidth++;
+	    }
+	    var subHeight = height >> BLOCK_SIZE_POWER;
+	    if ((height & BLOCK_SIZE_MASK) != 0) {
+	        subHeight++;
+	    }
+	    var blackPoints = calculateBlackPoints(gsArray, subWidth, subHeight, width, height);
+	    return calculateThresholdForBlock(gsArray, subWidth, subHeight, width, height, blackPoints);
+	}
+	exports.binarize = binarize;
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var BitMatrix = (function () {
+	    function BitMatrix(data, width) {
+	        this.width = width;
+	        this.height = data.length / width;
+	        this.data = data;
+	    }
+	    BitMatrix.createEmpty = function (width, height) {
+	        var data = new Array(width * height);
+	        for (var i = 0; i < data.length; i++) {
+	            data[i] = false;
+	        }
+	        return new BitMatrix(data, width);
+	    };
+	    BitMatrix.prototype.get = function (x, y) {
+	        return this.data[y * this.width + x];
+	    };
+	    BitMatrix.prototype.set = function (x, y, v) {
+	        this.data[y * this.width + x] = v;
+	    };
+	    BitMatrix.prototype.copyBit = function (x, y, versionBits) {
+	        return this.get(x, y) ? (versionBits << 1) | 0x1 : versionBits << 1;
+	    };
+	    BitMatrix.prototype.setRegion = function (left, top, width, height) {
+	        var right = left + width;
+	        var bottom = top + height;
+	        for (var y = top; y < bottom; y++) {
+	            for (var x = left; x < right; x++) {
+	                this.set(x, y, true);
+	            }
+	        }
+	    };
+	    BitMatrix.prototype.mirror = function () {
+	        for (var x = 0; x < this.width; x++) {
+	            for (var y = x + 1; y < this.height; y++) {
+	                if (this.get(x, y) != this.get(y, x)) {
+	                    this.set(x, y, !this.get(x, y));
+	                    this.set(y, x, !this.get(y, x));
+	                }
+	            }
+	        }
+	    };
+	    return BitMatrix;
+	}());
+	exports.BitMatrix = BitMatrix;
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var CENTER_QUORUM = 2;
+	var MIN_SKIP = 3;
+	var MAX_MODULES = 57;
+	var INTEGER_MATH_SHIFT = 8;
+	var FinderPattern = (function () {
+	    function FinderPattern(x, y, estimatedModuleSize, count) {
+	        this.x = x;
+	        this.y = y;
+	        this.estimatedModuleSize = estimatedModuleSize;
+	        if (count == null) {
+	            this.count = 1;
+	        }
+	        else {
+	            this.count = count;
+	        }
+	    }
+	    FinderPattern.prototype.aboutEquals = function (moduleSize, i, j) {
+	        if (Math.abs(i - this.y) <= moduleSize && Math.abs(j - this.x) <= moduleSize) {
+	            var moduleSizeDiff = Math.abs(moduleSize - this.estimatedModuleSize);
+	            return moduleSizeDiff <= 1.0 || moduleSizeDiff <= this.estimatedModuleSize;
+	        }
+	        return false;
+	    };
+	    FinderPattern.prototype.combineEstimate = function (i, j, newModuleSize) {
+	        var combinedCount = this.count + 1;
+	        var combinedX = (this.count * this.x + j) / combinedCount;
+	        var combinedY = (this.count * this.y + i) / combinedCount;
+	        var combinedModuleSize = (this.count * this.estimatedModuleSize + newModuleSize) / combinedCount;
+	        return new FinderPattern(combinedX, combinedY, combinedModuleSize, combinedCount);
+	    };
+	    return FinderPattern;
+	}());
+	function foundPatternCross(stateCount) {
+	    var totalModuleSize = 0;
+	    for (var i = 0; i < 5; i++) {
+	        var count = stateCount[i];
+	        if (count === 0)
+	            return false;
+	        totalModuleSize += count;
+	    }
+	    if (totalModuleSize < 7)
+	        return false;
+	    var moduleSize = (totalModuleSize << INTEGER_MATH_SHIFT) / 7;
+	    var maxVariance = moduleSize / 2;
+	    // Allow less than 50% variance from 1-1-3-1-1 proportions
+	    return Math.abs(moduleSize - (stateCount[0] << INTEGER_MATH_SHIFT)) < maxVariance &&
+	        Math.abs(moduleSize - (stateCount[1] << INTEGER_MATH_SHIFT)) < maxVariance &&
+	        Math.abs(3 * moduleSize - (stateCount[2] << INTEGER_MATH_SHIFT)) < 3 * maxVariance &&
+	        Math.abs(moduleSize - (stateCount[3] << INTEGER_MATH_SHIFT)) < maxVariance &&
+	        Math.abs(moduleSize - (stateCount[4] << INTEGER_MATH_SHIFT)) < maxVariance;
+	}
+	function centerFromEnd(stateCount, end) {
+	    var result = (end - stateCount[4] - stateCount[3]) - stateCount[2] / 2;
+	    // Fix this.
+	    if (result !== result) {
+	        return null;
+	    }
+	    return result;
+	}
+	function distance(pattern1, pattern2) {
+	    var a = pattern1.x - pattern2.x;
+	    var b = pattern1.y - pattern2.y;
+	    return Math.sqrt(a * a + b * b);
+	}
+	function crossProductZ(pointA, pointB, pointC) {
+	    var bX = pointB.x;
+	    var bY = pointB.y;
+	    return ((pointC.x - bX) * (pointA.y - bY)) - ((pointC.y - bY) * (pointA.x - bX));
+	}
+	function ReorderFinderPattern(patterns) {
+	    // Find distances between pattern centers
+	    var zeroOneDistance = distance(patterns[0], patterns[1]);
+	    var oneTwoDistance = distance(patterns[1], patterns[2]);
+	    var zeroTwoDistance = distance(patterns[0], patterns[2]);
+	    var pointA, pointB, pointC;
+	    // Assume one closest to other two is B; A and C will just be guesses at first
+	    if (oneTwoDistance >= zeroOneDistance && oneTwoDistance >= zeroTwoDistance) {
+	        pointB = patterns[0];
+	        pointA = patterns[1];
+	        pointC = patterns[2];
+	    }
+	    else if (zeroTwoDistance >= oneTwoDistance && zeroTwoDistance >= zeroOneDistance) {
+	        pointB = patterns[1];
+	        pointA = patterns[0];
+	        pointC = patterns[2];
+	    }
+	    else {
+	        pointB = patterns[2];
+	        pointA = patterns[0];
+	        pointC = patterns[1];
+	    }
+	    // Use cross product to figure out whether A and C are correct or flipped.
+	    // This asks whether BC x BA has a positive z component, which is the arrangement
+	    // we want for A, B, C. If it's negative, then we've got it flipped around and
+	    // should swap A and C.
+	    if (crossProductZ(pointA, pointB, pointC) < 0) {
+	        var temp = pointA;
+	        pointA = pointC;
+	        pointC = temp;
+	    }
+	    return {
+	        bottomLeft: { x: pointA.x, y: pointA.y },
+	        topLeft: { x: pointB.x, y: pointB.y },
+	        topRight: { x: pointC.x, y: pointC.y }
+	    };
+	}
+	function locate(matrix) {
+	    // Global state :(
+	    var possibleCenters = [];
+	    var hasSkipped = false;
+	    function get(x, y) {
+	        x = Math.floor(x);
+	        y = Math.floor(y);
+	        return matrix.get(x, y);
+	    }
+	    // Methods
+	    function crossCheckDiagonal(startI, centerJ, maxCount, originalStateCountTotal) {
+	        var maxI = matrix.height;
+	        var maxJ = matrix.width;
+	        var stateCount = [0, 0, 0, 0, 0];
+	        // Start counting up, left from center finding black center mass
+	        var i = 0;
+	        while (startI - i >= 0 && get(centerJ - i, startI - i)) {
+	            stateCount[2]++;
+	            i++;
+	        }
+	        if ((startI - i < 0) || (centerJ - i < 0)) {
+	            return false;
+	        }
+	        // Continue up, left finding white space
+	        while ((startI - i >= 0) && (centerJ - i >= 0) && !get(centerJ - i, startI - i) && stateCount[1] <= maxCount) {
+	            stateCount[1]++;
+	            i++;
+	        }
+	        // If already too many modules in this state or ran off the edge:
+	        if ((startI - i < 0) || (centerJ - i < 0) || stateCount[1] > maxCount) {
+	            return false;
+	        }
+	        // Continue up, left finding black border
+	        while ((startI - i >= 0) && (centerJ - i >= 0) && get(centerJ - i, startI - i) && stateCount[0] <= maxCount) {
+	            stateCount[0]++;
+	            i++;
+	        }
+	        if (stateCount[0] > maxCount) {
+	            return false;
+	        }
+	        // Now also count down, right from center
+	        i = 1;
+	        while ((startI + i < maxI) && (centerJ + i < maxJ) && get(centerJ + i, startI + i)) {
+	            stateCount[2]++;
+	            i++;
+	        }
+	        // Ran off the edge?
+	        if ((startI + i >= maxI) || (centerJ + i >= maxJ)) {
+	            return false;
+	        }
+	        while ((startI + i < maxI) && (centerJ + i < maxJ) && !get(centerJ + i, startI + i) && stateCount[3] < maxCount) {
+	            stateCount[3]++;
+	            i++;
+	        }
+	        if ((startI + i >= maxI) || (centerJ + i >= maxJ) || stateCount[3] >= maxCount) {
+	            return false;
+	        }
+	        while ((startI + i < maxI) && (centerJ + i < maxJ) && get(centerJ + i, startI + i) && stateCount[4] < maxCount) {
+	            stateCount[4]++;
+	            i++;
+	        }
+	        if (stateCount[4] >= maxCount) {
+	            return false;
+	        }
+	        // If we found a finder-pattern-like section, but its size is more than 100% different than
+	        // the original, assume it's a false positive
+	        var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+	        return Math.abs(stateCountTotal - originalStateCountTotal) < 2 * originalStateCountTotal &&
+	            foundPatternCross(stateCount);
+	    }
+	    function crossCheckVertical(startI, centerJ, maxCount, originalStateCountTotal) {
+	        var maxI = matrix.height;
+	        var stateCount = [0, 0, 0, 0, 0];
+	        // Start counting up from center
+	        var i = startI;
+	        while (i >= 0 && get(centerJ, i)) {
+	            stateCount[2]++;
+	            i--;
+	        }
+	        if (i < 0) {
+	            return null;
+	        }
+	        while (i >= 0 && !get(centerJ, i) && stateCount[1] <= maxCount) {
+	            stateCount[1]++;
+	            i--;
+	        }
+	        // If already too many modules in this state or ran off the edge:
+	        if (i < 0 || stateCount[1] > maxCount) {
+	            return null;
+	        }
+	        while (i >= 0 && get(centerJ, i) && stateCount[0] <= maxCount) {
+	            stateCount[0]++;
+	            i--;
+	        }
+	        if (stateCount[0] > maxCount) {
+	            return null;
+	        }
+	        // Now also count down from center
+	        i = startI + 1;
+	        while (i < maxI && get(centerJ, i)) {
+	            stateCount[2]++;
+	            i++;
+	        }
+	        if (i == maxI) {
+	            return null;
+	        }
+	        while (i < maxI && !get(centerJ, i) && stateCount[3] < maxCount) {
+	            stateCount[3]++;
+	            i++;
+	        }
+	        if (i == maxI || stateCount[3] >= maxCount) {
+	            return null;
+	        }
+	        while (i < maxI && get(centerJ, i) && stateCount[4] < maxCount) {
+	            stateCount[4]++;
+	            i++;
+	        }
+	        if (stateCount[4] >= maxCount) {
+	            return null;
+	        }
+	        // If we found a finder-pattern-like section, but its size is more than 40% different than
+	        // the original, assume it's a false positive
+	        var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+	        if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= 2 * originalStateCountTotal) {
+	            return null;
+	        }
+	        return foundPatternCross(stateCount) ? centerFromEnd(stateCount, i) : null;
+	    }
+	    function haveMultiplyConfirmedCenters() {
+	        var confirmedCount = 0;
+	        var totalModuleSize = 0;
+	        var max = possibleCenters.length;
+	        possibleCenters.forEach(function (pattern) {
+	            if (pattern.count >= CENTER_QUORUM) {
+	                confirmedCount++;
+	                totalModuleSize += pattern.estimatedModuleSize;
+	            }
+	        });
+	        if (confirmedCount < 3) {
+	            return false;
+	        }
+	        // OK, we have at least 3 confirmed centers, but, it's possible that one is a "false positive"
+	        // and that we need to keep looking. We detect this by asking if the estimated module sizes
+	        // vary too much. We arbitrarily say that when the total deviation from average exceeds
+	        // 5% of the total module size estimates, it's too much.
+	        var average = totalModuleSize / max;
+	        var totalDeviation = 0;
+	        for (var i = 0; i < max; i++) {
+	            var pattern = possibleCenters[i];
+	            totalDeviation += Math.abs(pattern.estimatedModuleSize - average);
+	        }
+	        return totalDeviation <= 0.05 * totalModuleSize;
+	    }
+	    function crossCheckHorizontal(startJ, centerI, maxCount, originalStateCountTotal) {
+	        var maxJ = matrix.width;
+	        var stateCount = [0, 0, 0, 0, 0];
+	        var j = startJ;
+	        while (j >= 0 && get(j, centerI)) {
+	            stateCount[2]++;
+	            j--;
+	        }
+	        if (j < 0) {
+	            return null;
+	        }
+	        while (j >= 0 && !get(j, centerI) && stateCount[1] <= maxCount) {
+	            stateCount[1]++;
+	            j--;
+	        }
+	        if (j < 0 || stateCount[1] > maxCount) {
+	            return null;
+	        }
+	        while (j >= 0 && get(j, centerI) && stateCount[0] <= maxCount) {
+	            stateCount[0]++;
+	            j--;
+	        }
+	        if (stateCount[0] > maxCount) {
+	            return null;
+	        }
+	        j = startJ + 1;
+	        while (j < maxJ && get(j, centerI)) {
+	            stateCount[2]++;
+	            j++;
+	        }
+	        if (j == maxJ) {
+	            return null;
+	        }
+	        while (j < maxJ && !get(j, centerI) && stateCount[3] < maxCount) {
+	            stateCount[3]++;
+	            j++;
+	        }
+	        if (j == maxJ || stateCount[3] >= maxCount) {
+	            return null;
+	        }
+	        while (j < maxJ && get(j, centerI) && stateCount[4] < maxCount) {
+	            stateCount[4]++;
+	            j++;
+	        }
+	        if (stateCount[4] >= maxCount) {
+	            return null;
+	        }
+	        // If we found a finder-pattern-like section, but its size is significantly different than
+	        // the original, assume it's a false positive
+	        var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+	        if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= originalStateCountTotal) {
+	            return null;
+	        }
+	        return foundPatternCross(stateCount) ? centerFromEnd(stateCount, j) : null;
+	    }
+	    function handlePossibleCenter(stateCount, i, j, pureBarcode) {
+	        var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2] + stateCount[3] + stateCount[4];
+	        var centerJ = centerFromEnd(stateCount, j);
+	        if (centerJ == null)
+	            return false;
+	        var centerI = crossCheckVertical(i, Math.floor(centerJ), stateCount[2], stateCountTotal);
+	        if (centerI != null) {
+	            // Re-cross check
+	            centerJ = crossCheckHorizontal(Math.floor(centerJ), Math.floor(centerI), stateCount[2], stateCountTotal);
+	            if (centerJ != null && (!pureBarcode || crossCheckDiagonal(Math.floor(centerI), Math.floor(centerJ), stateCount[2], stateCountTotal))) {
+	                var estimatedModuleSize = stateCountTotal / 7;
+	                var found = false;
+	                for (var index = 0; index < possibleCenters.length; index++) {
+	                    var center = possibleCenters[index];
+	                    // Look for about the same center and module size:
+	                    if (center.aboutEquals(estimatedModuleSize, centerI, centerJ)) {
+	                        possibleCenters.splice(index, 1, center.combineEstimate(centerI, centerJ, estimatedModuleSize));
+	                        found = true;
+	                        break;
+	                    }
+	                }
+	                if (!found) {
+	                    // var point = new FinderPattern(centerJ.Value, centerI.Value, estimatedModuleSize);
+	                    var point = new FinderPattern(centerJ, centerI, estimatedModuleSize);
+	                    possibleCenters.push(point);
+	                }
+	                return true;
+	            }
+	        }
+	        return false;
+	    }
+	    function findRowSkip() {
+	        var max = possibleCenters.length;
+	        if (max <= 1) {
+	            return 0;
+	        }
+	        var firstConfirmedCenter = null;
+	        possibleCenters.forEach(function (center) {
+	            if (center.count >= CENTER_QUORUM) {
+	                if (firstConfirmedCenter == null) {
+	                    firstConfirmedCenter = center;
+	                }
+	                else {
+	                    // We have two confirmed centers
+	                    // How far down can we skip before resuming looking for the next
+	                    // pattern? In the worst case, only the difference between the
+	                    // difference in the x / y coordinates of the two centers.
+	                    // This is the case where you find top left last.
+	                    hasSkipped = true;
+	                    //UPGRADE_WARNING: Data types in Visual C# might be different.  Verify the accuracy of narrowing conversions. "ms-help://MS.VSCC.v80/dv_commoner/local/redirect.htm?index='!DefaultContextWindowIndex'&keyword='jlca1042'"
+	                    return Math.floor(Math.abs(firstConfirmedCenter.x - center.x) - Math.abs(firstConfirmedCenter.y - center.y)) / 2;
+	                }
+	            }
+	        });
+	        return 0;
+	    }
+	    function selectBestPatterns() {
+	        var startSize = possibleCenters.length;
+	        if (startSize < 3) {
+	            // Couldn't find enough finder patterns
+	            return null;
+	        }
+	        // Filter outlier possibilities whose module size is too different
+	        if (startSize > 3) {
+	            // But we can only afford to do so if we have at least 4 possibilities to choose from
+	            var totalModuleSize = 0;
+	            var square = 0;
+	            possibleCenters.forEach(function (center) {
+	                var size = center.estimatedModuleSize;
+	                totalModuleSize += size;
+	                square += size * size;
+	            });
+	            var average = totalModuleSize / startSize;
+	            var stdDev = Math.sqrt(square / startSize - average * average);
+	            //possibleCenters.Sort(new FurthestFromAverageComparator(average));
+	            possibleCenters.sort(function (x, y) {
+	                var dA = Math.abs(y.estimatedModuleSize - average);
+	                var dB = Math.abs(x.estimatedModuleSize - average);
+	                return dA < dB ? -1 : dA == dB ? 0 : 1;
+	            });
+	            var limit = Math.max(0.2 * average, stdDev);
+	            for (var i = 0; i < possibleCenters.length && possibleCenters.length > 3; i++) {
+	                var pattern = possibleCenters[i];
+	                if (Math.abs(pattern.estimatedModuleSize - average) > limit) {
+	                    possibleCenters.splice(i, 1);
+	                    ///possibleCenters.RemoveAt(i);
+	                    i--;
+	                }
+	            }
+	        }
+	        if (possibleCenters.length > 3) {
+	            // Throw away all but those first size candidate points we found.
+	            var totalModuleSize = 0;
+	            possibleCenters.forEach(function (possibleCenter) {
+	                totalModuleSize += possibleCenter.estimatedModuleSize;
+	            });
+	            var average = totalModuleSize / possibleCenters.length;
+	            // possibleCenters.Sort(new CenterComparator(average));
+	            possibleCenters.sort(function (x, y) {
+	                if (y.count === x.count) {
+	                    var dA = Math.abs(y.estimatedModuleSize - average);
+	                    var dB = Math.abs(x.estimatedModuleSize - average);
+	                    return dA < dB ? 1 : dA == dB ? 0 : -1;
+	                }
+	                return y.count - x.count;
+	            });
+	            //possibleCenters.subList(3, possibleCenters.Count).clear();
+	            ///possibleCenters = possibleCenters.GetRange(0, 3);
+	            possibleCenters = possibleCenters.slice(0, 3);
+	        }
+	        return [possibleCenters[0], possibleCenters[1], possibleCenters[2]];
+	    }
+	    var pureBarcode = false;
+	    var maxI = matrix.height;
+	    var maxJ = matrix.width;
+	    var iSkip = Math.floor((3 * maxI) / (4 * MAX_MODULES));
+	    if (iSkip < MIN_SKIP || false) {
+	        iSkip = MIN_SKIP;
+	    }
+	    var done = false;
+	    var stateCount = [0, 0, 0, 0, 0];
+	    for (var i = iSkip - 1; i < maxI && !done; i += iSkip) {
+	        stateCount = [0, 0, 0, 0, 0];
+	        var currentState = 0;
+	        for (var j = 0; j < maxJ; j++) {
+	            if (get(j, i)) {
+	                // Black pixel
+	                if ((currentState & 1) === 1) {
+	                    currentState++;
+	                }
+	                stateCount[currentState]++;
+	            }
+	            else {
+	                // White pixel
+	                if ((currentState & 1) === 0) {
+	                    // Counting black pixels
+	                    if (currentState === 4) {
+	                        // A winner?
+	                        if (foundPatternCross(stateCount)) {
+	                            // Yes
+	                            var confirmed = handlePossibleCenter(stateCount, i, j, pureBarcode);
+	                            if (confirmed) {
+	                                // Start examining every other line. Checking each line turned out to be too
+	                                // expensive and didn't improve performance.
+	                                iSkip = 2;
+	                                if (hasSkipped) {
+	                                    done = haveMultiplyConfirmedCenters();
+	                                }
+	                                else {
+	                                    var rowSkip = findRowSkip();
+	                                    if (rowSkip > stateCount[2]) {
+	                                        // Skip rows between row of lower confirmed center
+	                                        // and top of presumed third confirmed center
+	                                        // but back up a bit to get a full chance of detecting
+	                                        // it, entire width of center of finder pattern
+	                                        // Skip by rowSkip, but back off by stateCount[2] (size of last center
+	                                        // of pattern we saw) to be conservative, and also back off by iSkip which
+	                                        // is about to be re-added
+	                                        i += rowSkip - stateCount[2] - iSkip;
+	                                        j = maxJ - 1;
+	                                    }
+	                                }
+	                            }
+	                            else {
+	                                stateCount = [stateCount[2], stateCount[3], stateCount[4], 1, 0];
+	                                currentState = 3;
+	                                continue;
+	                            }
+	                            // Clear state to start looking again
+	                            stateCount = [0, 0, 0, 0, 0];
+	                            currentState = 0;
+	                        }
+	                        else {
+	                            stateCount = [stateCount[2], stateCount[3], stateCount[4], 1, 0];
+	                            currentState = 3;
+	                        }
+	                    }
+	                    else {
+	                        // Should I really have copy/pasted this fuckery?
+	                        stateCount[++currentState]++;
+	                    }
+	                }
+	                else {
+	                    // Counting the white pixels
+	                    stateCount[currentState]++;
+	                }
+	            }
+	        }
+	        if (foundPatternCross(stateCount)) {
+	            var confirmed = handlePossibleCenter(stateCount, i, maxJ, pureBarcode);
+	            if (confirmed) {
+	                iSkip = stateCount[0];
+	                if (hasSkipped) {
+	                    // Found a third one
+	                    done = haveMultiplyConfirmedCenters();
+	                }
+	            }
+	        }
+	    }
+	    var patternInfo = selectBestPatterns();
+	    if (!patternInfo)
+	        return null;
+	    return ReorderFinderPattern(patternInfo);
+	}
+	exports.locate = locate;
+
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/// <reference path="../common/types.d.ts" />
+	var alignment_finder_1 = __webpack_require__(5);
+	var perspective_transform_1 = __webpack_require__(7);
+	var version_1 = __webpack_require__(8);
+	var bitmatrix_1 = __webpack_require__(2);
+	var helpers_1 = __webpack_require__(6);
+	function checkAndNudgePoints(width, height, points) {
+	    // Check and nudge points from start until we see some that are OK:
+	    var nudged = true;
+	    for (var offset = 0; offset < points.length && nudged; offset += 2) {
+	        var x = Math.floor(points[offset]);
+	        var y = Math.floor(points[offset + 1]);
+	        if (x < -1 || x > width || y < -1 || y > height) {
+	            throw new Error();
+	        }
+	        nudged = false;
+	        if (x == -1) {
+	            points[offset] = 0;
+	            nudged = true;
+	        }
+	        else if (x == width) {
+	            points[offset] = width - 1;
+	            nudged = true;
+	        }
+	        if (y == -1) {
+	            points[offset + 1] = 0;
+	            nudged = true;
+	        }
+	        else if (y == height) {
+	            points[offset + 1] = height - 1;
+	            nudged = true;
+	        }
+	    }
+	    // Check and nudge points from end:
+	    nudged = true;
+	    for (var offset = points.length - 2; offset >= 0 && nudged; offset -= 2) {
+	        var x = Math.floor(points[offset]);
+	        var y = Math.floor(points[offset + 1]);
+	        if (x < -1 || x > width || y < -1 || y > height) {
+	            throw new Error();
+	        }
+	        nudged = false;
+	        if (x == -1) {
+	            points[offset] = 0;
+	            nudged = true;
+	        }
+	        else if (x == width) {
+	            points[offset] = width - 1;
+	            nudged = true;
+	        }
+	        if (y == -1) {
+	            points[offset + 1] = 0;
+	            nudged = true;
+	        }
+	        else if (y == height) {
+	            points[offset + 1] = height - 1;
+	            nudged = true;
+	        }
+	    }
+	    return points;
+	}
+	function bitArrayFromImage(image, dimension, transform) {
+	    if (dimension <= 0) {
+	        return null;
+	    }
+	    var bits = bitmatrix_1.BitMatrix.createEmpty(dimension, dimension);
+	    var points = new Array(dimension << 1);
+	    for (var y = 0; y < dimension; y++) {
+	        var max = points.length;
+	        var iValue = y + 0.5;
+	        for (var x = 0; x < max; x += 2) {
+	            points[x] = (x >> 1) + 0.5;
+	            points[x + 1] = iValue;
+	        }
+	        points = perspective_transform_1.transformPoints(transform, points);
+	        // Quick check to see if points transformed to something inside the image;
+	        // sufficient to check the endpoints
+	        try {
+	            var nudgedPoints = checkAndNudgePoints(image.width, image.height, points);
+	        }
+	        catch (e) {
+	            return null;
+	        }
+	        // try {
+	        for (var x = 0; x < max; x += 2) {
+	            bits.set(x >> 1, y, image.get(Math.floor(nudgedPoints[x]), Math.floor(nudgedPoints[x + 1])));
+	        }
+	    }
+	    return bits;
+	}
+	function createTransform(topLeft, topRight, bottomLeft, alignmentPattern, dimension) {
+	    var dimMinusThree = dimension - 3.5;
+	    var bottomRightX;
+	    var bottomRightY;
+	    var sourceBottomRightX;
+	    var sourceBottomRightY;
+	    if (alignmentPattern != null) {
+	        bottomRightX = alignmentPattern.x;
+	        bottomRightY = alignmentPattern.y;
+	        sourceBottomRightX = sourceBottomRightY = dimMinusThree - 3;
+	    }
+	    else {
+	        // Don't have an alignment pattern, just make up the bottom-right point
+	        bottomRightX = (topRight.x - topLeft.x) + bottomLeft.x;
+	        bottomRightY = (topRight.y - topLeft.y) + bottomLeft.y;
+	        sourceBottomRightX = sourceBottomRightY = dimMinusThree;
+	    }
+	    return perspective_transform_1.quadrilateralToQuadrilateral(3.5, 3.5, dimMinusThree, 3.5, sourceBottomRightX, sourceBottomRightY, 3.5, dimMinusThree, topLeft.x, topLeft.y, topRight.x, topRight.y, bottomRightX, bottomRightY, bottomLeft.x, bottomLeft.y);
+	}
+	// Taken from 6th grade algebra
+	function distance(x1, y1, x2, y2) {
+	    return Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+	}
+	// Attempts to locate an alignment pattern in a limited region of the image, which is guessed to contain it.
+	// overallEstModuleSize - estimated module size so far
+	// estAlignmentX        - coordinate of center of area probably containing alignment pattern
+	// estAlignmentY        - y coordinate of above</param>
+	// allowanceFactor      - number of pixels in all directions to search from the center</param>
+	function findAlignmentInRegion(overallEstModuleSize, estAlignmentX, estAlignmentY, allowanceFactor, image) {
+	    estAlignmentX = Math.floor(estAlignmentX);
+	    estAlignmentY = Math.floor(estAlignmentY);
+	    // Look for an alignment pattern (3 modules in size) around where it should be
+	    var allowance = Math.floor(allowanceFactor * overallEstModuleSize);
+	    var alignmentAreaLeftX = Math.max(0, estAlignmentX - allowance);
+	    var alignmentAreaRightX = Math.min(image.width, estAlignmentX + allowance);
+	    if (alignmentAreaRightX - alignmentAreaLeftX < overallEstModuleSize * 3) {
+	        return null;
+	    }
+	    var alignmentAreaTopY = Math.max(0, estAlignmentY - allowance);
+	    var alignmentAreaBottomY = Math.min(image.height - 1, estAlignmentY + allowance);
+	    return alignment_finder_1.findAlignment(alignmentAreaLeftX, alignmentAreaTopY, alignmentAreaRightX - alignmentAreaLeftX, alignmentAreaBottomY - alignmentAreaTopY, overallEstModuleSize, image);
+	}
+	// Computes the dimension (number of modules on a size) of the QR Code based on the position of the finder
+	// patterns and estimated module size.
+	function computeDimension(topLeft, topRight, bottomLeft, moduleSize) {
+	    var tltrCentersDimension = Math.round(distance(topLeft.x, topLeft.y, topRight.x, topRight.y) / moduleSize);
+	    var tlblCentersDimension = Math.round(distance(topLeft.x, topLeft.y, bottomLeft.x, bottomLeft.y) / moduleSize);
+	    var dimension = ((tltrCentersDimension + tlblCentersDimension) >> 1) + 7;
+	    switch (dimension & 0x03) {
+	        // mod 4
+	        case 0:
+	            dimension++;
+	            break;
+	        // 1? do nothing
+	        case 2:
+	            dimension--;
+	            break;
+	    }
+	    return dimension;
+	}
+	// Deduces version information purely from QR Code dimensions.
+	// http://chan.catiewayne.com/z/src/131044167276.jpg
+	function getProvisionalVersionForDimension(dimension) {
+	    if (dimension % 4 != 1) {
+	        return null;
+	    }
+	    var versionNumber = (dimension - 17) >> 2;
+	    if (versionNumber < 1 || versionNumber > 40) {
+	        return null;
+	    }
+	    return version_1.getVersionForNumber(versionNumber);
+	}
+	// This method traces a line from a point in the image, in the direction towards another point.
+	// It begins in a black region, and keeps going until it finds white, then black, then white again.
+	// It reports the distance from the start to this point.</p>
+	//
+	// This is used when figuring out how wide a finder pattern is, when the finder pattern
+	// may be skewed or rotated.
+	function sizeOfBlackWhiteBlackRun(fromX, fromY, toX, toY, image) {
+	    fromX = Math.floor(fromX);
+	    fromY = Math.floor(fromY);
+	    toX = Math.floor(toX);
+	    toY = Math.floor(toY);
+	    // Mild variant of Bresenham's algorithm;
+	    // see http://en.wikipedia.org/wiki/Bresenham's_line_algorithm
+	    var steep = Math.abs(toY - fromY) > Math.abs(toX - fromX);
+	    if (steep) {
+	        var temp = fromX;
+	        fromX = fromY;
+	        fromY = temp;
+	        temp = toX;
+	        toX = toY;
+	        toY = temp;
+	    }
+	    var dx = Math.abs(toX - fromX);
+	    var dy = Math.abs(toY - fromY);
+	    var error = -dx >> 1;
+	    var xstep = fromX < toX ? 1 : -1;
+	    var ystep = fromY < toY ? 1 : -1;
+	    // In black pixels, looking for white, first or second time.
+	    var state = 0;
+	    // Loop up until x == toX, but not beyond
+	    var xLimit = toX + xstep;
+	    for (var x = fromX, y = fromY; x != xLimit; x += xstep) {
+	        var realX = steep ? y : x;
+	        var realY = steep ? x : y;
+	        // Does current pixel mean we have moved white to black or vice versa?
+	        // Scanning black in state 0,2 and white in state 1, so if we find the wrong
+	        // color, advance to next state or end if we are in state 2 already
+	        if ((state == 1) === image.get(realX, realY)) {
+	            if (state == 2) {
+	                return distance(x, y, fromX, fromY);
+	            }
+	            state++;
+	        }
+	        error += dy;
+	        if (error > 0) {
+	            if (y == toY) {
+	                break;
+	            }
+	            y += ystep;
+	            error -= dx;
+	        }
+	    }
+	    // Found black-white-black; give the benefit of the doubt that the next pixel outside the image
+	    // is "white" so this last point at (toX+xStep,toY) is the right ending. This is really a
+	    // small approximation; (toX+xStep,toY+yStep) might be really correct. Ignore this.
+	    if (state == 2) {
+	        return distance(toX + xstep, toY, fromX, fromY);
+	    }
+	    // else we didn't find even black-white-black; no estimate is really possible
+	    return NaN;
+	}
+	// Computes the total width of a finder pattern by looking for a black-white-black run from the center
+	// in the direction of another point (another finder pattern center), and in the opposite direction too.
+	function sizeOfBlackWhiteBlackRunBothWays(fromX, fromY, toX, toY, image) {
+	    var result = sizeOfBlackWhiteBlackRun(fromX, fromY, toX, toY, image);
+	    // Now count other way -- don't run off image though of course
+	    var scale = 1;
+	    var otherToX = fromX - (toX - fromX);
+	    if (otherToX < 0) {
+	        scale = fromX / (fromX - otherToX);
+	        otherToX = 0;
+	    }
+	    else if (otherToX >= image.width) {
+	        scale = (image.width - 1 - fromX) / (otherToX - fromX);
+	        otherToX = image.width - 1;
+	    }
+	    var otherToY = (fromY - (toY - fromY) * scale);
+	    scale = 1;
+	    if (otherToY < 0) {
+	        scale = fromY / (fromY - otherToY);
+	        otherToY = 0;
+	    }
+	    else if (otherToY >= image.height) {
+	        scale = (image.height - 1 - fromY) / (otherToY - fromY);
+	        otherToY = image.height - 1;
+	    }
+	    otherToX = (fromX + (otherToX - fromX) * scale);
+	    result += sizeOfBlackWhiteBlackRun(fromX, fromY, otherToX, otherToY, image);
+	    return result - 1; // -1 because we counted the middle pixel twice
+	}
+	function calculateModuleSizeOneWay(pattern, otherPattern, image) {
+	    var moduleSizeEst1 = sizeOfBlackWhiteBlackRunBothWays(pattern.x, pattern.y, otherPattern.x, otherPattern.y, image);
+	    var moduleSizeEst2 = sizeOfBlackWhiteBlackRunBothWays(otherPattern.x, otherPattern.y, pattern.x, pattern.y, image);
+	    if (helpers_1.isNaN(moduleSizeEst1)) {
+	        return moduleSizeEst2 / 7;
+	    }
+	    if (helpers_1.isNaN(moduleSizeEst2)) {
+	        return moduleSizeEst1 / 7;
+	    }
+	    // Average them, and divide by 7 since we've counted the width of 3 black modules,
+	    // and 1 white and 1 black module on either side. Ergo, divide sum by 14.
+	    return (moduleSizeEst1 + moduleSizeEst2) / 14;
+	}
+	// Computes an average estimated module size based on estimated derived from the positions of the three finder patterns.
+	function calculateModuleSize(topLeft, topRight, bottomLeft, image) {
+	    return (calculateModuleSizeOneWay(topLeft, topRight, image) + calculateModuleSizeOneWay(topLeft, bottomLeft, image)) / 2;
+	}
+	function extract(image, location) {
+	    var moduleSize = calculateModuleSize(location.topLeft, location.topRight, location.bottomLeft, image);
+	    if (moduleSize < 1) {
+	        return null;
+	    }
+	    var dimension = computeDimension(location.topLeft, location.topRight, location.bottomLeft, moduleSize);
+	    if (!dimension) {
+	        return null;
+	    }
+	    var provisionalVersion = getProvisionalVersionForDimension(dimension);
+	    if (provisionalVersion == null) {
+	        return null;
+	    }
+	    var modulesBetweenFPCenters = provisionalVersion.getDimensionForVersion() - 7;
+	    var alignmentPattern = null;
+	    // Anything above version 1 has an alignment pattern
+	    if (provisionalVersion.alignmentPatternCenters.length > 0) {
+	        // Guess where a "bottom right" finder pattern would have been
+	        var bottomRightX = location.topRight.x - location.topLeft.x + location.bottomLeft.x;
+	        var bottomRightY = location.topRight.y - location.topLeft.y + location.bottomLeft.y;
+	        // Estimate that alignment pattern is closer by 3 modules
+	        // from "bottom right" to known top left location
+	        var correctionToTopLeft = 1 - 3 / modulesBetweenFPCenters;
+	        var estAlignmentX = location.topLeft.x + correctionToTopLeft * (bottomRightX - location.topLeft.x);
+	        var estAlignmentY = location.topLeft.y + correctionToTopLeft * (bottomRightY - location.topLeft.y);
+	        // Kind of arbitrary -- expand search radius before giving up
+	        for (var i = 4; i <= 16; i <<= 1) {
+	            alignmentPattern = findAlignmentInRegion(moduleSize, estAlignmentX, estAlignmentY, i, image);
+	            if (!alignmentPattern) {
+	                continue;
+	            }
+	            break;
+	        }
+	    }
+	    var transform = createTransform(location.topLeft, location.topRight, location.bottomLeft, alignmentPattern, dimension);
+	    return bitArrayFromImage(image, dimension, transform);
+	}
+	exports.extract = extract;
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var helpers_1 = __webpack_require__(6);
+	function aboutEquals(center, moduleSize, i, j) {
+	    if (Math.abs(i - center.y) <= moduleSize && Math.abs(j - center.x) <= moduleSize) {
+	        var moduleSizeDiff = Math.abs(moduleSize - center.estimatedModuleSize);
+	        return moduleSizeDiff <= 1 || moduleSizeDiff <= center.estimatedModuleSize;
+	    }
+	    return false;
+	}
+	function combineEstimate(center, i, j, newModuleSize) {
+	    var combinedX = (center.x + j) / 2;
+	    var combinedY = (center.y + i) / 2;
+	    var combinedModuleSize = (center.estimatedModuleSize + newModuleSize) / 2;
+	    return { x: combinedX, y: combinedY, estimatedModuleSize: combinedModuleSize };
+	}
+	// returns true if the proportions of the counts is close enough to the 1/1/1 ratios used by alignment
+	// patterns to be considered a match
+	function foundPatternCross(stateCount, moduleSize) {
+	    var maxVariance = moduleSize / 2;
+	    for (var i = 0; i < 3; i++) {
+	        if (Math.abs(moduleSize - stateCount[i]) >= maxVariance) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	// Given a count of black/white/black pixels just seen and an end position,
+	// figures the location of the center of this black/white/black run.
+	function centerFromEnd(stateCount, end) {
+	    var result = (end - stateCount[2]) - stateCount[1] / 2;
+	    if (helpers_1.isNaN(result)) {
+	        return null;
+	    }
+	    return result;
+	}
+	// After a horizontal scan finds a potential alignment pattern, this method
+	// "cross-checks" by scanning down vertically through the center of the possible
+	// alignment pattern to see if the same proportion is detected.</p>
+	//
+	// startI - row where an alignment pattern was detected</param>
+	// centerJ - center of the section that appears to cross an alignment pattern</param>
+	// maxCount - maximum reasonable number of modules that should be observed in any reading state, based
+	//   on the results of the horizontal scan</param>
+	// originalStateCountTotal - The original state count total
+	function crossCheckVertical(startI, centerJ, maxCount, originalStateCountTotal, moduleSize, image) {
+	    var maxI = image.height;
+	    var stateCount = [0, 0, 0];
+	    // Start counting up from center
+	    var i = startI;
+	    while (i >= 0 && image.get(centerJ, i) && stateCount[1] <= maxCount) {
+	        stateCount[1]++;
+	        i--;
+	    }
+	    // If already too many modules in this state or ran off the edge:
+	    if (i < 0 || stateCount[1] > maxCount) {
+	        return null;
+	    }
+	    while (i >= 0 && !image.get(centerJ, i) && stateCount[0] <= maxCount) {
+	        stateCount[0]++;
+	        i--;
+	    }
+	    if (stateCount[0] > maxCount) {
+	        return null;
+	    }
+	    // Now also count down from center
+	    i = startI + 1;
+	    while (i < maxI && image.get(centerJ, i) && stateCount[1] <= maxCount) {
+	        stateCount[1]++;
+	        i++;
+	    }
+	    if (i == maxI || stateCount[1] > maxCount) {
+	        return null;
+	    }
+	    while (i < maxI && !image.get(centerJ, i) && stateCount[2] <= maxCount) {
+	        stateCount[2]++;
+	        i++;
+	    }
+	    if (stateCount[2] > maxCount) {
+	        return null;
+	    }
+	    var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
+	    if (5 * Math.abs(stateCountTotal - originalStateCountTotal) >= 2 * originalStateCountTotal) {
+	        return null;
+	    }
+	    return foundPatternCross(stateCount, moduleSize) ? centerFromEnd(stateCount, i) : null;
+	}
+	function findAlignment(startX, startY, width, height, moduleSize, image) {
+	    // Global State :(
+	    var possibleCenters = [];
+	    // This is called when a horizontal scan finds a possible alignment pattern. It will
+	    // cross check with a vertical scan, and if successful, will see if this pattern had been
+	    // found on a previous horizontal scan. If so, we consider it confirmed and conclude we have
+	    // found the alignment pattern.</p>
+	    //
+	    // stateCount - reading state module counts from horizontal scan
+	    // i - where alignment pattern may be found
+	    // j - end of possible alignment pattern in row
+	    function handlePossibleCenter(stateCount, i, j, moduleSize) {
+	        var stateCountTotal = stateCount[0] + stateCount[1] + stateCount[2];
+	        var centerJ = centerFromEnd(stateCount, j);
+	        if (centerJ == null) {
+	            return null;
+	        }
+	        var centerI = crossCheckVertical(i, Math.floor(centerJ), 2 * stateCount[1], stateCountTotal, moduleSize, image);
+	        if (centerI != null) {
+	            var estimatedModuleSize = (stateCount[0] + stateCount[1] + stateCount[2]) / 3;
+	            for (var i2 in possibleCenters) {
+	                var center = possibleCenters[i2];
+	                // Look for about the same center and module size:
+	                if (aboutEquals(center, estimatedModuleSize, centerI, centerJ)) {
+	                    return combineEstimate(center, centerI, centerJ, estimatedModuleSize);
+	                }
+	            }
+	            // Hadn't found this before; save it
+	            var point = { x: centerJ, y: centerI, estimatedModuleSize: estimatedModuleSize };
+	            possibleCenters.push(point);
+	        }
+	        return null;
+	    }
+	    var maxJ = startX + width;
+	    var middleI = startY + (height >> 1);
+	    // We are looking for black/white/black modules in 1:1:1 ratio;
+	    // this tracks the number of black/white/black modules seen so far
+	    var stateCount = [0, 0, 0]; // WTF
+	    for (var iGen = 0; iGen < height; iGen++) {
+	        // Search from middle outwards
+	        var i = middleI + ((iGen & 0x01) == 0 ? ((iGen + 1) >> 1) : -((iGen + 1) >> 1));
+	        stateCount[0] = 0;
+	        stateCount[1] = 0;
+	        stateCount[2] = 0;
+	        var j = startX;
+	        // Burn off leading white pixels before anything else; if we start in the middle of
+	        // a white run, it doesn't make sense to count its length, since we don't know if the
+	        // white run continued to the left of the start point
+	        while (j < maxJ && !image.get(j, i)) {
+	            j++;
+	        }
+	        var currentState = 0;
+	        while (j < maxJ) {
+	            if (image.get(j, i)) {
+	                // Black pixel
+	                if (currentState == 1) {
+	                    // Counting black pixels
+	                    stateCount[currentState]++;
+	                }
+	                else {
+	                    // Counting white pixels
+	                    if (currentState == 2) {
+	                        // A winner?
+	                        if (foundPatternCross(stateCount, moduleSize)) {
+	                            // Yes
+	                            confirmed = handlePossibleCenter(stateCount, i, j, moduleSize);
+	                            if (confirmed != null) {
+	                                return confirmed;
+	                            }
+	                        }
+	                        stateCount[0] = stateCount[2];
+	                        stateCount[1] = 1;
+	                        stateCount[2] = 0;
+	                        currentState = 1;
+	                    }
+	                    else {
+	                        stateCount[++currentState]++;
+	                    }
+	                }
+	            }
+	            else {
+	                // White pixel
+	                if (currentState == 1) {
+	                    // Counting black pixels
+	                    currentState++;
+	                }
+	                stateCount[currentState]++;
+	            }
+	            j++;
+	        }
+	        if (foundPatternCross(stateCount, moduleSize)) {
+	            var confirmed = handlePossibleCenter(stateCount, i, moduleSize, maxJ);
+	            if (confirmed != null) {
+	                return confirmed;
+	            }
+	        }
+	    }
+	    // Hmm, nothing we saw was observed and confirmed twice. If we had
+	    // any guess at all, return it.
+	    if (possibleCenters.length != 0) {
+	        return possibleCenters[0];
+	    }
+	    return null;
+	}
+	exports.findAlignment = findAlignment;
+
+
+/***/ },
+/* 6 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var BITS_SET_IN_HALF_BYTE = [0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4];
+	function numBitsDiffering(a, b) {
+	    a ^= b; // a now has a 1 bit exactly where its bit differs with b's
+	    // Count bits set quickly with a series of lookups:
+	    return BITS_SET_IN_HALF_BYTE[a & 0x0F] +
+	        BITS_SET_IN_HALF_BYTE[((a >> 4) & 0x0F)] +
+	        BITS_SET_IN_HALF_BYTE[((a >> 8) & 0x0F)] +
+	        BITS_SET_IN_HALF_BYTE[((a >> 12) & 0x0F)] +
+	        BITS_SET_IN_HALF_BYTE[((a >> 16) & 0x0F)] +
+	        BITS_SET_IN_HALF_BYTE[((a >> 20) & 0x0F)] +
+	        BITS_SET_IN_HALF_BYTE[((a >> 24) & 0x0F)] +
+	        BITS_SET_IN_HALF_BYTE[((a >> 28) & 0x0F)];
+	}
+	exports.numBitsDiffering = numBitsDiffering;
+	// Taken from underscore JS
+	function isNaN(obj) {
+	    return Object.prototype.toString.call(obj) === '[object Number]' && obj !== +obj;
+	}
+	exports.isNaN = isNaN;
+
+
+/***/ },
+/* 7 */
+/***/ function(module, exports) {
+
+	/// <reference path="../common/types.d.ts" />
+	"use strict";
+	function squareToQuadrilateral(x0, y0, x1, y1, x2, y2, x3, y3) {
+	    var dx3 = x0 - x1 + x2 - x3;
+	    var dy3 = y0 - y1 + y2 - y3;
+	    if (dx3 == 0 && dy3 == 0) {
+	        // Affine
+	        return {
+	            a11: x1 - x0,
+	            a21: x2 - x1,
+	            a31: x0,
+	            a12: y1 - y0,
+	            a22: y2 - y1,
+	            a32: y0,
+	            a13: 0,
+	            a23: 0,
+	            a33: 1
+	        };
+	    }
+	    else {
+	        var dx1 = x1 - x2;
+	        var dx2 = x3 - x2;
+	        var dy1 = y1 - y2;
+	        var dy2 = y3 - y2;
+	        var denominator = dx1 * dy2 - dx2 * dy1;
+	        var a13 = (dx3 * dy2 - dx2 * dy3) / denominator;
+	        var a23 = (dx1 * dy3 - dx3 * dy1) / denominator;
+	        return {
+	            a11: x1 - x0 + a13 * x1,
+	            a21: x3 - x0 + a23 * x3,
+	            a31: x0,
+	            a12: y1 - y0 + a13 * y1,
+	            a22: y3 - y0 + a23 * y3,
+	            a32: y0,
+	            a13: a13,
+	            a23: a23,
+	            a33: 1
+	        };
+	    }
+	}
+	function buildAdjoint(i) {
+	    return {
+	        a11: i.a22 * i.a33 - i.a23 * i.a32,
+	        a21: i.a23 * i.a31 - i.a21 * i.a33,
+	        a31: i.a21 * i.a32 - i.a22 * i.a31,
+	        a12: i.a13 * i.a32 - i.a12 * i.a33,
+	        a22: i.a11 * i.a33 - i.a13 * i.a31,
+	        a32: i.a12 * i.a31 - i.a11 * i.a32,
+	        a13: i.a12 * i.a23 - i.a13 * i.a22,
+	        a23: i.a13 * i.a21 - i.a11 * i.a23,
+	        a33: i.a11 * i.a22 - i.a12 * i.a21
+	    };
+	}
+	function times(a, b) {
+	    return {
+	        a11: a.a11 * b.a11 + a.a21 * b.a12 + a.a31 * b.a13,
+	        a21: a.a11 * b.a21 + a.a21 * b.a22 + a.a31 * b.a23,
+	        a31: a.a11 * b.a31 + a.a21 * b.a32 + a.a31 * b.a33,
+	        a12: a.a12 * b.a11 + a.a22 * b.a12 + a.a32 * b.a13,
+	        a22: a.a12 * b.a21 + a.a22 * b.a22 + a.a32 * b.a23,
+	        a32: a.a12 * b.a31 + a.a22 * b.a32 + a.a32 * b.a33,
+	        a13: a.a13 * b.a11 + a.a23 * b.a12 + a.a33 * b.a13,
+	        a23: a.a13 * b.a21 + a.a23 * b.a22 + a.a33 * b.a23,
+	        a33: a.a13 * b.a31 + a.a23 * b.a32 + a.a33 * b.a33
+	    };
+	}
+	function quadrilateralToSquare(x0, y0, x1, y1, x2, y2, x3, y3) {
+	    // Here, the adjoint serves as the inverse:
+	    return buildAdjoint(squareToQuadrilateral(x0, y0, x1, y1, x2, y2, x3, y3));
+	}
+	function transformPoints(transform, points) {
+	    var max = points.length;
+	    var a11 = transform.a11;
+	    var a12 = transform.a12;
+	    var a13 = transform.a13;
+	    var a21 = transform.a21;
+	    var a22 = transform.a22;
+	    var a23 = transform.a23;
+	    var a31 = transform.a31;
+	    var a32 = transform.a32;
+	    var a33 = transform.a33;
+	    for (var i = 0; i < max; i += 2) {
+	        var x = points[i];
+	        var y = points[i + 1];
+	        var denominator = a13 * x + a23 * y + a33;
+	        points[i] = (a11 * x + a21 * y + a31) / denominator;
+	        points[i + 1] = (a12 * x + a22 * y + a32) / denominator;
+	    }
+	    return points;
+	}
+	exports.transformPoints = transformPoints;
+	function quadrilateralToQuadrilateral(x0, y0, x1, y1, x2, y2, x3, y3, x0p, y0p, x1p, y1p, x2p, y2p, x3p, y3p) {
+	    var qToS = quadrilateralToSquare(x0, y0, x1, y1, x2, y2, x3, y3);
+	    var sToQ = squareToQuadrilateral(x0p, y0p, x1p, y1p, x2p, y2p, x3p, y3p);
+	    return times(sToQ, qToS);
+	}
+	exports.quadrilateralToQuadrilateral = quadrilateralToQuadrilateral;
+
+
+/***/ },
+/* 8 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var helpers_1 = __webpack_require__(6);
+	var VERSION_DECODE_INFO = [
+	    0x07C94, 0x085BC, 0x09A99, 0x0A4D3, 0x0BBF6,
+	    0x0C762, 0x0D847, 0x0E60D, 0x0F928, 0x10B78,
+	    0x1145D, 0x12A17, 0x13532, 0x149A6, 0x15683,
+	    0x168C9, 0x177EC, 0x18EC4, 0x191E1, 0x1AFAB,
+	    0x1B08E, 0x1CC1A, 0x1D33F, 0x1ED75, 0x1F250,
+	    0x209D5, 0x216F0, 0x228BA, 0x2379F, 0x24B0B,
+	    0x2542E, 0x26A64, 0x27541, 0x28C69,
+	];
+	var ECB = (function () {
+	    function ECB(_count, _dataCodewords) {
+	        this.count = _count;
+	        this.dataCodewords = _dataCodewords;
+	    }
+	    return ECB;
+	}());
+	var ECBlocks = (function () {
+	    function ECBlocks(_ecCodewordsPerBlock) {
+	        var _ecBlocks = [];
+	        for (var _i = 1; _i < arguments.length; _i++) {
+	            _ecBlocks[_i - 1] = arguments[_i];
+	        }
+	        this.ecCodewordsPerBlock = _ecCodewordsPerBlock;
+	        this.ecBlocks = _ecBlocks;
+	    }
+	    ECBlocks.prototype.getNumBlocks = function () {
+	        return this.ecBlocks.reduce(function (a, b) { return (a + b.count); }, 0);
+	    };
+	    ECBlocks.prototype.getTotalECCodewords = function () {
+	        return this.ecCodewordsPerBlock * this.getNumBlocks();
+	    };
+	    return ECBlocks;
+	}());
+	var Version = (function () {
+	    function Version(_versionNumber, _alignmentPatternCenters) {
+	        var _ecBlocks = [];
+	        for (var _i = 2; _i < arguments.length; _i++) {
+	            _ecBlocks[_i - 2] = arguments[_i];
+	        }
+	        this.versionNumber = _versionNumber;
+	        this.alignmentPatternCenters = _alignmentPatternCenters;
+	        this.ecBlocks = _ecBlocks;
+	        var total = 0;
+	        var ecCodewords = this.ecBlocks[0].ecCodewordsPerBlock;
+	        var ecbArray = this.ecBlocks[0].ecBlocks;
+	        ecbArray.forEach(function (ecBlock) {
+	            total += ecBlock.count * (ecBlock.dataCodewords + ecCodewords);
+	        });
+	        this.totalCodewords = total;
+	    }
+	    Version.prototype.getDimensionForVersion = function () {
+	        return 17 + 4 * this.versionNumber;
+	    };
+	    Version.prototype.getECBlocksForLevel = function (ecLevel) {
+	        return this.ecBlocks[ecLevel.ordinal];
+	    };
+	    Version.decodeVersionInformation = function (versionBits) {
+	        var bestDifference = Infinity;
+	        var bestVersion = 0;
+	        for (var i = 0; i < VERSION_DECODE_INFO.length; i++) {
+	            var targetVersion = VERSION_DECODE_INFO[i];
+	            // Do the version info bits match exactly? done.
+	            if (targetVersion == versionBits) {
+	                return getVersionForNumber(i + 7);
+	            }
+	            // Otherwise see if this is the closest to a real version info bit string
+	            // we have seen so far
+	            var bitsDifference = helpers_1.numBitsDiffering(versionBits, targetVersion);
+	            if (bitsDifference < bestDifference) {
+	                bestVersion = i + 7;
+	                bestDifference = bitsDifference;
+	            }
+	        }
+	        // We can tolerate up to 3 bits of error since no two version info codewords will
+	        // differ in less than 8 bits.
+	        if (bestDifference <= 3) {
+	            return getVersionForNumber(bestVersion);
+	        }
+	        // If we didn't find a close enough match, fail
+	        return null;
+	    };
+	    return Version;
+	}());
+	exports.Version = Version;
+	var VERSIONS = [
+	    new Version(1, [], new ECBlocks(7, new ECB(1, 19)), new ECBlocks(10, new ECB(1, 16)), new ECBlocks(13, new ECB(1, 13)), new ECBlocks(17, new ECB(1, 9))),
+	    new Version(2, [6, 18], new ECBlocks(10, new ECB(1, 34)), new ECBlocks(16, new ECB(1, 28)), new ECBlocks(22, new ECB(1, 22)), new ECBlocks(28, new ECB(1, 16))),
+	    new Version(3, [6, 22], new ECBlocks(15, new ECB(1, 55)), new ECBlocks(26, new ECB(1, 44)), new ECBlocks(18, new ECB(2, 17)), new ECBlocks(22, new ECB(2, 13))),
+	    new Version(4, [6, 26], new ECBlocks(20, new ECB(1, 80)), new ECBlocks(18, new ECB(2, 32)), new ECBlocks(26, new ECB(2, 24)), new ECBlocks(16, new ECB(4, 9))),
+	    new Version(5, [6, 30], new ECBlocks(26, new ECB(1, 108)), new ECBlocks(24, new ECB(2, 43)), new ECBlocks(18, new ECB(2, 15), new ECB(2, 16)), new ECBlocks(22, new ECB(2, 11), new ECB(2, 12))),
+	    new Version(6, [6, 34], new ECBlocks(18, new ECB(2, 68)), new ECBlocks(16, new ECB(4, 27)), new ECBlocks(24, new ECB(4, 19)), new ECBlocks(28, new ECB(4, 15))),
+	    new Version(7, [6, 22, 38], new ECBlocks(20, new ECB(2, 78)), new ECBlocks(18, new ECB(4, 31)), new ECBlocks(18, new ECB(2, 14), new ECB(4, 15)), new ECBlocks(26, new ECB(4, 13), new ECB(1, 14))),
+	    new Version(8, [6, 24, 42], new ECBlocks(24, new ECB(2, 97)), new ECBlocks(22, new ECB(2, 38), new ECB(2, 39)), new ECBlocks(22, new ECB(4, 18), new ECB(2, 19)), new ECBlocks(26, new ECB(4, 14), new ECB(2, 15))),
+	    new Version(9, [6, 26, 46], new ECBlocks(30, new ECB(2, 116)), new ECBlocks(22, new ECB(3, 36), new ECB(2, 37)), new ECBlocks(20, new ECB(4, 16), new ECB(4, 17)), new ECBlocks(24, new ECB(4, 12), new ECB(4, 13))),
+	    new Version(10, [6, 28, 50], new ECBlocks(18, new ECB(2, 68), new ECB(2, 69)), new ECBlocks(26, new ECB(4, 43), new ECB(1, 44)), new ECBlocks(24, new ECB(6, 19), new ECB(2, 20)), new ECBlocks(28, new ECB(6, 15), new ECB(2, 16))),
+	    new Version(11, [6, 30, 54], new ECBlocks(20, new ECB(4, 81)), new ECBlocks(30, new ECB(1, 50), new ECB(4, 51)), new ECBlocks(28, new ECB(4, 22), new ECB(4, 23)), new ECBlocks(24, new ECB(3, 12), new ECB(8, 13))),
+	    new Version(12, [6, 32, 58], new ECBlocks(24, new ECB(2, 92), new ECB(2, 93)), new ECBlocks(22, new ECB(6, 36), new ECB(2, 37)), new ECBlocks(26, new ECB(4, 20), new ECB(6, 21)), new ECBlocks(28, new ECB(7, 14), new ECB(4, 15))),
+	    new Version(13, [6, 34, 62], new ECBlocks(26, new ECB(4, 107)), new ECBlocks(22, new ECB(8, 37), new ECB(1, 38)), new ECBlocks(24, new ECB(8, 20), new ECB(4, 21)), new ECBlocks(22, new ECB(12, 11), new ECB(4, 12))),
+	    new Version(14, [6, 26, 46, 66], new ECBlocks(30, new ECB(3, 115), new ECB(1, 116)), new ECBlocks(24, new ECB(4, 40), new ECB(5, 41)), new ECBlocks(20, new ECB(11, 16), new ECB(5, 17)), new ECBlocks(24, new ECB(11, 12), new ECB(5, 13))),
+	    new Version(15, [6, 26, 48, 70], new ECBlocks(22, new ECB(5, 87), new ECB(1, 88)), new ECBlocks(24, new ECB(5, 41), new ECB(5, 42)), new ECBlocks(30, new ECB(5, 24), new ECB(7, 25)), new ECBlocks(24, new ECB(11, 12), new ECB(7, 13))),
+	    new Version(16, [6, 26, 50, 74], new ECBlocks(24, new ECB(5, 98), new ECB(1, 99)), new ECBlocks(28, new ECB(7, 45), new ECB(3, 46)), new ECBlocks(24, new ECB(15, 19), new ECB(2, 20)), new ECBlocks(30, new ECB(3, 15), new ECB(13, 16))),
+	    new Version(17, [6, 30, 54, 78], new ECBlocks(28, new ECB(1, 107), new ECB(5, 108)), new ECBlocks(28, new ECB(10, 46), new ECB(1, 47)), new ECBlocks(28, new ECB(1, 22), new ECB(15, 23)), new ECBlocks(28, new ECB(2, 14), new ECB(17, 15))),
+	    new Version(18, [6, 30, 56, 82], new ECBlocks(30, new ECB(5, 120), new ECB(1, 121)), new ECBlocks(26, new ECB(9, 43), new ECB(4, 44)), new ECBlocks(28, new ECB(17, 22), new ECB(1, 23)), new ECBlocks(28, new ECB(2, 14), new ECB(19, 15))),
+	    new Version(19, [6, 30, 58, 86], new ECBlocks(28, new ECB(3, 113), new ECB(4, 114)), new ECBlocks(26, new ECB(3, 44), new ECB(11, 45)), new ECBlocks(26, new ECB(17, 21), new ECB(4, 22)), new ECBlocks(26, new ECB(9, 13), new ECB(16, 14))),
+	    new Version(20, [6, 34, 62, 90], new ECBlocks(28, new ECB(3, 107), new ECB(5, 108)), new ECBlocks(26, new ECB(3, 41), new ECB(13, 42)), new ECBlocks(30, new ECB(15, 24), new ECB(5, 25)), new ECBlocks(28, new ECB(15, 15), new ECB(10, 16))),
+	    new Version(21, [6, 28, 50, 72, 94], new ECBlocks(28, new ECB(4, 116), new ECB(4, 117)), new ECBlocks(26, new ECB(17, 42)), new ECBlocks(28, new ECB(17, 22), new ECB(6, 23)), new ECBlocks(30, new ECB(19, 16), new ECB(6, 17))),
+	    new Version(22, [6, 26, 50, 74, 98], new ECBlocks(28, new ECB(2, 111), new ECB(7, 112)), new ECBlocks(28, new ECB(17, 46)), new ECBlocks(30, new ECB(7, 24), new ECB(16, 25)), new ECBlocks(24, new ECB(34, 13))),
+	    new Version(23, [6, 30, 54, 74, 102], new ECBlocks(30, new ECB(4, 121), new ECB(5, 122)), new ECBlocks(28, new ECB(4, 47), new ECB(14, 48)), new ECBlocks(30, new ECB(11, 24), new ECB(14, 25)), new ECBlocks(30, new ECB(16, 15), new ECB(14, 16))),
+	    new Version(24, [6, 28, 54, 80, 106], new ECBlocks(30, new ECB(6, 117), new ECB(4, 118)), new ECBlocks(28, new ECB(6, 45), new ECB(14, 46)), new ECBlocks(30, new ECB(11, 24), new ECB(16, 25)), new ECBlocks(30, new ECB(30, 16), new ECB(2, 17))),
+	    new Version(25, [6, 32, 58, 84, 110], new ECBlocks(26, new ECB(8, 106), new ECB(4, 107)), new ECBlocks(28, new ECB(8, 47), new ECB(13, 48)), new ECBlocks(30, new ECB(7, 24), new ECB(22, 25)), new ECBlocks(30, new ECB(22, 15), new ECB(13, 16))),
+	    new Version(26, [6, 30, 58, 86, 114], new ECBlocks(28, new ECB(10, 114), new ECB(2, 115)), new ECBlocks(28, new ECB(19, 46), new ECB(4, 47)), new ECBlocks(28, new ECB(28, 22), new ECB(6, 23)), new ECBlocks(30, new ECB(33, 16), new ECB(4, 17))),
+	    new Version(27, [6, 34, 62, 90, 118], new ECBlocks(30, new ECB(8, 122), new ECB(4, 123)), new ECBlocks(28, new ECB(22, 45), new ECB(3, 46)), new ECBlocks(30, new ECB(8, 23), new ECB(26, 24)), new ECBlocks(30, new ECB(12, 15), new ECB(28, 16))),
+	    new Version(28, [6, 26, 50, 74, 98, 122], new ECBlocks(30, new ECB(3, 117), new ECB(10, 118)), new ECBlocks(28, new ECB(3, 45), new ECB(23, 46)), new ECBlocks(30, new ECB(4, 24), new ECB(31, 25)), new ECBlocks(30, new ECB(11, 15), new ECB(31, 16))),
+	    new Version(29, [6, 30, 54, 78, 102, 126], new ECBlocks(30, new ECB(7, 116), new ECB(7, 117)), new ECBlocks(28, new ECB(21, 45), new ECB(7, 46)), new ECBlocks(30, new ECB(1, 23), new ECB(37, 24)), new ECBlocks(30, new ECB(19, 15), new ECB(26, 16))),
+	    new Version(30, [6, 26, 52, 78, 104, 130], new ECBlocks(30, new ECB(5, 115), new ECB(10, 116)), new ECBlocks(28, new ECB(19, 47), new ECB(10, 48)), new ECBlocks(30, new ECB(15, 24), new ECB(25, 25)), new ECBlocks(30, new ECB(23, 15), new ECB(25, 16))),
+	    new Version(31, [6, 30, 56, 82, 108, 134], new ECBlocks(30, new ECB(13, 115), new ECB(3, 116)), new ECBlocks(28, new ECB(2, 46), new ECB(29, 47)), new ECBlocks(30, new ECB(42, 24), new ECB(1, 25)), new ECBlocks(30, new ECB(23, 15), new ECB(28, 16))),
+	    new Version(32, [6, 34, 60, 86, 112, 138], new ECBlocks(30, new ECB(17, 115)), new ECBlocks(28, new ECB(10, 46), new ECB(23, 47)), new ECBlocks(30, new ECB(10, 24), new ECB(35, 25)), new ECBlocks(30, new ECB(19, 15), new ECB(35, 16))),
+	    new Version(33, [6, 30, 58, 86, 114, 142], new ECBlocks(30, new ECB(17, 115), new ECB(1, 116)), new ECBlocks(28, new ECB(14, 46), new ECB(21, 47)), new ECBlocks(30, new ECB(29, 24), new ECB(19, 25)), new ECBlocks(30, new ECB(11, 15), new ECB(46, 16))),
+	    new Version(34, [6, 34, 62, 90, 118, 146], new ECBlocks(30, new ECB(13, 115), new ECB(6, 116)), new ECBlocks(28, new ECB(14, 46), new ECB(23, 47)), new ECBlocks(30, new ECB(44, 24), new ECB(7, 25)), new ECBlocks(30, new ECB(59, 16), new ECB(1, 17))),
+	    new Version(35, [6, 30, 54, 78, 102, 126, 150], new ECBlocks(30, new ECB(12, 121), new ECB(7, 122)), new ECBlocks(28, new ECB(12, 47), new ECB(26, 48)), new ECBlocks(30, new ECB(39, 24), new ECB(14, 25)), new ECBlocks(30, new ECB(22, 15), new ECB(41, 16))),
+	    new Version(36, [6, 24, 50, 76, 102, 128, 154], new ECBlocks(30, new ECB(6, 121), new ECB(14, 122)), new ECBlocks(28, new ECB(6, 47), new ECB(34, 48)), new ECBlocks(30, new ECB(46, 24), new ECB(10, 25)), new ECBlocks(30, new ECB(2, 15), new ECB(64, 16))),
+	    new Version(37, [6, 28, 54, 80, 106, 132, 158], new ECBlocks(30, new ECB(17, 122), new ECB(4, 123)), new ECBlocks(28, new ECB(29, 46), new ECB(14, 47)), new ECBlocks(30, new ECB(49, 24), new ECB(10, 25)), new ECBlocks(30, new ECB(24, 15), new ECB(46, 16))),
+	    new Version(38, [6, 32, 58, 84, 110, 136, 162], new ECBlocks(30, new ECB(4, 122), new ECB(18, 123)), new ECBlocks(28, new ECB(13, 46), new ECB(32, 47)), new ECBlocks(30, new ECB(48, 24), new ECB(14, 25)), new ECBlocks(30, new ECB(42, 15), new ECB(32, 16))),
+	    new Version(39, [6, 26, 54, 82, 110, 138, 166], new ECBlocks(30, new ECB(20, 117), new ECB(4, 118)), new ECBlocks(28, new ECB(40, 47), new ECB(7, 48)), new ECBlocks(30, new ECB(43, 24), new ECB(22, 25)), new ECBlocks(30, new ECB(10, 15), new ECB(67, 16))),
+	    new Version(40, [6, 30, 58, 86, 114, 142, 170], new ECBlocks(30, new ECB(19, 118), new ECB(6, 119)), new ECBlocks(28, new ECB(18, 47), new ECB(31, 48)), new ECBlocks(30, new ECB(34, 24), new ECB(34, 25)), new ECBlocks(30, new ECB(20, 15), new ECB(61, 16))),
+	];
+	function getVersionForNumber(versionNumber) {
+	    if (versionNumber < 1 || versionNumber > 40) {
+	        throw new Error("Invalid version number " + versionNumber);
+	    }
+	    return VERSIONS[versionNumber - 1];
+	}
+	exports.getVersionForNumber = getVersionForNumber;
+
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var bitmatrix_1 = __webpack_require__(2);
+	var decodeqrdata_1 = __webpack_require__(10);
+	var helpers_1 = __webpack_require__(6);
+	var reedsolomon_1 = __webpack_require__(12);
+	var version_1 = __webpack_require__(8);
+	var FORMAT_INFO_MASK_QR = 0x5412;
+	var FORMAT_INFO_DECODE_LOOKUP = [
+	    [0x5412, 0x00],
+	    [0x5125, 0x01],
+	    [0x5E7C, 0x02],
+	    [0x5B4B, 0x03],
+	    [0x45F9, 0x04],
+	    [0x40CE, 0x05],
+	    [0x4F97, 0x06],
+	    [0x4AA0, 0x07],
+	    [0x77C4, 0x08],
+	    [0x72F3, 0x09],
+	    [0x7DAA, 0x0A],
+	    [0x789D, 0x0B],
+	    [0x662F, 0x0C],
+	    [0x6318, 0x0D],
+	    [0x6C41, 0x0E],
+	    [0x6976, 0x0F],
+	    [0x1689, 0x10],
+	    [0x13BE, 0x11],
+	    [0x1CE7, 0x12],
+	    [0x19D0, 0x13],
+	    [0x0762, 0x14],
+	    [0x0255, 0x15],
+	    [0x0D0C, 0x16],
+	    [0x083B, 0x17],
+	    [0x355F, 0x18],
+	    [0x3068, 0x19],
+	    [0x3F31, 0x1A],
+	    [0x3A06, 0x1B],
+	    [0x24B4, 0x1C],
+	    [0x2183, 0x1D],
+	    [0x2EDA, 0x1E],
+	    [0x2BED, 0x1F],
+	];
+	var DATA_MASKS = [
+	    function (i, j) { return ((i + j) & 0x01) === 0; },
+	    function (i, j) { return (i & 0x01) === 0; },
+	    function (i, j) { return j % 3 == 0; },
+	    function (i, j) { return (i + j) % 3 === 0; },
+	    function (i, j) { return (((i >> 1) + (j / 3)) & 0x01) === 0; },
+	    function (i, j) { return ((i * j) & 0x01) + ((i * j) % 3) === 0; },
+	    function (i, j) { return ((((i * j) & 0x01) + ((i * j) % 3)) & 0x01) === 0; },
+	    function (i, j) { return ((((i + j) & 0x01) + ((i * j) % 3)) & 0x01) === 0; },
+	];
+	var ERROR_CORRECTION_LEVELS = [
+	    { ordinal: 1, bits: 0x00, name: "M" },
+	    { ordinal: 0, bits: 0x01, name: "L" },
+	    { ordinal: 3, bits: 0x02, name: "H" },
+	    { ordinal: 2, bits: 0x03, name: "Q" },
+	];
+	function buildFunctionPattern(version) {
+	    var dimension = version.getDimensionForVersion();
+	    var emptyArray = new Array(dimension * dimension);
+	    for (var i = 0; i < emptyArray.length; i++) {
+	        emptyArray[i] = false;
+	    }
+	    var bitMatrix = new bitmatrix_1.BitMatrix(emptyArray, dimension);
+	    ///BitMatrix bitMatrix = new BitMatrix(dimension);
+	    // Top left finder pattern + separator + format
+	    bitMatrix.setRegion(0, 0, 9, 9);
+	    // Top right finder pattern + separator + format
+	    bitMatrix.setRegion(dimension - 8, 0, 8, 9);
+	    // Bottom left finder pattern + separator + format
+	    bitMatrix.setRegion(0, dimension - 8, 9, 8);
+	    // Alignment patterns
+	    var max = version.alignmentPatternCenters.length;
+	    for (var x = 0; x < max; x++) {
+	        var i = version.alignmentPatternCenters[x] - 2;
+	        for (var y = 0; y < max; y++) {
+	            if ((x == 0 && (y == 0 || y == max - 1)) || (x == max - 1 && y == 0)) {
+	                // No alignment patterns near the three finder paterns
+	                continue;
+	            }
+	            bitMatrix.setRegion(version.alignmentPatternCenters[y] - 2, i, 5, 5);
+	        }
+	    }
+	    // Vertical timing pattern
+	    bitMatrix.setRegion(6, 9, 1, dimension - 17);
+	    // Horizontal timing pattern
+	    bitMatrix.setRegion(9, 6, dimension - 17, 1);
+	    if (version.versionNumber > 6) {
+	        // Version info, top right
+	        bitMatrix.setRegion(dimension - 11, 0, 3, 6);
+	        // Version info, bottom left
+	        bitMatrix.setRegion(0, dimension - 11, 6, 3);
+	    }
+	    return bitMatrix;
+	}
+	function readCodewords(matrix, version, formatInfo) {
+	    // Get the data mask for the format used in this QR Code. This will exclude
+	    // some bits from reading as we wind through the bit matrix.
+	    var dataMask = DATA_MASKS[formatInfo.dataMask];
+	    var dimension = matrix.height;
+	    var funcPattern = buildFunctionPattern(version);
+	    var readingUp = true;
+	    var result = [];
+	    var resultOffset = 0;
+	    var currentByte = 0;
+	    var bitsRead = 0;
+	    // Read columns in pairs, from right to left
+	    for (var j = dimension - 1; j > 0; j -= 2) {
+	        if (j == 6) {
+	            // Skip whole column with vertical alignment pattern;
+	            // saves time and makes the other code proceed more cleanly
+	            j--;
+	        }
+	        // Read alternatingly from bottom to top then top to bottom
+	        for (var count = 0; count < dimension; count++) {
+	            var i = readingUp ? dimension - 1 - count : count;
+	            for (var col = 0; col < 2; col++) {
+	                // Ignore bits covered by the function pattern
+	                if (!funcPattern.get(j - col, i)) {
+	                    // Read a bit
+	                    bitsRead++;
+	                    currentByte <<= 1;
+	                    if (matrix.get(j - col, i) !== dataMask(i, j - col)) {
+	                        currentByte |= 1;
+	                    }
+	                    // If we've made a whole byte, save it off
+	                    if (bitsRead == 8) {
+	                        result[resultOffset++] = currentByte & 0xFF;
+	                        bitsRead = 0;
+	                        currentByte = 0;
+	                    }
+	                }
+	            }
+	        }
+	        readingUp = !readingUp; // switch directions
+	    }
+	    if (resultOffset != version.totalCodewords) {
+	        return null;
+	    }
+	    return result;
+	}
+	function readVersion(matrix) {
+	    var dimension = matrix.height;
+	    var provisionalVersion = (dimension - 17) >> 2;
+	    if (provisionalVersion <= 6) {
+	        return version_1.getVersionForNumber(provisionalVersion);
+	    }
+	    // Read top-right version info: 3 wide by 6 tall
+	    var versionBits = 0;
+	    var ijMin = dimension - 11;
+	    for (var j = 5; j >= 0; j--) {
+	        for (var i = dimension - 9; i >= ijMin; i--) {
+	            versionBits = matrix.copyBit(i, j, versionBits);
+	        }
+	    }
+	    var parsedVersion = version_1.Version.decodeVersionInformation(versionBits);
+	    if (parsedVersion != null && parsedVersion.getDimensionForVersion() == dimension) {
+	        return parsedVersion;
+	    }
+	    // Hmm, failed. Try bottom left: 6 wide by 3 tall
+	    versionBits = 0;
+	    for (var i = 5; i >= 0; i--) {
+	        for (var j = dimension - 9; j >= ijMin; j--) {
+	            versionBits = matrix.copyBit(i, j, versionBits);
+	        }
+	    }
+	    parsedVersion = version_1.Version.decodeVersionInformation(versionBits);
+	    if (parsedVersion != null && parsedVersion.getDimensionForVersion() == dimension) {
+	        return parsedVersion;
+	    }
+	    return null;
+	}
+	function newFormatInformation(formatInfo) {
+	    return {
+	        errorCorrectionLevel: ERROR_CORRECTION_LEVELS[(formatInfo >> 3) & 0x03],
+	        dataMask: formatInfo & 0x07
+	    };
+	}
+	function doDecodeFormatInformation(maskedFormatInfo1, maskedFormatInfo2) {
+	    // Find the int in FORMAT_INFO_DECODE_LOOKUP with fewest bits differing
+	    var bestDifference = Infinity;
+	    var bestFormatInfo = 0;
+	    for (var i = 0; i < FORMAT_INFO_DECODE_LOOKUP.length; i++) {
+	        var decodeInfo = FORMAT_INFO_DECODE_LOOKUP[i];
+	        var targetInfo = decodeInfo[0];
+	        if (targetInfo == maskedFormatInfo1 || targetInfo == maskedFormatInfo2) {
+	            // Found an exact match
+	            return newFormatInformation(decodeInfo[1]);
+	        }
+	        var bitsDifference = helpers_1.numBitsDiffering(maskedFormatInfo1, targetInfo);
+	        if (bitsDifference < bestDifference) {
+	            bestFormatInfo = decodeInfo[1];
+	            bestDifference = bitsDifference;
+	        }
+	        if (maskedFormatInfo1 != maskedFormatInfo2) {
+	            // also try the other option
+	            bitsDifference = helpers_1.numBitsDiffering(maskedFormatInfo2, targetInfo);
+	            if (bitsDifference < bestDifference) {
+	                bestFormatInfo = decodeInfo[1];
+	                bestDifference = bitsDifference;
+	            }
+	        }
+	    }
+	    // Hamming distance of the 32 masked codes is 7, by construction, so <= 3 bits
+	    // differing means we found a match
+	    if (bestDifference <= 3)
+	        return newFormatInformation(bestFormatInfo);
+	    return null;
+	}
+	function decodeFormatInformation(maskedFormatInfo1, maskedFormatInfo2) {
+	    var formatInfo = doDecodeFormatInformation(maskedFormatInfo1, maskedFormatInfo2);
+	    if (formatInfo) {
+	        return formatInfo;
+	    }
+	    // Should return null, but, some QR codes apparently
+	    // do not mask this info. Try again by actually masking the pattern
+	    // first
+	    return doDecodeFormatInformation(maskedFormatInfo1 ^ FORMAT_INFO_MASK_QR, maskedFormatInfo2 ^ FORMAT_INFO_MASK_QR);
+	}
+	function readFormatInformation(matrix) {
+	    // Read top-left format info bits
+	    var formatInfoBits1 = 0;
+	    for (var i = 0; i < 6; i++) {
+	        formatInfoBits1 = matrix.copyBit(i, 8, formatInfoBits1);
+	    }
+	    // .. and skip a bit in the timing pattern ...
+	    formatInfoBits1 = matrix.copyBit(7, 8, formatInfoBits1);
+	    formatInfoBits1 = matrix.copyBit(8, 8, formatInfoBits1);
+	    formatInfoBits1 = matrix.copyBit(8, 7, formatInfoBits1);
+	    // .. and skip a bit in the timing pattern ...
+	    for (var j = 5; j >= 0; j--) {
+	        formatInfoBits1 = matrix.copyBit(8, j, formatInfoBits1);
+	    }
+	    // Read the top-right/bottom-left pattern too
+	    var dimension = matrix.height;
+	    var formatInfoBits2 = 0;
+	    var jMin = dimension - 7;
+	    for (var j = dimension - 1; j >= jMin; j--) {
+	        formatInfoBits2 = matrix.copyBit(8, j, formatInfoBits2);
+	    }
+	    for (var i = dimension - 8; i < dimension; i++) {
+	        formatInfoBits2 = matrix.copyBit(i, 8, formatInfoBits2);
+	    }
+	    // parsedFormatInfo = FormatInformation.decodeFormatInformation(formatInfoBits1, formatInfoBits2);
+	    var parsedFormatInfo = decodeFormatInformation(formatInfoBits1, formatInfoBits2);
+	    if (parsedFormatInfo != null) {
+	        return parsedFormatInfo;
+	    }
+	    return null;
+	}
+	function getDataBlocks(rawCodewords, version, ecLevel) {
+	    if (rawCodewords.length != version.totalCodewords) {
+	        throw new Error("Invalid number of codewords for version; got " + rawCodewords.length + " expected " + version.totalCodewords);
+	    }
+	    // Figure out the number and size of data blocks used by this version and
+	    // error correction level
+	    var ecBlocks = version.getECBlocksForLevel(ecLevel);
+	    // First count the total number of data blocks
+	    var totalBlocks = 0;
+	    var ecBlockArray = ecBlocks.ecBlocks;
+	    ecBlockArray.forEach(function (ecBlock) {
+	        totalBlocks += ecBlock.count;
+	    });
+	    // Now establish DataBlocks of the appropriate size and number of data codewords
+	    var result = new Array(totalBlocks);
+	    var numResultBlocks = 0;
+	    ecBlockArray.forEach(function (ecBlock) {
+	        for (var i = 0; i < ecBlock.count; i++) {
+	            var numDataCodewords = ecBlock.dataCodewords;
+	            var numBlockCodewords = ecBlocks.ecCodewordsPerBlock + numDataCodewords;
+	            result[numResultBlocks++] = { numDataCodewords: numDataCodewords, codewords: new Array(numBlockCodewords) };
+	        }
+	    });
+	    // All blocks have the same amount of data, except that the last n
+	    // (where n may be 0) have 1 more byte. Figure out where these start.
+	    var shorterBlocksTotalCodewords = result[0].codewords.length;
+	    var longerBlocksStartAt = result.length - 1;
+	    while (longerBlocksStartAt >= 0) {
+	        var numCodewords = result[longerBlocksStartAt].codewords.length;
+	        if (numCodewords == shorterBlocksTotalCodewords) {
+	            break;
+	        }
+	        longerBlocksStartAt--;
+	    }
+	    longerBlocksStartAt++;
+	    var shorterBlocksNumDataCodewords = shorterBlocksTotalCodewords - ecBlocks.ecCodewordsPerBlock;
+	    // The last elements of result may be 1 element longer;
+	    // first fill out as many elements as all of them have
+	    var rawCodewordsOffset = 0;
+	    for (var i = 0; i < shorterBlocksNumDataCodewords; i++) {
+	        for (var j = 0; j < numResultBlocks; j++) {
+	            result[j].codewords[i] = rawCodewords[rawCodewordsOffset++];
+	        }
+	    }
+	    // Fill out the last data block in the longer ones
+	    for (var j = longerBlocksStartAt; j < numResultBlocks; j++) {
+	        result[j].codewords[shorterBlocksNumDataCodewords] = rawCodewords[rawCodewordsOffset++];
+	    }
+	    // Now add in error correction blocks
+	    var max = result[0].codewords.length;
+	    for (var i = shorterBlocksNumDataCodewords; i < max; i++) {
+	        for (var j = 0; j < numResultBlocks; j++) {
+	            var iOffset = j < longerBlocksStartAt ? i : i + 1;
+	            result[j].codewords[iOffset] = rawCodewords[rawCodewordsOffset++];
+	        }
+	    }
+	    return result;
+	}
+	function correctErrors(codewordBytes, numDataCodewords) {
+	    var rsDecoder = new reedsolomon_1.ReedSolomonDecoder();
+	    var numCodewords = codewordBytes.length;
+	    // First read into an array of ints
+	    var codewordsInts = new Array(numCodewords);
+	    for (var i = 0; i < numCodewords; i++) {
+	        codewordsInts[i] = codewordBytes[i] & 0xFF;
+	    }
+	    var numECCodewords = codewordBytes.length - numDataCodewords;
+	    if (!rsDecoder.decode(codewordsInts, numECCodewords))
+	        return false;
+	    // Copy back into array of bytes -- only need to worry about the bytes that were data
+	    // We don't care about errors in the error-correction codewords
+	    for (var i = 0; i < numDataCodewords; i++) {
+	        codewordBytes[i] = codewordsInts[i];
+	    }
+	    return true;
+	}
+	function decodeMatrix(matrix) {
+	    var version = readVersion(matrix);
+	    if (!version) {
+	        return null;
+	    }
+	    var formatInfo = readFormatInformation(matrix);
+	    if (!formatInfo) {
+	        return null;
+	    }
+	    var ecLevel = formatInfo.errorCorrectionLevel;
+	    // Read codewords
+	    var codewords = readCodewords(matrix, version, formatInfo);
+	    if (!codewords) {
+	        return null;
+	    }
+	    // Separate into data blocks
+	    var dataBlocks = getDataBlocks(codewords, version, ecLevel);
+	    // Count total number of data bytes
+	    var totalBytes = 0;
+	    dataBlocks.forEach(function (dataBlock) {
+	        totalBytes += dataBlock.numDataCodewords;
+	    });
+	    var resultBytes = new Array(totalBytes);
+	    var resultOffset = 0;
+	    // Error-correct and copy data blocks together into a stream of bytes
+	    for (var _i = 0, dataBlocks_1 = dataBlocks; _i < dataBlocks_1.length; _i++) {
+	        var dataBlock = dataBlocks_1[_i];
+	        var codewordBytes = dataBlock.codewords;
+	        var numDataCodewords = dataBlock.numDataCodewords;
+	        if (!correctErrors(codewordBytes, numDataCodewords))
+	            return null;
+	        for (var i = 0; i < numDataCodewords; i++) {
+	            resultBytes[resultOffset++] = codewordBytes[i];
+	        }
+	    }
+	    return decodeqrdata_1.decodeQRdata(resultBytes, version.versionNumber, ecLevel.name);
+	}
+	function decode(matrix) {
+	    if (matrix == null) {
+	        return null;
+	    }
+	    var result = decodeMatrix(matrix);
+	    if (result) {
+	        return result;
+	    }
+	    // Decoding didn't work, try mirroring the QR
+	    matrix.mirror();
+	    return decodeMatrix(matrix);
+	}
+	exports.decode = decode;
+
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var bitstream_1 = __webpack_require__(11);
+	function toAlphaNumericByte(value) {
+	    var ALPHANUMERIC_CHARS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B',
+	        'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+	        'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+	        ' ', '$', '%', '*', '+', '-', '.', '/', ':'];
+	    if (value >= ALPHANUMERIC_CHARS.length) {
+	        throw new Error("Could not decode alphanumeric char");
+	    }
+	    return ALPHANUMERIC_CHARS[value].charCodeAt(0);
+	}
+	var Mode = (function () {
+	    function Mode(characterCountBitsForVersions, bits) {
+	        this.characterCountBitsForVersions = characterCountBitsForVersions;
+	        this.bits = bits;
+	    }
+	    Mode.prototype.getCharacterCountBits = function (version) {
+	        if (this.characterCountBitsForVersions == null) {
+	            throw new Error("Character count doesn't apply to this mode");
+	        }
+	        var offset;
+	        if (version <= 9) {
+	            offset = 0;
+	        }
+	        else if (version <= 26) {
+	            offset = 1;
+	        }
+	        else {
+	            offset = 2;
+	        }
+	        return this.characterCountBitsForVersions[offset];
+	    };
+	    return Mode;
+	}());
+	var TERMINATOR_MODE = new Mode([0, 0, 0], 0x00); // Not really a mod...
+	var NUMERIC_MODE = new Mode([10, 12, 14], 0x01);
+	var ALPHANUMERIC_MODE = new Mode([9, 11, 13], 0x02);
+	var STRUCTURED_APPEND_MODE = new Mode([0, 0, 0], 0x03); // Not supported
+	var BYTE_MODE = new Mode([8, 16, 16], 0x04);
+	var ECI_MODE = new Mode(null, 0x07); // character counts don't apply
+	var KANJI_MODE = new Mode([8, 10, 12], 0x08);
+	var FNC1_FIRST_POSITION_MODE = new Mode(null, 0x05);
+	var FNC1_SECOND_POSITION_MODE = new Mode(null, 0x09);
+	var HANZI_MODE = new Mode([8, 10, 12], 0x0D);
+	function modeForBits(bits) {
+	    switch (bits) {
+	        case 0x0:
+	            return TERMINATOR_MODE;
+	        case 0x1:
+	            return NUMERIC_MODE;
+	        case 0x2:
+	            return ALPHANUMERIC_MODE;
+	        case 0x3:
+	            return STRUCTURED_APPEND_MODE;
+	        case 0x4:
+	            return BYTE_MODE;
+	        case 0x5:
+	            return FNC1_FIRST_POSITION_MODE;
+	        case 0x7:
+	            return ECI_MODE;
+	        case 0x8:
+	            return KANJI_MODE;
+	        case 0x9:
+	            return FNC1_SECOND_POSITION_MODE;
+	        case 0xD:
+	            // 0xD is defined in GBT 18284-2000, may not be supported in foreign country
+	            return HANZI_MODE;
+	        default:
+	            throw new Error("Couldn't decode mode from byte array");
+	    }
+	}
+	function parseECIValue(bits) {
+	    var firstByte = bits.readBits(8);
+	    if ((firstByte & 0x80) == 0) {
+	        // just one byte
+	        return firstByte & 0x7F;
+	    }
+	    if ((firstByte & 0xC0) == 0x80) {
+	        // two bytes
+	        var secondByte = bits.readBits(8);
+	        return ((firstByte & 0x3F) << 8) | secondByte;
+	    }
+	    if ((firstByte & 0xE0) == 0xC0) {
+	        // three bytes
+	        var secondThirdBytes = bits.readBits(16);
+	        return ((firstByte & 0x1F) << 16) | secondThirdBytes;
+	    }
+	    throw new Error("Bad ECI bits starting with byte " + firstByte);
+	}
+	function decodeHanziSegment(bits, result, count) {
+	    // Don't crash trying to read more bits than we have available.
+	    if (count * 13 > bits.available()) {
+	        return false;
+	    }
+	    // Each character will require 2 bytes. Read the characters as 2-byte pairs
+	    // and decode as GB2312 afterwards
+	    var buffer = new Array(2 * count);
+	    var offset = 0;
+	    while (count > 0) {
+	        // Each 13 bits encodes a 2-byte character
+	        var twoBytes = bits.readBits(13);
+	        var assembledTwoBytes = (Math.floor(twoBytes / 0x060) << 8) | (twoBytes % 0x060);
+	        if (assembledTwoBytes < 0x003BF) {
+	            // In the 0xA1A1 to 0xAAFE range
+	            assembledTwoBytes += 0x0A1A1;
+	        }
+	        else {
+	            // In the 0xB0A1 to 0xFAFE range
+	            assembledTwoBytes += 0x0A6A1;
+	        }
+	        buffer[offset] = ((assembledTwoBytes >> 8) & 0xFF);
+	        buffer[offset + 1] = (assembledTwoBytes & 0xFF);
+	        offset += 2;
+	        count--;
+	    }
+	    result.val = buffer;
+	    return true;
+	}
+	function decodeNumericSegment(bits, result, count) {
+	    // Read three digits at a time
+	    while (count >= 3) {
+	        // Each 10 bits encodes three digits
+	        if (bits.available() < 10) {
+	            return false;
+	        }
+	        var threeDigitsBits = bits.readBits(10);
+	        if (threeDigitsBits >= 1000) {
+	            return false;
+	        }
+	        result.val.push(toAlphaNumericByte(Math.floor(threeDigitsBits / 100)));
+	        result.val.push(toAlphaNumericByte(Math.floor(threeDigitsBits / 10) % 10));
+	        result.val.push(toAlphaNumericByte(threeDigitsBits % 10));
+	        count -= 3;
+	    }
+	    if (count == 2) {
+	        // Two digits left over to read, encoded in 7 bits
+	        if (bits.available() < 7) {
+	            return false;
+	        }
+	        var twoDigitsBits = bits.readBits(7);
+	        if (twoDigitsBits >= 100) {
+	            return false;
+	        }
+	        result.val.push(toAlphaNumericByte(Math.floor(twoDigitsBits / 10)));
+	        result.val.push(toAlphaNumericByte(twoDigitsBits % 10));
+	    }
+	    else if (count == 1) {
+	        // One digit left over to read
+	        if (bits.available() < 4) {
+	            return false;
+	        }
+	        var digitBits = bits.readBits(4);
+	        if (digitBits >= 10) {
+	            return false;
+	        }
+	        result.val.push(toAlphaNumericByte(digitBits));
+	    }
+	    return true;
+	}
+	function decodeAlphanumericSegment(bits, result, count, fc1InEffect) {
+	    // Read two characters at a time
+	    var start = result.val.length;
+	    while (count > 1) {
+	        if (bits.available() < 11) {
+	            return false;
+	        }
+	        var nextTwoCharsBits = bits.readBits(11);
+	        result.val.push(toAlphaNumericByte(Math.floor(nextTwoCharsBits / 45)));
+	        result.val.push(toAlphaNumericByte(nextTwoCharsBits % 45));
+	        count -= 2;
+	    }
+	    if (count == 1) {
+	        // special case: one character left
+	        if (bits.available() < 6) {
+	            return false;
+	        }
+	        result.val.push(toAlphaNumericByte(bits.readBits(6)));
+	    }
+	    // See section 6.4.8.1, 6.4.8.2
+	    if (fc1InEffect) {
+	        // We need to massage the result a bit if in an FNC1 mode:
+	        for (var i = start; i < result.val.length; i++) {
+	            if (result.val[i] == '%'.charCodeAt(0)) {
+	                if (i < result.val.length - 1 && result.val[i + 1] == '%'.charCodeAt(0)) {
+	                    // %% is rendered as %
+	                    result.val = result.val.slice(0, i + 1).concat(result.val.slice(i + 2));
+	                }
+	                else {
+	                    // In alpha mode, % should be converted to FNC1 separator 0x1D
+	                    // THIS IS ALMOST CERTAINLY INVALID
+	                    result.val[i] = 0x1D;
+	                }
+	            }
+	        }
+	    }
+	    return true;
+	}
+	function decodeByteSegment(bits, result, count) {
+	    // Don't crash trying to read more bits than we have available.
+	    if (count << 3 > bits.available()) {
+	        return false;
+	    }
+	    var readBytes = new Array(count);
+	    for (var i = 0; i < count; i++) {
+	        readBytes[i] = bits.readBits(8);
+	    }
+	    Array.prototype.push.apply(result.val, readBytes);
+	    return true;
+	}
+	var GB2312_SUBSET = 1;
+	// Takes in a byte array, a qr version number and an error correction level.
+	// Returns decoded data.
+	function decodeQRdata(data, version, ecl) {
+	    var symbolSequence = -1;
+	    var parityData = -1;
+	    var bits = new bitstream_1.BitStream(data);
+	    var result = { val: [] }; // Have to pass this around so functions can share a reference to a number[]
+	    var fc1InEffect = false;
+	    var mode;
+	    while (mode != TERMINATOR_MODE) {
+	        // While still another segment to read...
+	        if (bits.available() < 4) {
+	            // OK, assume we're done. Really, a TERMINATOR mode should have been recorded here
+	            mode = TERMINATOR_MODE;
+	        }
+	        else {
+	            mode = modeForBits(bits.readBits(4)); // mode is encoded by 4 bits
+	        }
+	        if (mode != TERMINATOR_MODE) {
+	            if (mode == FNC1_FIRST_POSITION_MODE || mode == FNC1_SECOND_POSITION_MODE) {
+	                // We do little with FNC1 except alter the parsed result a bit according to the spec
+	                fc1InEffect = true;
+	            }
+	            else if (mode == STRUCTURED_APPEND_MODE) {
+	                if (bits.available() < 16) {
+	                    return null;
+	                }
+	                // not really supported; but sequence number and parity is added later to the result metadata
+	                // Read next 8 bits (symbol sequence #) and 8 bits (parity data), then continue
+	                symbolSequence = bits.readBits(8);
+	                parityData = bits.readBits(8);
+	            }
+	            else if (mode == ECI_MODE) {
+	                // Ignore since we don't do character encoding in JS
+	                var value = parseECIValue(bits);
+	                if (value < 0 || value > 30) {
+	                    return null;
+	                }
+	            }
+	            else {
+	                // First handle Hanzi mode which does not start with character count
+	                if (mode == HANZI_MODE) {
+	                    //chinese mode contains a sub set indicator right after mode indicator
+	                    var subset = bits.readBits(4);
+	                    var countHanzi = bits.readBits(mode.getCharacterCountBits(version));
+	                    if (subset == GB2312_SUBSET) {
+	                        if (!decodeHanziSegment(bits, result, countHanzi)) {
+	                            return null;
+	                        }
+	                    }
+	                }
+	                else {
+	                    // "Normal" QR code modes:
+	                    // How many characters will follow, encoded in this mode?
+	                    var count = bits.readBits(mode.getCharacterCountBits(version));
+	                    if (mode == NUMERIC_MODE) {
+	                        if (!decodeNumericSegment(bits, result, count)) {
+	                            return null;
+	                        }
+	                    }
+	                    else if (mode == ALPHANUMERIC_MODE) {
+	                        if (!decodeAlphanumericSegment(bits, result, count, fc1InEffect)) {
+	                            return null;
+	                        }
+	                    }
+	                    else if (mode == BYTE_MODE) {
+	                        if (!decodeByteSegment(bits, result, count)) {
+	                            return null;
+	                        }
+	                    }
+	                    else if (mode == KANJI_MODE) {
+	                    }
+	                    else {
+	                        return null;
+	                    }
+	                }
+	            }
+	        }
+	    }
+	    return result.val;
+	}
+	exports.decodeQRdata = decodeQRdata;
+
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var BitStream = (function () {
+	    function BitStream(bytes) {
+	        this.byteOffset = 0;
+	        this.bitOffset = 0;
+	        this.bytes = bytes;
+	    }
+	    BitStream.prototype.readBits = function (numBits) {
+	        if (numBits < 1 || numBits > 32 || numBits > this.available()) {
+	            throw new Error("Cannot read " + numBits.toString() + " bits");
+	        }
+	        var result = 0;
+	        // First, read remainder from current byte
+	        if (this.bitOffset > 0) {
+	            var bitsLeft = 8 - this.bitOffset;
+	            var toRead = numBits < bitsLeft ? numBits : bitsLeft;
+	            var bitsToNotRead = bitsLeft - toRead;
+	            var mask = (0xFF >> (8 - toRead)) << bitsToNotRead;
+	            result = (this.bytes[this.byteOffset] & mask) >> bitsToNotRead;
+	            numBits -= toRead;
+	            this.bitOffset += toRead;
+	            if (this.bitOffset == 8) {
+	                this.bitOffset = 0;
+	                this.byteOffset++;
+	            }
+	        }
+	        // Next read whole bytes
+	        if (numBits > 0) {
+	            while (numBits >= 8) {
+	                result = (result << 8) | (this.bytes[this.byteOffset] & 0xFF);
+	                this.byteOffset++;
+	                numBits -= 8;
+	            }
+	            // Finally read a partial byte
+	            if (numBits > 0) {
+	                var bitsToNotRead = 8 - numBits;
+	                var mask = (0xFF >> bitsToNotRead) << bitsToNotRead;
+	                result = (result << numBits) | ((this.bytes[this.byteOffset] & mask) >> bitsToNotRead);
+	                this.bitOffset += numBits;
+	            }
+	        }
+	        return result;
+	    };
+	    BitStream.prototype.available = function () {
+	        return 8 * (this.bytes.length - this.byteOffset) - this.bitOffset;
+	    };
+	    return BitStream;
+	}());
+	exports.BitStream = BitStream;
+
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var ReedSolomonDecoder = (function () {
+	    function ReedSolomonDecoder() {
+	        this.field = new GenericGF(0x011D, 256, 0); // x^8 + x^4 + x^3 + x^2 + 1
+	    }
+	    ReedSolomonDecoder.prototype.decode = function (received, twoS) {
+	        var poly = new GenericGFPoly(this.field, received);
+	        var syndromeCoefficients = new Array(twoS);
+	        var noError = true;
+	        for (var i = 0; i < twoS; i++) {
+	            var evaluation = poly.evaluateAt(this.field.exp(i + this.field.generatorBase));
+	            syndromeCoefficients[syndromeCoefficients.length - 1 - i] = evaluation;
+	            if (evaluation != 0) {
+	                noError = false;
+	            }
+	        }
+	        if (noError) {
+	            return true;
+	        }
+	        var syndrome = new GenericGFPoly(this.field, syndromeCoefficients);
+	        var sigmaOmega = this.runEuclideanAlgorithm(this.field.buildMonomial(twoS, 1), syndrome, twoS);
+	        if (sigmaOmega == null)
+	            return false;
+	        var sigma = sigmaOmega[0];
+	        var errorLocations = this.findErrorLocations(sigma);
+	        if (errorLocations == null)
+	            return false;
+	        var omega = sigmaOmega[1];
+	        var errorMagnitudes = this.findErrorMagnitudes(omega, errorLocations);
+	        for (var i = 0; i < errorLocations.length; i++) {
+	            var position = received.length - 1 - this.field.log(errorLocations[i]);
+	            if (position < 0) {
+	                // throw new ReedSolomonException("Bad error location");
+	                return false;
+	            }
+	            received[position] = GenericGF.addOrSubtract(received[position], errorMagnitudes[i]);
+	        }
+	        return true;
+	    };
+	    ReedSolomonDecoder.prototype.runEuclideanAlgorithm = function (a, b, R) {
+	        // Assume a's degree is >= b's
+	        if (a.degree() < b.degree()) {
+	            var temp = a;
+	            a = b;
+	            b = temp;
+	        }
+	        var rLast = a;
+	        var r = b;
+	        var tLast = this.field.zero;
+	        var t = this.field.one;
+	        // Run Euclidean algorithm until r's degree is less than R/2
+	        while (r.degree() >= R / 2) {
+	            var rLastLast = rLast;
+	            var tLastLast = tLast;
+	            rLast = r;
+	            tLast = t;
+	            // Divide rLastLast by rLast, with quotient in q and remainder in r
+	            if (rLast.isZero()) {
+	                // Oops, Euclidean algorithm already terminated?
+	                // throw new ReedSolomonException("r_{i-1} was zero");
+	                return null;
+	            }
+	            r = rLastLast;
+	            var q = this.field.zero;
+	            var denominatorLeadingTerm = rLast.getCoefficient(rLast.degree());
+	            var dltInverse = this.field.inverse(denominatorLeadingTerm);
+	            while (r.degree() >= rLast.degree() && !r.isZero()) {
+	                var degreeDiff = r.degree() - rLast.degree();
+	                var scale = this.field.multiply(r.getCoefficient(r.degree()), dltInverse);
+	                q = q.addOrSubtract(this.field.buildMonomial(degreeDiff, scale));
+	                r = r.addOrSubtract(rLast.multiplyByMonomial(degreeDiff, scale));
+	            }
+	            t = q.multiplyPoly(tLast).addOrSubtract(tLastLast);
+	            if (r.degree() >= rLast.degree()) {
+	                // throw new IllegalStateException("Division algorithm failed to reduce polynomial?");
+	                return null;
+	            }
+	        }
+	        var sigmaTildeAtZero = t.getCoefficient(0);
+	        if (sigmaTildeAtZero == 0) {
+	            // throw new ReedSolomonException("sigmaTilde(0) was zero");
+	            return null;
+	        }
+	        var inverse = this.field.inverse(sigmaTildeAtZero);
+	        var sigma = t.multiply(inverse);
+	        var omega = r.multiply(inverse);
+	        return [sigma, omega];
+	    };
+	    ReedSolomonDecoder.prototype.findErrorLocations = function (errorLocator) {
+	        // This is a direct application of Chien's search
+	        var numErrors = errorLocator.degree();
+	        if (numErrors == 1) {
+	            // shortcut
+	            return [errorLocator.getCoefficient(1)];
+	        }
+	        var result = new Array(numErrors);
+	        var e = 0;
+	        for (var i = 1; i < this.field.size && e < numErrors; i++) {
+	            if (errorLocator.evaluateAt(i) == 0) {
+	                result[e] = this.field.inverse(i);
+	                e++;
+	            }
+	        }
+	        if (e != numErrors) {
+	            // throw new ReedSolomonException("Error locator degree does not match number of roots");
+	            return null;
+	        }
+	        return result;
+	    };
+	    ReedSolomonDecoder.prototype.findErrorMagnitudes = function (errorEvaluator, errorLocations) {
+	        // This is directly applying Forney's Formula
+	        var s = errorLocations.length;
+	        var result = new Array(s);
+	        for (var i = 0; i < s; i++) {
+	            var xiInverse = this.field.inverse(errorLocations[i]);
+	            var denominator = 1;
+	            for (var j = 0; j < s; j++) {
+	                if (i != j) {
+	                    //denominator = field.multiply(denominator,
+	                    //    GenericGF.addOrSubtract(1, field.multiply(errorLocations[j], xiInverse)));
+	                    // Above should work but fails on some Apple and Linux JDKs due to a Hotspot bug.
+	                    // Below is a funny-looking workaround from Steven Parkes
+	                    var term = this.field.multiply(errorLocations[j], xiInverse);
+	                    var termPlus1 = (term & 0x1) == 0 ? term | 1 : term & ~1;
+	                    denominator = this.field.multiply(denominator, termPlus1);
+	                }
+	            }
+	            result[i] = this.field.multiply(errorEvaluator.evaluateAt(xiInverse), this.field.inverse(denominator));
+	            if (this.field.generatorBase != 0) {
+	                result[i] = this.field.multiply(result[i], xiInverse);
+	            }
+	        }
+	        return result;
+	    };
+	    return ReedSolomonDecoder;
+	}());
+	exports.ReedSolomonDecoder = ReedSolomonDecoder;
+	var GenericGFPoly = (function () {
+	    function GenericGFPoly(field, coefficients) {
+	        if (coefficients.length == 0) {
+	            throw new Error("No coefficients.");
+	        }
+	        this.field = field;
+	        var coefficientsLength = coefficients.length;
+	        if (coefficientsLength > 1 && coefficients[0] == 0) {
+	            // Leading term must be non-zero for anything except the constant polynomial "0"
+	            var firstNonZero = 1;
+	            while (firstNonZero < coefficientsLength && coefficients[firstNonZero] == 0) {
+	                firstNonZero++;
+	            }
+	            if (firstNonZero == coefficientsLength) {
+	                this.coefficients = field.zero.coefficients;
+	            }
+	            else {
+	                this.coefficients = new Array(coefficientsLength - firstNonZero);
+	                /*Array.Copy(coefficients,       // Source array
+	                  firstNonZero,              // Source index
+	                  this.coefficients,         // Destination array
+	                  0,                         // Destination index
+	                  this.coefficients.length); // length*/
+	                for (var i = 0; i < this.coefficients.length; i++) {
+	                    this.coefficients[i] = coefficients[firstNonZero + i];
+	                }
+	            }
+	        }
+	        else {
+	            this.coefficients = coefficients;
+	        }
+	    }
+	    GenericGFPoly.prototype.evaluateAt = function (a) {
+	        var result = 0;
+	        if (a == 0) {
+	            // Just return the x^0 coefficient
+	            return this.getCoefficient(0);
+	        }
+	        var size = this.coefficients.length;
+	        if (a == 1) {
+	            // Just the sum of the coefficients
+	            this.coefficients.forEach(function (coefficient) {
+	                result = GenericGF.addOrSubtract(result, coefficient);
+	            });
+	            return result;
+	        }
+	        result = this.coefficients[0];
+	        for (var i = 1; i < size; i++) {
+	            result = GenericGF.addOrSubtract(this.field.multiply(a, result), this.coefficients[i]);
+	        }
+	        return result;
+	    };
+	    GenericGFPoly.prototype.getCoefficient = function (degree) {
+	        return this.coefficients[this.coefficients.length - 1 - degree];
+	    };
+	    GenericGFPoly.prototype.degree = function () {
+	        return this.coefficients.length - 1;
+	    };
+	    GenericGFPoly.prototype.isZero = function () {
+	        return this.coefficients[0] == 0;
+	    };
+	    GenericGFPoly.prototype.addOrSubtract = function (other) {
+	        /* TODO, fix this.
+	        if (!this.field.Equals(other.field))
+	        {
+	          throw new Error("GenericGFPolys do not have same GenericGF field");
+	        }*/
+	        if (this.isZero()) {
+	            return other;
+	        }
+	        if (other.isZero()) {
+	            return this;
+	        }
+	        var smallerCoefficients = this.coefficients;
+	        var largerCoefficients = other.coefficients;
+	        if (smallerCoefficients.length > largerCoefficients.length) {
+	            var temp = smallerCoefficients;
+	            smallerCoefficients = largerCoefficients;
+	            largerCoefficients = temp;
+	        }
+	        var sumDiff = new Array(largerCoefficients.length);
+	        var lengthDiff = largerCoefficients.length - smallerCoefficients.length;
+	        // Copy high-order terms only found in higher-degree polynomial's coefficients
+	        ///Array.Copy(largerCoefficients, 0, sumDiff, 0, lengthDiff);
+	        for (var i = 0; i < lengthDiff; i++) {
+	            sumDiff[i] = largerCoefficients[i];
+	        }
+	        for (var i = lengthDiff; i < largerCoefficients.length; i++) {
+	            sumDiff[i] = GenericGF.addOrSubtract(smallerCoefficients[i - lengthDiff], largerCoefficients[i]);
+	        }
+	        return new GenericGFPoly(this.field, sumDiff);
+	    };
+	    GenericGFPoly.prototype.multiply = function (scalar) {
+	        if (scalar == 0) {
+	            return this.field.zero;
+	        }
+	        if (scalar == 1) {
+	            return this;
+	        }
+	        var size = this.coefficients.length;
+	        var product = new Array(size);
+	        for (var i = 0; i < size; i++) {
+	            product[i] = this.field.multiply(this.coefficients[i], scalar);
+	        }
+	        return new GenericGFPoly(this.field, product);
+	    };
+	    GenericGFPoly.prototype.multiplyPoly = function (other) {
+	        /* TODO Fix this.
+	        if (!field.Equals(other.field))
+	        {
+	          throw new Error("GenericGFPolys do not have same GenericGF field");
+	        }*/
+	        if (this.isZero() || other.isZero()) {
+	            return this.field.zero;
+	        }
+	        var aCoefficients = this.coefficients;
+	        var aLength = aCoefficients.length;
+	        var bCoefficients = other.coefficients;
+	        var bLength = bCoefficients.length;
+	        var product = new Array(aLength + bLength - 1);
+	        for (var i = 0; i < aLength; i++) {
+	            var aCoeff = aCoefficients[i];
+	            for (var j = 0; j < bLength; j++) {
+	                product[i + j] = GenericGF.addOrSubtract(product[i + j], this.field.multiply(aCoeff, bCoefficients[j]));
+	            }
+	        }
+	        return new GenericGFPoly(this.field, product);
+	    };
+	    GenericGFPoly.prototype.multiplyByMonomial = function (degree, coefficient) {
+	        if (degree < 0) {
+	            throw new Error("Invalid degree less than 0");
+	        }
+	        if (coefficient == 0) {
+	            return this.field.zero;
+	        }
+	        var size = this.coefficients.length;
+	        var product = new Array(size + degree);
+	        for (var i = 0; i < size; i++) {
+	            product[i] = this.field.multiply(this.coefficients[i], coefficient);
+	        }
+	        return new GenericGFPoly(this.field, product);
+	    };
+	    return GenericGFPoly;
+	}());
+	var GenericGF = (function () {
+	    function GenericGF(primitive, size, genBase) {
+	        // ok.
+	        this.INITIALIZATION_THRESHOLD = 0;
+	        this.initialized = false;
+	        this.primitive = primitive;
+	        this.size = size;
+	        this.generatorBase = genBase;
+	        if (size <= this.INITIALIZATION_THRESHOLD) {
+	            this.initialize();
+	        }
+	    }
+	    GenericGF.prototype.initialize = function () {
+	        this.expTable = new Array(this.size);
+	        this.logTable = new Array(this.size);
+	        var x = 1;
+	        for (var i = 0; i < this.size; i++) {
+	            this.expTable[i] = x;
+	            x <<= 1; // x = x * 2; we're assuming the generator alpha is 2
+	            if (x >= this.size) {
+	                x ^= this.primitive;
+	                x &= this.size - 1;
+	            }
+	        }
+	        for (var i = 0; i < this.size - 1; i++) {
+	            this.logTable[this.expTable[i]] = i;
+	        }
+	        // logTable[0] == 0 but this should never be used
+	        this.zero = new GenericGFPoly(this, [0]);
+	        this.one = new GenericGFPoly(this, [1]);
+	        this.initialized = true;
+	    };
+	    GenericGF.addOrSubtract = function (a, b) {
+	        return a ^ b;
+	    };
+	    GenericGF.prototype.checkInit = function () {
+	        if (!this.initialized)
+	            this.initialize();
+	    };
+	    GenericGF.prototype.multiply = function (a, b) {
+	        this.checkInit();
+	        if (a == 0 || b == 0) {
+	            return 0;
+	        }
+	        return this.expTable[(this.logTable[a] + this.logTable[b]) % (this.size - 1)];
+	    };
+	    GenericGF.prototype.exp = function (a) {
+	        this.checkInit();
+	        return this.expTable[a];
+	    };
+	    GenericGF.prototype.log = function (a) {
+	        this.checkInit();
+	        if (a == 0) {
+	            throw new Error("Can't take log(0)");
+	        }
+	        return this.logTable[a];
+	    };
+	    GenericGF.prototype.inverse = function (a) {
+	        this.checkInit();
+	        if (a == 0) {
+	            throw new Error("Can't invert 0");
+	        }
+	        return this.expTable[this.size - this.logTable[a] - 1];
+	    };
+	    GenericGF.prototype.buildMonomial = function (degree, coefficient) {
+	        this.checkInit();
+	        if (degree < 0) {
+	            throw new Error("Invalid monomial degree less than 0");
+	        }
+	        if (coefficient == 0) {
+	            return this.zero;
+	        }
+	        var coefficients = new Array(degree + 1);
+	        coefficients[0] = coefficient;
+	        return new GenericGFPoly(this, coefficients);
+	    };
+	    return GenericGF;
+	}());
+
+
+/***/ }
+/******/ ])
+});
+;
+},{}],46:[function(require,module,exports){
 (function (process){
 var path = require('path');
 var fs = require('fs');
@@ -19367,10 +22093,10 @@ mime.charsets = {
 module.exports = mime;
 
 }).call(this,require('_process'))
-},{"./types.json":46,"_process":86,"fs":9,"path":63}],46:[function(require,module,exports){
+},{"./types.json":47,"_process":87,"fs":9,"path":64}],47:[function(require,module,exports){
 module.exports={"application/andrew-inset":["ez"],"application/applixware":["aw"],"application/atom+xml":["atom"],"application/atomcat+xml":["atomcat"],"application/atomsvc+xml":["atomsvc"],"application/bdoc":["bdoc"],"application/ccxml+xml":["ccxml"],"application/cdmi-capability":["cdmia"],"application/cdmi-container":["cdmic"],"application/cdmi-domain":["cdmid"],"application/cdmi-object":["cdmio"],"application/cdmi-queue":["cdmiq"],"application/cu-seeme":["cu"],"application/dash+xml":["mpd"],"application/davmount+xml":["davmount"],"application/docbook+xml":["dbk"],"application/dssc+der":["dssc"],"application/dssc+xml":["xdssc"],"application/ecmascript":["ecma"],"application/emma+xml":["emma"],"application/epub+zip":["epub"],"application/exi":["exi"],"application/font-tdpfr":["pfr"],"application/font-woff":["woff"],"application/font-woff2":["woff2"],"application/geo+json":["geojson"],"application/gml+xml":["gml"],"application/gpx+xml":["gpx"],"application/gxf":["gxf"],"application/hyperstudio":["stk"],"application/inkml+xml":["ink","inkml"],"application/ipfix":["ipfix"],"application/java-archive":["jar","war","ear"],"application/java-serialized-object":["ser"],"application/java-vm":["class"],"application/javascript":["js"],"application/json":["json","map"],"application/json5":["json5"],"application/jsonml+json":["jsonml"],"application/ld+json":["jsonld"],"application/lost+xml":["lostxml"],"application/mac-binhex40":["hqx"],"application/mac-compactpro":["cpt"],"application/mads+xml":["mads"],"application/manifest+json":["webmanifest"],"application/marc":["mrc"],"application/marcxml+xml":["mrcx"],"application/mathematica":["ma","nb","mb"],"application/mathml+xml":["mathml"],"application/mbox":["mbox"],"application/mediaservercontrol+xml":["mscml"],"application/metalink+xml":["metalink"],"application/metalink4+xml":["meta4"],"application/mets+xml":["mets"],"application/mods+xml":["mods"],"application/mp21":["m21","mp21"],"application/mp4":["mp4s","m4p"],"application/msword":["doc","dot"],"application/mxf":["mxf"],"application/octet-stream":["bin","dms","lrf","mar","so","dist","distz","pkg","bpk","dump","elc","deploy","exe","dll","deb","dmg","iso","img","msi","msp","msm","buffer"],"application/oda":["oda"],"application/oebps-package+xml":["opf"],"application/ogg":["ogx"],"application/omdoc+xml":["omdoc"],"application/onenote":["onetoc","onetoc2","onetmp","onepkg"],"application/oxps":["oxps"],"application/patch-ops-error+xml":["xer"],"application/pdf":["pdf"],"application/pgp-encrypted":["pgp"],"application/pgp-signature":["asc","sig"],"application/pics-rules":["prf"],"application/pkcs10":["p10"],"application/pkcs7-mime":["p7m","p7c"],"application/pkcs7-signature":["p7s"],"application/pkcs8":["p8"],"application/pkix-attr-cert":["ac"],"application/pkix-cert":["cer"],"application/pkix-crl":["crl"],"application/pkix-pkipath":["pkipath"],"application/pkixcmp":["pki"],"application/pls+xml":["pls"],"application/postscript":["ai","eps","ps"],"application/prs.cww":["cww"],"application/pskc+xml":["pskcxml"],"application/rdf+xml":["rdf"],"application/reginfo+xml":["rif"],"application/relax-ng-compact-syntax":["rnc"],"application/resource-lists+xml":["rl"],"application/resource-lists-diff+xml":["rld"],"application/rls-services+xml":["rs"],"application/rpki-ghostbusters":["gbr"],"application/rpki-manifest":["mft"],"application/rpki-roa":["roa"],"application/rsd+xml":["rsd"],"application/rss+xml":["rss"],"application/rtf":["rtf"],"application/sbml+xml":["sbml"],"application/scvp-cv-request":["scq"],"application/scvp-cv-response":["scs"],"application/scvp-vp-request":["spq"],"application/scvp-vp-response":["spp"],"application/sdp":["sdp"],"application/set-payment-initiation":["setpay"],"application/set-registration-initiation":["setreg"],"application/shf+xml":["shf"],"application/smil+xml":["smi","smil"],"application/sparql-query":["rq"],"application/sparql-results+xml":["srx"],"application/srgs":["gram"],"application/srgs+xml":["grxml"],"application/sru+xml":["sru"],"application/ssdl+xml":["ssdl"],"application/ssml+xml":["ssml"],"application/tei+xml":["tei","teicorpus"],"application/thraud+xml":["tfi"],"application/timestamped-data":["tsd"],"application/vnd.3gpp.pic-bw-large":["plb"],"application/vnd.3gpp.pic-bw-small":["psb"],"application/vnd.3gpp.pic-bw-var":["pvb"],"application/vnd.3gpp2.tcap":["tcap"],"application/vnd.3m.post-it-notes":["pwn"],"application/vnd.accpac.simply.aso":["aso"],"application/vnd.accpac.simply.imp":["imp"],"application/vnd.acucobol":["acu"],"application/vnd.acucorp":["atc","acutc"],"application/vnd.adobe.air-application-installer-package+zip":["air"],"application/vnd.adobe.formscentral.fcdt":["fcdt"],"application/vnd.adobe.fxp":["fxp","fxpl"],"application/vnd.adobe.xdp+xml":["xdp"],"application/vnd.adobe.xfdf":["xfdf"],"application/vnd.ahead.space":["ahead"],"application/vnd.airzip.filesecure.azf":["azf"],"application/vnd.airzip.filesecure.azs":["azs"],"application/vnd.amazon.ebook":["azw"],"application/vnd.americandynamics.acc":["acc"],"application/vnd.amiga.ami":["ami"],"application/vnd.android.package-archive":["apk"],"application/vnd.anser-web-certificate-issue-initiation":["cii"],"application/vnd.anser-web-funds-transfer-initiation":["fti"],"application/vnd.antix.game-component":["atx"],"application/vnd.apple.installer+xml":["mpkg"],"application/vnd.apple.mpegurl":["m3u8"],"application/vnd.apple.pkpass":["pkpass"],"application/vnd.aristanetworks.swi":["swi"],"application/vnd.astraea-software.iota":["iota"],"application/vnd.audiograph":["aep"],"application/vnd.blueice.multipass":["mpm"],"application/vnd.bmi":["bmi"],"application/vnd.businessobjects":["rep"],"application/vnd.chemdraw+xml":["cdxml"],"application/vnd.chipnuts.karaoke-mmd":["mmd"],"application/vnd.cinderella":["cdy"],"application/vnd.claymore":["cla"],"application/vnd.cloanto.rp9":["rp9"],"application/vnd.clonk.c4group":["c4g","c4d","c4f","c4p","c4u"],"application/vnd.cluetrust.cartomobile-config":["c11amc"],"application/vnd.cluetrust.cartomobile-config-pkg":["c11amz"],"application/vnd.commonspace":["csp"],"application/vnd.contact.cmsg":["cdbcmsg"],"application/vnd.cosmocaller":["cmc"],"application/vnd.crick.clicker":["clkx"],"application/vnd.crick.clicker.keyboard":["clkk"],"application/vnd.crick.clicker.palette":["clkp"],"application/vnd.crick.clicker.template":["clkt"],"application/vnd.crick.clicker.wordbank":["clkw"],"application/vnd.criticaltools.wbs+xml":["wbs"],"application/vnd.ctc-posml":["pml"],"application/vnd.cups-ppd":["ppd"],"application/vnd.curl.car":["car"],"application/vnd.curl.pcurl":["pcurl"],"application/vnd.dart":["dart"],"application/vnd.data-vision.rdz":["rdz"],"application/vnd.dece.data":["uvf","uvvf","uvd","uvvd"],"application/vnd.dece.ttml+xml":["uvt","uvvt"],"application/vnd.dece.unspecified":["uvx","uvvx"],"application/vnd.dece.zip":["uvz","uvvz"],"application/vnd.denovo.fcselayout-link":["fe_launch"],"application/vnd.dna":["dna"],"application/vnd.dolby.mlp":["mlp"],"application/vnd.dpgraph":["dpg"],"application/vnd.dreamfactory":["dfac"],"application/vnd.ds-keypoint":["kpxx"],"application/vnd.dvb.ait":["ait"],"application/vnd.dvb.service":["svc"],"application/vnd.dynageo":["geo"],"application/vnd.ecowin.chart":["mag"],"application/vnd.enliven":["nml"],"application/vnd.epson.esf":["esf"],"application/vnd.epson.msf":["msf"],"application/vnd.epson.quickanime":["qam"],"application/vnd.epson.salt":["slt"],"application/vnd.epson.ssf":["ssf"],"application/vnd.eszigno3+xml":["es3","et3"],"application/vnd.ezpix-album":["ez2"],"application/vnd.ezpix-package":["ez3"],"application/vnd.fdf":["fdf"],"application/vnd.fdsn.mseed":["mseed"],"application/vnd.fdsn.seed":["seed","dataless"],"application/vnd.flographit":["gph"],"application/vnd.fluxtime.clip":["ftc"],"application/vnd.framemaker":["fm","frame","maker","book"],"application/vnd.frogans.fnc":["fnc"],"application/vnd.frogans.ltf":["ltf"],"application/vnd.fsc.weblaunch":["fsc"],"application/vnd.fujitsu.oasys":["oas"],"application/vnd.fujitsu.oasys2":["oa2"],"application/vnd.fujitsu.oasys3":["oa3"],"application/vnd.fujitsu.oasysgp":["fg5"],"application/vnd.fujitsu.oasysprs":["bh2"],"application/vnd.fujixerox.ddd":["ddd"],"application/vnd.fujixerox.docuworks":["xdw"],"application/vnd.fujixerox.docuworks.binder":["xbd"],"application/vnd.fuzzysheet":["fzs"],"application/vnd.genomatix.tuxedo":["txd"],"application/vnd.geogebra.file":["ggb"],"application/vnd.geogebra.tool":["ggt"],"application/vnd.geometry-explorer":["gex","gre"],"application/vnd.geonext":["gxt"],"application/vnd.geoplan":["g2w"],"application/vnd.geospace":["g3w"],"application/vnd.gmx":["gmx"],"application/vnd.google-apps.document":["gdoc"],"application/vnd.google-apps.presentation":["gslides"],"application/vnd.google-apps.spreadsheet":["gsheet"],"application/vnd.google-earth.kml+xml":["kml"],"application/vnd.google-earth.kmz":["kmz"],"application/vnd.grafeq":["gqf","gqs"],"application/vnd.groove-account":["gac"],"application/vnd.groove-help":["ghf"],"application/vnd.groove-identity-message":["gim"],"application/vnd.groove-injector":["grv"],"application/vnd.groove-tool-message":["gtm"],"application/vnd.groove-tool-template":["tpl"],"application/vnd.groove-vcard":["vcg"],"application/vnd.hal+xml":["hal"],"application/vnd.handheld-entertainment+xml":["zmm"],"application/vnd.hbci":["hbci"],"application/vnd.hhe.lesson-player":["les"],"application/vnd.hp-hpgl":["hpgl"],"application/vnd.hp-hpid":["hpid"],"application/vnd.hp-hps":["hps"],"application/vnd.hp-jlyt":["jlt"],"application/vnd.hp-pcl":["pcl"],"application/vnd.hp-pclxl":["pclxl"],"application/vnd.hydrostatix.sof-data":["sfd-hdstx"],"application/vnd.ibm.minipay":["mpy"],"application/vnd.ibm.modcap":["afp","listafp","list3820"],"application/vnd.ibm.rights-management":["irm"],"application/vnd.ibm.secure-container":["sc"],"application/vnd.iccprofile":["icc","icm"],"application/vnd.igloader":["igl"],"application/vnd.immervision-ivp":["ivp"],"application/vnd.immervision-ivu":["ivu"],"application/vnd.insors.igm":["igm"],"application/vnd.intercon.formnet":["xpw","xpx"],"application/vnd.intergeo":["i2g"],"application/vnd.intu.qbo":["qbo"],"application/vnd.intu.qfx":["qfx"],"application/vnd.ipunplugged.rcprofile":["rcprofile"],"application/vnd.irepository.package+xml":["irp"],"application/vnd.is-xpr":["xpr"],"application/vnd.isac.fcs":["fcs"],"application/vnd.jam":["jam"],"application/vnd.jcp.javame.midlet-rms":["rms"],"application/vnd.jisp":["jisp"],"application/vnd.joost.joda-archive":["joda"],"application/vnd.kahootz":["ktz","ktr"],"application/vnd.kde.karbon":["karbon"],"application/vnd.kde.kchart":["chrt"],"application/vnd.kde.kformula":["kfo"],"application/vnd.kde.kivio":["flw"],"application/vnd.kde.kontour":["kon"],"application/vnd.kde.kpresenter":["kpr","kpt"],"application/vnd.kde.kspread":["ksp"],"application/vnd.kde.kword":["kwd","kwt"],"application/vnd.kenameaapp":["htke"],"application/vnd.kidspiration":["kia"],"application/vnd.kinar":["kne","knp"],"application/vnd.koan":["skp","skd","skt","skm"],"application/vnd.kodak-descriptor":["sse"],"application/vnd.las.las+xml":["lasxml"],"application/vnd.llamagraphics.life-balance.desktop":["lbd"],"application/vnd.llamagraphics.life-balance.exchange+xml":["lbe"],"application/vnd.lotus-1-2-3":["123"],"application/vnd.lotus-approach":["apr"],"application/vnd.lotus-freelance":["pre"],"application/vnd.lotus-notes":["nsf"],"application/vnd.lotus-organizer":["org"],"application/vnd.lotus-screencam":["scm"],"application/vnd.lotus-wordpro":["lwp"],"application/vnd.macports.portpkg":["portpkg"],"application/vnd.mcd":["mcd"],"application/vnd.medcalcdata":["mc1"],"application/vnd.mediastation.cdkey":["cdkey"],"application/vnd.mfer":["mwf"],"application/vnd.mfmp":["mfm"],"application/vnd.micrografx.flo":["flo"],"application/vnd.micrografx.igx":["igx"],"application/vnd.mif":["mif"],"application/vnd.mobius.daf":["daf"],"application/vnd.mobius.dis":["dis"],"application/vnd.mobius.mbk":["mbk"],"application/vnd.mobius.mqy":["mqy"],"application/vnd.mobius.msl":["msl"],"application/vnd.mobius.plc":["plc"],"application/vnd.mobius.txf":["txf"],"application/vnd.mophun.application":["mpn"],"application/vnd.mophun.certificate":["mpc"],"application/vnd.mozilla.xul+xml":["xul"],"application/vnd.ms-artgalry":["cil"],"application/vnd.ms-cab-compressed":["cab"],"application/vnd.ms-excel":["xls","xlm","xla","xlc","xlt","xlw"],"application/vnd.ms-excel.addin.macroenabled.12":["xlam"],"application/vnd.ms-excel.sheet.binary.macroenabled.12":["xlsb"],"application/vnd.ms-excel.sheet.macroenabled.12":["xlsm"],"application/vnd.ms-excel.template.macroenabled.12":["xltm"],"application/vnd.ms-fontobject":["eot"],"application/vnd.ms-htmlhelp":["chm"],"application/vnd.ms-ims":["ims"],"application/vnd.ms-lrm":["lrm"],"application/vnd.ms-officetheme":["thmx"],"application/vnd.ms-pki.seccat":["cat"],"application/vnd.ms-pki.stl":["stl"],"application/vnd.ms-powerpoint":["ppt","pps","pot"],"application/vnd.ms-powerpoint.addin.macroenabled.12":["ppam"],"application/vnd.ms-powerpoint.presentation.macroenabled.12":["pptm"],"application/vnd.ms-powerpoint.slide.macroenabled.12":["sldm"],"application/vnd.ms-powerpoint.slideshow.macroenabled.12":["ppsm"],"application/vnd.ms-powerpoint.template.macroenabled.12":["potm"],"application/vnd.ms-project":["mpp","mpt"],"application/vnd.ms-word.document.macroenabled.12":["docm"],"application/vnd.ms-word.template.macroenabled.12":["dotm"],"application/vnd.ms-works":["wps","wks","wcm","wdb"],"application/vnd.ms-wpl":["wpl"],"application/vnd.ms-xpsdocument":["xps"],"application/vnd.mseq":["mseq"],"application/vnd.musician":["mus"],"application/vnd.muvee.style":["msty"],"application/vnd.mynfc":["taglet"],"application/vnd.neurolanguage.nlu":["nlu"],"application/vnd.nitf":["ntf","nitf"],"application/vnd.noblenet-directory":["nnd"],"application/vnd.noblenet-sealer":["nns"],"application/vnd.noblenet-web":["nnw"],"application/vnd.nokia.n-gage.data":["ngdat"],"application/vnd.nokia.n-gage.symbian.install":["n-gage"],"application/vnd.nokia.radio-preset":["rpst"],"application/vnd.nokia.radio-presets":["rpss"],"application/vnd.novadigm.edm":["edm"],"application/vnd.novadigm.edx":["edx"],"application/vnd.novadigm.ext":["ext"],"application/vnd.oasis.opendocument.chart":["odc"],"application/vnd.oasis.opendocument.chart-template":["otc"],"application/vnd.oasis.opendocument.database":["odb"],"application/vnd.oasis.opendocument.formula":["odf"],"application/vnd.oasis.opendocument.formula-template":["odft"],"application/vnd.oasis.opendocument.graphics":["odg"],"application/vnd.oasis.opendocument.graphics-template":["otg"],"application/vnd.oasis.opendocument.image":["odi"],"application/vnd.oasis.opendocument.image-template":["oti"],"application/vnd.oasis.opendocument.presentation":["odp"],"application/vnd.oasis.opendocument.presentation-template":["otp"],"application/vnd.oasis.opendocument.spreadsheet":["ods"],"application/vnd.oasis.opendocument.spreadsheet-template":["ots"],"application/vnd.oasis.opendocument.text":["odt"],"application/vnd.oasis.opendocument.text-master":["odm"],"application/vnd.oasis.opendocument.text-template":["ott"],"application/vnd.oasis.opendocument.text-web":["oth"],"application/vnd.olpc-sugar":["xo"],"application/vnd.oma.dd2+xml":["dd2"],"application/vnd.openofficeorg.extension":["oxt"],"application/vnd.openxmlformats-officedocument.presentationml.presentation":["pptx"],"application/vnd.openxmlformats-officedocument.presentationml.slide":["sldx"],"application/vnd.openxmlformats-officedocument.presentationml.slideshow":["ppsx"],"application/vnd.openxmlformats-officedocument.presentationml.template":["potx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":["xlsx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.template":["xltx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.document":["docx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.template":["dotx"],"application/vnd.osgeo.mapguide.package":["mgp"],"application/vnd.osgi.dp":["dp"],"application/vnd.osgi.subsystem":["esa"],"application/vnd.palm":["pdb","pqa","oprc"],"application/vnd.pawaafile":["paw"],"application/vnd.pg.format":["str"],"application/vnd.pg.osasli":["ei6"],"application/vnd.picsel":["efif"],"application/vnd.pmi.widget":["wg"],"application/vnd.pocketlearn":["plf"],"application/vnd.powerbuilder6":["pbd"],"application/vnd.previewsystems.box":["box"],"application/vnd.proteus.magazine":["mgz"],"application/vnd.publishare-delta-tree":["qps"],"application/vnd.pvi.ptid1":["ptid"],"application/vnd.quark.quarkxpress":["qxd","qxt","qwd","qwt","qxl","qxb"],"application/vnd.realvnc.bed":["bed"],"application/vnd.recordare.musicxml":["mxl"],"application/vnd.recordare.musicxml+xml":["musicxml"],"application/vnd.rig.cryptonote":["cryptonote"],"application/vnd.rim.cod":["cod"],"application/vnd.rn-realmedia":["rm"],"application/vnd.rn-realmedia-vbr":["rmvb"],"application/vnd.route66.link66+xml":["link66"],"application/vnd.sailingtracker.track":["st"],"application/vnd.seemail":["see"],"application/vnd.sema":["sema"],"application/vnd.semd":["semd"],"application/vnd.semf":["semf"],"application/vnd.shana.informed.formdata":["ifm"],"application/vnd.shana.informed.formtemplate":["itp"],"application/vnd.shana.informed.interchange":["iif"],"application/vnd.shana.informed.package":["ipk"],"application/vnd.simtech-mindmapper":["twd","twds"],"application/vnd.smaf":["mmf"],"application/vnd.smart.teacher":["teacher"],"application/vnd.solent.sdkm+xml":["sdkm","sdkd"],"application/vnd.spotfire.dxp":["dxp"],"application/vnd.spotfire.sfs":["sfs"],"application/vnd.stardivision.calc":["sdc"],"application/vnd.stardivision.draw":["sda"],"application/vnd.stardivision.impress":["sdd"],"application/vnd.stardivision.math":["smf"],"application/vnd.stardivision.writer":["sdw","vor"],"application/vnd.stardivision.writer-global":["sgl"],"application/vnd.stepmania.package":["smzip"],"application/vnd.stepmania.stepchart":["sm"],"application/vnd.sun.xml.calc":["sxc"],"application/vnd.sun.xml.calc.template":["stc"],"application/vnd.sun.xml.draw":["sxd"],"application/vnd.sun.xml.draw.template":["std"],"application/vnd.sun.xml.impress":["sxi"],"application/vnd.sun.xml.impress.template":["sti"],"application/vnd.sun.xml.math":["sxm"],"application/vnd.sun.xml.writer":["sxw"],"application/vnd.sun.xml.writer.global":["sxg"],"application/vnd.sun.xml.writer.template":["stw"],"application/vnd.sus-calendar":["sus","susp"],"application/vnd.svd":["svd"],"application/vnd.symbian.install":["sis","sisx"],"application/vnd.syncml+xml":["xsm"],"application/vnd.syncml.dm+wbxml":["bdm"],"application/vnd.syncml.dm+xml":["xdm"],"application/vnd.tao.intent-module-archive":["tao"],"application/vnd.tcpdump.pcap":["pcap","cap","dmp"],"application/vnd.tmobile-livetv":["tmo"],"application/vnd.trid.tpt":["tpt"],"application/vnd.triscape.mxs":["mxs"],"application/vnd.trueapp":["tra"],"application/vnd.ufdl":["ufd","ufdl"],"application/vnd.uiq.theme":["utz"],"application/vnd.umajin":["umj"],"application/vnd.unity":["unityweb"],"application/vnd.uoml+xml":["uoml"],"application/vnd.vcx":["vcx"],"application/vnd.visio":["vsd","vst","vss","vsw"],"application/vnd.visionary":["vis"],"application/vnd.vsf":["vsf"],"application/vnd.wap.wbxml":["wbxml"],"application/vnd.wap.wmlc":["wmlc"],"application/vnd.wap.wmlscriptc":["wmlsc"],"application/vnd.webturbo":["wtb"],"application/vnd.wolfram.player":["nbp"],"application/vnd.wordperfect":["wpd"],"application/vnd.wqd":["wqd"],"application/vnd.wt.stf":["stf"],"application/vnd.xara":["xar"],"application/vnd.xfdl":["xfdl"],"application/vnd.yamaha.hv-dic":["hvd"],"application/vnd.yamaha.hv-script":["hvs"],"application/vnd.yamaha.hv-voice":["hvp"],"application/vnd.yamaha.openscoreformat":["osf"],"application/vnd.yamaha.openscoreformat.osfpvg+xml":["osfpvg"],"application/vnd.yamaha.smaf-audio":["saf"],"application/vnd.yamaha.smaf-phrase":["spf"],"application/vnd.yellowriver-custom-menu":["cmp"],"application/vnd.zul":["zir","zirz"],"application/vnd.zzazz.deck+xml":["zaz"],"application/voicexml+xml":["vxml"],"application/widget":["wgt"],"application/winhlp":["hlp"],"application/wsdl+xml":["wsdl"],"application/wspolicy+xml":["wspolicy"],"application/x-7z-compressed":["7z"],"application/x-abiword":["abw"],"application/x-ace-compressed":["ace"],"application/x-apple-diskimage":["dmg"],"application/x-authorware-bin":["aab","x32","u32","vox"],"application/x-authorware-map":["aam"],"application/x-authorware-seg":["aas"],"application/x-bcpio":["bcpio"],"application/x-bdoc":["bdoc"],"application/x-bittorrent":["torrent"],"application/x-blorb":["blb","blorb"],"application/x-bzip":["bz"],"application/x-bzip2":["bz2","boz"],"application/x-cbr":["cbr","cba","cbt","cbz","cb7"],"application/x-cdlink":["vcd"],"application/x-cfs-compressed":["cfs"],"application/x-chat":["chat"],"application/x-chess-pgn":["pgn"],"application/x-chrome-extension":["crx"],"application/x-cocoa":["cco"],"application/x-conference":["nsc"],"application/x-cpio":["cpio"],"application/x-csh":["csh"],"application/x-debian-package":["deb","udeb"],"application/x-dgc-compressed":["dgc"],"application/x-director":["dir","dcr","dxr","cst","cct","cxt","w3d","fgd","swa"],"application/x-doom":["wad"],"application/x-dtbncx+xml":["ncx"],"application/x-dtbook+xml":["dtb"],"application/x-dtbresource+xml":["res"],"application/x-dvi":["dvi"],"application/x-envoy":["evy"],"application/x-eva":["eva"],"application/x-font-bdf":["bdf"],"application/x-font-ghostscript":["gsf"],"application/x-font-linux-psf":["psf"],"application/x-font-otf":["otf"],"application/x-font-pcf":["pcf"],"application/x-font-snf":["snf"],"application/x-font-ttf":["ttf","ttc"],"application/x-font-type1":["pfa","pfb","pfm","afm"],"application/x-freearc":["arc"],"application/x-futuresplash":["spl"],"application/x-gca-compressed":["gca"],"application/x-glulx":["ulx"],"application/x-gnumeric":["gnumeric"],"application/x-gramps-xml":["gramps"],"application/x-gtar":["gtar"],"application/x-hdf":["hdf"],"application/x-httpd-php":["php"],"application/x-install-instructions":["install"],"application/x-iso9660-image":["iso"],"application/x-java-archive-diff":["jardiff"],"application/x-java-jnlp-file":["jnlp"],"application/x-latex":["latex"],"application/x-lua-bytecode":["luac"],"application/x-lzh-compressed":["lzh","lha"],"application/x-makeself":["run"],"application/x-mie":["mie"],"application/x-mobipocket-ebook":["prc","mobi"],"application/x-ms-application":["application"],"application/x-ms-shortcut":["lnk"],"application/x-ms-wmd":["wmd"],"application/x-ms-wmz":["wmz"],"application/x-ms-xbap":["xbap"],"application/x-msaccess":["mdb"],"application/x-msbinder":["obd"],"application/x-mscardfile":["crd"],"application/x-msclip":["clp"],"application/x-msdos-program":["exe"],"application/x-msdownload":["exe","dll","com","bat","msi"],"application/x-msmediaview":["mvb","m13","m14"],"application/x-msmetafile":["wmf","wmz","emf","emz"],"application/x-msmoney":["mny"],"application/x-mspublisher":["pub"],"application/x-msschedule":["scd"],"application/x-msterminal":["trm"],"application/x-mswrite":["wri"],"application/x-netcdf":["nc","cdf"],"application/x-ns-proxy-autoconfig":["pac"],"application/x-nzb":["nzb"],"application/x-perl":["pl","pm"],"application/x-pilot":["prc","pdb"],"application/x-pkcs12":["p12","pfx"],"application/x-pkcs7-certificates":["p7b","spc"],"application/x-pkcs7-certreqresp":["p7r"],"application/x-rar-compressed":["rar"],"application/x-redhat-package-manager":["rpm"],"application/x-research-info-systems":["ris"],"application/x-sea":["sea"],"application/x-sh":["sh"],"application/x-shar":["shar"],"application/x-shockwave-flash":["swf"],"application/x-silverlight-app":["xap"],"application/x-sql":["sql"],"application/x-stuffit":["sit"],"application/x-stuffitx":["sitx"],"application/x-subrip":["srt"],"application/x-sv4cpio":["sv4cpio"],"application/x-sv4crc":["sv4crc"],"application/x-t3vm-image":["t3"],"application/x-tads":["gam"],"application/x-tar":["tar"],"application/x-tcl":["tcl","tk"],"application/x-tex":["tex"],"application/x-tex-tfm":["tfm"],"application/x-texinfo":["texinfo","texi"],"application/x-tgif":["obj"],"application/x-ustar":["ustar"],"application/x-wais-source":["src"],"application/x-web-app-manifest+json":["webapp"],"application/x-x509-ca-cert":["der","crt","pem"],"application/x-xfig":["fig"],"application/x-xliff+xml":["xlf"],"application/x-xpinstall":["xpi"],"application/x-xz":["xz"],"application/x-zmachine":["z1","z2","z3","z4","z5","z6","z7","z8"],"application/xaml+xml":["xaml"],"application/xcap-diff+xml":["xdf"],"application/xenc+xml":["xenc"],"application/xhtml+xml":["xhtml","xht"],"application/xml":["xml","xsl","xsd","rng"],"application/xml-dtd":["dtd"],"application/xop+xml":["xop"],"application/xproc+xml":["xpl"],"application/xslt+xml":["xslt"],"application/xspf+xml":["xspf"],"application/xv+xml":["mxml","xhvml","xvml","xvm"],"application/yang":["yang"],"application/yin+xml":["yin"],"application/zip":["zip"],"audio/3gpp":["3gpp"],"audio/adpcm":["adp"],"audio/basic":["au","snd"],"audio/midi":["mid","midi","kar","rmi"],"audio/mp3":["mp3"],"audio/mp4":["m4a","mp4a"],"audio/mpeg":["mpga","mp2","mp2a","mp3","m2a","m3a"],"audio/ogg":["oga","ogg","spx"],"audio/s3m":["s3m"],"audio/silk":["sil"],"audio/vnd.dece.audio":["uva","uvva"],"audio/vnd.digital-winds":["eol"],"audio/vnd.dra":["dra"],"audio/vnd.dts":["dts"],"audio/vnd.dts.hd":["dtshd"],"audio/vnd.lucent.voice":["lvp"],"audio/vnd.ms-playready.media.pya":["pya"],"audio/vnd.nuera.ecelp4800":["ecelp4800"],"audio/vnd.nuera.ecelp7470":["ecelp7470"],"audio/vnd.nuera.ecelp9600":["ecelp9600"],"audio/vnd.rip":["rip"],"audio/wav":["wav"],"audio/wave":["wav"],"audio/webm":["weba"],"audio/x-aac":["aac"],"audio/x-aiff":["aif","aiff","aifc"],"audio/x-caf":["caf"],"audio/x-flac":["flac"],"audio/x-m4a":["m4a"],"audio/x-matroska":["mka"],"audio/x-mpegurl":["m3u"],"audio/x-ms-wax":["wax"],"audio/x-ms-wma":["wma"],"audio/x-pn-realaudio":["ram","ra"],"audio/x-pn-realaudio-plugin":["rmp"],"audio/x-realaudio":["ra"],"audio/x-wav":["wav"],"audio/xm":["xm"],"chemical/x-cdx":["cdx"],"chemical/x-cif":["cif"],"chemical/x-cmdf":["cmdf"],"chemical/x-cml":["cml"],"chemical/x-csml":["csml"],"chemical/x-xyz":["xyz"],"font/opentype":["otf"],"image/apng":["apng"],"image/bmp":["bmp"],"image/cgm":["cgm"],"image/g3fax":["g3"],"image/gif":["gif"],"image/ief":["ief"],"image/jpeg":["jpeg","jpg","jpe"],"image/ktx":["ktx"],"image/png":["png"],"image/prs.btif":["btif"],"image/sgi":["sgi"],"image/svg+xml":["svg","svgz"],"image/tiff":["tiff","tif"],"image/vnd.adobe.photoshop":["psd"],"image/vnd.dece.graphic":["uvi","uvvi","uvg","uvvg"],"image/vnd.djvu":["djvu","djv"],"image/vnd.dvb.subtitle":["sub"],"image/vnd.dwg":["dwg"],"image/vnd.dxf":["dxf"],"image/vnd.fastbidsheet":["fbs"],"image/vnd.fpx":["fpx"],"image/vnd.fst":["fst"],"image/vnd.fujixerox.edmics-mmr":["mmr"],"image/vnd.fujixerox.edmics-rlc":["rlc"],"image/vnd.ms-modi":["mdi"],"image/vnd.ms-photo":["wdp"],"image/vnd.net-fpx":["npx"],"image/vnd.wap.wbmp":["wbmp"],"image/vnd.xiff":["xif"],"image/webp":["webp"],"image/x-3ds":["3ds"],"image/x-cmu-raster":["ras"],"image/x-cmx":["cmx"],"image/x-freehand":["fh","fhc","fh4","fh5","fh7"],"image/x-icon":["ico"],"image/x-jng":["jng"],"image/x-mrsid-image":["sid"],"image/x-ms-bmp":["bmp"],"image/x-pcx":["pcx"],"image/x-pict":["pic","pct"],"image/x-portable-anymap":["pnm"],"image/x-portable-bitmap":["pbm"],"image/x-portable-graymap":["pgm"],"image/x-portable-pixmap":["ppm"],"image/x-rgb":["rgb"],"image/x-tga":["tga"],"image/x-xbitmap":["xbm"],"image/x-xpixmap":["xpm"],"image/x-xwindowdump":["xwd"],"message/rfc822":["eml","mime"],"model/iges":["igs","iges"],"model/mesh":["msh","mesh","silo"],"model/vnd.collada+xml":["dae"],"model/vnd.dwf":["dwf"],"model/vnd.gdl":["gdl"],"model/vnd.gtw":["gtw"],"model/vnd.mts":["mts"],"model/vnd.vtu":["vtu"],"model/vrml":["wrl","vrml"],"model/x3d+binary":["x3db","x3dbz"],"model/x3d+vrml":["x3dv","x3dvz"],"model/x3d+xml":["x3d","x3dz"],"text/cache-manifest":["appcache","manifest"],"text/calendar":["ics","ifb"],"text/coffeescript":["coffee","litcoffee"],"text/css":["css"],"text/csv":["csv"],"text/hjson":["hjson"],"text/html":["html","htm","shtml"],"text/jade":["jade"],"text/jsx":["jsx"],"text/less":["less"],"text/mathml":["mml"],"text/n3":["n3"],"text/plain":["txt","text","conf","def","list","log","in","ini"],"text/prs.lines.tag":["dsc"],"text/richtext":["rtx"],"text/rtf":["rtf"],"text/sgml":["sgml","sgm"],"text/slim":["slim","slm"],"text/stylus":["stylus","styl"],"text/tab-separated-values":["tsv"],"text/troff":["t","tr","roff","man","me","ms"],"text/turtle":["ttl"],"text/uri-list":["uri","uris","urls"],"text/vcard":["vcard"],"text/vnd.curl":["curl"],"text/vnd.curl.dcurl":["dcurl"],"text/vnd.curl.mcurl":["mcurl"],"text/vnd.curl.scurl":["scurl"],"text/vnd.dvb.subtitle":["sub"],"text/vnd.fly":["fly"],"text/vnd.fmi.flexstor":["flx"],"text/vnd.graphviz":["gv"],"text/vnd.in3d.3dml":["3dml"],"text/vnd.in3d.spot":["spot"],"text/vnd.sun.j2me.app-descriptor":["jad"],"text/vnd.wap.wml":["wml"],"text/vnd.wap.wmlscript":["wmls"],"text/vtt":["vtt"],"text/x-asm":["s","asm"],"text/x-c":["c","cc","cxx","cpp","h","hh","dic"],"text/x-component":["htc"],"text/x-fortran":["f","for","f77","f90"],"text/x-handlebars-template":["hbs"],"text/x-java-source":["java"],"text/x-lua":["lua"],"text/x-markdown":["markdown","md","mkd"],"text/x-nfo":["nfo"],"text/x-opml":["opml"],"text/x-pascal":["p","pas"],"text/x-processing":["pde"],"text/x-sass":["sass"],"text/x-scss":["scss"],"text/x-setext":["etx"],"text/x-sfv":["sfv"],"text/x-suse-ymp":["ymp"],"text/x-uuencode":["uu"],"text/x-vcalendar":["vcs"],"text/x-vcard":["vcf"],"text/xml":["xml"],"text/yaml":["yaml","yml"],"video/3gpp":["3gp","3gpp"],"video/3gpp2":["3g2"],"video/h261":["h261"],"video/h263":["h263"],"video/h264":["h264"],"video/jpeg":["jpgv"],"video/jpm":["jpm","jpgm"],"video/mj2":["mj2","mjp2"],"video/mp2t":["ts"],"video/mp4":["mp4","mp4v","mpg4"],"video/mpeg":["mpeg","mpg","mpe","m1v","m2v"],"video/ogg":["ogv"],"video/quicktime":["qt","mov"],"video/vnd.dece.hd":["uvh","uvvh"],"video/vnd.dece.mobile":["uvm","uvvm"],"video/vnd.dece.pd":["uvp","uvvp"],"video/vnd.dece.sd":["uvs","uvvs"],"video/vnd.dece.video":["uvv","uvvv"],"video/vnd.dvb.file":["dvb"],"video/vnd.fvt":["fvt"],"video/vnd.mpegurl":["mxu","m4u"],"video/vnd.ms-playready.media.pyv":["pyv"],"video/vnd.uvvu.mp4":["uvu","uvvu"],"video/vnd.vivo":["viv"],"video/webm":["webm"],"video/x-f4v":["f4v"],"video/x-fli":["fli"],"video/x-flv":["flv"],"video/x-m4v":["m4v"],"video/x-matroska":["mkv","mk3d","mks"],"video/x-mng":["mng"],"video/x-ms-asf":["asf","asx"],"video/x-ms-vob":["vob"],"video/x-ms-wm":["wm"],"video/x-ms-wmv":["wmv"],"video/x-ms-wmx":["wmx"],"video/x-ms-wvx":["wvx"],"video/x-msvideo":["avi"],"video/x-sgi-movie":["movie"],"video/x-smv":["smv"],"x-conference/x-cooltalk":["ice"]}
 
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 "use strict"
 
 var compile = require("cwise-compiler")
@@ -19833,7 +22559,7 @@ exports.equals = compile({
 
 
 
-},{"cwise-compiler":22}],48:[function(require,module,exports){
+},{"cwise-compiler":22}],49:[function(require,module,exports){
 "use strict"
 
 var ndarray = require("ndarray")
@@ -19856,10 +22582,10 @@ module.exports = function convert(arr, result) {
   return result
 }
 
-},{"./doConvert.js":49,"ndarray":50}],49:[function(require,module,exports){
+},{"./doConvert.js":50,"ndarray":51}],50:[function(require,module,exports){
 module.exports=require('cwise-compiler')({"args":["array","scalar","index"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{\nvar _inline_1_v=_inline_1_arg1_,_inline_1_i\nfor(_inline_1_i=0;_inline_1_i<_inline_1_arg2_.length-1;++_inline_1_i) {\n_inline_1_v=_inline_1_v[_inline_1_arg2_[_inline_1_i]]\n}\n_inline_1_arg0_=_inline_1_v[_inline_1_arg2_[_inline_1_arg2_.length-1]]\n}","args":[{"name":"_inline_1_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_1_arg1_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_1_arg2_","lvalue":false,"rvalue":true,"count":4}],"thisVars":[],"localVars":["_inline_1_i","_inline_1_v"]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"funcName":"convert","blockSize":64})
 
-},{"cwise-compiler":22}],50:[function(require,module,exports){
+},{"cwise-compiler":22}],51:[function(require,module,exports){
 var iota = require("iota-array")
 var isBuffer = require("is-buffer")
 
@@ -20204,7 +22930,7 @@ function wrappedNDArrayCtor(data, shape, stride, offset) {
 
 module.exports = wrappedNDArrayCtor
 
-},{"iota-array":41,"is-buffer":42}],51:[function(require,module,exports){
+},{"iota-array":41,"is-buffer":42}],52:[function(require,module,exports){
 // (c) Dean McNamee <dean@gmail.com>, 2013.
 //
 // https://github.com/deanm/omggif
@@ -20988,7 +23714,7 @@ function GifReaderLZWOutputIndexStream(code_stream, p, output, output_length) {
 
 try { exports.GifWriter = GifWriter; exports.GifReader = GifReader } catch(e) { }  // CommonJS.
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 
@@ -21092,7 +23818,7 @@ exports.setTyped = function (on) {
 
 exports.setTyped(TYPED_OK);
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 // Note: adler32 takes 12% for level 0 and 2% for level 6.
@@ -21126,7 +23852,7 @@ function adler32(adler, buf, len, pos) {
 
 module.exports = adler32;
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 
@@ -21178,7 +23904,7 @@ module.exports = {
   //Z_NULL:                 null // Use -1 or null inline, depending on var type
 };
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 // Note: we can't get significant speed boost here.
@@ -21221,7 +23947,7 @@ function crc32(crc, buf, len, pos) {
 
 module.exports = crc32;
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 'use strict';
 
 var utils   = require('../utils/common');
@@ -23078,7 +25804,7 @@ exports.deflatePrime = deflatePrime;
 exports.deflateTune = deflateTune;
 */
 
-},{"../utils/common":52,"./adler32":53,"./crc32":55,"./messages":60,"./trees":61}],57:[function(require,module,exports){
+},{"../utils/common":53,"./adler32":54,"./crc32":56,"./messages":61,"./trees":62}],58:[function(require,module,exports){
 'use strict';
 
 // See state defs from inflate.js
@@ -23406,7 +26132,7 @@ module.exports = function inflate_fast(strm, start) {
   return;
 };
 
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 'use strict';
 
 
@@ -24946,7 +27672,7 @@ exports.inflateSyncPoint = inflateSyncPoint;
 exports.inflateUndermine = inflateUndermine;
 */
 
-},{"../utils/common":52,"./adler32":53,"./crc32":55,"./inffast":57,"./inftrees":59}],59:[function(require,module,exports){
+},{"../utils/common":53,"./adler32":54,"./crc32":56,"./inffast":58,"./inftrees":60}],60:[function(require,module,exports){
 'use strict';
 
 
@@ -25275,7 +28001,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
   return 0;
 };
 
-},{"../utils/common":52}],60:[function(require,module,exports){
+},{"../utils/common":53}],61:[function(require,module,exports){
 'use strict';
 
 module.exports = {
@@ -25290,7 +28016,7 @@ module.exports = {
   '-6':   'incompatible version' /* Z_VERSION_ERROR (-6) */
 };
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 'use strict';
 
 
@@ -26494,7 +29220,7 @@ exports._tr_flush_block  = _tr_flush_block;
 exports._tr_tally = _tr_tally;
 exports._tr_align = _tr_align;
 
-},{"../utils/common":52}],62:[function(require,module,exports){
+},{"../utils/common":53}],63:[function(require,module,exports){
 'use strict';
 
 
@@ -26525,7 +29251,7 @@ function ZStream() {
 
 module.exports = ZStream;
 
-},{}],63:[function(require,module,exports){
+},{}],64:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -26753,7 +29479,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":86}],64:[function(require,module,exports){
+},{"_process":87}],65:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -26949,7 +29675,7 @@ exports.dataToBitMap = function(data, bitmapInfo) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./interlace":74,"buffer":10}],65:[function(require,module,exports){
+},{"./interlace":75,"buffer":10}],66:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -27017,7 +29743,7 @@ module.exports = function(data, width, height, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":67,"buffer":10}],66:[function(require,module,exports){
+},{"./constants":68,"buffer":10}],67:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 
@@ -27230,7 +29956,7 @@ ChunkStream.prototype._process = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":86,"buffer":10,"stream":105,"util":113}],67:[function(require,module,exports){
+},{"_process":87,"buffer":10,"stream":106,"util":114}],68:[function(require,module,exports){
 'use strict';
 
 
@@ -27266,7 +29992,7 @@ module.exports = {
   GAMMA_DIVISION: 100000
 };
 
-},{}],68:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
 'use strict';
 
 var crcTable = [];
@@ -27312,7 +30038,7 @@ CrcCalculator.crc32 = function(buf) {
   return crc ^ -1;
 };
 
-},{}],69:[function(require,module,exports){
+},{}],70:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -27499,7 +30225,7 @@ module.exports = function(pxData, width, height, options, bpp) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./paeth-predictor":78,"buffer":10}],70:[function(require,module,exports){
+},{"./paeth-predictor":79,"buffer":10}],71:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -27528,7 +30254,7 @@ var FilterAsync = module.exports = function(bitmapInfo) {
 util.inherits(FilterAsync, ChunkStream);
 
 }).call(this,require("buffer").Buffer)
-},{"./chunkstream":66,"./filter-parse":72,"buffer":10,"util":113}],71:[function(require,module,exports){
+},{"./chunkstream":67,"./filter-parse":73,"buffer":10,"util":114}],72:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -27555,7 +30281,7 @@ exports.process = function(inBuffer, bitmapInfo) {
   return Buffer.concat(outBuffers);
 };
 }).call(this,require("buffer").Buffer)
-},{"./filter-parse":72,"./sync-reader":84,"buffer":10}],72:[function(require,module,exports){
+},{"./filter-parse":73,"./sync-reader":85,"buffer":10}],73:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -27730,7 +30456,7 @@ Filter.prototype._reverseFilterLine = function(rawData) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./interlace":74,"./paeth-predictor":78,"buffer":10}],73:[function(require,module,exports){
+},{"./interlace":75,"./paeth-predictor":79,"buffer":10}],74:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -27823,7 +30549,7 @@ module.exports = function(indata, imageData) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":10}],74:[function(require,module,exports){
+},{"buffer":10}],75:[function(require,module,exports){
 'use strict';
 
 // Adam 7
@@ -27911,7 +30637,7 @@ exports.getInterlaceIterator = function(width) {
     return (outerX * 4) + (outerY * width * 4);
   };
 };
-},{}],75:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -27960,7 +30686,7 @@ PackerAsync.prototype.pack = function(data, width, height, gamma) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":67,"./packer":77,"buffer":10,"stream":105,"util":113}],76:[function(require,module,exports){
+},{"./constants":68,"./packer":78,"buffer":10,"stream":106,"util":114}],77:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -28012,7 +30738,7 @@ module.exports = function(metaData, opt) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":67,"./packer":77,"buffer":10,"zlib":8}],77:[function(require,module,exports){
+},{"./constants":68,"./packer":78,"buffer":10,"zlib":8}],78:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -28107,7 +30833,7 @@ Packer.prototype.packIEND = function() {
   return this._packChunk(constants.TYPE_IEND, null);
 };
 }).call(this,require("buffer").Buffer)
-},{"./bitpacker":65,"./constants":67,"./crc":68,"./filter-pack":69,"buffer":10,"zlib":8}],78:[function(require,module,exports){
+},{"./bitpacker":66,"./constants":68,"./crc":69,"./filter-pack":70,"buffer":10,"zlib":8}],79:[function(require,module,exports){
 'use strict';
 
 module.exports = function paethPredictor(left, above, upLeft) {
@@ -28125,7 +30851,7 @@ module.exports = function paethPredictor(left, above, upLeft) {
   }
   return upLeft;
 };
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 'use strict';
 
 var util = require('util');
@@ -28237,7 +30963,7 @@ ParserAsync.prototype._complete = function(filteredData) {
   this.emit('parsed', normalisedBitmapData);
 };
 
-},{"./bitmapper":64,"./chunkstream":66,"./filter-parse-async":70,"./format-normaliser":73,"./parser":81,"util":113,"zlib":8}],80:[function(require,module,exports){
+},{"./bitmapper":65,"./chunkstream":67,"./filter-parse-async":71,"./format-normaliser":74,"./parser":82,"util":114,"zlib":8}],81:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -28332,7 +31058,7 @@ module.exports = function(buffer, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./bitmapper":64,"./filter-parse-sync":71,"./format-normaliser":73,"./parser":81,"./sync-reader":84,"buffer":10,"zlib":8}],81:[function(require,module,exports){
+},{"./bitmapper":65,"./filter-parse-sync":72,"./format-normaliser":74,"./parser":82,"./sync-reader":85,"buffer":10,"zlib":8}],82:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -28626,7 +31352,7 @@ Parser.prototype._parseIEND = function(data) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":67,"./crc":68,"buffer":10}],82:[function(require,module,exports){
+},{"./constants":68,"./crc":69,"buffer":10}],83:[function(require,module,exports){
 'use strict';
 
 
@@ -28644,7 +31370,7 @@ exports.write = function(png) {
   return pack(png);
 };
 
-},{"./packer-sync":76,"./parser-sync":80}],83:[function(require,module,exports){
+},{"./packer-sync":77,"./parser-sync":81}],84:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 
@@ -28811,7 +31537,7 @@ PNG.prototype.adjustGamma = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./packer-async":75,"./parser-async":79,"./png-sync":82,"_process":86,"buffer":10,"stream":105,"util":113}],84:[function(require,module,exports){
+},{"./packer-async":76,"./parser-async":80,"./png-sync":83,"_process":87,"buffer":10,"stream":106,"util":114}],85:[function(require,module,exports){
 'use strict';
 
 var SyncReader = module.exports = function(buffer) {
@@ -28864,7 +31590,7 @@ SyncReader.prototype.process = function() {
 
 };
 
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -28911,7 +31637,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 }
 
 }).call(this,require('_process'))
-},{"_process":86}],86:[function(require,module,exports){
+},{"_process":87}],87:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -29097,10 +31823,10 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],87:[function(require,module,exports){
+},{}],88:[function(require,module,exports){
 module.exports = require('./lib/_stream_duplex.js');
 
-},{"./lib/_stream_duplex.js":88}],88:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":89}],89:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -29225,7 +31951,7 @@ function forEach(xs, f) {
     f(xs[i], i);
   }
 }
-},{"./_stream_readable":90,"./_stream_writable":92,"core-util-is":21,"inherits":40,"process-nextick-args":85}],89:[function(require,module,exports){
+},{"./_stream_readable":91,"./_stream_writable":93,"core-util-is":21,"inherits":40,"process-nextick-args":86}],90:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -29273,7 +31999,7 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-},{"./_stream_transform":91,"core-util-is":21,"inherits":40}],90:[function(require,module,exports){
+},{"./_stream_transform":92,"core-util-is":21,"inherits":40}],91:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -30283,7 +33009,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":88,"./internal/streams/BufferList":93,"./internal/streams/destroy":94,"./internal/streams/stream":95,"_process":86,"core-util-is":21,"events":26,"inherits":40,"isarray":43,"process-nextick-args":85,"safe-buffer":100,"string_decoder/":106,"util":6}],91:[function(require,module,exports){
+},{"./_stream_duplex":89,"./internal/streams/BufferList":94,"./internal/streams/destroy":95,"./internal/streams/stream":96,"_process":87,"core-util-is":21,"events":26,"inherits":40,"isarray":43,"process-nextick-args":86,"safe-buffer":101,"string_decoder/":107,"util":6}],92:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -30498,7 +33224,7 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":88,"core-util-is":21,"inherits":40}],92:[function(require,module,exports){
+},{"./_stream_duplex":89,"core-util-is":21,"inherits":40}],93:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -31165,7 +33891,7 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":88,"./internal/streams/destroy":94,"./internal/streams/stream":95,"_process":86,"core-util-is":21,"inherits":40,"process-nextick-args":85,"safe-buffer":100,"util-deprecate":110}],93:[function(require,module,exports){
+},{"./_stream_duplex":89,"./internal/streams/destroy":95,"./internal/streams/stream":96,"_process":87,"core-util-is":21,"inherits":40,"process-nextick-args":86,"safe-buffer":101,"util-deprecate":111}],94:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -31240,7 +33966,7 @@ module.exports = function () {
 
   return BufferList;
 }();
-},{"safe-buffer":100}],94:[function(require,module,exports){
+},{"safe-buffer":101}],95:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -31313,13 +34039,13 @@ module.exports = {
   destroy: destroy,
   undestroy: undestroy
 };
-},{"process-nextick-args":85}],95:[function(require,module,exports){
+},{"process-nextick-args":86}],96:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":26}],96:[function(require,module,exports){
+},{"events":26}],97:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
-},{"./readable":97}],97:[function(require,module,exports){
+},{"./readable":98}],98:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -31328,13 +34054,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":88,"./lib/_stream_passthrough.js":89,"./lib/_stream_readable.js":90,"./lib/_stream_transform.js":91,"./lib/_stream_writable.js":92}],98:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":89,"./lib/_stream_passthrough.js":90,"./lib/_stream_readable.js":91,"./lib/_stream_transform.js":92,"./lib/_stream_writable.js":93}],99:[function(require,module,exports){
 module.exports = require('./readable').Transform
 
-},{"./readable":97}],99:[function(require,module,exports){
+},{"./readable":98}],100:[function(require,module,exports){
 module.exports = require('./lib/_stream_writable.js');
 
-},{"./lib/_stream_writable.js":92}],100:[function(require,module,exports){
+},{"./lib/_stream_writable.js":93}],101:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -31398,7 +34124,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":10}],101:[function(require,module,exports){
+},{"buffer":10}],102:[function(require,module,exports){
 var encode = require('./lib/encoder'),
     decode = require('./lib/decoder');
 
@@ -31407,7 +34133,7 @@ module.exports = {
   decode: decode
 };
 
-},{"./lib/decoder":102,"./lib/encoder":103}],102:[function(require,module,exports){
+},{"./lib/decoder":103,"./lib/encoder":104}],103:[function(require,module,exports){
 (function (Buffer){
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- /
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
@@ -32390,7 +35116,7 @@ function decode(jpegData) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":10}],103:[function(require,module,exports){
+},{"buffer":10}],104:[function(require,module,exports){
 (function (Buffer){
 /*
   Copyright (c) 2008, Adobe Systems Incorporated
@@ -33160,7 +35886,7 @@ function getImageDataFromImage(idOrElement){
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":10}],104:[function(require,module,exports){
+},{"buffer":10}],105:[function(require,module,exports){
 (function (Buffer){
 'use strict'
 
@@ -33305,7 +36031,7 @@ module.exports = function savePixels (array, type, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":10,"contentstream":12,"gif-encoder":28,"jpeg-js":101,"ndarray":50,"ndarray-ops":47,"pngjs-nozlib":83,"through":107}],105:[function(require,module,exports){
+},{"buffer":10,"contentstream":12,"gif-encoder":28,"jpeg-js":102,"ndarray":51,"ndarray-ops":48,"pngjs-nozlib":84,"through":108}],106:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -33434,7 +36160,7 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":26,"inherits":40,"readable-stream/duplex.js":87,"readable-stream/passthrough.js":96,"readable-stream/readable.js":97,"readable-stream/transform.js":98,"readable-stream/writable.js":99}],106:[function(require,module,exports){
+},{"events":26,"inherits":40,"readable-stream/duplex.js":88,"readable-stream/passthrough.js":97,"readable-stream/readable.js":98,"readable-stream/transform.js":99,"readable-stream/writable.js":100}],107:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('safe-buffer').Buffer;
@@ -33707,7 +36433,7 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":100}],107:[function(require,module,exports){
+},{"safe-buffer":101}],108:[function(require,module,exports){
 (function (process){
 var Stream = require('stream')
 
@@ -33819,7 +36545,7 @@ function through (write, end, opts) {
 
 
 }).call(this,require('_process'))
-},{"_process":86,"stream":105}],108:[function(require,module,exports){
+},{"_process":87,"stream":106}],109:[function(require,module,exports){
 "use strict"
 
 function unique_pred(list, compare) {
@@ -33878,7 +36604,7 @@ function unique(list, compare, sorted) {
 
 module.exports = unique
 
-},{}],109:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 var mime = require('mime');
 var fs = require('fs');
 
@@ -33888,7 +36614,7 @@ module.exports = function urifyNode (file) {
   return 'data:' + type + ';base64,' + data;
 };
 
-},{"fs":9,"mime":45}],110:[function(require,module,exports){
+},{"fs":9,"mime":46}],111:[function(require,module,exports){
 (function (global){
 
 /**
@@ -33959,16 +36685,16 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 arguments[4][40][0].apply(exports,arguments)
-},{"dup":40}],112:[function(require,module,exports){
+},{"dup":40}],113:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],113:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -34558,7 +37284,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":112,"_process":86,"inherits":111}],114:[function(require,module,exports){
+},{"./support/isBuffer":113,"_process":87,"inherits":112}],115:[function(require,module,exports){
 function AddStep(ref, image, name, o) {
 
   function addStep(image, name, o_) {
@@ -34593,7 +37319,7 @@ function AddStep(ref, image, name, o) {
 }
 module.exports = AddStep;
 
-},{}],115:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 function objTypeOf(object){
   return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
 }
@@ -34759,7 +37485,7 @@ function formatInput(args,format,images) {
 }
 module.exports = formatInput;
 
-},{}],116:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 if (typeof window !== 'undefined') {window.$ = window.jQuery = require('jquery'); isBrowser = true}
 else {var isBrowser = false}
 
@@ -34941,7 +37667,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":114,"./FormatInput":115,"./InsertStep":117,"./LoadImage":118,"./Modules":119,"./ReplaceImage":120,"./Run":121,"jquery":44}],117:[function(require,module,exports){
+},{"./AddStep":115,"./FormatInput":116,"./InsertStep":118,"./LoadImage":119,"./Modules":120,"./ReplaceImage":121,"./Run":122,"jquery":44}],118:[function(require,module,exports){
 function InsertStep(ref, image, index, name, o) {
 
   function insertStep(image, index, name, o_) {
@@ -34978,7 +37704,7 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{}],118:[function(require,module,exports){
+},{}],119:[function(require,module,exports){
 function LoadImage(ref, name, src) {
   function CImage(src) {
     var datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
@@ -35021,7 +37747,7 @@ function LoadImage(ref, name, src) {
 
 module.exports = LoadImage;
 
-},{"urify":109}],119:[function(require,module,exports){
+},{"urify":110}],120:[function(require,module,exports){
 /*
  * Core modules
  */
@@ -35032,10 +37758,11 @@ module.exports = {
   'do-nothing-pix': require('./modules/DoNothingPix/Module.js'),
   'invert': require('./modules/Invert/Module'),
   'crop': require('./modules/Crop/Module'),
-  'segmented-colormap': require('./modules/SegmentedColormap/Module')
+  'segmented-colormap': require('./modules/SegmentedColormap/Module'),
+  'decode-qr': require('./modules/DecodeQr/Module')
 }
 
-},{"./modules/Crop/Module":123,"./modules/DoNothing/Module":124,"./modules/DoNothingPix/Module.js":125,"./modules/GreenChannel/Module":126,"./modules/Invert/Module":127,"./modules/NdviRed/Module":128,"./modules/SegmentedColormap/Module":129}],120:[function(require,module,exports){
+},{"./modules/Crop/Module":124,"./modules/DecodeQr/Module":125,"./modules/DoNothing/Module":126,"./modules/DoNothingPix/Module.js":127,"./modules/GreenChannel/Module":128,"./modules/Invert/Module":129,"./modules/NdviRed/Module":130,"./modules/SegmentedColormap/Module":131}],121:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var this_ = ref;
@@ -35072,7 +37799,7 @@ function ReplaceImage(ref,selector,steps,options) {
 
 module.exports = ReplaceImage;
 
-},{}],121:[function(require,module,exports){
+},{}],122:[function(require,module,exports){
 function Run(ref, json_q, callback) {
   function drawStep(drawarray,pos) {
     if(pos==drawarray.length) {
@@ -35121,7 +37848,7 @@ function Run(ref, json_q, callback) {
 }
 module.exports = Run;
 
-},{}],122:[function(require,module,exports){
+},{}],123:[function(require,module,exports){
 module.exports = function Crop(input,options,callback) {
 
   var getPixels = require("get-pixels"),
@@ -35156,7 +37883,7 @@ module.exports = function Crop(input,options,callback) {
 
 }
 
-},{"base64-stream":3,"get-pixels":27,"save-pixels":104}],123:[function(require,module,exports){
+},{"base64-stream":3,"get-pixels":27,"save-pixels":105}],124:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -35200,7 +37927,38 @@ module.exports = function Crop(input,options,callback) {
    }
  }
 
-},{"./Crop":122}],124:[function(require,module,exports){
+},{"./Crop":123}],125:[function(require,module,exports){
+/*
+ * Decodes QR from a given image.
+ */
+module.exports = function DoNothing(options) {
+  options = options || {};
+  options.title = "Decode QR Code";
+  var output;
+  var jsQR = require('jsqr');
+  var getPixels = require('get-pixels');
+
+  function draw(input,callback) {
+    var this_ = this;
+    getPixels(input.src,function(err,pixels){
+      if(err) throw err;
+      var w = pixels.shape[0];
+      var h = pixels.shape[1];
+      var decoded = jsQR.decodeQRFromImage(pixels.data,w,h);
+      this_.output = input;
+      this_.output.data = decoded;
+      callback();
+    });
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output
+  }
+}
+
+},{"get-pixels":27,"jsqr":45}],126:[function(require,module,exports){
 /*
  * Demo Module. Does nothing. Adds a step where output is equal to input.
  */
@@ -35222,7 +37980,7 @@ module.exports = function DoNothing(options) {
   }
 }
 
-},{}],125:[function(require,module,exports){
+},{}],127:[function(require,module,exports){
 /*
  * This module extracts pixels and saves them as it is.
  */
@@ -35256,7 +38014,7 @@ module.exports = function DoNothingPix(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131}],126:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":133}],128:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35294,7 +38052,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131}],127:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":133}],129:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -35332,7 +38090,7 @@ module.exports = function GreenChannel(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131}],128:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":133}],130:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -35367,7 +38125,7 @@ module.exports = function NdviRed(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131}],129:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":133}],131:[function(require,module,exports){
 module.exports = function SegmentedColormap(options) {
 
   options = options || {};
@@ -35401,7 +38159,7 @@ module.exports = function SegmentedColormap(options) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":131,"./SegmentedColormap":130}],130:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":133,"./SegmentedColormap":132}],132:[function(require,module,exports){
 /*
  * Accepts a normalized ndvi and returns the new color-mapped pixel
  */
@@ -35460,7 +38218,7 @@ var colormaps = {
   fastie: fastie_colormap
 }
 
-},{}],131:[function(require,module,exports){
+},{}],133:[function(require,module,exports){
 /*
  * General purpose per-pixel manipulation
  * accepting a changePixel() method to remix a pixel's channels
@@ -35520,4 +38278,4 @@ module.exports = function PixelManipulation(image, options) {
 
 }
 
-},{"base64-stream":3,"get-pixels":27,"save-pixels":104}]},{},[116]);
+},{"base64-stream":3,"get-pixels":27,"save-pixels":105}]},{},[117]);
