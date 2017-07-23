@@ -38,9 +38,9 @@ function LoadImage(ref, name, src) {
       }]
     };
     ref.images[name] = image;
-    ref.images[name].steps[0].UI.setup();
-    ref.images[name].steps[0].UI.drawing();
-    ref.images[name].steps[0].UI.drawn(image.steps[0].output.src);
+    ref.images[name].steps[0].UI.onSetup();
+    ref.images[name].steps[0].UI.onDraw();
+    ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
   }
 
   return loadImage(name,src);

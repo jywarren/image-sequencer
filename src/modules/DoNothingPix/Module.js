@@ -5,12 +5,12 @@ module.exports = function DoNothingPix(options,UI) {
 
   options = options || {};
   options.title = "Do Nothing with pixels";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   function draw(input,callback) {
 
-    UI.drawing();
+    UI.onDraw();
     var this_ = this;
 
     function changePixel(r, g, b, a) {
@@ -18,7 +18,7 @@ module.exports = function DoNothingPix(options,UI) {
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
-      UI.drawn(datauri);
+      UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -27,7 +27,7 @@ module.exports = function DoNothingPix(options,UI) {
       image: options.image,
       callback: callback
     });
-    
+
   }
 
   return {

@@ -4,14 +4,14 @@
 module.exports = function DoNothing(options,UI) {
   options = options || {};
   options.title = "Do Nothing";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   function draw(input,callback) {
-    UI.drawing();
+    UI.onDraw();
     this.output = input;
     callback();
-    UI.drawn(this.output.src);
+    UI.onComplete(this.output.src);
   }
 
   return {

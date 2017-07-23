@@ -69,7 +69,7 @@ ImageSequencer = function ImageSequencer(options) {
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
     if(index>0) {
-      images[image].steps[index].UI.remove();
+      images[image].steps[index].UI.onRemove();
       images[image].steps.splice(index,1);
     }
     //tell the UI a step has been removed

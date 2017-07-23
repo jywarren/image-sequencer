@@ -34822,7 +34822,7 @@ ImageSequencer = function ImageSequencer(options) {
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
     if(index>0) {
-      images[image].steps[index].UI.remove();
+      images[image].steps[index].UI.onRemove();
       images[image].steps.splice(index,1);
     }
     //tell the UI a step has been removed
@@ -35016,9 +35016,9 @@ function LoadImage(ref, name, src) {
       }]
     };
     ref.images[name] = image;
-    ref.images[name].steps[0].UI.setup();
-    ref.images[name].steps[0].UI.drawing();
-    ref.images[name].steps[0].UI.drawn(image.steps[0].output.src);
+    ref.images[name].steps[0].UI.onSetup();
+    ref.images[name].steps[0].UI.onDraw();
+    ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
   }
 
   return loadImage(name,src);
@@ -35136,7 +35136,7 @@ module.exports = function UserInterface(UI,options) {
 
     var UI = UI || {};
 
-    UI.setup = UI.setup || function() {
+    UI.onSetup = UI.onSetup || function() {
       if(options.ui == "none") {
         // No UI
       }
@@ -35151,7 +35151,7 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.drawing = UI.drawing || function() {
+    UI.onDraw = UI.onDraw || function() {
       if (options.ui == "none") {
         // No UI
       }
@@ -35165,7 +35165,7 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.drawn = UI.drawn || function(output) {
+    UI.onComplete = UI.onComplete || function(output) {
       if (options.ui == "none") {
         // No UI
       }
@@ -35180,7 +35180,7 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.remove = UI.remove || function(callback) {
+    UI.onRemove = UI.onRemove || function(callback) {
       if(options.ui == "null"){
         // No UI
       }
@@ -35254,12 +35254,12 @@ module.exports = function Crop(input,options,callback) {
  module.exports = function CropModule(options,UI) {
    options = options || {};
    options.title = "Crop Image";
-   UI.setup();
+   UI.onSetup();
    var output
 
    function draw(input,callback) {
 
-     UI.drawing();
+     UI.onDraw();
      const this_ = this;
 
      require('./Crop')(input,options,function(out,format){
@@ -35267,7 +35267,7 @@ module.exports = function Crop(input,options,callback) {
          src: out,
          format: format
        }
-       UI.drawn(out);
+       UI.onComplete(out);
        callback();
      });
 
@@ -35289,14 +35289,14 @@ module.exports = function Crop(input,options,callback) {
 module.exports = function DoNothing(options,UI) {
   options = options || {};
   options.title = "Do Nothing";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   function draw(input,callback) {
-    UI.drawing();
+    UI.onDraw();
     this.output = input;
     callback();
-    UI.drawn(this.output.src);
+    UI.onComplete(this.output.src);
   }
 
   return {
@@ -35315,12 +35315,12 @@ module.exports = function DoNothingPix(options,UI) {
 
   options = options || {};
   options.title = "Do Nothing with pixels";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   function draw(input,callback) {
 
-    UI.drawing();
+    UI.onDraw();
     var this_ = this;
 
     function changePixel(r, g, b, a) {
@@ -35328,7 +35328,7 @@ module.exports = function DoNothingPix(options,UI) {
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype}
-      UI.drawn(datauri);
+      UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -35337,7 +35337,7 @@ module.exports = function DoNothingPix(options,UI) {
       image: options.image,
       callback: callback
     });
-    
+
   }
 
   return {
@@ -35357,12 +35357,12 @@ module.exports = function GreenChannel(options,UI) {
   options = options || {};
   options.title = "Green channel only";
   options.description = "Displays only the green channel of an image";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   function draw(input,callback) {
 
-    UI.drawing();
+    UI.onDraw();
     var this_ = this;
 
     function changePixel(r, g, b, a) {
@@ -35370,7 +35370,7 @@ module.exports = function GreenChannel(options,UI) {
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype};
-      UI.drawn(datauri);
+      UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -35400,14 +35400,14 @@ module.exports = function GreenChannel(options,UI) {
   options = options || {};
   options.title = "Invert Colors";
   options.description = "Inverts the colors of the image";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   //function setup() {} // optional
 
   function draw(input,callback) {
 
-    UI.drawing();
+    UI.onDraw();
     var this_ = this;
 
     function changePixel(r, g, b, a) {
@@ -35415,7 +35415,7 @@ module.exports = function GreenChannel(options,UI) {
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype};
-      UI.drawn(datauri);
+      UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -35444,12 +35444,12 @@ module.exports = function NdviRed(options,UI) {
 
   options = options || {};
   options.title = "NDVI for red-filtered cameras (blue is infrared)";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   function draw(input,callback) {
 
-    UI.drawing();
+    UI.onDraw();
     var this_ = this;
 
     function changePixel(r, g, b, a) {
@@ -35459,7 +35459,7 @@ module.exports = function NdviRed(options,UI) {
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype};
-      UI.drawn(datauri);
+      UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -35484,12 +35484,12 @@ module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
   options.title = "Segmented Colormap";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   function draw(input,callback) {
 
-    UI.drawing();
+    UI.onDraw();
     var this_ = this;
 
     function changePixel(r, g, b, a) {
@@ -35500,7 +35500,7 @@ module.exports = function SegmentedColormap(options,UI) {
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype};
-      UI.drawn(datauri);
+      UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,

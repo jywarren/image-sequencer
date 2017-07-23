@@ -7,7 +7,7 @@ module.exports = function UserInterface(UI,options) {
 
     var UI = UI || {};
 
-    UI.setup = UI.setup || function() {
+    UI.onSetup = UI.onSetup || function() {
       if(options.ui == "none") {
         // No UI
       }
@@ -22,7 +22,7 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.drawing = UI.drawing || function() {
+    UI.onDraw = UI.onDraw || function() {
       if (options.ui == "none") {
         // No UI
       }
@@ -36,7 +36,7 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.drawn = UI.drawn || function(output) {
+    UI.onComplete = UI.onComplete || function(output) {
       if (options.ui == "none") {
         // No UI
       }
@@ -51,7 +51,7 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.remove = UI.remove || function(callback) {
+    UI.onRemove = UI.onRemove || function(callback) {
       if(options.ui == "null"){
         // No UI
       }

@@ -16,12 +16,12 @@
  module.exports = function CropModule(options,UI) {
    options = options || {};
    options.title = "Crop Image";
-   UI.setup();
+   UI.onSetup();
    var output
 
    function draw(input,callback) {
 
-     UI.drawing();
+     UI.onDraw();
      const this_ = this;
 
      require('./Crop')(input,options,function(out,format){
@@ -29,7 +29,7 @@
          src: out,
          format: format
        }
-       UI.drawn(out);
+       UI.onComplete(out);
        callback();
      });
 

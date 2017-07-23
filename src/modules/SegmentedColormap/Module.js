@@ -2,12 +2,12 @@ module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
   options.title = "Segmented Colormap";
-  UI.setup();
+  UI.onSetup();
   var output;
 
   function draw(input,callback) {
 
-    UI.drawing();
+    UI.onDraw();
     var this_ = this;
 
     function changePixel(r, g, b, a) {
@@ -18,7 +18,7 @@ module.exports = function SegmentedColormap(options,UI) {
     }
     function output(image,datauri,mimetype){
       this_.output = {src:datauri,format:mimetype};
-      UI.drawn(datauri);
+      UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,

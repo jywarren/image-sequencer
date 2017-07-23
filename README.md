@@ -325,6 +325,50 @@ sequencer.insertSteps({
 return value: **`sequencer`** (To allow method chaining)
 
 
+## Creating a User Interface
+
+Image Sequencer provides the following events which can be used to generate a UI:
+
+* `onSetup` : this event is triggered when a new module is set up. This can be used,
+for instance, to generate a DIV element to store the generated image for that step.
+* `onDraw` : This event is triggered when Image Sequencer starts drawing the output
+for a module. This can be used, for instance, to overlay a loading GIF over the DIV
+generated above.
+* `onComplete` : This event is triggered when Image Sequencer has drawn the output
+for a module. This can be used, for instance, to update the DIV with the new image
+and remove the loading GIF generated above.
+* `onRemove` : This event is triggered when a module is removed. This can be used,
+for instance, to remove the DIV generated above.
+
+How to define these functions:
+
+```js
+sequencer.setUI({
+  onSetup: function() {},
+  onDraw: function() {},
+  onComplete: function(output) {},
+  onRemove: function() {}
+});
+```
+
+These methods can be defined and re-defined at any time, but it is advisable to
+set them before any module is added and not change it thereafter. This is because
+the `setUI` method will only affect the modules added after `setUI` is called.
+
+The `onComplete` event is passed on the output of the module.
+
+In the scope of all these events, the following variables are present, which
+may be used in generating the UI:
+* The object `identity`
+```
+identity = {
+  stepName: "Name of the Step",
+  stepID: "A unique ID given to the step",
+  imageName: "The name of the image to which the step is added."
+}
+```
+* The variable `options.inBrowser` which is a Boolean and is `true` if the client is a browser and `false` otherwise.
+
 ## Contributing
 
 Happily accepting pull requests; to edit the core library, modify files in `/src/`. To build, run `npm install` and `grunt build`.
