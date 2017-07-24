@@ -22,10 +22,10 @@
    function draw(input,callback) {
 
      UI.onDraw();
-     const this_ = this;
+     const step = this;
 
      require('./Crop')(input,options,function(out,format){
-       this_.output = {
+       step.output = {
          src: out,
          format: format
        }

@@ -12,13 +12,13 @@ module.exports = function GreenChannel(options,UI) {
   function draw(input,callback) {
 
     UI.onDraw();
-    var this_ = this;
+    const step = this;
 
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
     }
     function output(image,datauri,mimetype){
-      this_.output = {src:datauri,format:mimetype};
+      step.output = {src:datauri,format:mimetype};
       UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {

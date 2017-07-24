@@ -8,7 +8,7 @@ module.exports = function UserInterface(UI,options) {
     var UI = UI || {};
 
     UI.onSetup = UI.onSetup || function() {
-      if(options.ui == "none") {
+      if(options.ui == false) {
         // No UI
       }
       else if(options.inBrowser) {
@@ -23,7 +23,7 @@ module.exports = function UserInterface(UI,options) {
     }
 
     UI.onDraw = UI.onDraw || function() {
-      if (options.ui == "none") {
+      if (options.ui == false) {
         // No UI
       }
       else if(options.inBrowser) {
@@ -37,7 +37,7 @@ module.exports = function UserInterface(UI,options) {
     }
 
     UI.onComplete = UI.onComplete || function(output) {
-      if (options.ui == "none") {
+      if (options.ui == false) {
         // No UI
       }
       else if(options.inBrowser) {
@@ -52,7 +52,7 @@ module.exports = function UserInterface(UI,options) {
     }
 
     UI.onRemove = UI.onRemove || function(callback) {
-      if(options.ui == "null"){
+      if(options.ui == false){
         // No UI
       }
       else if(options.inBrowser) {

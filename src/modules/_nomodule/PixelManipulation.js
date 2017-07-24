@@ -7,16 +7,15 @@ module.exports = function PixelManipulation(image, options) {
   options = options || {};
   options.changePixel = options.changePixel || function changePixel(r, g, b, a) {
     return [r, g, b, a];
-  }
-  var getPixels = require("get-pixels"),
-      savePixels = require("save-pixels"),
-      base64 = require('base64-stream');
+  };
+  var getPixels = require('get-pixels'),
+      savePixels = require('save-pixels');
 
   getPixels(image.src, function(err, pixels) {
 
     if(err) {
-      console.log("Bad image path")
-      return
+      console.log('Bad image path');
+      return;
     }
 
     // iterate through pixels;
@@ -25,7 +24,7 @@ module.exports = function PixelManipulation(image, options) {
     for(var x = 0; x < pixels.shape[0]; x++) {
       for(var y = 0; y < pixels.shape[1]; y++) {
 
-        pixel = options.changePixel(
+        var pixel = options.changePixel(
           pixels.get(x, y, 0),
           pixels.get(x, y, 1),
           pixels.get(x, y, 2),
@@ -40,19 +39,22 @@ module.exports = function PixelManipulation(image, options) {
       }
     }
 
-    options.format = "jpeg";
-
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
-    w = base64.encode();
+    var chunks = [];
+    var totalLength = 0;
     var r = savePixels(pixels, options.format);
-    r.pipe(w).on('finish',function(){
-      data = w.read().toString();
-      datauri = 'data:image/' + options.format + ';base64,' + data;
+
+    r.on('data', function(chunk){
+      totalLength += chunk.length;
+      chunks.push(chunk);
+    });
+
+    r.on('end', function(){
+      var data = Buffer.concat(chunks, totalLength).toString('base64');
+      var datauri = 'data:image/' + options.format + ';base64,' + data;
       if (options.output) options.output(options.image,datauri,options.format);
       if (options.callback) options.callback();
     });
-
   });
-
-}
+};

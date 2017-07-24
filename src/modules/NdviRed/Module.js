@@ -11,7 +11,7 @@ module.exports = function NdviRed(options,UI) {
   function draw(input,callback) {
 
     UI.onDraw();
-    var this_ = this;
+    const step = this;
 
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (1.00 * b + r);
@@ -19,7 +19,7 @@ module.exports = function NdviRed(options,UI) {
       return [x, x, x, a];
     }
     function output(image,datauri,mimetype){
-      this_.output = {src:datauri,format:mimetype};
+      step.output = {src:datauri,format:mimetype};
       UI.onComplete(datauri);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
