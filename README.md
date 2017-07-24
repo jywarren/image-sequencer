@@ -369,6 +369,10 @@ identity = {
 ```
 * The variable `options.inBrowser` which is a Boolean and is `true` if the client is a browser and `false` otherwise.
 
+Note: `identity.imageName` is the "name" of that particular image. This name can be specified
+while loading the image via `sequencer.loadImage("name","SRC")`. If not specified,
+the name of a loaded image defaults to a name like "image1", "image2", et cetra.
+
 ## Contributing
 
 Happily accepting pull requests; to edit the core library, modify files in `/src/`. To build, run `npm install` and `grunt build`.
