@@ -17,6 +17,11 @@ function LoadImage(ref, name, src) {
           name: "load-image",
           title: "Load Image"
         },
+        UI: ref.UI({
+          stepName: "load-image",
+          stepID: ref.options.sequencerCounter++,
+          imageName: name
+        }),
         draw: function() {
           if(arguments.length==1){
             this.output = CImage(arguments[0]);
@@ -33,6 +38,9 @@ function LoadImage(ref, name, src) {
       }]
     };
     ref.images[name] = image;
+    ref.images[name].steps[0].UI.onSetup();
+    ref.images[name].steps[0].UI.onDraw();
+    ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
   }
 
   return loadImage(name,src);
