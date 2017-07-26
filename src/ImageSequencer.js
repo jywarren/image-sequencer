@@ -142,8 +142,7 @@ ImageSequencer = function ImageSequencer(options) {
     for (var i in json_q.images)
       require('./LoadImage')(this,i,json_q.images[i])
 
-    json_q.callback();
-    return {
+    var ret = {
       name: "ImageSequencer Wrapper",
       sequencer: this,
       addSteps: this.addSteps,
@@ -154,6 +153,8 @@ ImageSequencer = function ImageSequencer(options) {
       setUI: this.setUI,
       images: loadedimages
     };
+    json_q.callback.call(ret);
+    return ret;
   }
 
   function replaceImage(selector,steps,options) {

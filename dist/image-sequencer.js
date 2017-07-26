@@ -34717,8 +34717,7 @@ ImageSequencer = function ImageSequencer(options) {
     for (var i in json_q.images)
       require('./LoadImage')(this,i,json_q.images[i])
 
-    json_q.callback();
-    return {
+    var ret = {
       name: "ImageSequencer Wrapper",
       sequencer: this,
       addSteps: this.addSteps,
@@ -34729,6 +34728,8 @@ ImageSequencer = function ImageSequencer(options) {
       setUI: this.setUI,
       images: loadedimages
     };
+    json_q.callback.call(ret);
+    return ret;
   }
 
   function replaceImage(selector,steps,options) {
@@ -34799,13 +34800,37 @@ module.exports = InsertStep;
 
 },{}],115:[function(require,module,exports){
 function LoadImage(ref, name, src) {
-  function CImage(src) {
-    var datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
+  function makeImage(datauri) {
     var image = {
       src: datauri,
       format: datauri.split(':')[1].split(';')[0].split('/')[1]
     }
     return image;
+  }
+  function CImage(src, callback) {
+    var datauri;
+    if (src.substring(0,11) == "data:image/") {
+      datauri = src;
+      callback(datauri);
+    }
+    else if (ref.options.inBrowser) {
+      var ext = src.split('.').pop();
+      var image = document.createElement('img');
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      image.onload = function() {
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        context.drawImage(image,0,0);
+        datauri = canvas.toDataURL(ext);
+        callback(datauri);
+      }
+      image.src = src;
+    }
+    else {
+      datauri = require('urify')(src);
+      callback(datauri);
+    }
   }
 
   function loadImage(name, src) {
@@ -34834,13 +34859,17 @@ function LoadImage(ref, name, src) {
           }
           return false;
         },
-        output: CImage(src)
       }]
     };
-    ref.images[name] = image;
-    ref.images[name].steps[0].UI.onSetup();
-    ref.images[name].steps[0].UI.onDraw();
-    ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
+    CImage(src, function(datauri) {
+      var output = makeImage(datauri);
+      image.steps[0].output = output;
+      ref.images[name] = image;
+      ref.images[name].steps[0].UI.onSetup();
+      ref.images[name].steps[0].UI.onDraw();
+      ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
+      return true;
+    });
   }
 
   return loadImage(name,src);
