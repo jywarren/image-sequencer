@@ -41,7 +41,10 @@ ImageSequencer = function ImageSequencer(options) {
       modules = require('./Modules'),
       formatInput = require('./FormatInput'),
       images = {},
-      inputlog = [];
+      inputlog = [],
+      UI;
+
+  setUI();
 
   // if in browser, prompt for an image
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
@@ -66,7 +69,7 @@ ImageSequencer = function ImageSequencer(options) {
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
     if(index>0) {
-      log('\x1b[31m%s\x1b[0m',"Removing "+index+" from "+image);
+      images[image].steps[index].UI.onRemove();
       images[image].steps.splice(index,1);
     }
     //tell the UI a step has been removed
@@ -112,7 +115,6 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function run(t_image,t_from) {
-    log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     var args = (this.name == "ImageSequencer")?[]:[this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
@@ -148,6 +150,8 @@ ImageSequencer = function ImageSequencer(options) {
       removeSteps: this.removeSteps,
       insertSteps: this.insertSteps,
       run: this.run,
+      UI: this.UI,
+      setUI: this.setUI,
       images: loadedimages
     };
   }
@@ -157,9 +161,21 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this,selector,steps);
   }
 
+  function setUI(_UI) {
+    UI = require('./UserInterface')(_UI,options);
+    return UI;
+  }
+
   return {
+    //literals and objects
     name: "ImageSequencer",
     options: options,
+    inputlog: inputlog,
+    modules: modules,
+    images: images,
+    UI: UI,
+
+    //user functions
     loadImages: loadImages,
     loadImage: loadImages,
     addSteps: addSteps,
@@ -167,10 +183,9 @@ ImageSequencer = function ImageSequencer(options) {
     insertSteps: insertSteps,
     replaceImage: replaceImage,
     run: run,
-    inputlog: inputlog,
-    modules: modules,
-    images: images,
-    ui: options.ui,
+    setUI: setUI,
+
+    //other functions
     log: log,
     objTypeOf: objTypeOf,
     copy: copy

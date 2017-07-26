@@ -7,14 +7,14 @@ var test = require('tape');
 
 require('../src/ImageSequencer.js');
 
-var sequencer = ImageSequencer({ ui: "none" });
-
 //require image files as DataURLs so they can be tested alike on browser and Node.
+var sequencer = ImageSequencer({ ui: false });
+
 var image = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z";
 var test_png = require('../examples/test.png.js');
 var test_gif = require('../examples/test.gif.js');
-sequencer.loadImages(image);
 
+sequencer.loadImages(image);
 sequencer.addSteps(['do-nothing-pix','invert','invert']);
 sequencer.run();
 
@@ -28,14 +28,14 @@ test("Twice inverted image is identical to original image", function (t) {
   t.end();
 });
 
-test("PixelManipulation works for PNG images :: setup", function (t) {
+test("PixelManipulation works for PNG images", function (t) {
   sequencer.loadImages(test_png).addSteps('invert').run(function(out){
     t.equal(1,1)
     t.end();
   });
 });
 
-test("PixelManipulation works for GIF images :: setup", function (t) {
+test("PixelManipulation works for GIF images", function (t) {
   sequencer.loadImages(test_gif).addSteps('invert').run(function(out){
     t.equal(1,1)
     t.end();
