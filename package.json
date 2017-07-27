@@ -2,7 +2,7 @@
   "name": "image-sequencer",
   "version": "0.0.1",
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
-  "main": "dist/image-sequencer.js",
+  "main": "src/ImageSequencer.js",
   "scripts": {
     "test": "tape test/*.js | tap-spec; browserify test/image-sequencer.js test/chain.js | tape-run --render=\"tap-spec\""
   },
