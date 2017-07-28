@@ -34391,11 +34391,18 @@ function AddStep(ref, image, name, o) {
     o.container = o_.container || ref.options.selector;
     o.image = image;
 
-    var UI = ref.UI({
+    o.identity = {
       stepName: o.name,
       stepID: o.number,
       imageName: o.image
-    });
+    };
+    o.UIFs = ref.UI();
+    var UI = {
+      onSetup: function(){o.UIFs.onSetup(o.identity);},
+      onDraw: function(){o.UIFs.onSetup(o.identity);},
+      onComplete: function(out){o.UIFs.onSetup(o.identity,out);},
+      onRemove: function(){o.UIFs.onSetup(o.identity);},
+    }
     var module = ref.modules[name](o,UI);
     ref.images[image].steps.push(module);
 
@@ -34782,11 +34789,18 @@ function InsertStep(ref, image, index, name, o) {
 
     if(index==-1) index = ref.images[image].steps.length;
 
-    var UI = ref.UI({
+    o.identity = {
       stepName: o.name,
       stepID: o.number,
       imageName: o.image
-    });
+    };
+    o.UIFs = ref.UI();
+    var UI = {
+      onSetup: function(){o.UIFs.onSetup(o.identity);},
+      onDraw: function(){o.UIFs.onSetup(o.identity);},
+      onComplete: function(out){o.UIFs.onSetup(o.identity,out);},
+      onRemove: function(){o.UIFs.onSetup(o.identity);},
+    }
     var module = ref.modules[name](o,UI);
     ref.images[image].steps.splice(index,0,module);
 
@@ -34952,17 +34966,20 @@ module.exports = Run;
 /*
  * Default UI for each image-sequencer module
  */
-module.exports = function UserInterface(UI,options) {
+module.exports = function UserInterface(newUI = {},options) {
+
+  var UI = newUI;
 
   return function userInterface(identity) {
 
-    var UI = UI || {};
+    identity.ui = options.ui;
+    identity.inBrowser = options.inBrowser;
 
-    UI.onSetup = UI.onSetup || function() {
-      if(options.ui == false) {
+    UI.onSetup = UI.onSetup || function(identity) {
+      if(identity.ui == false) {
         // No UI
       }
-      else if(options.inBrowser) {
+      else if(identity.inBrowser) {
         // Create and append an HTML Element
         console.log("Added Step \""+identity.stepName+"\" to \""+identity.imageName+"\".");
       }
@@ -34973,11 +34990,11 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.onDraw = UI.onDraw || function() {
-      if (options.ui == false) {
+    UI.onDraw = UI.onDraw || function(identity) {
+      if (identity.ui == false) {
         // No UI
       }
-      else if(options.inBrowser) {
+      else if(identity.inBrowser) {
         // Overlay a loading spinner
         console.log("Drawing Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
       }
@@ -34987,11 +35004,11 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.onComplete = UI.onComplete || function(output) {
-      if (options.ui == false) {
+    UI.onComplete = UI.onComplete || function(identity,output) {
+      if (identity.ui == false) {
         // No UI
       }
-      else if(options.inBrowser) {
+      else if(identity.inBrowser) {
         // Update the DIV Element
         // Hide the laoding spinner
         console.log("Drawn Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
@@ -35002,11 +35019,11 @@ module.exports = function UserInterface(UI,options) {
       }
     }
 
-    UI.onRemove = UI.onRemove || function(callback) {
-      if(options.ui == false){
+    UI.onRemove = UI.onRemove || function(identity) {
+      if(identity.ui == false){
         // No UI
       }
-      else if(options.inBrowser) {
+      else if(identity.inBrowser) {
         // Remove the DIV Element
         console.log("Removing Step \""+identity.stepName+"\" of \""+identity.imageName+"\".");
       }
