@@ -13,17 +13,18 @@ Any module must look like this :
 module.exports = function ModuleName(options,UI) {
   options = options || {};
   options.title = "Title of the Module";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
-    UI.onDraw();
+    UI.onDraw(options.step);
 
     var output = /*do something with the input*/ ;
 
     this.output = output;
+    options.step.output = output.src;
     callback();
-    UI.onComplete(this.output.src);
+    UI.onComplete(options.step);
   }
 
   return {
@@ -65,21 +66,19 @@ constant definitions must be done **outside** the `draw()` method's definition.
 step has been "drawn".
 
 When you have done your calculations and produced an image output, you are required
-to set `this.output` to an object similar to what the input object was, and call
-`callback()`.
+to set `this.output` to an object similar to what the input object was, call
+`callback()`, and set `options.step.output` equal to the output DataURL
 
 ### UI Methods
 
 The module is responsible to emit various events for the UI to capture. There are
 four events in all:
 
-* `UI.onSetup()` must be emitted when the module is added. So it must be emitted
-outside the draw method's definition as shown above.
-* `UI.onDraw()` must be emitted whenever the `draw()` method is called. So it should
-ideally be the first line of the definition of the `draw` method.
-* `UI.onComplete(output_src)` must be emitted whenever the output of a draw call
+* `UI.onSetup(options.step)` must be emitted when the module is added. So it must be emitted outside the draw method's definition as shown above.
+* `UI.onDraw(options.step)` must be emitted whenever the `draw()` method is called. So it should ideally be the first line of the definition of the `draw` method.
+* `UI.onComplete(options.step)` must be emitted whenever the output of a draw call
 is ready. An argument, that is the DataURL of the output image must be passed in.
-* `UI.onRemove()` is emitted automatically and the module should not emit it.
+* `UI.onRemove(options.step)` is emitted automatically and the module should not emit it.
 
 To add a module to Image Sequencer, it must have the following method; you can wrap an existing module to add them:
 

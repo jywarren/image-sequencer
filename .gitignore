@@ -34,3 +34,5 @@ node_modules
 
 *.swp
 todo.txt
+test.js
+output.txt

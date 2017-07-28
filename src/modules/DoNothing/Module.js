@@ -4,14 +4,17 @@
 module.exports = function DoNothing(options,UI) {
   options = options || {};
   options.title = "Do Nothing";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
-    UI.onDraw();
+    UI.onDraw(options.step);
+
     this.output = input;
+
+    options.step.output = this.output.src;
     callback();
-    UI.onComplete(this.output.src);
+    UI.onComplete(options.step);
   }
 
   return {
