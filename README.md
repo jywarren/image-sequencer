@@ -370,10 +370,10 @@ How to define these functions:
 
 ```js
 sequencer.setUI({
-  onSetup: function() {},
-  onDraw: function() {},
-  onComplete: function(output) {},
-  onRemove: function() {}
+  onSetup: function(step) {},
+  onDraw: function(step) {},
+  onComplete: function(step) {},
+  onRemove: function(step) {}
 });
 ```
 
@@ -383,18 +383,37 @@ the `setUI` method will only affect the modules added after `setUI` is called.
 
 The `onComplete` event is passed on the output of the module.
 
-In the scope of all these events, the following variables are present, which
-may be used in generating the UI:
-* The object `identity`
-```
-identity = {
-  stepName: "Name of the Step",
-  stepID: "A unique ID given to the step",
-  imageName: "The name of the image to which the step is added."
-}
-```
-* The variable `options.inBrowser` which is a Boolean and is `true` if the client is a browser and `false` otherwise.
+Image Sequencer provides a namespace `step` for the purpose of UI Creation in
+the scope of these definable function. This namespace has the following
+predefined properties:
 
-Note: `identity.imageName` is the "name" of that particular image. This name can be specified
-while loading the image via `sequencer.loadImage("name","SRC")`. If not specified,
-the name of a loaded image defaults to a name like "image1", "image2", et cetra.
+* `step.name` : (String) Name of the step
+* `step.ID` : (Number) An ID given to every step of the sequencer, unique throughout.
+* `step.imageName` : (String) Name of the image the step is applied to.
+* `step.output` : (DataURL String) Output of the step.
+* `step.inBrowser` : (Boolean) Whether the client is a browser or not
+
+In addition to these, one might define their own properties, which shall be
+accessible across all the event scopes of that step.
+
+For example :
+
+```js
+sequencer.setUI({
+  onSetup: function(step){
+    step.image = document.createElement('img');
+    document.body.append(step.image);
+  },
+  onComplete: function(step){
+    step.image.src = step.output;
+  },
+  onRemove: function(step){
+    step.image.remove();
+  }
+});
+```
+
+Note: `identity.imageName` is the "name" of that particular image. This name can
+be specified while loading the image via `sequencer.loadImage("name","SRC")`. If
+not specified, the name of a loaded image defaults to a name like "image1",
+"image2", et cetra.
