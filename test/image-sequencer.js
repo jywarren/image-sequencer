@@ -8,7 +8,24 @@ var test = require('tape');
 
 require('../src/ImageSequencer.js');
 
-var sequencer = ImageSequencer({ ui: "none" });
+// This function is used to test whether or not any additional global variables are being created
+function copy(g,a) {
+  var b = {};
+  var i = 0;
+  for (var v in a)
+    if(g) {
+      if(v != "sequencer") b[v] = a[v];
+    }
+    else {
+      if(v != "sequencer" && v!="global1" && v!="global2" && !global1.hasOwnProperty(v)) i++;
+    }
+  if(g) return b;
+  else return i;
+}
+var parent = (typeof(global)==="undefined")?window:global;
+var global1 = copy(true,parent);
+
+var sequencer = ImageSequencer({ ui: false });
 var red = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z";
 
 test('Image Sequencer has tests', function (t) {
@@ -23,18 +40,22 @@ test('loadImages loads a DataURL image and creates a step.', function (t){
   t.end();
 });
 
-test('loadImages loads a PATH image and creates a step. (NodeJS)', function (t){
-  if(sequencer.options.inBrowser){
-    t.equal("not applicable","not applicable","Not applicable for Browser");
-    t.end();
-  }
-  else {
-    sequencer.loadImages(red);
+if(!sequencer.options.inBrowser)
+  test('loadImage loads an image from URL and creates a step. (NodeJS)', function (t){
+    sequencer.loadImage('URL','https://ccpandhare.github.io/image-sequencer/examples/red.jpg', function(){
+      t.equal(sequencer.images.URL.steps.length, 1, "Initial Step Created");
+      t.equal(typeof(sequencer.images.URL.steps[0].output.src), "string", "Initial output exists");
+      t.end();
+    });
+  });
+
+if(!sequencer.options.inBrowser)
+  test('loadImages loads an image from PATH and creates a step. (NodeJS)', function (t){
+    sequencer.loadImages('examples/red.jpg');
     t.equal(sequencer.images.image1.steps.length, 1, "Initial Step Created");
     t.equal(typeof(sequencer.images.image1.steps[0].output.src), "string", "Initial output exists");
     t.end();
-  }
-});
+  });
 
 test('loadImage works too.', function (t){
   sequencer.loadImage('test2',red);
@@ -136,5 +157,11 @@ test('run() runs the sequencer and returns output to callback', function (t) {
 test('replaceImage returns false in NodeJS', function (t) {
   var returnvalue = (sequencer.options.inBrowser)?false:sequencer.replaceImage("#selector","test");
   t.equal(returnvalue,false,"It does.");
+  t.end();
+});
+
+var global2 = copy(false,parent);
+test('No Global Variables Created', function (t) {
+  t.equal(0,global2,"None Created.");
   t.end();
 });
