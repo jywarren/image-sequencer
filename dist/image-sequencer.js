@@ -34708,17 +34708,15 @@ ImageSequencer = function ImageSequencer(options) {
 
   function loadImages() {
     var args = [];
+    var sequencer = this;
     for (var arg in arguments) args.push(copy(arguments[arg]));
     var json_q = formatInput.call(this,args,"l");
 
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
     var loadedimages = this.copy(json_q.loadedimages);
+// require('./LoadImage')(this,i,json_q.images[i]);
 
-    for (var i in json_q.images)
-      require('./LoadImage')(this,i,json_q.images[i])
-
-    json_q.callback();
-    return {
+    var ret = {
       name: "ImageSequencer Wrapper",
       sequencer: this,
       addSteps: this.addSteps,
@@ -34729,6 +34727,19 @@ ImageSequencer = function ImageSequencer(options) {
       setUI: this.setUI,
       images: loadedimages
     };
+
+    function load(i) {
+      if(i==loadedimages.length) {
+        json_q.callback.call(ret);
+        return;
+      }
+      var img = loadedimages[i];
+      require('./LoadImage')(sequencer,img,json_q.images[img],function(){
+        load(++i);
+      });
+    }
+
+    load(0);
   }
 
   function replaceImage(selector,steps,options) {
@@ -34798,14 +34809,49 @@ function InsertStep(ref, image, index, name, o) {
 module.exports = InsertStep;
 
 },{}],115:[function(require,module,exports){
-function LoadImage(ref, name, src) {
-  function CImage(src) {
-    var datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
+function LoadImage(ref, name, src, main_callback) {
+  function makeImage(datauri) {
     var image = {
       src: datauri,
       format: datauri.split(':')[1].split(';')[0].split('/')[1]
     }
     return image;
+  }
+  function CImage(src, callback) {
+    var datauri;
+    if (!!src.match(/^data:/i)) {
+      datauri = src;
+      callback(datauri);
+    }
+    else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
+      require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
+        var data = '';
+        var contentType = res.headers['content-type'];
+        res.setEncoding('base64');
+        res.on('data',function(chunk) {data += chunk;});
+        res.on('end',function() {
+          callback("data:"+contentType+";base64,"+data);
+        });
+      });
+    }
+    else if (ref.options.inBrowser) {
+      var ext = src.split('.').pop();
+      var image = document.createElement('img');
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      image.onload = function() {
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        context.drawImage(image,0,0);
+        datauri = canvas.toDataURL(ext);
+        callback(datauri);
+      }
+      image.src = src;
+    }
+    else {
+      datauri = require('urify')(src);
+      callback(datauri);
+    }
   }
 
   function loadImage(name, src) {
@@ -34834,13 +34880,18 @@ function LoadImage(ref, name, src) {
           }
           return false;
         },
-        output: CImage(src)
       }]
     };
-    ref.images[name] = image;
-    ref.images[name].steps[0].UI.onSetup();
-    ref.images[name].steps[0].UI.onDraw();
-    ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
+    CImage(src, function(datauri) {
+      var output = makeImage(datauri);
+      image.steps[0].output = output;
+      ref.images[name] = image;
+      ref.images[name].steps[0].UI.onSetup();
+      ref.images[name].steps[0].UI.onDraw();
+      ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
+      main_callback();
+      return true;
+    });
   }
 
   return loadImage(name,src);
@@ -35452,7 +35503,7 @@ module.exports = function PixelManipulation(image, options) {
     // but node modules and their documentation are essentially arcane on this point
     var chunks = [];
     var totalLength = 0;
-    var r = savePixels(pixels, options.format);
+    var r = savePixels(pixels, options.format, {quality: 100});
 
     r.on('data', function(chunk){
       totalLength += chunk.length;
