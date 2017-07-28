@@ -34391,18 +34391,14 @@ function AddStep(ref, image, name, o) {
     o.container = o_.container || ref.options.selector;
     o.image = image;
 
-    o.identity = {
-      stepName: o.name,
-      stepID: o.number,
-      imageName: o.image
+    o.step = {
+      name: o.name,
+      ID: o.number,
+      imageName: o.image,
+      inBrowser: ref.options.inBrowser,
+      ui: ref.options.ui
     };
-    o.UIFs = ref.UI();
-    var UI = {
-      onSetup: function(){o.UIFs.onSetup(o.identity);},
-      onDraw: function(){o.UIFs.onSetup(o.identity);},
-      onComplete: function(out){o.UIFs.onSetup(o.identity,out);},
-      onRemove: function(){o.UIFs.onSetup(o.identity);},
-    }
+    var UI = ref.events;
     var module = ref.modules[name](o,UI);
     ref.images[image].steps.push(module);
 
@@ -34624,7 +34620,7 @@ ImageSequencer = function ImageSequencer(options) {
       formatInput = require('./FormatInput'),
       images = {},
       inputlog = [],
-      UI;
+      events;
 
   setUI();
 
@@ -34651,7 +34647,7 @@ ImageSequencer = function ImageSequencer(options) {
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
     if(index>0) {
-      images[image].steps[index].UI.onRemove();
+      images[image].steps[index].UI.onRemove(images[image].steps[index].options.step);
       images[image].steps.splice(index,1);
     }
     //tell the UI a step has been removed
@@ -34743,9 +34739,8 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this,selector,steps);
   }
 
-  function setUI(_UI) {
-    UI = require('./UserInterface')(_UI,options);
-    return UI;
+  function setUI(UI) {
+    events = require('./UserInterface')(UI);
   }
 
   return {
@@ -34755,7 +34750,7 @@ ImageSequencer = function ImageSequencer(options) {
     inputlog: inputlog,
     modules: modules,
     images: images,
-    UI: UI,
+    events: events,
 
     //user functions
     loadImages: loadImages,
@@ -34789,18 +34784,14 @@ function InsertStep(ref, image, index, name, o) {
 
     if(index==-1) index = ref.images[image].steps.length;
 
-    o.identity = {
-      stepName: o.name,
-      stepID: o.number,
-      imageName: o.image
+    o.step = {
+      name: o.name,
+      ID: o.number,
+      imageName: o.image,
+      inBrowser: ref.options.inBrowser,
+      ui: ref.options.ui
     };
-    o.UIFs = ref.UI();
-    var UI = {
-      onSetup: function(){o.UIFs.onSetup(o.identity);},
-      onDraw: function(){o.UIFs.onSetup(o.identity);},
-      onComplete: function(out){o.UIFs.onSetup(o.identity,out);},
-      onRemove: function(){o.UIFs.onSetup(o.identity);},
-    }
+    var UI = ref.events;
     var module = ref.modules[name](o,UI);
     ref.images[image].steps.splice(index,0,module);
 
@@ -34823,27 +34814,37 @@ function LoadImage(ref, name, src) {
   }
 
   function loadImage(name, src) {
+    var step = {
+      name: "load-image",
+      ID: ref.options.sequencerCounter++,
+      imageName: name,
+      inBrowser: ref.options.inBrowser,
+      ui: ref.options.ui
+    };
+
     var image = {
       src: src,
       steps: [{
         options: {
-          id: ref.options.sequencerCounter++,
+          id: step.ID,
           name: "load-image",
-          title: "Load Image"
+          title: "Load Image",
+          step: step
         },
-        UI: ref.UI({
-          stepName: "load-image",
-          stepID: ref.options.sequencerCounter++,
-          imageName: name
-        }),
+        UI: ref.events,
         draw: function() {
+          UI.onDraw(options.step);
           if(arguments.length==1){
             this.output = CImage(arguments[0]);
+            options.step.output = this.output;
+            UI.onComplete(options.step);
             return true;
           }
           else if(arguments.length==2) {
             this.output = CImage(arguments[0]);
+            options.step.output = this.output;
             arguments[1]();
+            UI.onComplete(options.step);
             return true;
           }
           return false;
@@ -34852,9 +34853,11 @@ function LoadImage(ref, name, src) {
       }]
     };
     ref.images[name] = image;
-    ref.images[name].steps[0].UI.onSetup();
-    ref.images[name].steps[0].UI.onDraw();
-    ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
+    loadImageStep = ref.images[name].steps[0];
+    loadImageStep.options.step.output = loadImageStep.output.src;
+    loadImageStep.UI.onSetup(loadImageStep.options.step);
+    loadImageStep.UI.onDraw(loadImageStep.options.step);
+    loadImageStep.UI.onComplete(loadImageStep.options.step);
   }
 
   return loadImage(name,src);
@@ -34964,78 +34967,28 @@ module.exports = Run;
 
 },{}],119:[function(require,module,exports){
 /*
- * Default UI for each image-sequencer module
+ * User Interface Handling Module
  */
-module.exports = function UserInterface(newUI = {},options) {
 
-  var UI = newUI;
+module.exports = function UserInterface(events = {}) {
 
-  return function userInterface(identity) {
-
-    identity.ui = options.ui;
-    identity.inBrowser = options.inBrowser;
-
-    UI.onSetup = UI.onSetup || function(identity) {
-      if(identity.ui == false) {
-        // No UI
-      }
-      else if(identity.inBrowser) {
-        // Create and append an HTML Element
-        console.log("Added Step \""+identity.stepName+"\" to \""+identity.imageName+"\".");
-      }
-      else {
-        // Create a NodeJS Object
-        console.log('\x1b[36m%s\x1b[0m',"Added Step \""+identity.stepName+"\" to \""+identity.imageName+"\".");
-
-      }
-    }
-
-    UI.onDraw = UI.onDraw || function(identity) {
-      if (identity.ui == false) {
-        // No UI
-      }
-      else if(identity.inBrowser) {
-        // Overlay a loading spinner
-        console.log("Drawing Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
-      }
-      else {
-        // Don't do anything
-        console.log('\x1b[33m%s\x1b[0m',"Drawing Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
-      }
-    }
-
-    UI.onComplete = UI.onComplete || function(identity,output) {
-      if (identity.ui == false) {
-        // No UI
-      }
-      else if(identity.inBrowser) {
-        // Update the DIV Element
-        // Hide the laoding spinner
-        console.log("Drawn Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
-      }
-      else {
-        // Update the NodeJS Object
-        console.log('\x1b[32m%s\x1b[0m',"Drawn Step \""+identity.stepName+"\" on \""+identity.imageName+"\".");
-      }
-    }
-
-    UI.onRemove = UI.onRemove || function(identity) {
-      if(identity.ui == false){
-        // No UI
-      }
-      else if(identity.inBrowser) {
-        // Remove the DIV Element
-        console.log("Removing Step \""+identity.stepName+"\" of \""+identity.imageName+"\".");
-      }
-      else {
-        // Delete the NodeJS Object
-        console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+identity.stepName+"\" of \""+identity.imageName+"\".");
-      }
-    }
-
-    return UI;
-
+  events.onSetup = events.onSetup || function(step) {
+    console.log("onSetup "+step.name);
   }
+
+  events.onDraw = events.onDraw || function(step) {
+    console.log("onDraw "+step.name);
+  }
+
+  events.onComplete = events.onComplete || function(step) {
+    console.log("onComplete "+step.name);
+  }
+
+  events.onRemove = events.onRemove || function(step) {
+    console.log("onRemove "+step.name);
+  }
+
+  return events;
 
 }
 
@@ -35097,12 +35050,12 @@ module.exports = function Crop(input,options,callback) {
  module.exports = function CropModule(options,UI) {
    options = options || {};
    options.title = "Crop Image";
-   UI.onSetup();
+   UI.onSetup(options.step);
    var output
 
    function draw(input,callback) {
 
-     UI.onDraw();
+     UI.onDraw(options.step);
      const step = this;
 
      require('./Crop')(input,options,function(out,format){
@@ -35110,7 +35063,8 @@ module.exports = function Crop(input,options,callback) {
          src: out,
          format: format
        }
-       UI.onComplete(out);
+       options.step.output = out;
+       UI.onComplete(options.step);
        callback();
      });
 
@@ -35132,14 +35086,17 @@ module.exports = function Crop(input,options,callback) {
 module.exports = function DoNothing(options,UI) {
   options = options || {};
   options.title = "Do Nothing";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
-    UI.onDraw();
+    UI.onDraw(options.step);
+
     this.output = input;
+
+    options.step.output = this.output.src;
     callback();
-    UI.onComplete(this.output.src);
+    UI.onComplete(options.step);
   }
 
   return {
@@ -35158,12 +35115,12 @@ module.exports = function DoNothingPix(options,UI) {
 
   options = options || {};
   options.title = "Do Nothing with pixels";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
 
-    UI.onDraw();
+    UI.onDraw(options.step);
     const step = this;
 
     function changePixel(r, g, b, a) {
@@ -35171,7 +35128,8 @@ module.exports = function DoNothingPix(options,UI) {
     }
     function output(image,datauri,mimetype){
       step.output = {src:datauri,format:mimetype}
-      UI.onComplete(datauri);
+      options.step.output = datauri;
+      UI.onComplete(options.step);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -35200,12 +35158,12 @@ module.exports = function GreenChannel(options,UI) {
   options = options || {};
   options.title = "Green channel only";
   options.description = "Displays only the green channel of an image";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
 
-    UI.onDraw();
+    UI.onDraw(options.step);
     const step = this;
 
     function changePixel(r, g, b, a) {
@@ -35213,7 +35171,8 @@ module.exports = function GreenChannel(options,UI) {
     }
     function output(image,datauri,mimetype){
       step.output = {src:datauri,format:mimetype};
-      UI.onComplete(datauri);
+      options.step.output = datauri;
+      UI.onComplete(options.step);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -35243,14 +35202,14 @@ module.exports = function GreenChannel(options,UI) {
   options = options || {};
   options.title = "Invert Colors";
   options.description = "Inverts the colors of the image";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   //function setup() {} // optional
 
   function draw(input,callback) {
 
-    UI.onDraw();
+    UI.onDraw(options.step);
     const step = this;
 
     function changePixel(r, g, b, a) {
@@ -35258,7 +35217,8 @@ module.exports = function GreenChannel(options,UI) {
     }
     function output(image,datauri,mimetype){
       step.output = {src:datauri,format:mimetype};
-      UI.onComplete(datauri);
+      options.step.output = datauri;
+      UI.onComplete(options.step);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -35287,12 +35247,12 @@ module.exports = function NdviRed(options,UI) {
 
   options = options || {};
   options.title = "NDVI for red-filtered cameras (blue is infrared)";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
 
-    UI.onDraw();
+    UI.onDraw(options.step);
     const step = this;
 
     function changePixel(r, g, b, a) {
@@ -35302,7 +35262,8 @@ module.exports = function NdviRed(options,UI) {
     }
     function output(image,datauri,mimetype){
       step.output = {src:datauri,format:mimetype};
-      UI.onComplete(datauri);
+      options.step.output = datauri;
+      UI.onComplete(options.step);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -35327,12 +35288,12 @@ module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
   options.title = "Segmented Colormap";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
 
-    UI.onDraw();
+    UI.onDraw(options.step);
     const step = this;
 
     function changePixel(r, g, b, a) {
@@ -35343,7 +35304,8 @@ module.exports = function SegmentedColormap(options,UI) {
     }
     function output(image,datauri,mimetype){
       step.output = {src:datauri,format:mimetype};
-      UI.onComplete(datauri);
+      options.step.output = datauri;
+      UI.onComplete(options.step);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,

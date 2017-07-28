@@ -42,7 +42,7 @@ ImageSequencer = function ImageSequencer(options) {
       formatInput = require('./FormatInput'),
       images = {},
       inputlog = [],
-      UI;
+      events;
 
   setUI();
 
@@ -69,7 +69,7 @@ ImageSequencer = function ImageSequencer(options) {
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
     if(index>0) {
-      images[image].steps[index].UI.onRemove();
+      images[image].steps[index].UI.onRemove(images[image].steps[index].options.step);
       images[image].steps.splice(index,1);
     }
     //tell the UI a step has been removed
@@ -161,9 +161,8 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this,selector,steps);
   }
 
-  function setUI(_UI) {
-    UI = require('./UserInterface')(_UI,options);
-    return UI;
+  function setUI(UI) {
+    events = require('./UserInterface')(UI);
   }
 
   return {
@@ -173,7 +172,7 @@ ImageSequencer = function ImageSequencer(options) {
     inputlog: inputlog,
     modules: modules,
     images: images,
-    UI: UI,
+    events: events,
 
     //user functions
     loadImages: loadImages,

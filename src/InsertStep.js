@@ -10,18 +10,14 @@ function InsertStep(ref, image, index, name, o) {
 
     if(index==-1) index = ref.images[image].steps.length;
 
-    o.identity = {
-      stepName: o.name,
-      stepID: o.number,
-      imageName: o.image
+    o.step = {
+      name: o.name,
+      ID: o.number,
+      imageName: o.image,
+      inBrowser: ref.options.inBrowser,
+      ui: ref.options.ui
     };
-    o.UIFs = ref.UI();
-    var UI = {
-      onSetup: function(){o.UIFs.onSetup(o.identity);},
-      onDraw: function(){o.UIFs.onSetup(o.identity);},
-      onComplete: function(out){o.UIFs.onSetup(o.identity,out);},
-      onRemove: function(){o.UIFs.onSetup(o.identity);},
-    }
+    var UI = ref.events;
     var module = ref.modules[name](o,UI);
     ref.images[image].steps.splice(index,0,module);
 

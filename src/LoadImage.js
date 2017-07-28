@@ -9,27 +9,37 @@ function LoadImage(ref, name, src) {
   }
 
   function loadImage(name, src) {
+    var step = {
+      name: "load-image",
+      ID: ref.options.sequencerCounter++,
+      imageName: name,
+      inBrowser: ref.options.inBrowser,
+      ui: ref.options.ui
+    };
+
     var image = {
       src: src,
       steps: [{
         options: {
-          id: ref.options.sequencerCounter++,
+          id: step.ID,
           name: "load-image",
-          title: "Load Image"
+          title: "Load Image",
+          step: step
         },
-        UI: ref.UI({
-          stepName: "load-image",
-          stepID: ref.options.sequencerCounter++,
-          imageName: name
-        }),
+        UI: ref.events,
         draw: function() {
+          UI.onDraw(options.step);
           if(arguments.length==1){
             this.output = CImage(arguments[0]);
+            options.step.output = this.output;
+            UI.onComplete(options.step);
             return true;
           }
           else if(arguments.length==2) {
             this.output = CImage(arguments[0]);
+            options.step.output = this.output;
             arguments[1]();
+            UI.onComplete(options.step);
             return true;
           }
           return false;
@@ -38,9 +48,11 @@ function LoadImage(ref, name, src) {
       }]
     };
     ref.images[name] = image;
-    ref.images[name].steps[0].UI.onSetup();
-    ref.images[name].steps[0].UI.onDraw();
-    ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
+    loadImageStep = ref.images[name].steps[0];
+    loadImageStep.options.step.output = loadImageStep.output.src;
+    loadImageStep.UI.onSetup(loadImageStep.options.step);
+    loadImageStep.UI.onDraw(loadImageStep.options.step);
+    loadImageStep.UI.onComplete(loadImageStep.options.step);
   }
 
   return loadImage(name,src);
