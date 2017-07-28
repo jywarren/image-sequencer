@@ -42,9 +42,7 @@ ImageSequencer = function ImageSequencer(options) {
       formatInput = require('./FormatInput'),
       images = {},
       inputlog = [],
-      UI;
-
-  setUI();
+      events = require('./UserInterface')();
 
   // if in browser, prompt for an image
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
@@ -69,7 +67,8 @@ ImageSequencer = function ImageSequencer(options) {
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
     if(index>0) {
-      images[image].steps[index].UI.onRemove();
+      thisStep = images[image].steps[index];
+      thisStep.UI.onRemove(thisStep.options.step);
       images[image].steps.splice(index,1);
     }
     //tell the UI a step has been removed
@@ -133,17 +132,15 @@ ImageSequencer = function ImageSequencer(options) {
 
   function loadImages() {
     var args = [];
+    var sequencer = this;
     for (var arg in arguments) args.push(copy(arguments[arg]));
     var json_q = formatInput.call(this,args,"l");
 
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
     var loadedimages = this.copy(json_q.loadedimages);
+// require('./LoadImage')(this,i,json_q.images[i]);
 
-    for (var i in json_q.images)
-      require('./LoadImage')(this,i,json_q.images[i])
-
-    json_q.callback();
-    return {
+    var ret = {
       name: "ImageSequencer Wrapper",
       sequencer: this,
       addSteps: this.addSteps,
@@ -154,6 +151,19 @@ ImageSequencer = function ImageSequencer(options) {
       setUI: this.setUI,
       images: loadedimages
     };
+
+    function load(i) {
+      if(i==loadedimages.length) {
+        json_q.callback.call(ret);
+        return;
+      }
+      var img = loadedimages[i];
+      require('./LoadImage')(sequencer,img,json_q.images[img],function(){
+        load(++i);
+      });
+    }
+
+    load(0);
   }
 
   function replaceImage(selector,steps,options) {
@@ -161,9 +171,8 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this,selector,steps);
   }
 
-  function setUI(_UI) {
-    UI = require('./UserInterface')(_UI,options);
-    return UI;
+  function setUI(UI) {
+    this.events = require('./UserInterface')(UI);
   }
 
   return {
@@ -173,7 +182,7 @@ ImageSequencer = function ImageSequencer(options) {
     inputlog: inputlog,
     modules: modules,
     images: images,
-    UI: UI,
+    events: events,
 
     //user functions
     loadImages: loadImages,

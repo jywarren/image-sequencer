@@ -4,14 +4,14 @@
 module.exports = function DoNothing(options,UI) {
   options = options || {};
   options.title = "Decode QR Code";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
   var jsQR = require('jsqr');
   var getPixels = require('get-pixels');
 
   function draw(input,callback) {
 
-    UI.onDraw();
+    UI.onDraw(options.step);
 
     const step = this;
     getPixels(input.src,function(err,pixels){
@@ -22,13 +22,15 @@ module.exports = function DoNothing(options,UI) {
       step.output = input;
       step.output.data = decoded;
       callback();
-      UI.onComplete(input.src);
+      options.step.output = input.src;
+      UI.onComplete(options.step);
     });
   }
 
   return {
     options: options,
     draw: draw,
-    output: output
+    output: output,
+    UI: UI
   }
 }
