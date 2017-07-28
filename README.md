@@ -76,7 +76,7 @@ a name and an image. The method also accepts an optional callback.
 ```js
 sequencer.loadImage(image_src,optional_callback);
 ```
-On `Node.js` the `image_src` may be a DataURI or a local path.
+On `Node.js` the `image_src` may be a DataURI or a local path or a URL.
 
 On browsers, it may be a DatURI, a local image or a URL (Unless this violates
 CORS Restrictions). To sum up, these are accepted:
