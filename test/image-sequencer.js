@@ -40,18 +40,13 @@ test('loadImages loads a DataURL image and creates a step.', function (t){
   t.end();
 });
 
-test('loadImages loads a PATH image and creates a step. (NodeJS)', function (t){
-  if(sequencer.options.inBrowser){
-    t.equal(1,1,"Not applicable for Browser");
-    t.end();
-  }
-  else {
-    sequencer.loadImages(red);
+if(!sequencer.options.inBrowser)
+  test('loadImages loads an image from PATH and creates a step. (NodeJS)', function (t){
+    sequencer.loadImages('examples/red.jpg');
     t.equal(sequencer.images.image1.steps.length, 1, "Initial Step Created");
     t.equal(typeof(sequencer.images.image1.steps[0].output.src), "string", "Initial output exists");
     t.end();
-  }
-});
+  });
 
 test('loadImage works too.', function (t){
   sequencer.loadImage('test2',red);

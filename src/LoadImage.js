@@ -8,9 +8,20 @@ function LoadImage(ref, name, src, main_callback) {
   }
   function CImage(src, callback) {
     var datauri;
-    if (src.substring(0,11) == "data:image/") {
+    if (!!src.match(/^data:/i)) {
       datauri = src;
       callback(datauri);
+    }
+    else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
+      require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
+        var data = '';
+        var contentType = res.headers['content-type'];
+        res.setEncoding('base64');
+        res.on('data',function(chunk) {data += chunk;});
+        res.on('end',function() {
+          callback("data:"+contentType+";base64,"+data);
+        });
+      });
     }
     else if (ref.options.inBrowser) {
       var ext = src.split('.').pop();
