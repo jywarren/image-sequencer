@@ -34620,9 +34620,7 @@ ImageSequencer = function ImageSequencer(options) {
       formatInput = require('./FormatInput'),
       images = {},
       inputlog = [],
-      events;
-
-  setUI();
+      events = require('./UserInterface')();
 
   // if in browser, prompt for an image
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
@@ -34647,7 +34645,8 @@ ImageSequencer = function ImageSequencer(options) {
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
     if(index>0) {
-      images[image].steps[index].UI.onRemove(images[image].steps[index].options.step);
+      thisStep = images[image].steps[index];
+      thisStep.UI.onRemove(thisStep.options.step);
       images[image].steps.splice(index,1);
     }
     //tell the UI a step has been removed
@@ -34751,7 +34750,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function setUI(UI) {
-    events = require('./UserInterface')(UI);
+    this.events = require('./UserInterface')(UI);
   }
 
   return {
@@ -35025,19 +35024,60 @@ module.exports = Run;
 module.exports = function UserInterface(events = {}) {
 
   events.onSetup = events.onSetup || function(step) {
-    console.log("onSetup "+step.name);
+    if(step.ui == false) {
+        // No UI
+    }
+    else if(step.inBrowser) {
+      // Create and append an HTML Element
+      console.log("Added Step \""+step.name+"\" to \""+step.imageName+"\".");
+    }
+    else {
+      // Create a NodeJS Object
+      console.log('\x1b[36m%s\x1b[0m',"Added Step \""+step.name+"\" to \""+step.imageName+"\".");
+    }
   }
 
   events.onDraw = events.onDraw || function(step) {
-    console.log("onDraw "+step.name);
+    if (step.ui == false) {
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Overlay a loading spinner
+      console.log("Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
+    else {
+      // Don't do anything
+      console.log('\x1b[33m%s\x1b[0m',"Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
   }
 
   events.onComplete = events.onComplete || function(step) {
-    console.log("onComplete "+step.name);
+    if (step.ui == false) {
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Update the DIV Element
+      // Hide the laoding spinner
+      console.log("Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
+    else {
+      // Update the NodeJS Object
+      console.log('\x1b[32m%s\x1b[0m',"Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
   }
 
   events.onRemove = events.onRemove || function(step) {
-    console.log("onRemove "+step.name);
+    if(step.ui == false){
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Remove the DIV Element
+      console.log("Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
+    }
+    else {
+      // Delete the NodeJS Object
+      console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
+    }
   }
 
   return events;
