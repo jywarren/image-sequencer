@@ -42,7 +42,7 @@ test('loadImages loads a DataURL image and creates a step.', function (t){
 
 test('loadImages loads a PATH image and creates a step. (NodeJS)', function (t){
   if(sequencer.options.inBrowser){
-    t.equal("not applicable","not applicable","Not applicable for Browser");
+    t.equal(1,1,"Not applicable for Browser");
     t.end();
   }
   else {

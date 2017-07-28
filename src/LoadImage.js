@@ -1,4 +1,4 @@
-function LoadImage(ref, name, src) {
+function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
     var image = {
       src: datauri,
@@ -67,6 +67,7 @@ function LoadImage(ref, name, src) {
       ref.images[name].steps[0].UI.onSetup();
       ref.images[name].steps[0].UI.onDraw();
       ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
+      main_callback();
       return true;
     });
   }

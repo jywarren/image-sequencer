@@ -34708,14 +34708,13 @@ ImageSequencer = function ImageSequencer(options) {
 
   function loadImages() {
     var args = [];
+    var sequencer = this;
     for (var arg in arguments) args.push(copy(arguments[arg]));
     var json_q = formatInput.call(this,args,"l");
 
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
     var loadedimages = this.copy(json_q.loadedimages);
-
-    for (var i in json_q.images)
-      require('./LoadImage')(this,i,json_q.images[i])
+// require('./LoadImage')(this,i,json_q.images[i]);
 
     var ret = {
       name: "ImageSequencer Wrapper",
@@ -34728,7 +34727,20 @@ ImageSequencer = function ImageSequencer(options) {
       setUI: this.setUI,
       images: loadedimages
     };
-    json_q.callback.call(ret);
+
+    function load(i) {
+      if(i==loadedimages.length) {
+        json_q.callback.call(ret);
+        return;
+      }
+      var img = loadedimages[i];
+      require('./LoadImage')(sequencer,img,json_q.images[img],function(){
+        load(++i);
+      });
+    }
+
+    load(0);
+
     return ret;
   }
 
@@ -34799,7 +34811,7 @@ function InsertStep(ref, image, index, name, o) {
 module.exports = InsertStep;
 
 },{}],115:[function(require,module,exports){
-function LoadImage(ref, name, src) {
+function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
     var image = {
       src: datauri,
@@ -34868,6 +34880,7 @@ function LoadImage(ref, name, src) {
       ref.images[name].steps[0].UI.onSetup();
       ref.images[name].steps[0].UI.onDraw();
       ref.images[name].steps[0].UI.onComplete(image.steps[0].output.src);
+      main_callback();
       return true;
     });
   }
@@ -35481,7 +35494,7 @@ module.exports = function PixelManipulation(image, options) {
     // but node modules and their documentation are essentially arcane on this point
     var chunks = [];
     var totalLength = 0;
-    var r = savePixels(pixels, options.format);
+    var r = savePixels(pixels, options.format, {quality: 100});
 
     r.on('data', function(chunk){
       totalLength += chunk.length;

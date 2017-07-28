@@ -133,14 +133,13 @@ ImageSequencer = function ImageSequencer(options) {
 
   function loadImages() {
     var args = [];
+    var sequencer = this;
     for (var arg in arguments) args.push(copy(arguments[arg]));
     var json_q = formatInput.call(this,args,"l");
 
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
     var loadedimages = this.copy(json_q.loadedimages);
-
-    for (var i in json_q.images)
-      require('./LoadImage')(this,i,json_q.images[i])
+// require('./LoadImage')(this,i,json_q.images[i]);
 
     var ret = {
       name: "ImageSequencer Wrapper",
@@ -153,8 +152,19 @@ ImageSequencer = function ImageSequencer(options) {
       setUI: this.setUI,
       images: loadedimages
     };
-    json_q.callback.call(ret);
-    return ret;
+
+    function load(i) {
+      if(i==loadedimages.length) {
+        json_q.callback.call(ret);
+        return;
+      }
+      var img = loadedimages[i];
+      require('./LoadImage')(sequencer,img,json_q.images[img],function(){
+        load(++i);
+      });
+    }
+
+    load(0);
   }
 
   function replaceImage(selector,steps,options) {
