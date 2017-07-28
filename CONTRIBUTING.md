@@ -13,17 +13,18 @@ Any module must look like this :
 module.exports = function ModuleName(options,UI) {
   options = options || {};
   options.title = "Title of the Module";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
-    UI.onDraw();
+    UI.onDraw(options.step);
 
     var output = /*do something with the input*/ ;
 
     this.output = output;
+    options.step.output = output.src;
     callback();
-    UI.onComplete(this.output.src);
+    UI.onComplete(options.step);
   }
 
   return {

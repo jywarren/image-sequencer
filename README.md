@@ -401,13 +401,16 @@ For example :
 ```js
 sequencer.setUI({
   onSetup: function(step){
+    // Create new property "step.image"
     step.image = document.createElement('img');
     document.body.append(step.image);
   },
   onComplete: function(step){
+    // Access predefined "step.output" and user-defined "step.image"
     step.image.src = step.output;
   },
   onRemove: function(step){
+    // Access user-defined "step.image"
     step.image.remove();
   }
 });
