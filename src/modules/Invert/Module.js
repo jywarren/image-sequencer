@@ -6,14 +6,14 @@ module.exports = function GreenChannel(options,UI) {
   options = options || {};
   options.title = "Invert Colors";
   options.description = "Inverts the colors of the image";
-  UI.onSetup();
+  UI.onSetup(options.step);
   var output;
 
   //function setup() {} // optional
 
   function draw(input,callback) {
 
-    UI.onDraw();
+    UI.onDraw(options.step);
     const step = this;
 
     function changePixel(r, g, b, a) {
@@ -21,7 +21,8 @@ module.exports = function GreenChannel(options,UI) {
     }
     function output(image,datauri,mimetype){
       step.output = {src:datauri,format:mimetype};
-      UI.onComplete(datauri);
+      options.step.output = datauri;
+      UI.onComplete(options.step);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,

@@ -1,14 +1,16 @@
 /*
  * Creates Fisheye Effect
  */
-module.exports = function DoNothing(options) {
+module.exports = function DoNothing(options,UI) {
   options = options || {};
   options.title = "Fisheye GL";
   var output;
+  UI.onSetup(options.step);
   require('fisheyegl');
 
   function draw(input,callback) {
-    this_ = this;
+    UI.onDraw(options.step);
+    const step = this;
     if (!options.inBrowser) { // This module is only for browser
       this.output = input;
       callback();
@@ -35,8 +37,10 @@ module.exports = function DoNothing(options) {
       distorter.fov.y = options.y || distorter.fov.y;
 
       distorter.setImage(input.src,function(){
-        this_.output = {src: canvas.toDataURL(), format: input.format};
+        step.output = {src: canvas.toDataURL(), format: input.format};
+        options.step.output = step.output.src;
         callback();
+        UI.onComplete(options.step);
       });
 
     }
@@ -45,6 +49,7 @@ module.exports = function DoNothing(options) {
   return {
     options: options,
     draw: draw,
-    output: output
+    output: output,
+    UI: UI
   }
 }

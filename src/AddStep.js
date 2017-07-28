@@ -9,11 +9,14 @@ function AddStep(ref, image, name, o) {
     o.image = image;
     o.inBrowser = ref.options.inBrowser;
 
-    var UI = ref.UI({
-      stepName: o.name,
-      stepID: o.number,
-      imageName: o.image
-    });
+    o.step = {
+      name: o.name,
+      ID: o.number,
+      imageName: o.image,
+      inBrowser: ref.options.inBrowser,
+      ui: ref.options.ui
+    };
+    var UI = ref.events;
     var module = ref.modules[name](o,UI);
     ref.images[image].steps.push(module);
 
