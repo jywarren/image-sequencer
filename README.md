@@ -84,8 +84,18 @@ CORS Restrictions). To sum up, these are accepted:
 * CORS-Proof images in another domain.
 * DataURLs
 
-return value: **`sequencer`** (To allow method chaining)
+return value: **none** (A callback should be used to ensure the image gets loaded)
+The callback is called within the scope of a the sequencer. For example:
+(addSteps is defined later)
 
+```js
+sequencer.loadImage('SRC',function(){
+  this.addSteps('module-name');
+});
+```
+
+The `this` refers to all the images added in the parent `loadImages` function only.
+In this case, only `'SRC'`.
 
 ### Adding steps to the image
 
@@ -169,6 +179,7 @@ return value: **`sequencer`** (To allow method chaining)
 
 ## Method Chaining
 Methods can be chained on the Image Sequencer:
+* loadImage()/loadImages() can only terminate a chain.
 * run() can not be in the middle of the chain.
 * If the chain starts with loadImage() or loadImages(), the following methods are
 applied only to the newly loaded images.
@@ -177,9 +188,11 @@ be of the form "image<number>". For ex: "image1", "image2", "image3", etc.
 
 Valid Chains:
 ```js
-sequencer.loadImage('red').addSteps('invert').run(function(out){
-  //do something with otuput.
-});
+sequencer.loadImage('red',function(){
+  this.addSteps('invert').run(function(out){
+    //do something with ouptut.
+  });
+})
 sequencer.addSteps(['ndvi-red','invert']).run();
 et cetra.
 ```
@@ -222,7 +235,7 @@ with each image. This is a string literal.
     });
     ```
 
-return value: **`sequencer`** (To allow method chaining)
+return value: **none**
 
 
 ### Adding Steps on Multiple Images
