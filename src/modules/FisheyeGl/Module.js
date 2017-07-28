@@ -4,7 +4,8 @@
 module.exports = function DoNothing(options) {
   options = options || {};
   options.title = "Fisheye GL";
-  var output
+  var output;
+  require('fisheyegl');
 
   function draw(input,callback) {
     this_ = this;
@@ -13,7 +14,6 @@ module.exports = function DoNothing(options) {
       callback();
     }
     else {
-
       if (!document.querySelector('#image-sequencer-canvas')) {
         var canvas = document.createElement('canvas');
         canvas.style.display = "none";
@@ -22,7 +22,7 @@ module.exports = function DoNothing(options) {
       }
       else var canvas = document.querySelector('#image-sequencer-canvas');
 
-      distorter = require('./fisheyegl.js')({
+      distorter = FisheyeGl({
         selector: "#image-sequencer-canvas"
       });
 
