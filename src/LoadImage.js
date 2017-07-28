@@ -1,11 +1,46 @@
-function LoadImage(ref, name, src) {
-  function CImage(src) {
-    var datauri = (ref.options.inBrowser || src.substring(0,11) == "data:image/")?(src):require('urify')(src);
+function LoadImage(ref, name, src, main_callback) {
+  function makeImage(datauri) {
     var image = {
       src: datauri,
       format: datauri.split(':')[1].split(';')[0].split('/')[1]
     }
     return image;
+  }
+  function CImage(src, callback) {
+    var datauri;
+    if (!!src.match(/^data:/i)) {
+      datauri = src;
+      callback(datauri);
+    }
+    else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
+      require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
+        var data = '';
+        var contentType = res.headers['content-type'];
+        res.setEncoding('base64');
+        res.on('data',function(chunk) {data += chunk;});
+        res.on('end',function() {
+          callback("data:"+contentType+";base64,"+data);
+        });
+      });
+    }
+    else if (ref.options.inBrowser) {
+      var ext = src.split('.').pop();
+      var image = document.createElement('img');
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      image.onload = function() {
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        context.drawImage(image,0,0);
+        datauri = canvas.toDataURL(ext);
+        callback(datauri);
+      }
+      image.src = src;
+    }
+    else {
+      datauri = require('urify')(src);
+      callback(datauri);
+    }
   }
 
   function loadImage(name, src) {
@@ -44,15 +79,21 @@ function LoadImage(ref, name, src) {
           }
           return false;
         },
-        output: CImage(src)
       }]
     };
-    ref.images[name] = image;
-    loadImageStep = ref.images[name].steps[0];
-    loadImageStep.options.step.output = loadImageStep.output.src;
-    loadImageStep.UI.onSetup(loadImageStep.options.step);
-    loadImageStep.UI.onDraw(loadImageStep.options.step);
-    loadImageStep.UI.onComplete(loadImageStep.options.step);
+    CImage(src, function(datauri) {
+      var output = makeImage(datauri);
+      ref.images[name] = image;
+      var loadImageStep = ref.images[name].steps[0];
+      loadImageStep.output = output;
+      loadImageStep.options.step.output = loadImageStep.output.src;
+      loadImageStep.UI.onSetup(loadImageStep.options.step);
+      loadImageStep.UI.onDraw(loadImageStep.options.step);
+      loadImageStep.UI.onComplete(loadImageStep.options.step);
+
+      main_callback();
+      return true;
+    });
   }
 
   return loadImage(name,src);

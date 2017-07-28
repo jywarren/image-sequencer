@@ -43,7 +43,7 @@ module.exports = function PixelManipulation(image, options) {
     // but node modules and their documentation are essentially arcane on this point
     var chunks = [];
     var totalLength = 0;
-    var r = savePixels(pixels, options.format);
+    var r = savePixels(pixels, options.format, {quality: 100});
 
     r.on('data', function(chunk){
       totalLength += chunk.length;
