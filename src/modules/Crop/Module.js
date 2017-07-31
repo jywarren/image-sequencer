@@ -13,21 +13,24 @@
  *          y = options.y
  *          y = options.y + options.h
  */
- module.exports = function CropModule(options) {
+ module.exports = function CropModule(options,UI) {
    options = options || {};
    options.title = "Crop Image";
-   this_ = this;
+   UI.onSetup(options.step);
    var output
 
    function draw(input,callback) {
 
-     const this_ = this;
+     UI.onDraw(options.step);
+     const step = this;
 
      require('./Crop')(input,options,function(out,format){
-       this_.output = {
+       step.output = {
          src: out,
          format: format
        }
+       options.step.output = out;
+       UI.onComplete(options.step);
        callback();
      });
 
@@ -37,6 +40,7 @@
    return {
      options: options,
      draw: draw,
-     output: output
+     output: output,
+     UI: UI
    }
  }
