@@ -1,41 +1,66 @@
 /*
- * Default UI for each image-sequencer module
+ * User Interface Handling Module
  */
-module.exports = function UserInterface(options) {
 
-  options = options || {};
-  options.container = options.container || ".panels";
-  options.id = options.id;
-  options.instanceName = options.instanceName;
-  options.random = options.random || parseInt(Math.random() * (new Date()).getTime() / 1000000);
-  options.uniqueSelector = options.uniqueSelector || options.selector + '-' + options.random;
-  $(options.container).append('<div class="panel ' + options.selector + ' ' + options.uniqueSelector + '" id="sequencer-'+options.id+'"><div class="image"></div></div>');
-  options.el = options.el || $('.' + options.uniqueSelector);
-  createLabel(options.el);
+module.exports = function UserInterface(events = {}) {
 
-  // method to remove the UI for a given method, and remove the step
-  function display(image) {
-    options.el.find('.image').html(image);
+  events.onSetup = events.onSetup || function(step) {
+    if(step.ui == false) {
+        // No UI
+    }
+    else if(step.inBrowser) {
+      // Create and append an HTML Element
+      console.log("Added Step \""+step.name+"\" to \""+step.imageName+"\".");
+    }
+    else {
+      // Create a NodeJS Object
+      console.log('\x1b[36m%s\x1b[0m',"Added Step \""+step.name+"\" to \""+step.imageName+"\".");
+    }
   }
 
-  // method to remove the UI for a given method, and remove the step
-  function remove() {
-    $('div#sequencer-'+options.id).remove();
+  events.onDraw = events.onDraw || function(step) {
+    if (step.ui == false) {
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Overlay a loading spinner
+      console.log("Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
+    else {
+      // Don't do anything
+      console.log('\x1b[33m%s\x1b[0m',"Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
   }
 
-  // method to reorder steps, and update the UI
-  //function move() {}
-
-  function createLabel(el) {
-    if (options.title) el.prepend('<h3 class="title">' + options.title + '</h3> <button class="btn btn-default" onclick="'+options.instanceName+'.removeStep('+options.id+')">Remove Step</button>');
+  events.onComplete = events.onComplete || function(step) {
+    if (step.ui == false) {
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Update the DIV Element
+      // Hide the laoding spinner
+      console.log("Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
+    else {
+      // Update the NodeJS Object
+      console.log('\x1b[32m%s\x1b[0m',"Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
   }
 
-  return {
-    el: options.el,
-    uniqueSelector: options.uniqueSelector,
-    selector: options.selector,
-    display: display,
-    remove: remove
+  events.onRemove = events.onRemove || function(step) {
+    if(step.ui == false){
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Remove the DIV Element
+      console.log("Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
+    }
+    else {
+      // Delete the NodeJS Object
+      console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
+    }
   }
+
+  return events;
 
 }

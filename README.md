@@ -26,6 +26,14 @@ It is also for prototyping some other related ideas:
 * [Basic example](https://jywarren.github.io/image-sequencer/)
 * [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
 
+## Jump to:
+
+* [Quick Usage](#quick-usage)
+* [Classic Usage](#classic-usage)
+* [Method Chaining](#method-chaining)
+* [Multiple Images](#multiple-images)
+* [Creating a User Interface](#creating-a-user-interface)
+
 ## Quick Usage
 
 Image Sequencer can be used to run modules on an HTML Image Element using the
@@ -68,11 +76,26 @@ a name and an image. The method also accepts an optional callback.
 ```js
 sequencer.loadImage(image_src,optional_callback);
 ```
-On `Node.js` the `image_src` may be a DataURI or a local path. On browsers, it
-must be a DatURI (or 'selector to image' -- Work in Progress)
+On `Node.js` the `image_src` may be a DataURI or a local path or a URL.
 
-return value: **`sequencer`** (To allow method chaining)
+On browsers, it may be a DatURI, a local image or a URL (Unless this violates
+CORS Restrictions). To sum up, these are accepted:
+* Images in the same domain (or directory - for a local implementation)
+* CORS-Proof images in another domain.
+* DataURLs
 
+return value: **none** (A callback should be used to ensure the image gets loaded)
+The callback is called within the scope of a the sequencer. For example:
+(addSteps is defined later)
+
+```js
+sequencer.loadImage('SRC',function(){
+  this.addSteps('module-name');
+});
+```
+
+The `this` refers to all the images added in the parent `loadImages` function only.
+In this case, only `'SRC'`.
 
 ### Adding steps to the image
 
@@ -156,6 +179,7 @@ return value: **`sequencer`** (To allow method chaining)
 
 ## Method Chaining
 Methods can be chained on the Image Sequencer:
+* loadImage()/loadImages() can only terminate a chain.
 * run() can not be in the middle of the chain.
 * If the chain starts with loadImage() or loadImages(), the following methods are
 applied only to the newly loaded images.
@@ -164,9 +188,11 @@ be of the form "image<number>". For ex: "image1", "image2", "image3", etc.
 
 Valid Chains:
 ```js
-sequencer.loadImage('red').addSteps('invert').run(function(out){
-  //do something with otuput.
-});
+sequencer.loadImage('red',function(){
+  this.addSteps('invert').run(function(out){
+    //do something with ouptut.
+  });
+})
 sequencer.addSteps(['ndvi-red','invert']).run();
 et cetra.
 ```
@@ -209,7 +235,7 @@ with each image. This is a string literal.
     });
     ```
 
-return value: **`sequencer`** (To allow method chaining)
+return value: **none**
 
 
 ### Adding Steps on Multiple Images
@@ -325,204 +351,72 @@ sequencer.insertSteps({
 return value: **`sequencer`** (To allow method chaining)
 
 
-## Contributing
+## Creating a User Interface
 
-Happily accepting pull requests; to edit the core library, modify files in `/src/`. To build, run `npm install` and `grunt build`.
+Image Sequencer provides the following events which can be used to generate a UI:
 
-### Contributing modules
+* `onSetup` : this event is triggered when a new module is set up. This can be used,
+for instance, to generate a DIV element to store the generated image for that step.
+* `onDraw` : This event is triggered when Image Sequencer starts drawing the output
+for a module. This can be used, for instance, to overlay a loading GIF over the DIV
+generated above.
+* `onComplete` : This event is triggered when Image Sequencer has drawn the output
+for a module. This can be used, for instance, to update the DIV with the new image
+and remove the loading GIF generated above.
+* `onRemove` : This event is triggered when a module is removed. This can be used,
+for instance, to remove the DIV generated above.
 
-Most contribution (we imagine) would be in the form of API-compatible modules, which need not be directly included.
-
-#### draw()
-
-To add a module to Image Sequencer, it must have the following method; you can wrap an existing module to add them:
-
-* `module.draw()`
-
-The `draw(input,callback)` method should accept an `input` parameter, which will be an object of the form:
+How to define these functions:
 
 ```js
-input = {
-  src: "datauri here",
-  format: "jpeg/png/etc"
-}
+sequencer.setUI({
+  onSetup: function(step) {},
+  onDraw: function(step) {},
+  onComplete: function(step) {},
+  onRemove: function(step) {}
+});
 ```
 
-The  `image` object is essentially the output of the previous step.
+These methods can be defined and re-defined at any time, but it is advisable to
+set them before any module is added and not change it thereafter. This is because
+the `setUI` method will only affect the modules added after `setUI` is called.
 
-The draw method must, when it is complete, pass the output image to the method `this.output = modified_input`, which will send the output to the next module in the chain. For example:
+The `onComplete` event is passed on the output of the module.
 
-```js
-function draw(image) {
+Image Sequencer provides a namespace `step` for the purpose of UI Creation in
+the scope of these definable function. This namespace has the following
+predefined properties:
 
-  // do some stuff with the image
+* `step.name` : (String) Name of the step
+* `step.ID` : (Number) An ID given to every step of the sequencer, unique throughout.
+* `step.imageName` : (String) Name of the image the step is applied to.
+* `step.output` : (DataURL String) Output of the step.
+* `step.inBrowser` : (Boolean) Whether the client is a browser or not
 
-  this.output = image;
-  callback();
-}
-```
+In addition to these, one might define their own properties, which shall be
+accessible across all the event scopes of that step.
 
-#### Title
-
-For display in the web-based UI, each module may also have a title like `options.title`.
-
-#### Module example
-
-See existing module `green-channel` for an example: https://github.com/jywarren/image-sequencer/tree/master/src/modules/GreenChannel.js
-
-For help integrating, please open an issue.
-
-****
-
-## Development
-
-Notes on development next steps:
-
-### UI
-
-* [ ] add createUserInterface() which is set up by default to draw on ImageBoardUI, but could be swapped for nothing, or an equiv. lib
-* [ ] it could create the interface and use event listeners like module.on('draw', fn()); to update the interface
-
-* [ ] spinners before panels are complete
-* [ ] is there a module for generating forms from parameters?
-* [ ] click to expand for all images
-* [ ] `ImageSequencer.Renderer` class to manage image output formats and adapters
-* [ ] remove step
-
-* [ ] output besides an image -- like `message(txt)` to display to the step's UI
-
-
-### Modularization
-
-* [ ] remotely includable modules, not compiled in -- see plugin structures in other libs
-* [x] ability to start running at any point -- already works?
-* [x] commandline runnability?
-  * [x] Make available as browserified OR `require()` includable...
-* [ ] standardize panel addition with submodule that offers Panel.display(image)
-* [ ] allow passing data as data-uri or Image object, or stream, or ndarray or ImageData array, if both of neighboring pair has ability?
-  * see https://github.com/jywarren/image-sequencer/issues/1
-* [ ] ...could we directly include package.json for module descriptions? At least as a fallback.
-* [ ] (for node-and-line style UIs) non-linear sequences with Y-splitters
-* [ ] `sequencer.addModule('path/to/module.js')` style module addition -- also to avoid browserifying all of Plotly :-P
-* [x] remove step
-
-### Testing
-
-* [ ] tests - modules headless; unit tests
-* [ ] comparisons with diff
-  * [ ] testing a module's promised functionality: each module could offer before/after images as part of their API; by running the module on the before image, you should get exactly the after image, comparing with an image diff
-
-### Use cases
-
-* [ ] make an Infragram module that accepts a math expression
-
-### Bugs
-
-* [x] BUG: this doesn't work for defaults:  imageboard.loadImage('examples/grid.png', function() {});
-  * we should make defaults a config of the first module
-
-****
-
-## Module Candidates
-
-* https://github.com/linuxenko/rextract.js
-* https://www.npmjs.com/package/histogram
-* https://github.com/hughsk/flood-fill
-* https://www.npmjs.com/package/blink-diff
-* smaller and faster: https://www.npmjs.com/package/@schornio/pixelmatch
-* https://github.com/yahoo/pngjs-image has lots of useful general-purpose image getters like `image.getLuminosityAtIndex(idx)`
-* some way to add in a new image (respecting alpha) -- `add-image` (with blend mode, default `normal`?)
-* https://github.com/yuta1984/CannyJS - edge detection
-* http://codepen.io/taylorcoffelt/pen/EsCcr - more edge detection
-
-## Ideas
-
-* https://github.com/vicapow/jsqrcode
-* https://github.com/jadnco/whirl - scrubbable image sequence player
-* non graphics card GL functions could be shimmed with https://github.com/Overv/JSGL
-* or this: https://github.com/stackgl/headless-gl
-* https://github.com/mattdesl/fontpath-simple-renderer
-* output in animated Gif? as a module
-
-### Referencing earlier states
-
-Complex sequences with masking could require accessing previous states (or nonlinearity):
-
-* flood-fill an area
-* select only the flooded area
-  * roundabout: lighten everything to <50%, then flood-fill with black? Not 100% reliable.
-  * roundabout 2: `flood fill`, then `blink-diff` with original
-* then add step which recovers original image, repeat `flood-fill`/`blink-diff` for second region
-* reference above masked states in a `mask` module, with `maskModule.draw(image, { getMask: function() { return maskImg } })`
-
-****
-
-**Notes:**
-
-`pattern-fill` module to use patterns in JS canvas:
+For example :
 
 ```js
-var c=document.getElementById("myCanvas");
-var ctx=c.getContext("2d");
-var img=document.getElementById("lamp");
-var pat=ctx.createPattern(img,"repeat");
-ctx.rect(0,0,150,100);
-ctx.fillStyle=pat;
-ctx.fill();
-```
-
-Masking:
-
-```js
-ctx.save();
-ctx.beginPath();
-ctx.moveTo(0, 0);
-ctx.lineTo(160, 600);
-ctx.rect(0, 0, 160, 600);
-ctx.closePath();
-ctx.clip();
-ctx.drawImage(img, 0, 0);
-ctx.restore();
-```
-
-****
-
-## UI notes:
-
-* visual nodes-and-lines UI: https://github.com/flowhub/the-graph
-  * https://flowhub.github.io/the-graph/examples/demo-simple.html
-
-
-
-```js
-
-settings: {
-  'threshold': {
-    type: 'slider',
-    label: 'Threshold',
-    default: 50,
-    min: 0,
-    max: 100
+sequencer.setUI({
+  onSetup: function(step){
+    // Create new property "step.image"
+    step.image = document.createElement('img');
+    document.body.append(step.image);
   },
-  'colors': {
-    type: 'select',
-    label: 'Colors',
-    options: [
-      { name: '0', value: '0', default: true },
-      { name: '1', value: '1' },
-      { name: '2', value: '2' }
-    ]
+  onComplete: function(step){
+    // Access predefined "step.output" and user-defined "step.image"
+    step.image.src = step.output;
+  },
+  onRemove: function(step){
+    // Access user-defined "step.image"
+    step.image.remove();
   }
-}
-
+});
 ```
 
-Possible web-based commandline interface: https://hyper.is/?
-
-
-### Path cutting
-
-* threshold
-* vectorize
-  * edge detect
-  * direction find (vectorize and colorize)
+Note: `identity.imageName` is the "name" of that particular image. This name can
+be specified while loading the image via `sequencer.loadImage("name","SRC")`. If
+not specified, the name of a loaded image defaults to a name like "image1",
+"image2", et cetra.

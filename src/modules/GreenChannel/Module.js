@@ -1,22 +1,26 @@
 /*
  * Display only the green channel
  */
-module.exports = function GreenChannel(options) {
+module.exports = function GreenChannel(options,UI) {
 
   options = options || {};
   options.title = "Green channel only";
   options.description = "Displays only the green channel of an image";
+  UI.onSetup(options.step);
   var output;
 
-  //function setup() {} // optional
-
   function draw(input,callback) {
-    var this_ = this;
+
+    UI.onDraw(options.step);
+    const step = this;
+
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
     }
     function output(image,datauri,mimetype){
-      this_.output = {src:datauri,format:mimetype}
+      step.output = {src:datauri,format:mimetype};
+      options.step.output = datauri;
+      UI.onComplete(options.step);
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -25,12 +29,14 @@ module.exports = function GreenChannel(options) {
       image: options.image,
       callback: callback
     });
+
   }
 
   return {
     options: options,
     //setup: setup, // optional
     draw:  draw,
-    output: output
+    output: output,
+    UI: UI
   }
 }

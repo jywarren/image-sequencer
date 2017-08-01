@@ -25,7 +25,7 @@ function copy(g,a) {
 var parent = (typeof(global)==="undefined")?window:global;
 var global1 = copy(true,parent);
 
-var sequencer = ImageSequencer({ ui: "none" });
+var sequencer = ImageSequencer({ ui: false });
 var red = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z";
 
 test('Image Sequencer has tests', function (t) {
@@ -40,18 +40,22 @@ test('loadImages loads a DataURL image and creates a step.', function (t){
   t.end();
 });
 
-test('loadImages loads a PATH image and creates a step. (NodeJS)', function (t){
-  if(sequencer.options.inBrowser){
-    t.equal("not applicable","not applicable","Not applicable for Browser");
-    t.end();
-  }
-  else {
-    sequencer.loadImages(red);
+if(!sequencer.options.inBrowser)
+  test('loadImage loads an image from URL and creates a step. (NodeJS)', function (t){
+    sequencer.loadImage('URL','https://ccpandhare.github.io/image-sequencer/examples/images/red.jpg', function(){
+      t.equal(sequencer.images.URL.steps.length, 1, "Initial Step Created");
+      t.equal(typeof(sequencer.images.URL.steps[0].output.src), "string", "Initial output exists");
+      t.end();
+    });
+  });
+
+if(!sequencer.options.inBrowser)
+  test('loadImages loads an image from PATH and creates a step. (NodeJS)', function (t){
+    sequencer.loadImages('examples/images/red.jpg');
     t.equal(sequencer.images.image1.steps.length, 1, "Initial Step Created");
     t.equal(typeof(sequencer.images.image1.steps[0].output.src), "string", "Initial output exists");
     t.end();
-  }
-});
+  });
 
 test('loadImage works too.', function (t){
   sequencer.loadImage('test2',red);

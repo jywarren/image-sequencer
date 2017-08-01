@@ -41,7 +41,8 @@ ImageSequencer = function ImageSequencer(options) {
       modules = require('./Modules'),
       formatInput = require('./FormatInput'),
       images = {},
-      inputlog = [];
+      inputlog = [],
+      events = require('./UserInterface')();
 
   // if in browser, prompt for an image
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
@@ -66,7 +67,8 @@ ImageSequencer = function ImageSequencer(options) {
   function removeStep(image,index) {
     //remove the step from images[image].steps and redraw remaining images
     if(index>0) {
-      log('\x1b[31m%s\x1b[0m',"Removing "+index+" from "+image);
+      thisStep = images[image].steps[index];
+      thisStep.UI.onRemove(thisStep.options.step);
       images[image].steps.splice(index,1);
     }
     //tell the UI a step has been removed
@@ -112,7 +114,6 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function run(t_image,t_from) {
-    log('\x1b[32m%s\x1b[0m',"Running the Sequencer!");
     const this_ = (this.name == "ImageSequencer")?this:this.sequencer;
     var args = (this.name == "ImageSequencer")?[]:[this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
@@ -131,25 +132,38 @@ ImageSequencer = function ImageSequencer(options) {
 
   function loadImages() {
     var args = [];
+    var sequencer = this;
     for (var arg in arguments) args.push(copy(arguments[arg]));
     var json_q = formatInput.call(this,args,"l");
 
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
     var loadedimages = this.copy(json_q.loadedimages);
+// require('./LoadImage')(this,i,json_q.images[i]);
 
-    for (var i in json_q.images)
-      require('./LoadImage')(this,i,json_q.images[i])
-
-    json_q.callback();
-    return {
+    var ret = {
       name: "ImageSequencer Wrapper",
       sequencer: this,
       addSteps: this.addSteps,
       removeSteps: this.removeSteps,
       insertSteps: this.insertSteps,
       run: this.run,
+      UI: this.UI,
+      setUI: this.setUI,
       images: loadedimages
     };
+
+    function load(i) {
+      if(i==loadedimages.length) {
+        json_q.callback.call(ret);
+        return;
+      }
+      var img = loadedimages[i];
+      require('./LoadImage')(sequencer,img,json_q.images[img],function(){
+        load(++i);
+      });
+    }
+
+    load(0);
   }
 
   function replaceImage(selector,steps,options) {
@@ -157,9 +171,20 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ReplaceImage')(this,selector,steps);
   }
 
+  function setUI(UI) {
+    this.events = require('./UserInterface')(UI);
+  }
+
   return {
+    //literals and objects
     name: "ImageSequencer",
     options: options,
+    inputlog: inputlog,
+    modules: modules,
+    images: images,
+    events: events,
+
+    //user functions
     loadImages: loadImages,
     loadImage: loadImages,
     addSteps: addSteps,
@@ -167,10 +192,9 @@ ImageSequencer = function ImageSequencer(options) {
     insertSteps: insertSteps,
     replaceImage: replaceImage,
     run: run,
-    inputlog: inputlog,
-    modules: modules,
-    images: images,
-    ui: options.ui,
+    setUI: setUI,
+
+    //other functions
     log: log,
     objTypeOf: objTypeOf,
     copy: copy
