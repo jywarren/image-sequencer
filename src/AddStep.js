@@ -7,6 +7,7 @@ function AddStep(ref, image, name, o) {
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
     o.image = image;
+    o.inBrowser = ref.options.inBrowser;
 
     o.step = {
       name: o.name,

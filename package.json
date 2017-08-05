@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "bootstrap": "~3.2.0",
+    "fisheyegl": "^0.1.2",
     "font-awesome": "~4.5.0",
     "jquery": "~2",
     "jsqr": "^0.2.2",
