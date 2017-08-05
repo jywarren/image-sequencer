@@ -10,6 +10,7 @@ require('../src/ImageSequencer.js');
 //require image files as DataURLs so they can be tested alike on browser and Node.
 var sequencer = ImageSequencer({ ui: false });
 
+var qr = require('../examples/IS-QR.js');
 var test_png = require('../examples/test.png.js');
 var test_gif = require('../examples/test.gif.js');
 
@@ -29,6 +30,19 @@ test("Inverted image isn't identical", function (t) {
 
 test("Twice inverted image is identical to original image", function (t) {
   t.equal(sequencer.images.image1.steps[1].output.src, sequencer.images.image1.steps[3].output.src);
+  t.end();
+});
+
+test("Decode QR module works properly :: setup", function (t) {
+  sequencer.loadImage(qr,function(){
+    this.addSteps('decode-qr').run(function(){
+      t.end();
+    });
+  })
+});
+
+test("Decode QR module works properly :: teardown", function (t) {
+  t.equal("http://github.com/publiclab/image-sequencer",sequencer.images.image2.steps[1].output.data);
   t.end();
 });
 

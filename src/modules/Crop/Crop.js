@@ -17,6 +17,8 @@ module.exports = function Crop(input,options,callback) {
     pixels.shape = [w,h,4];
     pixels.stride[1] = 4*w;
 
+    options.format = input.format;
+
     var chunks = [];
     var totalLength = 0;
     var r = savePixels(pixels, options.format);
