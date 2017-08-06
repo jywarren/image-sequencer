@@ -10,9 +10,9 @@ require('../src/ImageSequencer.js');
 //require image files as DataURLs so they can be tested alike on browser and Node.
 var sequencer = ImageSequencer({ ui: false });
 
-var qr = require('../examples/IS-QR.js');
-var test_png = require('../examples/test.png.js');
-var test_gif = require('../examples/test.gif.js');
+var qr = require('./images/IS-QR.js');
+var test_png = require('./images/test.png.js');
+var test_gif = require('./images/test.gif.js');
 
 sequencer.loadImages(test_png);
 sequencer.addSteps(['do-nothing-pix','invert','invert']);
