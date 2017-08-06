@@ -24,6 +24,7 @@
     "fisheyegl": "^0.1.2",
     "font-awesome": "~4.5.0",
     "jquery": "~2",
+    "jsqr": "^0.2.2",
     "urify": "^2.1.0"
   },
   "devDependencies": {
