@@ -37,6 +37,7 @@
     "image-diff": "^1.6.3",
     "image-filter-core": "~1.0.0",
     "image-filter-threshold": "~1.0.0",
+    "imagemagick": "^0.1.3",
     "matchdep": "^0.3.0",
     "plotly.js": "~1.21.2",
     "save-pixels": "~2.3.4",
