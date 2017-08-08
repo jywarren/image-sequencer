@@ -1,6 +1,8 @@
 'use strict';
 
 var test = require('tape');
+var looksSame = require('looks-same');
+var DataURItoBuffer = require('data-uri-to-buffer');
 
 // We should only test headless code here.
 // http://stackoverflow.com/questions/21358015/error-jquery-requires-a-window-with-a-document#25622933
@@ -23,13 +25,27 @@ test("Preload", function(t) {
 });
 
 test("Inverted image isn't identical", function (t) {
-  t.notEqual(sequencer.images.image1.steps[1].output.src, sequencer.images.image1.steps[2].output.src);
-  t.end();
+  var step1 = sequencer.images.image1.steps[1].output.src;
+  var step2 = sequencer.images.image1.steps[2].output.src;
+  step1 = DataURItoBuffer(step1);
+  step2 = DataURItoBuffer(step2);
+  looksSame(step1,step2,function(err,res){
+    if(err) console.log(err);
+    t.equal(res,false);
+    t.end();
+  });
 });
 
 test("Twice inverted image is identical to original image", function (t) {
-  t.equal(sequencer.images.image1.steps[1].output.src, sequencer.images.image1.steps[3].output.src);
-  t.end();
+  var step1 = sequencer.images.image1.steps[1].output.src;
+  var step3 = sequencer.images.image1.steps[3].output.src;
+  step1 = DataURItoBuffer(step1);
+  step3 = DataURItoBuffer(step3);
+  looksSame(step1,step3,function(err,res){
+    if(err) console.log(err);
+    t.equal(res,true);
+    t.end();
+  });
 });
 
 test("PixelManipulation works for PNG images", function (t) {
