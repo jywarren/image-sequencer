@@ -42,7 +42,8 @@ ImageSequencer = function ImageSequencer(options) {
       formatInput = require('./FormatInput'),
       images = {},
       inputlog = [],
-      events = require('./UserInterface')();
+      events = require('./UserInterface')(),
+      fs = require('fs');
 
   // if in browser, prompt for an image
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
@@ -175,6 +176,10 @@ ImageSequencer = function ImageSequencer(options) {
     this.events = require('./UserInterface')(UI);
   }
 
+  var exportBin = function() {
+    return require('./ExportBin')(this);
+  }
+
   return {
     //literals and objects
     name: "ImageSequencer",
@@ -193,6 +198,7 @@ ImageSequencer = function ImageSequencer(options) {
     replaceImage: replaceImage,
     run: run,
     setUI: setUI,
+    exportBin: exportBin,
 
     //other functions
     log: log,
