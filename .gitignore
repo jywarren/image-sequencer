@@ -36,3 +36,4 @@ node_modules
 todo.txt
 test.js
 output.txt
+output/
