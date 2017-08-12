@@ -42,10 +42,18 @@ test('loadImages loads a DataURL image and creates a step.', function (t){
 
 if(!sequencer.options.inBrowser)
   test('loadImage loads an image from URL and creates a step. (NodeJS)', function (t){
-    sequencer.loadImage('URL','https://ccpandhare.github.io/image-sequencer/examples/images/red.jpg', function(){
-      t.equal(sequencer.images.URL.steps.length, 1, "Initial Step Created");
-      t.equal(typeof(sequencer.images.URL.steps[0].output.src), "string", "Initial output exists");
-      t.end();
+    require('dns').resolve('www.github.com', function(err) {
+      if (err) {
+        console.log("Test aborted due to no internet");
+        t.end();
+      }
+      else {
+        sequencer.loadImage('URL','https://ccpandhare.github.io/image-sequencer/examples/images/red.jpg', function(){
+          t.equal(sequencer.images.URL.steps.length, 1, "Initial Step Created");
+          t.equal(typeof(sequencer.images.URL.steps[0].output.src), "string", "Initial output exists");
+          t.end();
+        });
+      }
     });
   });
 
