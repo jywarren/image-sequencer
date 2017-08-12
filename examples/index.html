@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html>
+
+
+  <head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="content-type" content="text/html; charset=UTF8">
+
+    <title>Image Sequencer</title>
+
+    <link rel="stylesheet" href="demo.css">
+
+    <script src="../dist/image-sequencer.js" charset="utf-8"></script>
+
+    <style media="screen">
+      #addStep select, button, #addStep input {
+        font-family: sans-serif;
+        font-size: 18px !important;
+        height: 30px !important;
+      }
+      .nomargin {
+        margin: 0 !important;
+      }
+    </style>
+
+  </head>
+
+
+  <body>
+
+    <div class="wrapper">
+
+      <header>
+        <h2>Image Sequencer</h2>
+        <h5>Single Image Demo</h5>
+      </header>
+
+      <section id="steps" class="rh">
+        <div class="r">
+          <div class="c">
+            <img src="images/grid.png" alt="">
+          </div>
+          <div class="c rh details">
+            <div class="r"><h4>Original Image</h4></div>
+            <div class="r nomargin">Width: x</div>
+            <div class="r nomargin">Height: y</div>
+          </div>
+        </div>
+        <div class="r">
+          <div class="c">
+            <img src="images/grid-crop.png" alt="">
+          </div>
+          <div class="c rh details">
+            <div class="r"><h4>Crop</h4></div>
+            <div class="r nomargin">Width: null (50%)</div>
+            <div class="r nomargin">Height: null (50%)</div>
+            <div class="r nomargin">x: null (0)</div>
+            <div class="r nomargin">y: null (0)</div>
+            <div class="r"><button>Remove</button></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="addStep">
+        <div class="r">
+          Add Step :
+          <select style="font-family: sans-serif; height: 30px">
+            <option value="" disabled selected>Please Select</option>
+            <option value="crop">Crop</option>
+            <option value="decode-qr">Decode Qr</option>
+            <option value="fisheye-gl">Fisheye GL</option>
+            <option value="green-channel">Green Channel</option>
+            <option value="invert">Invert</option>
+            <option value="ndvi-red">NDVI Red</option>
+            <option value="segmented-colormap">Segmented Colormap</option>
+          </select>
+          <button type="button" name="add">Add Step</button>
+        </div>
+        <div class="r">
+          <div class="c">
+            Options:
+          </div>
+          <div class="c rh">
+            <div class="r">
+              <div class="c">
+                key:
+              </div>
+              <div class="c">
+                <input type="text" name="" value="" placeholder="default"/>
+              </div>
+            </div>
+            <div class="r">
+              <div class="c">
+                key:
+              </div>
+              <div class="c">
+                <input type="text" name="" value="" placeholder="default"/>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </body>
+
+
+</html>
