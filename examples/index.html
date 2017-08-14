@@ -23,6 +23,9 @@
       .nomargin {
         margin: 0 !important;
       }
+      #steps img {
+        max-width: 90%;
+      }
     </style>
 
   </head>
@@ -39,27 +42,7 @@
 
       <section id="steps" class="rh">
         <div class="r">
-          <div class="c">
-            <img src="images/grid.png" alt="">
-          </div>
-          <div class="c rh details">
-            <div class="r"><h4>Original Image</h4></div>
-            <div class="r nomargin">Width: x</div>
-            <div class="r nomargin">Height: y</div>
-          </div>
-        </div>
-        <div class="r">
-          <div class="c">
-            <img src="images/grid-crop.png" alt="">
-          </div>
-          <div class="c rh details">
-            <div class="r"><h4>Crop</h4></div>
-            <div class="r nomargin">Width: null (50%)</div>
-            <div class="r nomargin">Height: null (50%)</div>
-            <div class="r nomargin">x: null (0)</div>
-            <div class="r nomargin">y: null (0)</div>
-            <div class="r"><button>Remove</button></div>
-          </div>
+          Select an Image <input type="file" id="file" value="">
         </div>
       </section>
 
@@ -67,7 +50,7 @@
         <div class="r">
           Add Step :
           <select style="font-family: sans-serif; height: 30px">
-            <option value="" disabled selected>Please Select</option>
+            <option value="none" disabled selected>Please Select</option>
             <option value="crop">Crop</option>
             <option value="decode-qr">Decode Qr</option>
             <option value="fisheye-gl">Fisheye GL</option>
@@ -104,6 +87,91 @@
       </section>
 
     </div>
+
+    <script type="text/javascript">
+
+      window.onload = function() {
+
+
+        var sequencer = ImageSequencer();
+
+        var steps = document.querySelector('#steps');
+        var parser = new DOMParser();
+        var reader = new FileReader();
+        initial = "images/grid.png";
+
+        sequencer.setUI({
+
+          onSetup: function(step) {
+
+            step.ui = '\
+            <div class="r">\
+              <div class="c">\
+                <img alt="" />\
+              </div>\
+              <div class="c rh details">\
+                <div class="r"><h4>'+step.name+'</h4></div>\
+                <div class="r nomargin">Width: x</div>\
+                <div class="r nomargin">Height: y</div>\
+              </div>\
+            </div>\
+            ';
+
+            var removebutton =
+            '<div class="r"><button class="remove">Remove</button></div>';
+
+            step.ui = parser.parseFromString(step.ui,'text/html');
+            step.ui = step.ui.querySelector('div.r');
+            step.imgElement = step.ui.querySelector('img');
+
+            if(step.name != "load-image")
+              step.ui.querySelector('div.details').appendChild(
+                parser.parseFromString(removebutton,'text/html')
+                  .querySelector('div')
+              );
+
+            steps.appendChild(step.ui);
+          },
+
+          onComplete: function(step) {
+            step.imgElement.src = step.output;
+          },
+
+          onRemove: function(step) {
+            step.ui.remove();
+          }
+
+        });
+
+        sequencer.loadImage('images/grid.png',function(){
+          this.addSteps('crop').run();
+        });
+
+        $('#addStep button').on('click',function(){
+          if($('#addStep select').val()=="none") return;
+          sequencer.addSteps($('#addStep select').val()).run();
+        });
+
+        $('body').on('click','button.remove',function(){
+          var index = $('button.remove').index(this) + 1;
+          sequencer.removeSteps(index).run();
+        });
+
+        $('#file').on('change',function(e){
+          var file = e.target.files[0];
+          if(!file) return;
+
+          reader.onload = function(){
+            var loadStep = sequencer.images.image1.steps[0];
+            loadStep.output.src = reader.result;
+            sequencer.run(0);
+            loadStep.options.step.imgElement.src = reader.result;
+          }
+
+          reader.readAsDataURL(file);
+        });
+      }
+    </script>
 
   </body>
 
