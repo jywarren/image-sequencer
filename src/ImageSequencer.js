@@ -180,6 +180,17 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ExportBin')(this);
   }
 
+  function modulesInfo() {
+    window.data = require('./modules/Crop/info.json');
+    var modulesdata = {}
+    for (var modulename in modules) {
+      var camelCased = modulename.replace(/-([a-z])/g,function (g) { return g[1].toUpperCase(); });
+      var capitalised = camelCased[0].toUpperCase() + camelCased.substring(1);
+      modulesdata[modulename] = require('./modules/'+capitalised+'/info.json');
+    }
+    return modulesdata;
+  }
+
   return {
     //literals and objects
     name: "ImageSequencer",
@@ -199,6 +210,7 @@ ImageSequencer = function ImageSequencer(options) {
     run: run,
     setUI: setUI,
     exportBin: exportBin,
+    modulesInfo: modulesInfo,
 
     //other functions
     log: log,

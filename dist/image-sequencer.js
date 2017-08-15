@@ -28282,6 +28282,17 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ExportBin')(this);
   }
 
+  function modulesInfo() {
+    window.data = require('./modules/Crop/info.json');
+    var modulesdata = {}
+    for (var modulename in modules) {
+      var camelCased = modulename.replace(/-([a-z])/g,function (g) { return g[1].toUpperCase(); });
+      var capitalised = camelCased[0].toUpperCase() + camelCased.substring(1);
+      modulesdata[modulename] = require('./modules/'+capitalised+'/info.json');
+    }
+    return modulesdata;
+  }
+
   return {
     //literals and objects
     name: "ImageSequencer",
@@ -28301,6 +28312,7 @@ ImageSequencer = function ImageSequencer(options) {
     run: run,
     setUI: setUI,
     exportBin: exportBin,
+    modulesInfo: modulesInfo,
 
     //other functions
     log: log,
@@ -28311,7 +28323,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":120,"./ExportBin":121,"./FormatInput":122,"./InsertStep":124,"./LoadImage":125,"./Modules":126,"./ReplaceImage":127,"./Run":128,"./UserInterface":129,"fs":6,"jquery":142}],124:[function(require,module,exports){
+},{"./AddStep":120,"./ExportBin":121,"./FormatInput":122,"./InsertStep":124,"./LoadImage":125,"./Modules":126,"./ReplaceImage":127,"./Run":128,"./UserInterface":129,"./modules/Crop/info.json":132,"fs":6,"jquery":143}],124:[function(require,module,exports){
 function InsertStep(ref, image, index, name, o) {
 
   function insertStep(image, index, name, o_) {
@@ -28462,7 +28474,7 @@ module.exports = {
   'fisheye-gl': require('./modules/FisheyeGl/Module')
 }
 
-},{"./modules/Crop/Module":131,"./modules/DecodeQr/Module":132,"./modules/DoNothing/Module":133,"./modules/DoNothingPix/Module.js":134,"./modules/FisheyeGl/Module":135,"./modules/GreenChannel/Module":136,"./modules/Invert/Module":137,"./modules/NdviRed/Module":138,"./modules/SegmentedColormap/Module":139}],127:[function(require,module,exports){
+},{"./modules/Crop/Module":131,"./modules/DecodeQr/Module":133,"./modules/DoNothing/Module":134,"./modules/DoNothingPix/Module.js":135,"./modules/FisheyeGl/Module":136,"./modules/GreenChannel/Module":137,"./modules/Invert/Module":138,"./modules/NdviRed/Module":139,"./modules/SegmentedColormap/Module":140}],127:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var this_ = ref;
@@ -28706,6 +28718,33 @@ module.exports = function Crop(input,options,callback) {
  }
 
 },{"./Crop":130}],132:[function(require,module,exports){
+module.exports={
+  "name": "Crop",
+  "inputs": {
+    "x": {
+      "type": "integer",
+      "desc": "X-position (measured from left) from where cropping starts",
+      "default": 0
+    },
+    "y": {
+      "type": "integer",
+      "desc": "Y-position (measured from top) from where cropping starts",
+      "default": 0
+    },
+    "width": {
+      "type": "integer",
+      "desc": "Width of crop",
+      "default": "(50%)"
+    },
+    "height": {
+      "type": "integer",
+      "desc": "Height of crop",
+      "default": "(50%)"
+    }
+  }
+}
+
+},{}],133:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -28743,7 +28782,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":32,"jsqr":50}],133:[function(require,module,exports){
+},{"get-pixels":32,"jsqr":50}],134:[function(require,module,exports){
 /*
  * Demo Module. Does nothing. Adds a step where output is equal to input.
  */
@@ -28771,7 +28810,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{}],134:[function(require,module,exports){
+},{}],135:[function(require,module,exports){
 /*
  * This module extracts pixels and saves them as it is.
  */
@@ -28813,7 +28852,7 @@ module.exports = function DoNothingPix(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141}],135:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":142}],136:[function(require,module,exports){
 /*
  * Creates Fisheye Effect
  */
@@ -28870,7 +28909,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":24}],136:[function(require,module,exports){
+},{"fisheyegl":24}],137:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -28914,7 +28953,7 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141}],137:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":142}],138:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -28960,7 +28999,7 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141}],138:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":142}],139:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -29004,7 +29043,7 @@ module.exports = function NdviRed(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141}],139:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":142}],140:[function(require,module,exports){
 module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
@@ -29046,7 +29085,7 @@ module.exports = function SegmentedColormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141,"./SegmentedColormap":140}],140:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":142,"./SegmentedColormap":141}],141:[function(require,module,exports){
 /*
  * Accepts a normalized ndvi and returns the new color-mapped pixel
  */
@@ -29105,7 +29144,7 @@ var colormaps = {
   fastie: fastie_colormap
 }
 
-},{}],141:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 (function (Buffer){
 /*
  * General purpose per-pixel manipulation
@@ -29169,7 +29208,7 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":7,"get-pixels":32,"save-pixels":110}],142:[function(require,module,exports){
+},{"buffer":7,"get-pixels":32,"save-pixels":110}],143:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.4
  * http://jquery.com/
