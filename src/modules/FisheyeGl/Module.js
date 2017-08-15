@@ -28,13 +28,13 @@ module.exports = function DoNothing(options,UI) {
         selector: "#image-sequencer-canvas"
       });
 
-      distorter.lens.a = options.a || distorter.lens.a;
-      distorter.lens.b = options.b || distorter.lens.b;
-      distorter.lens.Fx = options.Fx || distorter.lens.Fx;
-      distorter.lens.Fy = options.Fy || distorter.lens.Fy;
-      distorter.lens.scale = options.scale || distorter.lens.scale;
-      distorter.fov.x = options.x || distorter.fov.x;
-      distorter.fov.y = options.y || distorter.fov.y;
+      distorter.lens.a = parseFloat(options.a) || distorter.lens.a;
+      distorter.lens.b = parseFloat(options.b) || distorter.lens.b;
+      distorter.lens.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
+      distorter.lens.Fy = parseFloat(options.Fy) || distorter.lens.Fy;
+      distorter.lens.scale = parseFloat(options.scale) || distorter.lens.scale;
+      distorter.fov.x = parseFloat(options.x) || distorter.fov.x;
+      distorter.fov.y = parseFloat(options.y) || distorter.fov.y;
 
       distorter.setImage(input.src,function(){
         step.output = {src: canvas.toDataURL(), format: input.format};

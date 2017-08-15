@@ -11,12 +11,12 @@
       "desc": "Y-position (measured from top) from where cropping starts",
       "default": 0
     },
-    "width": {
+    "w": {
       "type": "integer",
       "desc": "Width of crop",
       "default": "(50%)"
     },
-    "height": {
+    "h": {
       "type": "integer",
       "desc": "Height of crop",
       "default": "(50%)"

@@ -4,10 +4,10 @@ module.exports = function Crop(input,options,callback) {
       savePixels = require('save-pixels');
 
   getPixels(input.src,function(err,pixels){
-    var ox = options.x || 0;
-    var oy = options.y || 0;
-    var w = options.w || Math.floor(0.5*pixels.shape[0]);
-    var h = options.h || Math.floor(0.5*pixels.shape[1]);
+    var ox = parseInt(options.x) || 0;
+    var oy = parseInt(options.y) || 0;
+    var w = parseInt(options.w) || Math.floor(0.5*pixels.shape[0]);
+    var h = parseInt(options.h) || Math.floor(0.5*pixels.shape[1]);
     var iw = pixels.shape[0]; //Width of Original Image
     var newarray = new Uint8Array(4*w*h);
     for (var n = oy; n < oy + h; n++) {

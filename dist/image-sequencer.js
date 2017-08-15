@@ -28654,10 +28654,10 @@ module.exports = function Crop(input,options,callback) {
       savePixels = require('save-pixels');
 
   getPixels(input.src,function(err,pixels){
-    var ox = options.x || 0;
-    var oy = options.y || 0;
-    var w = options.w || Math.floor(0.5*pixels.shape[0]);
-    var h = options.h || Math.floor(0.5*pixels.shape[1]);
+    var ox = parseInt(options.x) || 0;
+    var oy = parseInt(options.y) || 0;
+    var w = parseInt(options.w) || Math.floor(0.5*pixels.shape[0]);
+    var h = parseInt(options.h) || Math.floor(0.5*pixels.shape[1]);
     var iw = pixels.shape[0]; //Width of Original Image
     var newarray = new Uint8Array(4*w*h);
     for (var n = oy; n < oy + h; n++) {
@@ -28749,12 +28749,12 @@ module.exports={
       "desc": "Y-position (measured from top) from where cropping starts",
       "default": 0
     },
-    "width": {
+    "w": {
       "type": "integer",
       "desc": "Width of crop",
       "default": "(50%)"
     },
-    "height": {
+    "h": {
       "type": "integer",
       "desc": "Height of crop",
       "default": "(50%)"
@@ -28922,13 +28922,13 @@ module.exports = function DoNothing(options,UI) {
         selector: "#image-sequencer-canvas"
       });
 
-      distorter.lens.a = options.a || distorter.lens.a;
-      distorter.lens.b = options.b || distorter.lens.b;
-      distorter.lens.Fx = options.Fx || distorter.lens.Fx;
-      distorter.lens.Fy = options.Fy || distorter.lens.Fy;
-      distorter.lens.scale = options.scale || distorter.lens.scale;
-      distorter.fov.x = options.x || distorter.fov.x;
-      distorter.fov.y = options.y || distorter.fov.y;
+      distorter.lens.a = parseFloat(options.a) || distorter.lens.a;
+      distorter.lens.b = parseFloat(options.b) || distorter.lens.b;
+      distorter.lens.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
+      distorter.lens.Fy = parseFloat(options.Fy) || distorter.lens.Fy;
+      distorter.lens.scale = parseFloat(options.scale) || distorter.lens.scale;
+      distorter.fov.x = parseFloat(options.x) || distorter.fov.x;
+      distorter.fov.y = parseFloat(options.y) || distorter.fov.y;
 
       distorter.setImage(input.src,function(){
         step.output = {src: canvas.toDataURL(), format: input.format};
