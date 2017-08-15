@@ -97,6 +97,35 @@ input = {
 
 For display in the web-based UI, each module may also have a title `options.title`.
 
+## Info file
+
+All module folders must have an `info.json` file which looks like the following:
+```json
+{
+  "name": "Name of Module to be displayed",
+  "inputs": {
+    "var1": {
+      "type": "text",
+      "default": "default value"
+    }
+  }
+}
+```
+
+Types may be one of "text", "integer", "float", "select".
+Integer and Float types should also specify minimum and maximum values like this:
+
+```json
+"var1": {
+  "type": "integer",
+  "min": 0,
+  "max": 4,
+  "default": 1
+}
+```
+
+Similarly, "Select" type inputs should have a `values` array.
+
 ### Module example
 
 See existing module `green-channel` for an example: https://github.com/publiclab/image-sequencer/tree/master/src/modules/GreenChannel/Module.js
