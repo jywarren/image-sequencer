@@ -27866,7 +27866,8 @@ function AddStep(ref, image, name, o) {
       ID: o.number,
       imageName: o.image,
       inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
+      ui: ref.options.ui,
+      options: o
     };
     var UI = ref.events;
     var module = ref.modules[name][0](o,UI);
@@ -28341,7 +28342,8 @@ function InsertStep(ref, image, index, name, o) {
       ID: o.number,
       imageName: o.image,
       inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
+      ui: ref.options.ui,
+      options: o
     };
     var UI = ref.events;
     var module = ref.modules[name][0](o,UI);
@@ -28653,11 +28655,16 @@ module.exports = function Crop(input,options,callback) {
   var getPixels = require('get-pixels'),
       savePixels = require('save-pixels');
 
+  options.x = parseInt(options.x) || 0;
+  options.y = parseInt(options.y) || 0;
+
   getPixels(input.src,function(err,pixels){
-    var ox = parseInt(options.x) || 0;
-    var oy = parseInt(options.y) || 0;
-    var w = parseInt(options.w) || Math.floor(0.5*pixels.shape[0]);
-    var h = parseInt(options.h) || Math.floor(0.5*pixels.shape[1]);
+    options.w = parseInt(options.w) || Math.floor(0.5*pixels.shape[0]);
+    options.h = parseInt(options.h) || Math.floor(0.5*pixels.shape[1]);
+    var ox = options.x;
+    var oy = options.y;
+    var w = options.w;
+    var h = options.h;
     var iw = pixels.shape[0]; //Width of Original Image
     var newarray = new Uint8Array(4*w*h);
     for (var n = oy; n < oy + h; n++) {
@@ -28922,13 +28929,21 @@ module.exports = function DoNothing(options,UI) {
         selector: "#image-sequencer-canvas"
       });
 
-      distorter.lens.a = parseFloat(options.a) || distorter.lens.a;
-      distorter.lens.b = parseFloat(options.b) || distorter.lens.b;
-      distorter.lens.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
-      distorter.lens.Fy = parseFloat(options.Fy) || distorter.lens.Fy;
-      distorter.lens.scale = parseFloat(options.scale) || distorter.lens.scale;
-      distorter.fov.x = parseFloat(options.x) || distorter.fov.x;
-      distorter.fov.y = parseFloat(options.y) || distorter.fov.y;
+      options.a = parseFloat(options.a) || distorter.lens.a;
+      options.b = parseFloat(options.b) || distorter.lens.b;
+      options.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
+      options.Fy = parseFloat(options.Fy) || distorter.lens.Fy;
+      options.scale = parseFloat(options.scale) || distorter.lens.scale;
+      options.x = parseFloat(options.x) || distorter.fov.x;
+      options.y = parseFloat(options.y) || distorter.fov.y;
+
+      distorter.lens.a = options.a;
+      distorter.lens.b = options.b;
+      distorter.lens.Fx = options.Fx;
+      distorter.lens.Fy = options.Fy;
+      distorter.lens.scale = options.scale;
+      distorter.fov.x = options.x;
+      distorter.fov.y = options.y;
 
       distorter.setImage(input.src,function(){
         step.output = {src: canvas.toDataURL(), format: input.format};
@@ -28973,7 +28988,7 @@ module.exports={
       "min": 0,
       "max": 4
     },
-    "Fx": {
+    "Fy": {
       "type": "float",
       "desc": "Fy parameter",
       "default": 0,

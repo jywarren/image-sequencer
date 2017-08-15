@@ -96,8 +96,6 @@
               </div>\
               <div class="c rh details">\
                 <div class="r"><h4>'+step.name+'</h4></div>\
-                <div class="r nomargin">Width: x</div>\
-                <div class="r nomargin">Height: y</div>\
               </div>\
             </div>\
             ';
@@ -109,6 +107,17 @@
             step.ui = step.ui.querySelector('div.r');
             step.imgElement = step.ui.querySelector('img');
 
+            if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
+              var inputs = sequencer.modulesInfo(step.name).inputs;
+              for (var i in inputs) {
+                var div = document.createElement('div');
+                div.className = "r nomargin";
+                div.setAttribute('name',i);
+                div.innerHTML = i + ": " + "<span></span>";
+                step.ui.querySelector('div.details').appendChild(div);
+              }
+            }
+
             if(step.name != "load-image")
               step.ui.querySelector('div.details').appendChild(
                 parser.parseFromString(removebutton,'text/html')
@@ -119,7 +128,17 @@
           },
 
           onComplete: function(step) {
+
             step.imgElement.src = step.output;
+
+            if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
+              var inputs = sequencer.modulesInfo(step.name).inputs;
+              for (var i in inputs) {
+                step.ui.querySelector('div[name="'+i+'"] span')
+                  .innerHTML = step.options[i];
+              }
+            }
+
           },
 
           onRemove: function(step) {

@@ -22,7 +22,7 @@
       "min": 0,
       "max": 4
     },
-    "Fx": {
+    "Fy": {
       "type": "float",
       "desc": "Fy parameter",
       "default": 0,
