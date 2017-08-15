@@ -180,14 +180,14 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ExportBin')(this);
   }
 
-  function modulesInfo() {
+  function modulesInfo(name) {
     window.data = require('./modules/Crop/info.json');
     var modulesdata = {}
-    for (var modulename in modules) {
-      var camelCased = modulename.replace(/-([a-z])/g,function (g) { return g[1].toUpperCase(); });
-      var capitalised = camelCased[0].toUpperCase() + camelCased.substring(1);
-      modulesdata[modulename] = require('./modules/'+capitalised+'/info.json');
-    }
+    if(arguments.length==0)
+      for (var modulename in modules) {
+        modulesdata[modulename] = modules[modulename][1];
+      }
+    else modulesdata = modules[name][1];
     return modulesdata;
   }
 

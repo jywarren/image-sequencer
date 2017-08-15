@@ -17,7 +17,7 @@ function AddStep(ref, image, name, o) {
       ui: ref.options.ui
     };
     var UI = ref.events;
-    var module = ref.modules[name](o,UI);
+    var module = ref.modules[name][0](o,UI);
     ref.images[image].steps.push(module);
 
     return true;
