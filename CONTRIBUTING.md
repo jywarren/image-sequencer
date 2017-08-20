@@ -165,6 +165,7 @@ Notes on development next steps:
 * some way to add in a new image (respecting alpha) -- `add-image` (with blend mode, default `normal`?)
 * https://github.com/yuta1984/CannyJS - edge detection
 * http://codepen.io/taylorcoffelt/pen/EsCcr - more edge detection
+* https://github.com/jywarren/webgl-distort/ - an image distortion module
 
 ## Ideas
 
