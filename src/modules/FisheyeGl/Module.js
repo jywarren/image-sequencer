@@ -28,13 +28,21 @@ module.exports = function DoNothing(options,UI) {
         selector: "#image-sequencer-canvas"
       });
 
-      distorter.lens.a = options.a || distorter.lens.a;
-      distorter.lens.b = options.b || distorter.lens.b;
-      distorter.lens.Fx = options.Fx || distorter.lens.Fx;
-      distorter.lens.Fy = options.Fy || distorter.lens.Fy;
-      distorter.lens.scale = options.scale || distorter.lens.scale;
-      distorter.fov.x = options.x || distorter.fov.x;
-      distorter.fov.y = options.y || distorter.fov.y;
+      options.a = parseFloat(options.a) || distorter.lens.a;
+      options.b = parseFloat(options.b) || distorter.lens.b;
+      options.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
+      options.Fy = parseFloat(options.Fy) || distorter.lens.Fy;
+      options.scale = parseFloat(options.scale) || distorter.lens.scale;
+      options.x = parseFloat(options.x) || distorter.fov.x;
+      options.y = parseFloat(options.y) || distorter.fov.y;
+
+      distorter.lens.a = options.a;
+      distorter.lens.b = options.b;
+      distorter.lens.Fx = options.Fx;
+      distorter.lens.Fy = options.Fy;
+      distorter.lens.scale = options.scale;
+      distorter.fov.x = options.x;
+      distorter.fov.y = options.y;
 
       distorter.setImage(input.src,function(){
         step.output = {src: canvas.toDataURL(), format: input.format};

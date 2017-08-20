@@ -51,13 +51,6 @@
           Add Step :
           <select style="font-family: sans-serif; height: 30px">
             <option value="none" disabled selected>Please Select</option>
-            <option value="crop">Crop</option>
-            <option value="decode-qr">Decode Qr</option>
-            <option value="fisheye-gl">Fisheye GL</option>
-            <option value="green-channel">Green Channel</option>
-            <option value="invert">Invert</option>
-            <option value="ndvi-red">NDVI Red</option>
-            <option value="segmented-colormap">Segmented Colormap</option>
           </select>
           <button type="button" name="add">Add Step</button>
         </div>
@@ -65,23 +58,7 @@
           <div class="c">
             Options:
           </div>
-          <div class="c rh">
-            <div class="r">
-              <div class="c">
-                key:
-              </div>
-              <div class="c">
-                <input type="text" name="" value="" placeholder="default"/>
-              </div>
-            </div>
-            <div class="r">
-              <div class="c">
-                key:
-              </div>
-              <div class="c">
-                <input type="text" name="" value="" placeholder="default"/>
-              </div>
-            </div>
+          <div id="options" class="c rh">
           </div>
         </div>
       </section>
@@ -90,10 +67,18 @@
 
     <script type="text/javascript">
 
+    var sequencer = ImageSequencer();
+
       window.onload = function() {
 
+        var modulesInfo = sequencer.modulesInfo();
 
-        var sequencer = ImageSequencer();
+        for(var m in modulesInfo) {
+          if(m!="do-nothing" && m!="do-nothing-pix")
+            $('#addStep select').append(
+              '<option value="'+m+'">'+modulesInfo[m].name+'</option>'
+            );
+        }
 
         var steps = document.querySelector('#steps');
         var parser = new DOMParser();
@@ -111,8 +96,6 @@
               </div>\
               <div class="c rh details">\
                 <div class="r"><h4>'+step.name+'</h4></div>\
-                <div class="r nomargin">Width: x</div>\
-                <div class="r nomargin">Height: y</div>\
               </div>\
             </div>\
             ';
@@ -124,6 +107,17 @@
             step.ui = step.ui.querySelector('div.r');
             step.imgElement = step.ui.querySelector('img');
 
+            if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
+              var inputs = sequencer.modulesInfo(step.name).inputs;
+              for (var i in inputs) {
+                var div = document.createElement('div');
+                div.className = "r nomargin";
+                div.setAttribute('name',i);
+                div.innerHTML = i + ": " + "<span></span>";
+                step.ui.querySelector('div.details').appendChild(div);
+              }
+            }
+
             if(step.name != "load-image")
               step.ui.querySelector('div.details').appendChild(
                 parser.parseFromString(removebutton,'text/html')
@@ -134,7 +128,17 @@
           },
 
           onComplete: function(step) {
+
             step.imgElement.src = step.output;
+
+            if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
+              var inputs = sequencer.modulesInfo(step.name).inputs;
+              for (var i in inputs) {
+                step.ui.querySelector('div[name="'+i+'"] span')
+                  .innerHTML = step.options[i];
+              }
+            }
+
           },
 
           onRemove: function(step) {
@@ -147,9 +151,32 @@
           this.addSteps('crop').run();
         });
 
+        $('#addStep select').on('change', function(){
+          $('#options').html('');
+          var m = $('#addStep select').val();
+          for(var input in modulesInfo[m].inputs) {
+            $('#options').append(
+              '<div class="r">\
+                 <div class="c">\
+                   '+input+':\
+                 </div>\
+                 <div class="c">\
+                   <input type="text" name="'+input+'" value="" placeholder="'+
+                   modulesInfo[m].inputs[input].default+'"/>\
+                 </div>\
+               </div>'
+            );
+          }
+        });
+
         $('#addStep button').on('click',function(){
+          var options = {};
+          var inputs = $('#options input');
+          $.each(inputs, function() {
+            options[this.name] = $(this).val();
+          });
           if($('#addStep select').val()=="none") return;
-          sequencer.addSteps($('#addStep select').val()).run();
+          sequencer.addSteps($('#addStep select').val(),options).run();
         });
 
         $('body').on('click','button.remove',function(){

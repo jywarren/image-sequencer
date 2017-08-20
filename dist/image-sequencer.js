@@ -27866,10 +27866,11 @@ function AddStep(ref, image, name, o) {
       ID: o.number,
       imageName: o.image,
       inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
+      ui: ref.options.ui,
+      options: o
     };
     var UI = ref.events;
-    var module = ref.modules[name](o,UI);
+    var module = ref.modules[name][0](o,UI);
     ref.images[image].steps.push(module);
 
     return true;
@@ -28282,6 +28283,17 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ExportBin')(this);
   }
 
+  function modulesInfo(name) {
+    window.data = require('./modules/Crop/info.json');
+    var modulesdata = {}
+    if(arguments.length==0)
+      for (var modulename in modules) {
+        modulesdata[modulename] = modules[modulename][1];
+      }
+    else modulesdata = modules[name][1];
+    return modulesdata;
+  }
+
   return {
     //literals and objects
     name: "ImageSequencer",
@@ -28301,6 +28313,7 @@ ImageSequencer = function ImageSequencer(options) {
     run: run,
     setUI: setUI,
     exportBin: exportBin,
+    modulesInfo: modulesInfo,
 
     //other functions
     log: log,
@@ -28311,7 +28324,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":120,"./ExportBin":121,"./FormatInput":122,"./InsertStep":124,"./LoadImage":125,"./Modules":126,"./ReplaceImage":127,"./Run":128,"./UserInterface":129,"fs":6,"jquery":142}],124:[function(require,module,exports){
+},{"./AddStep":120,"./ExportBin":121,"./FormatInput":122,"./InsertStep":124,"./LoadImage":125,"./Modules":126,"./ReplaceImage":127,"./Run":128,"./UserInterface":129,"./modules/Crop/info.json":132,"fs":6,"jquery":151}],124:[function(require,module,exports){
 function InsertStep(ref, image, index, name, o) {
 
   function insertStep(image, index, name, o_) {
@@ -28329,10 +28342,11 @@ function InsertStep(ref, image, index, name, o) {
       ID: o.number,
       imageName: o.image,
       inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
+      ui: ref.options.ui,
+      options: o
     };
     var UI = ref.events;
-    var module = ref.modules[name](o,UI);
+    var module = ref.modules[name][0](o,UI);
     ref.images[image].steps.splice(index,0,module);
 
     return true;
@@ -28448,21 +28462,39 @@ module.exports = LoadImage;
 
 },{"urify":115}],126:[function(require,module,exports){
 /*
- * Core modules
+ * Core modules and their info files
  */
 module.exports = {
-  'do-nothing': require('./modules/DoNothing/Module'),
-  'green-channel': require('./modules/GreenChannel/Module'),
-  'ndvi-red': require('./modules/NdviRed/Module'),
-  'do-nothing-pix': require('./modules/DoNothingPix/Module.js'),
-  'invert': require('./modules/Invert/Module'),
-  'crop': require('./modules/Crop/Module'),
-  'segmented-colormap': require('./modules/SegmentedColormap/Module'),
-  'decode-qr': require('./modules/DecodeQr/Module'),
-  'fisheye-gl': require('./modules/FisheyeGl/Module')
+  'do-nothing': [
+    require('./modules/DoNothing/Module'),require('./modules/DoNothing/info')
+  ],
+  'green-channel': [
+    require('./modules/GreenChannel/Module'),require('./modules/GreenChannel/info')
+  ],
+  'ndvi-red': [
+    require('./modules/NdviRed/Module'),require('./modules/NdviRed/info')
+  ],
+  'do-nothing-pix': [
+    require('./modules/DoNothingPix/Module'),require('./modules/DoNothingPix/info')
+  ],
+  'invert': [
+    require('./modules/Invert/Module'),require('./modules/Invert/info')
+  ],
+  'crop': [
+    require('./modules/Crop/Module'),require('./modules/Crop/info')
+  ],
+  'segmented-colormap': [
+    require('./modules/SegmentedColormap/Module'),require('./modules/SegmentedColormap/info')
+  ],
+  'decode-qr': [
+    require('./modules/DecodeQr/Module'),require('./modules/DecodeQr/info')
+  ],
+  'fisheye-gl': [
+    require('./modules/FisheyeGl/Module'),require('./modules/FisheyeGl/info')
+  ]
 }
 
-},{"./modules/Crop/Module":131,"./modules/DecodeQr/Module":132,"./modules/DoNothing/Module":133,"./modules/DoNothingPix/Module.js":134,"./modules/FisheyeGl/Module":135,"./modules/GreenChannel/Module":136,"./modules/Invert/Module":137,"./modules/NdviRed/Module":138,"./modules/SegmentedColormap/Module":139}],127:[function(require,module,exports){
+},{"./modules/Crop/Module":131,"./modules/Crop/info":132,"./modules/DecodeQr/Module":133,"./modules/DecodeQr/info":134,"./modules/DoNothing/Module":135,"./modules/DoNothing/info":136,"./modules/DoNothingPix/Module":137,"./modules/DoNothingPix/info":138,"./modules/FisheyeGl/Module":139,"./modules/FisheyeGl/info":140,"./modules/GreenChannel/Module":141,"./modules/GreenChannel/info":142,"./modules/Invert/Module":143,"./modules/Invert/info":144,"./modules/NdviRed/Module":145,"./modules/NdviRed/info":146,"./modules/SegmentedColormap/Module":147,"./modules/SegmentedColormap/info":149}],127:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var this_ = ref;
@@ -28623,11 +28655,16 @@ module.exports = function Crop(input,options,callback) {
   var getPixels = require('get-pixels'),
       savePixels = require('save-pixels');
 
+  options.x = parseInt(options.x) || 0;
+  options.y = parseInt(options.y) || 0;
+
   getPixels(input.src,function(err,pixels){
-    var ox = options.x || 0;
-    var oy = options.y || 0;
-    var w = options.w || Math.floor(0.5*pixels.shape[0]);
-    var h = options.h || Math.floor(0.5*pixels.shape[1]);
+    options.w = parseInt(options.w) || Math.floor(0.5*pixels.shape[0]);
+    options.h = parseInt(options.h) || Math.floor(0.5*pixels.shape[1]);
+    var ox = options.x;
+    var oy = options.y;
+    var w = options.w;
+    var h = options.h;
     var iw = pixels.shape[0]; //Width of Original Image
     var newarray = new Uint8Array(4*w*h);
     for (var n = oy; n < oy + h; n++) {
@@ -28706,6 +28743,33 @@ module.exports = function Crop(input,options,callback) {
  }
 
 },{"./Crop":130}],132:[function(require,module,exports){
+module.exports={
+  "name": "Crop",
+  "inputs": {
+    "x": {
+      "type": "integer",
+      "desc": "X-position (measured from left) from where cropping starts",
+      "default": 0
+    },
+    "y": {
+      "type": "integer",
+      "desc": "Y-position (measured from top) from where cropping starts",
+      "default": 0
+    },
+    "w": {
+      "type": "integer",
+      "desc": "Width of crop",
+      "default": "(50%)"
+    },
+    "h": {
+      "type": "integer",
+      "desc": "Height of crop",
+      "default": "(50%)"
+    }
+  }
+}
+
+},{}],133:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -28743,7 +28807,14 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":32,"jsqr":50}],133:[function(require,module,exports){
+},{"get-pixels":32,"jsqr":50}],134:[function(require,module,exports){
+module.exports={
+  "name": "Decode QR",
+  "inputs": {
+  }
+}
+
+},{}],135:[function(require,module,exports){
 /*
  * Demo Module. Does nothing. Adds a step where output is equal to input.
  */
@@ -28771,7 +28842,14 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{}],134:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
+module.exports={
+  "name": "Do Nothing",
+  "inputs": {
+  }
+}
+
+},{}],137:[function(require,module,exports){
 /*
  * This module extracts pixels and saves them as it is.
  */
@@ -28813,7 +28891,14 @@ module.exports = function DoNothingPix(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141}],135:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":150}],138:[function(require,module,exports){
+module.exports={
+  "name": "extract pixels, do nothing, and replace",
+  "inputs": {
+  }
+}
+
+},{}],139:[function(require,module,exports){
 /*
  * Creates Fisheye Effect
  */
@@ -28844,13 +28929,21 @@ module.exports = function DoNothing(options,UI) {
         selector: "#image-sequencer-canvas"
       });
 
-      distorter.lens.a = options.a || distorter.lens.a;
-      distorter.lens.b = options.b || distorter.lens.b;
-      distorter.lens.Fx = options.Fx || distorter.lens.Fx;
-      distorter.lens.Fy = options.Fy || distorter.lens.Fy;
-      distorter.lens.scale = options.scale || distorter.lens.scale;
-      distorter.fov.x = options.x || distorter.fov.x;
-      distorter.fov.y = options.y || distorter.fov.y;
+      options.a = parseFloat(options.a) || distorter.lens.a;
+      options.b = parseFloat(options.b) || distorter.lens.b;
+      options.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
+      options.Fy = parseFloat(options.Fy) || distorter.lens.Fy;
+      options.scale = parseFloat(options.scale) || distorter.lens.scale;
+      options.x = parseFloat(options.x) || distorter.fov.x;
+      options.y = parseFloat(options.y) || distorter.fov.y;
+
+      distorter.lens.a = options.a;
+      distorter.lens.b = options.b;
+      distorter.lens.Fx = options.Fx;
+      distorter.lens.Fy = options.Fy;
+      distorter.lens.scale = options.scale;
+      distorter.fov.x = options.x;
+      distorter.fov.y = options.y;
 
       distorter.setImage(input.src,function(){
         step.output = {src: canvas.toDataURL(), format: input.format};
@@ -28870,7 +28963,73 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":24}],136:[function(require,module,exports){
+},{"fisheyegl":24}],140:[function(require,module,exports){
+module.exports={
+  "name": "Fisheye GL",
+  "inputs": {
+    "a": {
+      "type": "float",
+      "desc": "a parameter",
+      "default": 1,
+      "min": 1,
+      "max": 4
+    },
+    "b": {
+      "type": "float",
+      "desc": "b parameter",
+      "default": 1,
+      "min": 1,
+      "max": 4
+    },
+    "Fx": {
+      "type": "float",
+      "desc": "Fx parameter",
+      "default": 0,
+      "min": 0,
+      "max": 4
+    },
+    "Fy": {
+      "type": "float",
+      "desc": "Fy parameter",
+      "default": 0,
+      "min": 0,
+      "max": 4
+    },
+    "scale": {
+      "type": "float",
+      "desc": "Image Scaling",
+      "default": 1.5,
+      "min": 0,
+      "max": 20
+    },
+    "x": {
+      "type": "float",
+      "desc": "FOV x parameter",
+      "default": 1.5,
+      "min": 0,
+      "max": 20
+    },
+    "y": {
+      "type": "float",
+      "desc": "FOV y parameter",
+      "default": 1.5,
+      "min": 0,
+      "max": 20
+    },
+    "fragmentSrc": {
+      "type": "PATH",
+      "desc": "Patht to a WebGL fragment shader file",
+      "default": "(inbuilt)"
+    },
+    "vertexSrc": {
+      "type": "PATH",
+      "desc": "Patht to a WebGL vertex shader file",
+      "default": "(inbuilt)"
+    }
+  }
+}
+
+},{}],141:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -28914,7 +29073,14 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141}],137:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":150}],142:[function(require,module,exports){
+module.exports={
+  "name": "Green Channel",
+  "inputs": {
+  }
+}
+
+},{}],143:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -28960,7 +29126,14 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141}],138:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":150}],144:[function(require,module,exports){
+module.exports={
+  "name": "Invert",
+  "inputs": {
+  }
+}
+
+},{}],145:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -29004,7 +29177,14 @@ module.exports = function NdviRed(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141}],139:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":150}],146:[function(require,module,exports){
+module.exports={
+  "name": "NDVI Red",
+  "inputs": {
+  }
+}
+
+},{}],147:[function(require,module,exports){
 module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
@@ -29046,7 +29226,7 @@ module.exports = function SegmentedColormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":141,"./SegmentedColormap":140}],140:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":150,"./SegmentedColormap":148}],148:[function(require,module,exports){
 /*
  * Accepts a normalized ndvi and returns the new color-mapped pixel
  */
@@ -29105,7 +29285,20 @@ var colormaps = {
   fastie: fastie_colormap
 }
 
-},{}],141:[function(require,module,exports){
+},{}],149:[function(require,module,exports){
+module.exports={
+  "name": "Segmented Colormap",
+  "inputs": {
+    "colormap": {
+      "type": "select",
+      "desc": "Name of the Colormap",
+      "default": "default",
+      "values": ["default","greyscale","stretched","fastie"]
+    }
+  }
+}
+
+},{}],150:[function(require,module,exports){
 (function (Buffer){
 /*
  * General purpose per-pixel manipulation
@@ -29169,7 +29362,7 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":7,"get-pixels":32,"save-pixels":110}],142:[function(require,module,exports){
+},{"buffer":7,"get-pixels":32,"save-pixels":110}],151:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.4
  * http://jquery.com/
