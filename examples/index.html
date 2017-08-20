@@ -10,56 +10,46 @@
 
     <title>Image Sequencer</title>
 
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
     <link rel="stylesheet" href="demo.css">
 
+    <script src="../node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../dist/image-sequencer.js" charset="utf-8"></script>
-
-    <style media="screen">
-      #addStep select, button, #addStep input {
-        font-family: sans-serif;
-        font-size: 18px !important;
-        height: 30px !important;
-      }
-      .nomargin {
-        margin: 0 !important;
-      }
-      #steps img {
-        max-width: 90%;
-      }
-    </style>
 
   </head>
 
 
   <body>
 
-    <div class="wrapper">
+    <div class="container">
 
-      <header>
-        <h2>Image Sequencer</h2>
-        <h5>Single Image Demo</h5>
+      <header class="jumbotron text-center">
+        <h1>Image Sequencer</h1>
+        <p><h3>Select an image to start with!</h3></p>
+        <center><input type="file" id="file" value=""></center>
       </header>
 
-      <section id="steps" class="rh">
-        <div class="r">
-          Select an Image <input type="file" id="file" value="">
-        </div>
+      <section id="steps" class="row">
       </section>
 
-      <section id="addStep">
-        <div class="r">
-          Add Step :
+      <section id="addStep" class="jumbotron text-center">
+        <div class="row">
+          <h4>Add Step :</h4>
           <select style="font-family: sans-serif; height: 30px">
             <option value="none" disabled selected>Please Select</option>
           </select>
-          <button type="button" name="add">Add Step</button>
         </div>
-        <div class="r">
-          <div class="c">
-            Options:
+        <div class="row">
+          <div>
+            <h4>Options:</h4>
           </div>
-          <div id="options" class="c rh">
+          <div id="options" class="form-horizontal">
           </div>
+        </div>
+        <div class="row" style="margin: 5px">
+          <button class="btn btn-success btn-lg" name="add">Add Step</button>
         </div>
       </section>
 
@@ -90,38 +80,38 @@
           onSetup: function(step) {
 
             step.ui = '\
-            <div class="r">\
-              <div class="c">\
-                <img alt="" />\
+            <div class="row">\
+              <div>\
+                <img alt="" class="img-thumbnail"/>\
               </div>\
-              <div class="c rh details">\
-                <div class="r"><h4>'+step.name+'</h4></div>\
+              <div class="details">\
+                <h2>'+step.name+'&nbsp;</h2>\
               </div>\
             </div>\
             ';
 
             var removebutton =
-            '<div class="r"><button class="remove">Remove</button></div>';
+            '<button class="remove btn btn-danger">X</button>';
 
             step.ui = parser.parseFromString(step.ui,'text/html');
-            step.ui = step.ui.querySelector('div.r');
+            step.ui = step.ui.querySelector('div.row');
             step.imgElement = step.ui.querySelector('img');
 
             if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
               var inputs = sequencer.modulesInfo(step.name).inputs;
               for (var i in inputs) {
                 var div = document.createElement('div');
-                div.className = "r nomargin";
+                div.className = "row";
                 div.setAttribute('name',i);
-                div.innerHTML = i + ": " + "<span></span>";
+                div.innerHTML = "<div class='det'>" + i + ": " + "<span></span></div>";
                 step.ui.querySelector('div.details').appendChild(div);
               }
             }
 
             if(step.name != "load-image")
-              step.ui.querySelector('div.details').appendChild(
+              step.ui.querySelector('div.details h2').appendChild(
                 parser.parseFromString(removebutton,'text/html')
-                  .querySelector('div')
+                  .querySelector('button')
               );
 
             steps.appendChild(step.ui);
@@ -156,11 +146,11 @@
           var m = $('#addStep select').val();
           for(var input in modulesInfo[m].inputs) {
             $('#options').append(
-              '<div class="r">\
-                 <div class="c">\
+              '<div class="row">\
+                 <div class="col-md-2">\
                    '+input+':\
                  </div>\
-                 <div class="c">\
+                 <div class="col-md-2">\
                    <input type="text" name="'+input+'" value="" placeholder="'+
                    modulesInfo[m].inputs[input].default+'"/>\
                  </div>\

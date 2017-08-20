@@ -1,4 +1,4 @@
-@font-face {
+/*@font-face {
   font-family: "Poiret One";
   src: url("Poiret One.woff2");
 }
@@ -71,4 +71,49 @@ section .c {
 }
 section span {
   margin: 0 5px;
+}*/
+
+#addStep select, button, #addStep input {
+  font-family: sans-serif;
+  font-size: 18px !important;
+  height: 30px !important;
+}
+.nomargin {
+  margin: 0 !important;
+}
+.details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+}
+#steps .row {
+  display: flex;
+  flex-direction: row;
+  flex: auto;
+  align-items: center;
+  justify-content: space-around;
+  margin: 10px;
+}
+.jumbotron {
+  background: transparent;
+}
+.form-horizontal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.btn {
+  line-height: 1.2
+}
+.btn-lg {
+  line-height: 0.7
+}
+body {
+  /*background: #f8f8fa;*/
+}
+.det {
+  font-size: 1.7rem;
 }
