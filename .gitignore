@@ -38,3 +38,5 @@ todo.txt
 test.js
 output.txt
 output/
+node_modules/
+node_modules/*
