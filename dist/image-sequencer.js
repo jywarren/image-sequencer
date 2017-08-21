@@ -38335,17 +38335,11 @@ module.exports = LoadImage;
  * Core modules and their info files
  */
 module.exports = {
-  'do-nothing': [
-    require('./modules/DoNothing/Module'),require('./modules/DoNothing/info')
-  ],
   'green-channel': [
     require('./modules/GreenChannel/Module'),require('./modules/GreenChannel/info')
   ],
   'ndvi-red': [
     require('./modules/NdviRed/Module'),require('./modules/NdviRed/info')
-  ],
-  'do-nothing-pix': [
-    require('./modules/DoNothingPix/Module'),require('./modules/DoNothingPix/info')
   ],
   'invert': [
     require('./modules/Invert/Module'),require('./modules/Invert/info')
@@ -38364,7 +38358,7 @@ module.exports = {
   ]
 }
 
-},{"./modules/Crop/Module":131,"./modules/Crop/info":132,"./modules/DecodeQr/Module":133,"./modules/DecodeQr/info":134,"./modules/DoNothing/Module":135,"./modules/DoNothing/info":136,"./modules/DoNothingPix/Module":137,"./modules/DoNothingPix/info":138,"./modules/FisheyeGl/Module":139,"./modules/FisheyeGl/info":140,"./modules/GreenChannel/Module":141,"./modules/GreenChannel/info":142,"./modules/Invert/Module":143,"./modules/Invert/info":144,"./modules/NdviRed/Module":145,"./modules/NdviRed/info":146,"./modules/SegmentedColormap/Module":147,"./modules/SegmentedColormap/info":149}],127:[function(require,module,exports){
+},{"./modules/Crop/Module":131,"./modules/Crop/info":132,"./modules/DecodeQr/Module":133,"./modules/DecodeQr/info":134,"./modules/FisheyeGl/Module":135,"./modules/FisheyeGl/info":136,"./modules/GreenChannel/Module":137,"./modules/GreenChannel/info":138,"./modules/Invert/Module":139,"./modules/Invert/info":140,"./modules/NdviRed/Module":141,"./modules/NdviRed/info":142,"./modules/SegmentedColormap/Module":143,"./modules/SegmentedColormap/info":145}],127:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var this_ = ref;
@@ -38581,26 +38575,39 @@ module.exports = function Crop(input,options,callback) {
  *          y = options.y + options.h
  */
  module.exports = function CropModule(options,UI) {
+
    options = options || {};
    options.title = "Crop Image";
-   UI.onSetup(options.step);
-   var output
 
+   // Tell the UI that a step has been added
+   UI.onSetup(options.step);
+   var output;
+
+   // This function is caled everytime the step has to be redrawn
    function draw(input,callback) {
 
+     // Tell the UI that the step has been triggered
      UI.onDraw(options.step);
      const step = this;
 
      require('./Crop')(input,options,function(out,format){
+
+       // This output is accessible to Image Sequencer
        step.output = {
          src: out,
          format: format
        }
-       options.step.output = out;
-       UI.onComplete(options.step);
-       callback();
-     });
 
+       // This output is accessible to the UI
+       options.step.output = out;
+
+       // Tell the UI that the step has been drawn
+       UI.onComplete(options.step);
+
+       // Tell Image Sequencer that step has been drawn
+       callback();
+
+     });
 
    }
 
@@ -38644,29 +38651,46 @@ module.exports={
  * Decodes QR from a given image.
  */
 module.exports = function DoNothing(options,UI) {
+
   options = options || {};
   options.title = "Decode QR Code";
+
+  // Tell the UI that a step has been added
   UI.onSetup(options.step);
+
   var output;
   var jsQR = require('jsqr');
   var getPixels = require('get-pixels');
 
+  // This function is called everytime a step has to be redrawn
   function draw(input,callback) {
 
     UI.onDraw(options.step);
 
     const step = this;
+
     getPixels(input.src,function(err,pixels){
+
       if(err) throw err;
+
       var w = pixels.shape[0];
       var h = pixels.shape[1];
       var decoded = jsQR.decodeQRFromImage(pixels.data,w,h);
+
+      // This output is accessible to Image Sequencer
       step.output = input;
+
+      // Tell Image Sequencer that this step is complete
       callback();
+
+      // These values are accessible to the UI
       options.step.output = input.src;
       options.step.qrval = decoded;
+
+      // Tell the UI that the step is complete and output is set
       UI.onComplete(options.step);
     });
+
   }
 
   return {
@@ -38691,107 +38715,32 @@ module.exports={
 
 },{}],135:[function(require,module,exports){
 /*
- * Demo Module. Does nothing. Adds a step where output is equal to input.
+ * Resolves Fisheye Effect
  */
 module.exports = function DoNothing(options,UI) {
-  options = options || {};
-  options.title = "Do Nothing";
-  UI.onSetup(options.step);
-  var output;
 
-  function draw(input,callback) {
-    UI.onDraw(options.step);
-
-    this.output = input;
-
-    options.step.output = this.output.src;
-    callback();
-    UI.onComplete(options.step);
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{}],136:[function(require,module,exports){
-module.exports={
-  "name": "Do Nothing",
-  "inputs": {
-  }
-}
-
-},{}],137:[function(require,module,exports){
-/*
- * This module extracts pixels and saves them as it is.
- */
-module.exports = function DoNothingPix(options,UI) {
-
-  options = options || {};
-  options.title = "Do Nothing with pixels";
-  UI.onSetup(options.step);
-  var output;
-
-  function draw(input,callback) {
-
-    UI.onDraw(options.step);
-    const step = this;
-
-    function changePixel(r, g, b, a) {
-      return [r, g, b, a];
-    }
-    function output(image,datauri,mimetype){
-      step.output = {src:datauri,format:mimetype}
-      options.step.output = datauri;
-      UI.onComplete(options.step);
-    }
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      format: input.format,
-      image: options.image,
-      callback: callback
-    });
-
-  }
-
-  return {
-    options: options,
-    draw:  draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"../_nomodule/PixelManipulation.js":150}],138:[function(require,module,exports){
-module.exports={
-  "name": "extract pixels, do nothing, and replace",
-  "inputs": {
-  }
-}
-
-},{}],139:[function(require,module,exports){
-/*
- * Creates Fisheye Effect
- */
-module.exports = function DoNothing(options,UI) {
   options = options || {};
   options.title = "Fisheye GL";
+
   var output;
+
+  // Tell the UI that a step has been set up.
   UI.onSetup(options.step);
   require('fisheyegl');
 
   function draw(input,callback) {
+
+    // Tell the UI that the step is being drawn
     UI.onDraw(options.step);
+
     const step = this;
+
     if (!options.inBrowser) { // This module is only for browser
       this.output = input;
       callback();
     }
     else {
+      // Create a canvas, if it doesn't already exist.
       if (!document.querySelector('#image-sequencer-canvas')) {
         var canvas = document.createElement('canvas');
         canvas.style.display = "none";
@@ -38804,6 +38753,7 @@ module.exports = function DoNothing(options,UI) {
         selector: "#image-sequencer-canvas"
       });
 
+      // Parse the inputs
       options.a = parseFloat(options.a) || distorter.lens.a;
       options.b = parseFloat(options.b) || distorter.lens.b;
       options.Fx = parseFloat(options.Fx) || distorter.lens.Fx;
@@ -38812,6 +38762,7 @@ module.exports = function DoNothing(options,UI) {
       options.x = parseFloat(options.x) || distorter.fov.x;
       options.y = parseFloat(options.y) || distorter.fov.y;
 
+      // Set fisheyegl inputs
       distorter.lens.a = options.a;
       distorter.lens.b = options.b;
       distorter.lens.Fx = options.Fx;
@@ -38820,11 +38771,19 @@ module.exports = function DoNothing(options,UI) {
       distorter.fov.x = options.x;
       distorter.fov.y = options.y;
 
+      // generate fisheyegl output
       distorter.setImage(input.src,function(){
+
+        // this output is accessible to Image Sequencer
         step.output = {src: canvas.toDataURL(), format: input.format};
+
+        // This output is accessible to the UI
         options.step.output = step.output.src;
+
+        // Tell Image Sequencer and UI that step has been drawn
         callback();
         UI.onComplete(options.step);
+        
       });
 
     }
@@ -38838,7 +38797,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":21}],140:[function(require,module,exports){
+},{"fisheyegl":21}],136:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "inputs": {
@@ -38904,7 +38863,7 @@ module.exports={
   }
 }
 
-},{}],141:[function(require,module,exports){
+},{}],137:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -38913,22 +38872,33 @@ module.exports = function GreenChannel(options,UI) {
   options = options || {};
   options.title = "Green channel only";
   options.description = "Displays only the green channel of an image";
+
+  // Tell UI that a step has been set up
   UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
 
+    // Tell UI that a step is being drawn
     UI.onDraw(options.step);
     const step = this;
 
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
     }
+
     function output(image,datauri,mimetype){
+
+      // This output is accesible by Image Sequencer
       step.output = {src:datauri,format:mimetype};
+
+      // This output is accessible by UI
       options.step.output = datauri;
+
+      // Tell UI that step ahs been drawn
       UI.onComplete(options.step);
     }
+
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
@@ -38948,14 +38918,14 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":150}],142:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":146}],138:[function(require,module,exports){
 module.exports={
   "name": "Green Channel",
   "inputs": {
   }
 }
 
-},{}],143:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -38964,24 +38934,35 @@ module.exports = function GreenChannel(options,UI) {
   options = options || {};
   options.title = "Invert Colors";
   options.description = "Inverts the colors of the image";
+
+  // Tell UI that a step has been set up.
   UI.onSetup(options.step);
   var output;
 
-  //function setup() {} // optional
-
+  // The function which is called on every draw.
   function draw(input,callback) {
 
+    // Tell UI that a step is being drawn.
     UI.onDraw(options.step);
+
     const step = this;
 
     function changePixel(r, g, b, a) {
       return [255-r, 255-g, 255-b, a];
     }
+
     function output(image,datauri,mimetype){
+
+      // This output is accessible by Image Sequencer
       step.output = {src:datauri,format:mimetype};
+
+      // This output is accessible by UI
       options.step.output = datauri;
+
+      // Tell UI that step has been drawn.
       UI.onComplete(options.step);
     }
+
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
@@ -38994,21 +38975,20 @@ module.exports = function GreenChannel(options,UI) {
 
   return {
     options: options,
-    //setup: setup, // optional
     draw:  draw,
     output: output,
     UI: UI
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":150}],144:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":146}],140:[function(require,module,exports){
 module.exports={
   "name": "Invert",
   "inputs": {
   }
 }
 
-},{}],145:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -39016,11 +38996,15 @@ module.exports = function NdviRed(options,UI) {
 
   options = options || {};
   options.title = "NDVI for red-filtered cameras (blue is infrared)";
+
+  // Tell the UI that a step has been set up.
   UI.onSetup(options.step);
   var output;
 
+  // The function which is called on every draw.
   function draw(input,callback) {
 
+    // Tell the UI that a step is being drawn.
     UI.onDraw(options.step);
     const step = this;
 
@@ -39029,11 +39013,19 @@ module.exports = function NdviRed(options,UI) {
       var x = 255 * (ndvi + 1) / 2;
       return [x, x, x, a];
     }
+
     function output(image,datauri,mimetype){
+
+      // This output is accessible by Image Sequencer
       step.output = {src:datauri,format:mimetype};
+
+      // This output is accessible by the UI.
       options.step.output = datauri;
+
+      // Tell the UI that step has been drawn succesfully.
       UI.onComplete(options.step);
     }
+    
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
@@ -39052,23 +39044,27 @@ module.exports = function NdviRed(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":150}],146:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":146}],142:[function(require,module,exports){
 module.exports={
   "name": "NDVI Red",
   "inputs": {
   }
 }
 
-},{}],147:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
   options.title = "Segmented Colormap";
+
+  // Tell the UI that a step has been set up.
   UI.onSetup(options.step);
   var output;
 
+  // This function is called on every draw.
   function draw(input,callback) {
 
+    // Tell the UI that the step is being drawn
     UI.onDraw(options.step);
     const step = this;
 
@@ -39078,10 +39074,18 @@ module.exports = function SegmentedColormap(options,UI) {
       var res = require('./SegmentedColormap')(normalized,options);
       return [res[0], res[1], res[2], 255];
     }
+
     function output(image,datauri,mimetype){
+
+      // This output is accessible by Image Sequencer
       step.output = {src:datauri,format:mimetype};
+
+      // This output is accessible by the UI
       options.step.output = datauri;
+
+      // Tell the UI that the draw is complete
       UI.onComplete(options.step);
+
     }
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
@@ -39101,7 +39105,7 @@ module.exports = function SegmentedColormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":150,"./SegmentedColormap":148}],148:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":146,"./SegmentedColormap":144}],144:[function(require,module,exports){
 /*
  * Accepts a normalized ndvi and returns the new color-mapped pixel
  */
@@ -39160,7 +39164,7 @@ var colormaps = {
   fastie: fastie_colormap
 }
 
-},{}],149:[function(require,module,exports){
+},{}],145:[function(require,module,exports){
 module.exports={
   "name": "Segmented Colormap",
   "inputs": {
@@ -39173,7 +39177,7 @@ module.exports={
   }
 }
 
-},{}],150:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
 (function (Buffer){
 /*
  * General purpose per-pixel manipulation

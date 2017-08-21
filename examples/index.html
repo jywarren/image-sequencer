@@ -99,7 +99,9 @@
 
             if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
               var inputs = sequencer.modulesInfo(step.name).inputs;
-              for (var i in inputs) {
+              var outputs = sequencer.modulesInfo(step.name).outputs;
+              var io = Object.assign(inputs,outputs);
+              for (var i in io) {
                 var div = document.createElement('div');
                 div.className = "row";
                 div.setAttribute('name',i);
@@ -123,9 +125,14 @@
 
             if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
               var inputs = sequencer.modulesInfo(step.name).inputs;
+              var outputs = sequencer.modulesInfo(step.name).outputs;
               for (var i in inputs) {
                 step.ui.querySelector('div[name="'+i+'"] span')
                   .innerHTML = step.options[i];
+              }
+              for (var i in outputs) {
+                step.ui.querySelector('div[name="'+i+'"] span')
+                  .innerHTML = step[i];
               }
             }
 
