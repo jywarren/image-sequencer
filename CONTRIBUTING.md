@@ -108,6 +108,11 @@ All module folders must have an `info.json` file which looks like the following:
       "type": "text",
       "default": "default value"
     }
+  },
+  "outputs": {
+    "out1": {
+      "type": "text"
+    }
   }
 }
 ```
@@ -125,6 +130,8 @@ Integer and Float types should also specify minimum and maximum values like this
 ```
 
 Similarly, "Select" type inputs should have a `values` array.
+
+Also, A module may have output values. These must be defined as shown above.
 
 ### Module example
 
