@@ -30,6 +30,7 @@ module.exports = function DoNothing(options,UI) {
 
       // This output is accessible to Image Sequencer
       step.output = input;
+      step.output.data = decoded;
 
       // Tell Image Sequencer that this step is complete
       callback();

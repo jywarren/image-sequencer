@@ -73,38 +73,38 @@ test('loadImage works too.', function (t){
 });
 
 test('addSteps("image","name") adds a step', function (t) {
-  sequencer.addSteps('test','do-nothing');
+  sequencer.addSteps('test','green-channel');
   t.equal(sequencer.images.test.steps.length, 2, "Length of steps increased")
-  t.equal(sequencer.images.test.steps[1].options.name, "do-nothing", "Correct Step Added");
+  t.equal(sequencer.images.test.steps[1].options.name, "green-channel", "Correct Step Added");
   t.end();
 });
 
 test('addSteps("name") adds a step', function (t) {
-  sequencer.addSteps('do-nothing');
+  sequencer.addSteps('green-channel');
   t.equal(sequencer.images.test.steps.length, 3, "Length of steps increased");
-  t.equal(sequencer.images.test.steps[2].options.name, "do-nothing", "Correct Step Added");
+  t.equal(sequencer.images.test.steps[2].options.name, "green-channel", "Correct Step Added");
   t.end();
 });
 
 test('addSteps(["name"]) adds a step', function (t) {
-  sequencer.addSteps(['do-nothing','do-nothing-pix']);
+  sequencer.addSteps(['green-channel','invert']);
   t.equal(sequencer.images.test.steps.length, 5, "Length of steps increased by two")
-  t.equal(sequencer.images.test.steps[3].options.name, "do-nothing", "Correct Step Added");
-  t.equal(sequencer.images.test.steps[4].options.name, "do-nothing-pix", "Correct Step Added");
+  t.equal(sequencer.images.test.steps[3].options.name, "green-channel", "Correct Step Added");
+  t.equal(sequencer.images.test.steps[4].options.name, "invert", "Correct Step Added");
   t.end();
 });
 
 test('addSteps("name",o) adds a step', function (t) {
-  sequencer.addSteps('do-nothing',{});
+  sequencer.addSteps('green-channel',{});
   t.equal(sequencer.images.test.steps.length, 6, "Length of steps increased");
-  t.equal(sequencer.images.test.steps[5].options.name, "do-nothing", "Correct Step Added");
+  t.equal(sequencer.images.test.steps[5].options.name, "green-channel", "Correct Step Added");
   t.end();
 });
 
 test('addSteps("image","name",o) adds a step', function (t) {
-  sequencer.addSteps('test','do-nothing',{});
+  sequencer.addSteps('test','green-channel',{});
   t.equal(sequencer.images.test.steps.length, 7, "Length of steps increased");
-  t.equal(sequencer.images.test.steps[6].options.name, "do-nothing", "Correct Step Added");
+  t.equal(sequencer.images.test.steps[6].options.name, "green-channel", "Correct Step Added");
   t.end();
 });
 
@@ -127,30 +127,30 @@ test('removeSteps(position) removes steps', function (t) {
 });
 
 test('insertSteps("image",position,"module",options) inserts a step', function (t) {
-  sequencer.insertSteps('test',1,'do-nothing',{});
+  sequencer.insertSteps('test',1,'green-channel',{});
   t.equal(sequencer.images.test.steps.length, 3, "Length of Steps increased");
-  t.equal(sequencer.images.test.steps[1].options.name, "do-nothing", "Correct Step Inserted");
+  t.equal(sequencer.images.test.steps[1].options.name, "green-channel", "Correct Step Inserted");
   t.end();
 });
 
 test('insertSteps("image",position,"module") inserts a step', function (t) {
-  sequencer.insertSteps('test',1,'do-nothing');
+  sequencer.insertSteps('test',1,'green-channel');
   t.equal(sequencer.images.test.steps.length, 4, "Length of Steps increased");
-  t.equal(sequencer.images.test.steps[1].options.name, "do-nothing", "Correct Step Inserted");
+  t.equal(sequencer.images.test.steps[1].options.name, "green-channel", "Correct Step Inserted");
   t.end();
 });
 
 test('insertSteps(position,"module") inserts a step', function (t) {
-  sequencer.insertSteps(1,'do-nothing');
+  sequencer.insertSteps(1,'green-channel');
   t.equal(sequencer.images.test.steps.length, 5, "Length of Steps increased");
-  t.equal(sequencer.images.test.steps[1].options.name, "do-nothing", "Correct Step Inserted");
+  t.equal(sequencer.images.test.steps[1].options.name, "green-channel", "Correct Step Inserted");
   t.end();
 });
 
 test('insertSteps({image: {index: index, name: "module", o: options} }) inserts a step', function (t) {
-  sequencer.insertSteps({test: {index:1, name:'do-nothing', o:{} } });
+  sequencer.insertSteps({test: {index:1, name:'green-channel', o:{} } });
   t.equal(sequencer.images.test.steps.length, 6, "Length of Steps increased");
-  t.equal(sequencer.images.test.steps[1].options.name, "do-nothing", "Correct Step Inserted");
+  t.equal(sequencer.images.test.steps[1].options.name, "green-channel", "Correct Step Inserted");
   t.end();
 });
 
