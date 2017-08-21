@@ -57,24 +57,36 @@
 
     <script type="text/javascript">
 
+    // Initialize Image Sequencer
     var sequencer = ImageSequencer();
 
       window.onload = function() {
 
+        // Load information of all modules (Name, Inputs, Outputs)
         var modulesInfo = sequencer.modulesInfo();
 
+        // Add modules to the addStep dropdown
         for(var m in modulesInfo) {
-          if(m!="do-nothing" && m!="do-nothing-pix")
-            $('#addStep select').append(
-              '<option value="'+m+'">'+modulesInfo[m].name+'</option>'
-            );
+          $('#addStep select').append(
+            '<option value="'+m+'">'+modulesInfo[m].name+'</option>'
+          );
         }
 
+        // Initial definitions
         var steps = document.querySelector('#steps');
         var parser = new DOMParser();
         var reader = new FileReader();
         initial = "images/grid.png";
 
+        // Set the UI in sequencer. This Will generate HTML based on
+        // Image Sequencer events :
+        // onSetup : Called every time a step is added
+        // onDraw : Called every time a step starts draw
+        // onComplete : Called every time a step finishes drawing
+        // onRemove : Called everytime a step is removed
+        // The variable 'step' stores useful data like input and
+        // output values, step information.
+        // See documetation for more details.
         sequencer.setUI({
 
           onSetup: function(step) {
@@ -145,7 +157,7 @@
         });
 
         sequencer.loadImage('images/grid.png',function(){
-          this.addSteps('crop').run();
+          this.addSteps('invert').run();
         });
 
         $('#addStep select').on('change', function(){
