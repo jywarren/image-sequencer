@@ -1,0 +1,10 @@
+{
+  "name": "Decode QR",
+  "inputs": {
+  },
+  "outputs": {
+    "qrval": {
+      "type": "text"
+    }
+  }
+}

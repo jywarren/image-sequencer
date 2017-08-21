@@ -15,10 +15,11 @@ function InsertStep(ref, image, index, name, o) {
       ID: o.number,
       imageName: o.image,
       inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
+      ui: ref.options.ui,
+      options: o
     };
     var UI = ref.events;
-    var module = ref.modules[name](o,UI);
+    var module = ref.modules[name][0](o,UI);
     ref.images[image].steps.splice(index,0,module);
 
     return true;

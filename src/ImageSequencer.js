@@ -180,6 +180,17 @@ ImageSequencer = function ImageSequencer(options) {
     return require('./ExportBin')(this);
   }
 
+  function modulesInfo(name) {
+    window.data = require('./modules/Crop/info.json');
+    var modulesdata = {}
+    if(arguments.length==0)
+      for (var modulename in modules) {
+        modulesdata[modulename] = modules[modulename][1];
+      }
+    else modulesdata = modules[name][1];
+    return modulesdata;
+  }
+
   return {
     //literals and objects
     name: "ImageSequencer",
@@ -199,6 +210,7 @@ ImageSequencer = function ImageSequencer(options) {
     run: run,
     setUI: setUI,
     exportBin: exportBin,
+    modulesInfo: modulesInfo,
 
     //other functions
     log: log,

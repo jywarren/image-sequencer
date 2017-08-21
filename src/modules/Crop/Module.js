@@ -14,26 +14,39 @@
  *          y = options.y + options.h
  */
  module.exports = function CropModule(options,UI) {
+
    options = options || {};
    options.title = "Crop Image";
-   UI.onSetup(options.step);
-   var output
 
+   // Tell the UI that a step has been added
+   UI.onSetup(options.step);
+   var output;
+
+   // This function is caled everytime the step has to be redrawn
    function draw(input,callback) {
 
+     // Tell the UI that the step has been triggered
      UI.onDraw(options.step);
      const step = this;
 
      require('./Crop')(input,options,function(out,format){
+
+       // This output is accessible to Image Sequencer
        step.output = {
          src: out,
          format: format
        }
-       options.step.output = out;
-       UI.onComplete(options.step);
-       callback();
-     });
 
+       // This output is accessible to the UI
+       options.step.output = out;
+
+       // Tell the UI that the step has been drawn
+       UI.onComplete(options.step);
+
+       // Tell Image Sequencer that step has been drawn
+       callback();
+
+     });
 
    }
 

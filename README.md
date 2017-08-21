@@ -420,3 +420,6 @@ Note: `identity.imageName` is the "name" of that particular image. This name can
 be specified while loading the image via `sequencer.loadImage("name","SRC")`. If
 not specified, the name of a loaded image defaults to a name like "image1",
 "image2", et cetra.
+
+Details of all modules can be sought using `sequencer.modulesInfo()`.
+This method returns an object which defines the name and inputs of the modules. If a module name (hyphenated) is passed in the method, then only the details of that module are returned.

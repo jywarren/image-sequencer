@@ -17,7 +17,7 @@ var test_png = require('./images/test.png.js');
 var test_gif = require('./images/test.gif.js');
 
 sequencer.loadImages(test_png);
-sequencer.addSteps(['do-nothing-pix','invert','invert']);
+sequencer.addSteps(['invert','invert']);
 
 test("Preload", function(t) {
   sequencer.run(function(){
@@ -26,8 +26,8 @@ test("Preload", function(t) {
 });
 
 test("Inverted image isn't identical", function (t) {
-  var step1 = sequencer.images.image1.steps[1].output.src;
-  var step2 = sequencer.images.image1.steps[2].output.src;
+  var step1 = sequencer.images.image1.steps[0].output.src;
+  var step2 = sequencer.images.image1.steps[1].output.src;
   step1 = DataURItoBuffer(step1);
   step2 = DataURItoBuffer(step2);
   looksSame(step1,step2,function(err,res){
@@ -38,8 +38,8 @@ test("Inverted image isn't identical", function (t) {
 });
 
 test("Twice inverted image is identical to original image", function (t) {
-  var step1 = sequencer.images.image1.steps[1].output.src;
-  var step3 = sequencer.images.image1.steps[3].output.src;
+  var step1 = sequencer.images.image1.steps[0].output.src;
+  var step3 = sequencer.images.image1.steps[2].output.src;
   step1 = DataURItoBuffer(step1);
   step3 = DataURItoBuffer(step3);
   looksSame(step1,step3,function(err,res){

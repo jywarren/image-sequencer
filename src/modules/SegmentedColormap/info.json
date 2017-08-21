@@ -1,0 +1,11 @@
+{
+  "name": "Segmented Colormap",
+  "inputs": {
+    "colormap": {
+      "type": "select",
+      "desc": "Name of the Colormap",
+      "default": "default",
+      "values": ["default","greyscale","stretched","fastie"]
+    }
+  }
+}
