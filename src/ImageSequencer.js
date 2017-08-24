@@ -181,7 +181,6 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function modulesInfo(name) {
-    window.data = require('./modules/Crop/info.json');
     var modulesdata = {}
     if(arguments.length==0)
       for (var modulename in modules) {
