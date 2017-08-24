@@ -8,6 +8,6 @@ sequencer.loadImages({images:{red:'examples/images/red.jpg'},callback:function()
     red: [{index: -1, name: 'invert', o:{}}]
   });
   sequencer.run(function(){
-    sequencer.exportBin();
+    sequencer.exportBin('output2');
   });
 }});

@@ -37776,20 +37776,21 @@ var getDirectories = function(rootDir, cb) {
   });
 }
 
-module.exports = function ExportBin(ref) {
+module.exports = function ExportBin(dir = "./output/",ref) {
+  dir = (dir[dir.length-1]=="/") ? dir : dir + "/";
   if(ref.options.inBrowser) return false;
-  fs.access('./output/', function(err){
-    if(err) fs.mkdir('output', function() {});
+  fs.access(dir, function(err){
+    if(err) fs.mkdir(dir, function() {});
   });
-  getDirectories('./output',function(dirs){
+  getDirectories(dir,function(dirs){
     var num = 1;
     for(var d in dirs){
       if(dirs[d].match(/^sequencer(.*)$/)==null) continue;
       var n = parseInt(dirs[d].match(/^sequencer(.*)$/)[1]);
       num = (n>=num)?(n+1):num;
     }
-    fs.mkdir('output/sequencer'+num,function(){
-      var root = 'output/sequencer'+num+'/';
+    fs.mkdir(dir+'sequencer'+num,function(){
+      var root = dir+'sequencer'+num+'/';
       for(var image in ref.images) {
         var steps = ref.images[image].steps;
         for(var i in steps) {
@@ -38150,8 +38151,8 @@ ImageSequencer = function ImageSequencer(options) {
     this.events = require('./UserInterface')(UI);
   }
 
-  var exportBin = function() {
-    return require('./ExportBin')(this);
+  var exportBin = function(dir) {
+    return require('./ExportBin')(dir,this);
   }
 
   function modulesInfo(name) {
