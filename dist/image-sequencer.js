@@ -37751,6 +37751,7 @@ function AddStep(ref, image, name, o) {
 module.exports = AddStep;
 
 },{}],121:[function(require,module,exports){
+var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
       var dirs = [];
@@ -37804,7 +37805,7 @@ module.exports = function ExportBin(ref) {
   });
 }
 
-},{"data-uri-to-buffer":19}],122:[function(require,module,exports){
+},{"data-uri-to-buffer":19,"fs":43}],122:[function(require,module,exports){
 function objTypeOf(object){
   return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
 }
@@ -38679,6 +38680,7 @@ module.exports = function DoNothing(options,UI) {
 
       // This output is accessible to Image Sequencer
       step.output = input;
+      step.output.data = decoded;
 
       // Tell Image Sequencer that this step is complete
       callback();
