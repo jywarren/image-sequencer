@@ -1,3 +1,4 @@
+var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
       var dirs = [];

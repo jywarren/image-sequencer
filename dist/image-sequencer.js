@@ -37751,6 +37751,7 @@ function AddStep(ref, image, name, o) {
 module.exports = AddStep;
 
 },{}],121:[function(require,module,exports){
+var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
       var dirs = [];
@@ -37804,7 +37805,7 @@ module.exports = function ExportBin(ref) {
   });
 }
 
-},{"data-uri-to-buffer":19}],122:[function(require,module,exports){
+},{"data-uri-to-buffer":19,"fs":43}],122:[function(require,module,exports){
 function objTypeOf(object){
   return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
 }
@@ -38154,7 +38155,6 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function modulesInfo(name) {
-    window.data = require('./modules/Crop/info.json');
     var modulesdata = {}
     if(arguments.length==0)
       for (var modulename in modules) {
@@ -38194,7 +38194,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":120,"./ExportBin":121,"./FormatInput":122,"./InsertStep":124,"./LoadImage":125,"./Modules":126,"./ReplaceImage":127,"./Run":128,"./UserInterface":129,"./modules/Crop/info.json":132,"fs":43,"jquery":49}],124:[function(require,module,exports){
+},{"./AddStep":120,"./ExportBin":121,"./FormatInput":122,"./InsertStep":124,"./LoadImage":125,"./Modules":126,"./ReplaceImage":127,"./Run":128,"./UserInterface":129,"fs":43,"jquery":49}],124:[function(require,module,exports){
 function InsertStep(ref, image, index, name, o) {
 
   function insertStep(image, index, name, o_) {
@@ -38679,6 +38679,7 @@ module.exports = function DoNothing(options,UI) {
 
       // This output is accessible to Image Sequencer
       step.output = input;
+      step.output.data = decoded;
 
       // Tell Image Sequencer that this step is complete
       callback();
