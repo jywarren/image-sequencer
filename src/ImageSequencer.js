@@ -176,12 +176,13 @@ ImageSequencer = function ImageSequencer(options) {
     this.events = require('./UserInterface')(UI);
   }
 
-  var exportBin = function() {
-    return require('./ExportBin')(this);
+  var exportBin = function(dir) {
+    return require('./ExportBin')(dir,this);
   }
 
   function modulesInfo(name) {
     var modulesdata = {}
+    if(name == "load-image") return {};
     if(arguments.length==0)
       for (var modulename in modules) {
         modulesdata[modulename] = modules[modulename][1];
