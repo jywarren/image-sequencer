@@ -182,6 +182,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   function modulesInfo(name) {
     var modulesdata = {}
+    if(name == "load-image") return {};
     if(arguments.length==0)
       for (var modulename in modules) {
         modulesdata[modulename] = modules[modulename][1];
