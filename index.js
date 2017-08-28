@@ -31,8 +31,8 @@ require('fs').access(program.image, function(err){
 });
 
 // User must input a step. If steps exist, check that every step is a valid step.
-if(!program.step || !program.step.every(function(step){return sequencer.modulesInfo().hasOwnProperty(step)}))
-  exit("Please name a valid step.");
+if(!program.step || !validateSteps(program.step))
+  exit("Please ensure all steps are valid.");
 
 // If there's no user defined output directory, select a default directory.
 program.output = program.output || "./output/";
@@ -82,3 +82,19 @@ sequencer.loadImages(program.image,function(){
   });
 
 });
+
+// Takes an array of steps and checks if they are valid steps for the sequencer.
+function validateSteps(steps) {
+
+  // Assume all are valid in the beginning. 
+  var valid = true;
+  steps.forEach(function(step) {
+    // If any step in the array is not valid (not a property of modulesInfo), set valid to false.
+    if (!sequencer.modulesInfo().hasOwnProperty(step)) {
+      valid = false;
+    }
+  });
+
+  // Return valid. (If all of the steps are valid properties, valid will have remained true).
+  return valid;
+}
