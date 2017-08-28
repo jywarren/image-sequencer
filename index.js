@@ -4,6 +4,7 @@ require('./src/ImageSequencer');
 sequencer = ImageSequencer({ui: false});
 
 var program = require('commander');
+var readlineSync = require('readline-sync');
 
 function exit(message) {
   console.error(message);
@@ -18,6 +19,9 @@ program
   .option('-op, --opions {object}', 'Options for the step')
   .parse(process.argv);
 
+// Parse step into an array to allow for multiple steps.
+program.step = program.step.split(" ");
+
 // User must input an image.
 if(!program.image) exit("Can't read file.")
 
@@ -26,19 +30,19 @@ require('fs').access(program.image, function(err){
   if(err) exit("Can't read file.")
 });
 
-// User must input a step.
-if(!program.step || !sequencer.modulesInfo().hasOwnProperty(program.step))
-  exit("Please name a valid step.");
+// User must input a step. If steps exist, check that every step is a valid step.
+if(!program.step || !validateSteps(program.step))
+  exit("Please ensure all steps are valid.");
 
-// If there's no user defined output directory, select a default directory
+// If there's no user defined output directory, select a default directory.
 program.output = program.output || "./output/";
 
-// set sequencer to log module outputs, if any
+// Set sequencer to log module outputs, if any.
 sequencer.setUI({
 
   onComplete: function(step) {
 
-    // get information of outputs
+    // Get information of outputs.
     step.info = sequencer.modulesInfo(step.name);
 
     for (var output in step.info.outputs) {
@@ -49,16 +53,28 @@ sequencer.setUI({
 
 });
 
-// Finally, if everything is alright, load the image, add the step and run the sequencer.
+// Finally, if everything is alright, load the image, add the steps and run the sequencer.
 sequencer.loadImages(program.image,function(){
 
-  // Add the step inputted by the user
-  sequencer.addSteps(program.step);
+  // Iterate through the steps and retrieve their inputs.
+  program.step.forEach(function(step){
+    var options = Object.assign({}, sequencer.modulesInfo(step).inputs);
 
-  // Run the sequencer
+    // If inputs exist, iterate through them and prompt for values.
+    Object.keys(options).forEach(function(input) {
+        console.log(step + " : " + input + " : " + options[input].desc);
+        var value = readlineSync.question(step + " : " + "Enter a value for " + input + " : ");
+        options[input] = value;
+    });
+
+    // Add the step and its inputs to the sequencer.
+    sequencer.addSteps(step, options);
+  });
+
+  // Run the sequencer.
   sequencer.run(function(){
 
-    // Export all images as binary files
+    // Export all images as binary files.
     sequencer.exportBin(program.output);
 
     console.log("Files will be exported to \""+program.output+"\"");
@@ -66,3 +82,19 @@ sequencer.loadImages(program.image,function(){
   });
 
 });
+
+// Takes an array of steps and checks if they are valid steps for the sequencer.
+function validateSteps(steps) {
+
+  // Assume all are valid in the beginning. 
+  var valid = true;
+  steps.forEach(function(step) {
+    // If any step in the array is not valid (not a property of modulesInfo), set valid to false.
+    if (!sequencer.modulesInfo().hasOwnProperty(step)) {
+      valid = false;
+    }
+  });
+
+  // Return valid. (If all of the steps are valid properties, valid will have remained true).
+  return valid;
+}
