@@ -57,6 +57,24 @@ For example:
   sequencer.replaceImage('#photo',['invert','ndvi-red']);
 ```
 
+## CLI Usage
+
+Image Sequencer also provides a CLI for applying operations to local files. The CLI takes the following arguments:
+
+    -i  | --image [PATH/URL] | Input image URL. (required)
+    -s  | --step [step-name] | Name of the step to be added. (required)
+    -o  | --output [PATH]    | Directory where output will be stored. (optional)
+    -op | --opions {object}  | Options for the step. (optional)
+
+The basic format for using the CLI is as follows: 
+
+    $ ./index.js -i [PATH] -s step-name
+
+*NOTE:* On Windows you'll have to use `node index.js` instead of `./index.js`.
+
+The CLI also can take multiple steps at once, like so:
+
+    $ ./index.js -i [PATH] -s "step-name-1 step-name-2 ..."
 
 ## Classic Usage
 
