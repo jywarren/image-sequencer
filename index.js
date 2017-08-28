@@ -19,7 +19,7 @@ program
   .option('-op, --opions {object}', 'Options for the step')
   .parse(process.argv);
 
-// Parse step into an array to allow for multiple step.
+// Parse step into an array to allow for multiple steps.
 program.step = program.step.split(" ");
 
 // User must input an image.
@@ -30,7 +30,7 @@ require('fs').access(program.image, function(err){
   if(err) exit("Can't read file.")
 });
 
-// User must input a step. If step exists, check that every step is a valid step.
+// User must input a step. If steps exist, check that every step is a valid step.
 if(!program.step || !program.step.every(function(step){return sequencer.modulesInfo().hasOwnProperty(step)}))
   exit("Please name a valid step.");
 
@@ -60,14 +60,14 @@ sequencer.loadImages(program.image,function(){
   program.step.forEach(function(step){
     var options = Object.assign({}, sequencer.modulesInfo(step).inputs);
 
-    // If inputs exists, iterate through them and prompt for values.
+    // If inputs exist, iterate through them and prompt for values.
     Object.keys(options).forEach(function(input) {
         console.log(step + " : " + input + " : " + options[input].desc);
         var value = readlineSync.question(step + " : " + "Enter a value for " + input + " : ");
         options[input] = value;
     });
 
-    // Add the step and its options to the sequencer.
+    // Add the step and its inputs to the sequencer.
     sequencer.addSteps(step, options);
   });
 
