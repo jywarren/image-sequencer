@@ -26,6 +26,7 @@
     "font-awesome": "~4.5.0",
     "jquery": "~2",
     "jsqr": "^0.2.2",
+    "readline-sync": "^1.4.7",
     "urify": "^2.1.0"
   },
   "devDependencies": {
