@@ -60,10 +60,21 @@ sequencer.loadImages(program.image,function(){
   program.step.forEach(function(step){
     var options = Object.assign({}, sequencer.modulesInfo(step).inputs);
 
+    // If inputs exists, print to console.
+    if (Object.keys(options).length) {
+      console.log("[" + step + "]: Inputs");
+    }
+
+    // If inputs exists, print them out with descriptions.
+    Object.keys(options).forEach(function(input) {
+        // The array below creates a variable number of spaces. This is done with (length + 1). 
+        // The extra 4 that makes it (length + 5) is to account for the []: characters
+        console.log(new Array(step.length + 5).join(' ') + input + ": " + options[input].desc);
+    });
+
     // If inputs exist, iterate through them and prompt for values.
     Object.keys(options).forEach(function(input) {
-        console.log(step + " : " + input + " : " + options[input].desc);
-        var value = readlineSync.question(step + " : " + "Enter a value for " + input + " : ");
+        var value = readlineSync.question("[" + step + "]: Enter a value for " + input + " (" + options[input].type + ", default: " + options[input].default + "): ");
         options[input] = value;
     });
 
