@@ -23,13 +23,19 @@
 
   <body>
 
-    <div class="container">
+    <div class="container-fluid">
 
       <header class="text-center">
         <h1>Image Sequencer</h1>
+        <h3>
+          <a href="https://github.com/publiclab/image-sequencer"><i class="fa fa-github"></i></a>
+        </h3>
+      </header>
+
+      <div class="image-select">
         <p><i>Select an image to start with!</i></p>
         <center><input type="file" id="file" value=""></center>
-      </header>
+      </div>
 
       <section id="steps" class="row">
       </section>
@@ -91,18 +97,18 @@
           onSetup: function(step) {
 
             step.ui = '\
-            <div class="row">\
-              <div>\
+            <div class="row step">\
+              <div class="col-md-8">\
                 <img alt="" class="img-thumbnail"/>\
               </div>\
-              <div class="details">\
-                <h2>'+step.name+'&nbsp;</h2>\
+              <div class="col-md-4 details">\
+                <h3>'+step.name+'</h3>\
               </div>\
             </div>\
             ';
 
             var removebutton =
-            '<button class="remove btn btn-sm btn-danger"><i class="fa fa-remove"></i></button>';
+            '<div class="tools"><button class="remove btn btn-sm btn-danger"><i class="fa fa-remove"></i></button></div>';
 
             step.ui = parser.parseFromString(step.ui,'text/html');
             step.ui = step.ui.querySelector('div.row');
@@ -122,7 +128,7 @@
             }
 
             if(step.name != "load-image")
-              step.ui.querySelector('div.details h2').appendChild(
+              step.ui.querySelector('div.details').appendChild(
                 parser.parseFromString(removebutton,'text/html')
                   .querySelector('button')
               );
@@ -165,10 +171,10 @@
           for(var input in modulesInfo[m].inputs) {
             $('#options').append(
               '<div class="row">\
-                 <div class="col-md-2">\
+                 <div class="col-md-5">\
                    '+input+':\
                  </div>\
-                 <div class="col-md-2">\
+                 <div class="col-md-5">\
                    <input class="form-control" type="text" name="'+input+'" value="" placeholder="'+
                    modulesInfo[m].inputs[input].default+'"/>\
                  </div>\
