@@ -13,8 +13,8 @@
 
 body {
   padding: 20px;
-  margin: 0 auto;
-  /* max-width: 700px; */
+  margin: 0 auto 200px;
+  max-width: 1000px;
   background: #f8f8fa;
 }
 
@@ -31,7 +31,7 @@ h1 {
   margin: 0 !important;
 }
 
-.image-select {
+#imageSelect {
   padding: 30px;
   margin: 0 20% 30px;
   border: 4px dashed #ccc;
@@ -40,24 +40,53 @@ h1 {
   color: #444;
 }
 
-/*
-.form-horizontal {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-}
-*/
-
 .step {
   margin-bottom: 20px;
 }
 
-.details h4 {
+.step .img-thumbnail {
+  margin-bottom: 20px;
+}
+
+.details {
+  border-top: 3px solid #444;
+  padding-left: 6px;
+}
+
+.details h3 {
   font-family: monospace;
+  margin-top: 12px;
+  font-size: 1.3em;
 }
 
 .det {
   padding: 10px 16px;
   text-decoration: italic;
+}
+
+.tools {
+  margin: 10px 0;
+}
+
+#addStep {
+  max-width: 500px;
+  margin: 20px auto;
+}
+
+#addStep .labels {
+  text-align: right;
+  padding: 6px;
+  margin: 2px;
+  font-weight: bold;
+}
+
+@media (max-width:768px) {
+  #addStep .labels {
+    text-align: left;
+  }
+}
+
+#addStep .add {
+  text-align: center;
+  margin: 10px;
 }
