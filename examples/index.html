@@ -25,9 +25,9 @@
 
     <div class="container">
 
-      <header class="jumbotron text-center">
+      <header class="text-center">
         <h1>Image Sequencer</h1>
-        <p><h3>Select an image to start with!</h3></p>
+        <p><i>Select an image to start with!</i></p>
         <center><input type="file" id="file" value=""></center>
       </header>
 
@@ -36,9 +36,8 @@
 
       <section id="addStep" class="jumbotron text-center">
         <div class="row">
-          <h4>Add Step :</h4>
-          <select style="font-family: sans-serif; height: 30px">
-            <option value="none" disabled selected>Please Select</option>
+          <select class="form-control">
+            <option value="none" disabled selected>Select a new step...</option>
           </select>
         </div>
         <div class="row">
@@ -103,7 +102,7 @@
             ';
 
             var removebutton =
-            '<button class="remove btn btn-danger">X</button>';
+            '<button class="remove btn btn-sm btn-danger"><i class="fa fa-remove"></i></button>';
 
             step.ui = parser.parseFromString(step.ui,'text/html');
             step.ui = step.ui.querySelector('div.row');
@@ -170,7 +169,7 @@
                    '+input+':\
                  </div>\
                  <div class="col-md-2">\
-                   <input type="text" name="'+input+'" value="" placeholder="'+
+                   <input class="form-control" type="text" name="'+input+'" value="" placeholder="'+
                    modulesInfo[m].inputs[input].default+'"/>\
                  </div>\
                </div>'
