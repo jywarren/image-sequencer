@@ -5,6 +5,13 @@ Happily accepting pull requests; to edit the core library, modify files in `./sr
 
 Most contribution (we imagine) would be in the form of API-compatible modules, which need not be directly included.
 
+## Jump To
+
+* [README.md](https://github.com/publiclab/image-sequencer)
+* [Contributing Modules](#contributing-modules)
+* [Info File](#info-file)
+* [Ideas](#ideas)
+
 ## Contributing modules
 
 Any module must look like this :
@@ -93,7 +100,7 @@ input = {
 }
 ```
 
-## options.title
+### options.title
 
 For display in the web-based UI, each module may also have a title `options.title`.
 
@@ -139,45 +146,29 @@ See existing module `green-channel` for an example: https://github.com/publiclab
 
 For help integrating, please open an issue.
 
-****
-
-## Development
+## Ideas
 
 Notes on development next steps:
 
 ### UI
 
-* [ ] add createUserInterface() which is set up by default to draw on ImageBoardUI, but could be swapped for nothing, or an equiv. lib
-* [ ] it could create the interface and use event listeners like module.on('draw', fn()); to update the interface
-
 * [ ] spinners before panels are complete
-* [ ] is there a module for generating forms from parameters?
 * [ ] click to expand for all images
-* [ ] `ImageSequencer.Renderer` class to manage image output formats and adapters
-* [ ] remove step
 
-* [ ] output besides an image -- like `message(txt)` to display to the step's UI
-
-
-### Modularization
+### Modules
 
 * [ ] remotely includable modules, not compiled in -- see plugin structures in other libs
-* [x] ability to start running at any point -- already works?
-* [x] commandline runnability?
-  * [x] Make available as browserified OR `require()` includable...
-* [ ] standardize panel addition with submodule that offers Panel.display(image)
-* [ ] allow passing data as data-uri or Image object, or stream, or ndarray or ImageData array, if both of neighboring pair has ability?
-  * see https://github.com/jywarren/image-sequencer/issues/1
-* [ ] ...could we directly include package.json for module descriptions? At least as a fallback.
-* [ ] (for node-and-line style UIs) non-linear sequences with Y-splitters
 * [ ] `sequencer.addModule('path/to/module.js')` style module addition -- also to avoid browserifying all of Plotly :-P
-* [x] remove step
+
+### Core Functionality
+
+* [ ] allow passing data as data-uri or Image object, or stream, or ndarray or ImageData array, if both of neighboring pair has ability?
+* [ ] (for node-and-line style UIs) non-linear sequences with Y-splitters
 
 ### Testing
 
-* [x] tests - modules headless; unit tests
 * [ ] comparisons with diff
-  * [ ] testing a module's promised functionality: each module could offer before/after images as part of their API; by running the module on the before image, you should get exactly the after image, comparing with an image diff
+* [ ] testing a module's promised functionality: each module could offer before/after images as part of their API; by running the module on the before image, you should get exactly the after image, comparing with an image diff
 
 ### Use cases
 
@@ -185,32 +176,22 @@ Notes on development next steps:
 
 ### Bugs
 
-* [x] BUG: this doesn't work for defaults:  imageboard.loadImage('examples/grid.png', function() {});
-  * we should make defaults a config of the first module
+If you find a bug please list it here, and help us develop Image Sequencer by opening an issue!
 
-****
-
-## Module Candidates
+## Module Candidates, related Ideas
 
 * https://github.com/linuxenko/rextract.js
 * https://www.npmjs.com/package/histogram
 * https://github.com/hughsk/flood-fill
-* https://www.npmjs.com/package/blink-diff
-* smaller and faster: https://www.npmjs.com/package/@schornio/pixelmatch
 * https://github.com/yahoo/pngjs-image has lots of useful general-purpose image getters like `image.getLuminosityAtIndex(idx)`
 * some way to add in a new image (respecting alpha) -- `add-image` (with blend mode, default `normal`?)
 * https://github.com/yuta1984/CannyJS - edge detection
 * http://codepen.io/taylorcoffelt/pen/EsCcr - more edge detection
 * https://github.com/jywarren/webgl-distort/ - an image distortion module
-
-## Ideas
-
-* https://github.com/vicapow/jsqrcode
 * https://github.com/jadnco/whirl - scrubbable image sequence player
 * non graphics card GL functions could be shimmed with https://github.com/Overv/JSGL
 * or this: https://github.com/stackgl/headless-gl
 * https://github.com/mattdesl/fontpath-simple-renderer
-* output in animated Gif? as a module
 
 ### Referencing earlier states
 
@@ -222,8 +203,6 @@ Complex sequences with masking could require accessing previous states (or nonli
   * roundabout 2: `flood fill`, then `blink-diff` with original
 * then add step which recovers original image, repeat `flood-fill`/`blink-diff` for second region
 * reference above masked states in a `mask` module, with `maskModule.draw(image, { getMask: function() { return maskImg } })`
-
-****
 
 **Notes:**
 
@@ -260,8 +239,6 @@ ctx.restore();
 * visual nodes-and-lines UI: https://github.com/flowhub/the-graph
   * https://flowhub.github.io/the-graph/examples/demo-simple.html
 
-
-
 ```js
 
 settings: {
@@ -286,11 +263,3 @@ settings: {
 ```
 
 Possible web-based commandline interface: https://hyper.is/?
-
-
-### Path cutting
-
-* threshold
-* vectorize
-  * edge detect
-  * direction find (vectorize and colorize)
