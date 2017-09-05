@@ -38590,7 +38590,7 @@ module.exports = function Crop(input,options,callback) {
 
      // Tell the UI that the step has been triggered
      UI.onDraw(options.step);
-     const step = this;
+     var step = this;
 
      require('./Crop')(input,options,function(out,format){
 
@@ -38669,7 +38669,7 @@ module.exports = function DoNothing(options,UI) {
 
     UI.onDraw(options.step);
 
-    const step = this;
+    var step = this;
 
     getPixels(input.src,function(err,pixels){
 
@@ -38736,7 +38736,7 @@ module.exports = function DoNothing(options,UI) {
     // Tell the UI that the step is being drawn
     UI.onDraw(options.step);
 
-    const step = this;
+    var step = this;
 
     if (!options.inBrowser) { // This module is only for browser
       this.output = input;
@@ -38884,7 +38884,7 @@ module.exports = function GreenChannel(options,UI) {
 
     // Tell UI that a step is being drawn
     UI.onDraw(options.step);
-    const step = this;
+    var step = this;
 
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
@@ -38948,7 +38948,7 @@ module.exports = function GreenChannel(options,UI) {
     // Tell UI that a step is being drawn.
     UI.onDraw(options.step);
 
-    const step = this;
+    var step = this;
 
     function changePixel(r, g, b, a) {
       return [255-r, 255-g, 255-b, a];
@@ -39009,7 +39009,7 @@ module.exports = function NdviRed(options,UI) {
 
     // Tell the UI that a step is being drawn.
     UI.onDraw(options.step);
-    const step = this;
+    var step = this;
 
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (1.00 * b + r);
@@ -39069,7 +39069,7 @@ module.exports = function SegmentedColormap(options,UI) {
 
     // Tell the UI that the step is being drawn
     UI.onDraw(options.step);
-    const step = this;
+    var step = this;
 
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (r + b);

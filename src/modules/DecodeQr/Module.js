@@ -18,7 +18,7 @@ module.exports = function DoNothing(options,UI) {
 
     UI.onDraw(options.step);
 
-    const step = this;
+    var step = this;
 
     getPixels(input.src,function(err,pixels){
 

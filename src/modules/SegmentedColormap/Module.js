@@ -12,7 +12,7 @@ module.exports = function SegmentedColormap(options,UI) {
 
     // Tell the UI that the step is being drawn
     UI.onDraw(options.step);
-    const step = this;
+    var step = this;
 
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (r + b);

@@ -15,7 +15,7 @@ module.exports = function NdviRed(options,UI) {
 
     // Tell the UI that a step is being drawn.
     UI.onDraw(options.step);
-    const step = this;
+    var step = this;
 
     function changePixel(r, g, b, a) {
       var ndvi = (b - r) / (1.00 * b + r);

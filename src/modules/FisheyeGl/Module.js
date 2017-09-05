@@ -17,7 +17,7 @@ module.exports = function DoNothing(options,UI) {
     // Tell the UI that the step is being drawn
     UI.onDraw(options.step);
 
-    const step = this;
+    var step = this;
 
     if (!options.inBrowser) { // This module is only for browser
       this.output = input;

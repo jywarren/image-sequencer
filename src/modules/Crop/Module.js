@@ -27,7 +27,7 @@
 
      // Tell the UI that the step has been triggered
      UI.onDraw(options.step);
-     const step = this;
+     var step = this;
 
      require('./Crop')(input,options,function(out,format){
 
