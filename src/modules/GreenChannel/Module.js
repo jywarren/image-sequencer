@@ -15,7 +15,7 @@ module.exports = function GreenChannel(options,UI) {
 
     // Tell UI that a step is being drawn
     UI.onDraw(options.step);
-    const step = this;
+    var step = this;
 
     function changePixel(r, g, b, a) {
       return [0, g, 0, a];
