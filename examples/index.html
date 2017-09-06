@@ -23,32 +23,33 @@
 
   <body>
 
-    <div class="container">
+    <div class="container-fluid">
 
-      <header class="jumbotron text-center">
+      <header class="text-center">
         <h1>Image Sequencer</h1>
-        <p><h3>Select an image to start with!</h3></p>
-        <center><input type="file" id="file" value=""></center>
+        <h3>
+          <a href="https://github.com/publiclab/image-sequencer"><i class="fa fa-github"></i></a>
+        </h3>
       </header>
 
-      <section id="steps" class="row">
-      </section>
+      <div id="imageSelect">
+        <p><i>Select an image to start with!</i></p>
+        <center><input type="file" id="file" value=""></center>
+      </div>
 
-      <section id="addStep" class="jumbotron text-center">
+      <section id="steps" class="row"></section>
+
+      <section id="addStep">
         <div class="row">
-          <h4>Add Step :</h4>
-          <select style="font-family: sans-serif; height: 30px">
-            <option value="none" disabled selected>Please Select</option>
+          <select class="form-control">
+            <option value="none" disabled selected>Select a new step...</option>
           </select>
         </div>
+        <hr />
         <div class="row">
-          <div>
-            <h4>Options:</h4>
-          </div>
-          <div id="options" class="form-horizontal">
-          </div>
+          <div id="options"></div>
         </div>
-        <div class="row" style="margin: 5px">
+        <div class="row add">
           <button class="btn btn-success btn-lg" name="add">Add Step</button>
         </div>
       </section>
@@ -92,18 +93,23 @@
           onSetup: function(step) {
 
             step.ui = '\
-            <div class="row">\
-              <div>\
-                <img alt="" class="img-thumbnail"/>\
+            <div class="row step">\
+              <div class="col-md-4 details">\
+                <h3>'+step.name+'</h3>\
+                <p><i>'+(step.description || '')+'</i></p>\
               </div>\
-              <div class="details">\
-                <h2>'+step.name+'&nbsp;</h2>\
+              <div class="col-md-8">\
+                <img alt="" class="img-thumbnail"/>\
               </div>\
             </div>\
             ';
 
-            var removebutton =
-            '<button class="remove btn btn-danger">X</button>';
+            var tools =
+            '<div class="tools btn-group">\
+               <button confirm="Are you sure?" class="remove btn btn-xs btn-default">\
+                 <i class="fa fa-trash"></i>\
+               </button>\
+            </div>';
 
             step.ui = parser.parseFromString(step.ui,'text/html');
             step.ui = step.ui.querySelector('div.row');
@@ -123,9 +129,9 @@
             }
 
             if(step.name != "load-image")
-              step.ui.querySelector('div.details h2').appendChild(
-                parser.parseFromString(removebutton,'text/html')
-                  .querySelector('button')
+              step.ui.querySelector('div.details').appendChild(
+                parser.parseFromString(tools,'text/html')
+                      .querySelector('div')
               );
 
             steps.appendChild(step.ui);
@@ -166,11 +172,11 @@
           for(var input in modulesInfo[m].inputs) {
             $('#options').append(
               '<div class="row">\
-                 <div class="col-md-2">\
+                 <div class="col-md-5 labels">\
                    '+input+':\
                  </div>\
-                 <div class="col-md-2">\
-                   <input type="text" name="'+input+'" value="" placeholder="'+
+                 <div class="col-md-5">\
+                   <input class="form-control" type="text" name="'+input+'" value="" placeholder="'+
                    modulesInfo[m].inputs[input].default+'"/>\
                  </div>\
                </div>'

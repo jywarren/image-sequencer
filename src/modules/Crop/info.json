@@ -1,5 +1,7 @@
 {
   "name": "Crop",
+  "description": "Crop image to given x, y, w, h",
+  "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x": {
       "type": "integer",
