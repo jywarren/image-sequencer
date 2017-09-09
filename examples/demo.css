@@ -40,6 +40,10 @@ h1 {
   color: #444;
 }
 
+#imageSelect input {
+  max-width: 100%;  
+}
+
 .step {
   margin-bottom: 20px;
 }
