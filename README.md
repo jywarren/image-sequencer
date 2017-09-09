@@ -23,16 +23,38 @@ It is also for prototyping some other related ideas:
 
 ## Examples:
 
-* [Basic example](https://jywarren.github.io/image-sequencer/)
-* [NDVI example](https://jywarren.github.io/image-sequencer/examples/ndvi/) - related to [Infragram.org](http://infragram.org)
+* [Single Image Demo](https://publiclab.github.io/image-sequencer/)
 
 ## Jump to:
 
+* [Installation](#installation)
 * [Quick Usage](#quick-usage)
+* [CLI Usage](#cli-usage)
 * [Classic Usage](#classic-usage)
 * [Method Chaining](#method-chaining)
 * [Multiple Images](#multiple-images)
 * [Creating a User Interface](#creating-a-user-interface)
+* [Submit a Module](https://github.com/publiclab/tree/master/CONTRIBUTING.md)
+
+## Installation
+
+### Browser
+
+Just include [image-sequencer.js](https://publiclab.github.io/image-sequencer/dist/image-sequencer.js) in the Head section of your web page.
+
+### Node (via NPM)
+
+(You must have NPM for this)
+Add `image-sequencer` to your list of dependancies and run `$ npm install`
+
+### CLI
+
+(You should have Node.JS and NPM for this.)
+Globally install Image Sequencer:
+```
+$ npm install image-sequencer -g
+```
+
 
 ## Quick Usage
 
@@ -68,13 +90,19 @@ Image Sequencer also provides a CLI for applying operations to local files. The 
 
 The basic format for using the CLI is as follows: 
 
+```
     $ ./index.js -i [PATH] -s step-name
+```
 
 *NOTE:* On Windows you'll have to use `node index.js` instead of `./index.js`.
 
 The CLI also can take multiple steps at once, like so:
 
+```
     $ ./index.js -i [PATH] -s "step-name-1 step-name-2 ..."
+```
+
+But for this, double quotes must wrap the space-separated steps.
 
 ## Classic Usage
 
