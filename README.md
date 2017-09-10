@@ -1,8 +1,6 @@
 Image Sequencer
 ====
 
-aka "Consequencer"
-
 [![Build Status](https://travis-ci.org/publiclab/image-sequencer.svg?branch=master)](https://travis-ci.org/publiclab/image-sequencer)
 
 ## Why
@@ -19,7 +17,7 @@ It is also for prototyping some other related ideas:
 * test-based image processing -- the ability to create a sequence of steps that do the same task as some other image processing tool, provable with example before/after images to compare with
 * logging of each step to produce an evidentiary record of modifications to an original image
 * cascading changes -- change an earlier step's settings, and see those changes affect later steps
-* "small modules"-based extensibility: see [Contributing](#contributing), below
+* "small modules"-based extensibility: see [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
 
 ## Examples:
 
@@ -34,7 +32,8 @@ It is also for prototyping some other related ideas:
 * [Method Chaining](#method-chaining)
 * [Multiple Images](#multiple-images)
 * [Creating a User Interface](#creating-a-user-interface)
-* [Submit a Module](https://github.com/publiclab/tree/master/CONTRIBUTING.md)
+* [Contributing](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md)
+* [Submit a Module](https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md#contributing-modules)
 
 ## Installation
 
