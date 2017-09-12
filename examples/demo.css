@@ -40,6 +40,10 @@ h1 {
   color: #444;
 }
 
+.hover {
+  background: #eee;
+}
+
 #imageSelect input {
   max-width: 100%;  
 }
