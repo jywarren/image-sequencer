@@ -27,9 +27,9 @@
 
       <header class="text-center">
         <h1>Image Sequencer</h1>
-        <h3>
-          <a href="https://github.com/publiclab/image-sequencer"><i class="fa fa-github"></i></a>
-        </h3>
+        <p>
+          Open Source <a href="https://github.com/publiclab/image-sequencer"><i class="fa fa-github"></i></a> by <a href="https://publiclab.org">Public Lab</a>
+        </p>
       </header>
 
       <div id="imageSelect">
@@ -199,8 +199,13 @@
           sequencer.removeSteps(index).run();
         });
 
-        $('#file').on('change',function(e){
-          var file = e.target.files[0];
+        function handleFile(e) {
+
+          e.preventDefault();
+          e.stopPropagation(); // stops the browser from redirecting.
+
+          if (e.target && e.target.files) var file = e.target.files[0];
+          else var file = e.dataTransfer.files[0];
           if(!file) return;
 
           reader.onload = function(){
@@ -211,11 +216,31 @@
           }
 
           reader.readAsDataURL(file);
+        }
+
+        $('#file').on('change', handleFile);
+
+        var select = $('#imageSelect');
+
+        select[0].addEventListener('drop', handleFile, false);
+
+        select.on('dragover', function(e) {
+          e.stopPropagation();
+          e.preventDefault();
+          e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+        }, false);
+
+        select.on('dragenter', function(e) {
+          select.addClass('hover');
         });
+  
+        select.on('dragleave', function(e) {
+          select.removeClass('hover');
+        });
+
       }
     </script>
 
   </body>
-
 
 </html>

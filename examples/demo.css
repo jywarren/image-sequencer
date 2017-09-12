@@ -40,6 +40,10 @@ h1 {
   color: #444;
 }
 
+.hover {
+  background: #eee;
+}
+
 .step {
   margin-bottom: 20px;
 }
