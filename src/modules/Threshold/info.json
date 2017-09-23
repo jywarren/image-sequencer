@@ -1,0 +1,12 @@
+{
+  "name": "Threshold",
+  "description": "Thresholds image to a given <threshold> value",
+  "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
+  "inputs": {
+    "threshold": {
+      "type": "integer",
+      "desc": "Threshold from 0 to 100 at which to flatten a pixel into black or white.",
+      "default": 50
+    }
+  }
+}

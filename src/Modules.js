@@ -11,6 +11,9 @@ module.exports = {
   'invert': [
     require('./modules/Invert/Module'),require('./modules/Invert/info')
   ],
+  'threshold': [
+    require('./modules/Threshold/Module'),require('./modules/Threshold/info')
+  ],
   'crop': [
     require('./modules/Crop/Module'),require('./modules/Crop/info')
   ],

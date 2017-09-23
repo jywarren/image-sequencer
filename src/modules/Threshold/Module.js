@@ -1,20 +1,26 @@
 /*
  * Image thresholding with 'image-filter-threshold'
  */
-module.exports = function ImageThreshold(options) {
+module.exports = function ImageThreshold(options, UI) {
   options = options || {};
   options.title = "Threshold image";
-  options.threshold = options.threshold || 30;
+  options.threshold = options.threshold || 50;
 
-  var image;
+  UI.onSetup(options.step);
 
-  function draw(inputImage) {
+  var output;
+
+  function draw(input, callback) {
+
+    UI.onDraw(options.step);
+    var image = new Image();
+    image.src = input.src;
     var canvas = document.createElement('canvas');
-    canvas.width = inputImage.naturalWidth;
-    canvas.height = inputImage.naturalHeight;
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
     var context = canvas.getContext('2d');
-    context.drawImage(inputImage, 0, 0 );
-    var imageData = context.getImageData(0, 0, inputImage.naturalWidth, inputImage.naturalHeight);
+    context.drawImage(image, 0, 0);
+    var imageData = context.getImageData(0, 0, image.naturalWidth, image.naturalHeight);
 
     var imageThreshold = require('image-filter-threshold');
     var imageFilterCore = require('image-filter-core');
@@ -25,7 +31,13 @@ module.exports = function ImageThreshold(options) {
     }).then(function (imageData) {
       image = new Image();
       image.onload = function onLoad() {
-        if (options.output) options.output(image);
+        this.output = {
+          format: input.type, 
+          src: image.src
+        }
+        options.step.output = output.src;
+        callback();
+        UI.onComplete(options.step);
       }
      image.src = imageFilterCore.convertImageDataToCanvasURL(imageData);
     });
@@ -38,6 +50,7 @@ module.exports = function ImageThreshold(options) {
   return {
     options: options,
     draw: draw,
-    get: get
+    output: output,
+    UI: UI
   }
 }
