@@ -17,6 +17,7 @@
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../dist/image-sequencer.js" charset="utf-8"></script>
+    <script src="lib/urlHash.js" charset="utf-8"></script>
 
   </head>
 
@@ -163,7 +164,14 @@
         });
 
         sequencer.loadImage('images/grid.png',function(){
-          this.addSteps('invert').run();
+
+          // look up needed steps from Url Hash:
+          var stepsFromHash = getUrlHashParameter('steps').split(',')
+          stepsFromHash.forEach(function eachStep(step) {
+            sequencer.addSteps(step)
+          });
+          sequencer.run();
+
         });
 
         $('#addStep select').on('change', function(){
@@ -189,6 +197,8 @@
           var inputs = $('#options input');
           $.each(inputs, function() {
             options[this.name] = $(this).val();
+            // add to URL hash too
+            setUrlHashParameter('steps', getUrlHashParameter('steps') + ',' + this.name)
           });
           if($('#addStep select').val()=="none") return;
           sequencer.addSteps($('#addStep select').val(),options).run();
@@ -197,6 +207,8 @@
         $('body').on('click','button.remove',function(){
           var index = $('button.remove').index(this) + 1;
           sequencer.removeSteps(index).run();
+          // remove from URL hash too
+          setUrlHashParameter("steps", getUrlHashParameter('steps').split(',').splice(index, 1).join(','));
         });
 
         function handleFile(e) {
