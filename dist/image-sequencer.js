@@ -38309,6 +38309,7 @@ function LoadImage(ref, name, src, main_callback) {
         options: {
           id: step.ID,
           name: "load-image",
+          description: "This initial step loads and displays the original image without any modifications.",
           title: "Load Image",
           step: step
         },
@@ -39095,14 +39096,14 @@ module.exports = function SegmentedColormap(options,UI) {
 
     function changePixel(r, g, b, a) {
       var combined = (r + g + b) / 3.000;
-      var res = require('./SegmentedColormap')(combined,options);
+      var res = require('./SegmentedColormap')(combined, options);
       return [res[0], res[1], res[2], 255];
     }
 
     function output(image,datauri,mimetype){
 
       // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
       // This output is accessible by the UI
       options.step.output = datauri;
@@ -39189,9 +39190,10 @@ var colormaps = {
                [1,     [255, 255, 255], [255, 255, 255] ]
              ]),
   default:   segmented_colormap([
-               [0,     [0,   0,   255], [0,   255, 255] ],
-               [0.33,  [0,   255, 255], [255, 255, 0]   ],
-               [0.66,  [255, 255, 0],   [255, 0,   0]  ]
+               [0,     [0,   0,   255], [0,   255, 0] ],
+               [0.25,  [0,   255, 0],   [255, 255, 0]   ],
+               [0.50,  [0,   255, 255], [255, 255, 0]   ],
+               [0.75,  [255, 255, 0],   [255, 0,   0]  ]
              ]),
   ndvi:      segmented_colormap([
                [0,     [0,   0,   255], [38,  195, 195] ],

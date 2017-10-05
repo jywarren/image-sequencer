@@ -163,6 +163,8 @@ window.onload = function() {
   $('body').on('click','button.remove', removeStepUI);
 
 
+  // Load-image drag/drop handling
+
   // File handling
 
   function handleFile(e) {
