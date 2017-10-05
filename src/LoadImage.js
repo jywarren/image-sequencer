@@ -46,6 +46,7 @@ function LoadImage(ref, name, src, main_callback) {
   function loadImage(name, src) {
     var step = {
       name: "load-image",
+      description: "This initial step loads and displays the original image without any modifications.",
       ID: ref.options.sequencerCounter++,
       imageName: name,
       inBrowser: ref.options.inBrowser,

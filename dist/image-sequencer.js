@@ -37893,6 +37893,7 @@ function LoadImage(ref, name, src, main_callback) {
   function loadImage(name, src) {
     var step = {
       name: "load-image",
+      description: "This initial step loads and displays the original image without any modifications.",
       ID: ref.options.sequencerCounter++,
       imageName: name,
       inBrowser: ref.options.inBrowser,
@@ -38549,9 +38550,9 @@ module.exports={
 
 },{}],139:[function(require,module,exports){
 /*
- * Display only the green channel
+ * Invert the image
  */
-module.exports = function GreenChannel(options,UI) {
+module.exports = function Invert(options,UI) {
 
   options = options || {};
   options.title = "Invert Colors";
@@ -38606,6 +38607,7 @@ module.exports = function GreenChannel(options,UI) {
 },{"../_nomodule/PixelManipulation.js":146}],140:[function(require,module,exports){
 module.exports={
   "name": "Invert",
+  "description": "Inverts the image.",
   "inputs": {
   }
 }
