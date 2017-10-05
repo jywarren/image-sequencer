@@ -58,6 +58,7 @@ function LoadImage(ref, name, src, main_callback) {
         options: {
           id: step.ID,
           name: "load-image",
+          description: "This initial step loads and displays the original image without any modifications.",
           title: "Load Image",
           step: step
         },
