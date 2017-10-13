@@ -31,6 +31,8 @@ window.onload = function() {
 
     onSetup: function(step) {
 
+      if (step.options && step.options.description) step.description = step.options.description
+
       step.ui = '\
       <div class="row step">\
         <div class="col-md-4 details">\
