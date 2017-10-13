@@ -31,7 +31,6 @@ window.onload = function() {
 
     onSetup: function(step) {
 
-console.log(step, step.description)
       if (step.options && step.options.description) step.description = step.options.description
 
       step.ui = '\
