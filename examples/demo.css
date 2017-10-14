@@ -31,7 +31,7 @@ h1 {
   margin: 0 !important;
 }
 
-#imageSelect {
+#dropzone {
   padding: 30px;
   margin: 0 20% 30px;
   border: 4px dashed #ccc;
@@ -44,7 +44,7 @@ h1 {
   background: #eee;
 }
 
-#imageSelect input {
+#dropzone input {
   max-width: 100%;  
 }
 

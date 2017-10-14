@@ -10,20 +10,21 @@
 
     <title>Image Sequencer</title>
 
-    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="demo.css">
-
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="../dist/image-sequencer.js" charset="utf-8"></script>
     <script src="lib/urlHash.js" charset="utf-8"></script>
+    <script src="lib/imageSelection.js" charset="utf-8"></script>
     <script src="demo.js" charset="utf-8"></script>
 
   </head>
 
 
   <body>
+
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../node_modules/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="demo.css">
 
     <div class="container-fluid">
 
@@ -34,9 +35,9 @@
         </p>
       </header>
 
-      <div id="imageSelect">
-        <p><i>Select an image to start with!</i></p>
-        <center><input type="file" id="file" value=""></center>
+      <div id="dropzone">
+        <p><i>Select or drag in an image to start!</i></p>
+        <center><input type="file" id="fileInput" value=""></center>
       </div>
 
       <section id="steps" class="row"></section>

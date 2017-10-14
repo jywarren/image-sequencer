@@ -16,7 +16,6 @@ window.onload = function() {
   var steps = document.querySelector('#steps');
   var parser = new DOMParser();
   var reader = new FileReader();
-  initial = "images/grid.png";
 
   // Set the UI in sequencer. This Will generate HTML based on
   // Image Sequencer events :
@@ -59,14 +58,26 @@ window.onload = function() {
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
         var inputs = sequencer.modulesInfo(step.name).inputs;
         var outputs = sequencer.modulesInfo(step.name).outputs;
-        var io = Object.assign(inputs,outputs);
+        var io = Object.assign(inputs, outputs);
         for (var i in io) {
           var div = document.createElement('div');
           div.className = "row";
-          div.setAttribute('name',i);
-          div.innerHTML = "<div class='det'>" + i + ": " + "<span></span></div>";
+          div.setAttribute('name', i);
+          div.innerHTML = "<div class='det'>\
+                             <label for='" + i + "'>" + i + "</label>\
+                             <input name=" + i + " class='form-control' style='width:50%' type='text' />\
+                           </div>";
           step.ui.querySelector('div.details').appendChild(div);
         }
+        $(step.ui.querySelector('div.details')).append("<p><button class='btn btn-default btn-save'>Save</button></p>");
+
+        // on clicking Save in the details pane of the step
+        $(step.ui.querySelector('div.details .btn-save')).click(function saveOptions() {
+          $(step.ui.querySelector('div.details')).find('input').each(function(i, input) {
+            step.options[$(input).attr('name')] = input.value;
+          });
+          sequencer.run();
+        });
       }
 
       if(step.name != "load-image")
@@ -79,22 +90,19 @@ window.onload = function() {
     },
 
     onComplete: function(step) {
-
       step.imgElement.src = step.output;
-
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
         var inputs = sequencer.modulesInfo(step.name).inputs;
         var outputs = sequencer.modulesInfo(step.name).outputs;
         for (var i in inputs) {
-          step.ui.querySelector('div[name="'+i+'"] span')
-            .innerHTML = step.options[i];
+          if (step.options[i] !== undefined) step.ui.querySelector('div[name="'+i+'"] input')
+                                                 .value = step.options[i];
         }
         for (var i in outputs) {
-          step.ui.querySelector('div[name="'+i+'"] span')
-            .innerHTML = step[i];
+          if (step[i] !== undefined) step.ui.querySelector('div[name="'+i+'"] input')
+                                         .value = step[i];
         }
       }
-
     },
 
     onRemove: function(step) {
@@ -103,7 +111,7 @@ window.onload = function() {
 
   });
 
-  sequencer.loadImage('images/grid.png', function loadImageUI(){
+  sequencer.loadImage('images/tulips.png', function loadImageUI(){
 
     // look up needed steps from Url Hash:
     var stepsFromHash = getUrlHashParameter('steps').split(',')
@@ -165,47 +173,7 @@ window.onload = function() {
   $('body').on('click','button.remove', removeStepUI);
 
 
-  // Load-image drag/drop handling
-
-  // File handling
-
-  function handleFile(e) {
-
-    e.preventDefault();
-    e.stopPropagation(); // stops the browser from redirecting.
-
-    if (e.target && e.target.files) var file = e.target.files[0];
-    else var file = e.dataTransfer.files[0];
-    if(!file) return;
-
-    reader.onload = function(){
-      var loadStep = sequencer.images.image1.steps[0];
-      loadStep.output.src = reader.result;
-      sequencer.run(0);
-      loadStep.options.step.imgElement.src = reader.result;
-    }
-
-    reader.readAsDataURL(file);
-  }
-
-  $('#file').on('change', handleFile);
-
-  var select = $('#imageSelect');
-
-  select[0].addEventListener('drop', handleFile, false);
-
-  select.on('dragover', function(e) {
-    e.stopPropagation();
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
-  }, false);
-
-  select.on('dragenter', function(e) {
-    select.addClass('hover');
-  });
-
-  select.on('dragleave', function(e) {
-    select.removeClass('hover');
-  });
+  // image selection and drag/drop handling from examples/lib/imageSelection.js
+  setupFileHandling(sequencer);
 
 }
