@@ -37845,6 +37845,7 @@ function InsertStep(ref, image, index, name, o) {
 module.exports = InsertStep;
 
 },{}],125:[function(require,module,exports){
+// special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
     var image = {
@@ -37975,10 +37976,13 @@ module.exports = {
   ],
   'fisheye-gl': [
     require('./modules/FisheyeGl/Module'),require('./modules/FisheyeGl/info')
+  ],
+  'dynamic': [
+    require('./modules/Dynamic/Module'),require('./modules/Dynamic/info')
   ]
 }
 
-},{"./modules/Crop/Module":131,"./modules/Crop/info":132,"./modules/DecodeQr/Module":133,"./modules/DecodeQr/info":134,"./modules/FisheyeGl/Module":135,"./modules/FisheyeGl/info":136,"./modules/GreenChannel/Module":137,"./modules/GreenChannel/info":138,"./modules/Invert/Module":139,"./modules/Invert/info":140,"./modules/NdviRed/Module":141,"./modules/NdviRed/info":142,"./modules/SegmentedColormap/Module":143,"./modules/SegmentedColormap/info":145}],127:[function(require,module,exports){
+},{"./modules/Crop/Module":131,"./modules/Crop/info":132,"./modules/DecodeQr/Module":133,"./modules/DecodeQr/info":134,"./modules/Dynamic/Module":135,"./modules/Dynamic/info":136,"./modules/FisheyeGl/Module":137,"./modules/FisheyeGl/info":138,"./modules/GreenChannel/Module":139,"./modules/GreenChannel/info":140,"./modules/Invert/Module":141,"./modules/Invert/info":142,"./modules/NdviRed/Module":143,"./modules/NdviRed/info":144,"./modules/SegmentedColormap/Module":145,"./modules/SegmentedColormap/info":147}],127:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var this_ = ref;
@@ -38017,50 +38021,58 @@ module.exports = ReplaceImage;
 
 },{}],128:[function(require,module,exports){
 function Run(ref, json_q, callback) {
-  function drawStep(drawarray,pos) {
-    if(pos==drawarray.length) {
+
+  function drawStep(drawarray, pos) {
+    if (pos == drawarray.length && drawarray[pos - 1] !== undefined) {
       var image = drawarray[pos-1].image;
-      if(ref.objTypeOf(callback)=='Function'){
+      if(ref.objTypeOf(callback) == 'Function') {
         var steps = ref.images[image].steps;
         var out = steps[steps.length-1].output.src;
         callback(out);
         return true;
       }
     }
-    var image = drawarray[pos].image;
-    var i = drawarray[pos].i;
-    var input = ref.images[image].steps[i-1].output;
-    ref.images[image].steps[i].draw(ref.copy(input),function(){
-      drawStep(drawarray,++pos);
-    });
+    // so we don't run on the loadImage module:
+    if (drawarray[pos] !== undefined) {
+      var image = drawarray[pos].image;
+      var i = drawarray[pos].i;
+      var input = ref.images[image].steps[i - 1].output;
+      ref.images[image].steps[i].draw(ref.copy(input), function onEachStep() {
+        drawStep(drawarray, ++pos);
+      });
+    }
   }
+
   function drawSteps(json_q) {
     var drawarray = [];
     for (var image in json_q) {
       var no_steps = ref.images[image].steps.length;
       var init = json_q[image];
-      for(var i = 0; i < no_steps-init; i++) {
-        drawarray.push({image: image,i: init+i});
+      for(var i = 0; i < no_steps - init; i++) {
+        drawarray.push({ image: image, i: init + i });
       }
     }
     drawStep(drawarray,0);
   }
+
   function filter(json_q){
     for (var image in json_q) {
-      if (json_q[image]==0 && ref.images[image].steps.length==1)
+      if (json_q[image] == 0 && ref.images[image].steps.length == 1)
         delete json_q[image];
-      else if (json_q[image]==0) json_q[image]++;
+      else if (json_q[image] == 0) json_q[image]++;
     }
     for (var image in json_q) {
-      var prevstep = ref.images[image].steps[json_q[image]-1];
+      var prevstep = ref.images[image].steps[json_q[image] - 1];
       while (typeof(prevstep) == "undefined" || typeof(prevstep.output) == "undefined") {
         prevstep = ref.images[image].steps[(--json_q[image]) - 1];
       }
     }
     return json_q;
   }
+
   var json_q = filter(json_q);
   return drawSteps(json_q);
+
 }
 module.exports = Run;
 
@@ -38337,6 +38349,110 @@ module.exports={
 }
 
 },{}],135:[function(require,module,exports){
+module.exports = function Dynamic(options,UI) {
+
+  options = options || {};
+  options.title = "Dynamic";
+
+  // Tell the UI that a step has been set up.
+  UI.onSetup(options.step);
+  var output;
+
+  // This function is called on every draw.
+  function draw(input,callback) {
+
+    // Tell the UI that the step is being drawn
+    UI.onDraw(options.step);
+    var step = this;
+
+    // start with monochrome, but if options.red, options.green, and options.blue are set, accept them too
+    options.monochrome = options.monochrome || "(R+G+B)/3";
+
+    function generator(expression) {
+      var func = 'f = function (r, g, b, a) { var R = r, G = g, B = b, A = a;'
+      func = func + 'return ';
+      func = func + expression + '}';
+      var f;
+      eval(func);
+      return f;
+    }
+
+    var channels = ['red', 'green', 'blue', 'alpha'];
+
+    channels.forEach(function(channel) {
+      if (options.hasOwnProperty(channel)) options[channel + '_function'] = generator(options[channel]);
+      else if (channel === 'alpha')        options['alpha_function'] = function() { return 255; }
+      else                                 options[channel + '_function'] = generator(options.monochrome);
+    });
+
+    function changePixel(r, g, b, a) {
+      var combined = (r + g + b) / 3.000;
+      return [
+        options.red_function(  r, g, b, a),
+        options.green_function(r, g, b, a),
+        options.blue_function( r, g, b, a),
+        options.alpha_function(r, g, b, a),
+      ];
+    }
+
+    function output(image,datauri,mimetype){
+
+      // This output is accessible by Image Sequencer
+      step.output = { src: datauri, format: mimetype };
+
+      // This output is accessible by the UI
+      options.step.output = datauri;
+
+      // Tell the UI that the draw is complete
+      UI.onComplete(options.step);
+
+    }
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      callback: callback
+    });
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}
+
+},{"../_nomodule/PixelManipulation.js":148}],136:[function(require,module,exports){
+module.exports={
+  "name": "Dynamic",
+  "inputs": {
+    "red": {
+      "type": "input",
+      "desc": "Expression to return for red channel with R, G, B, and A inputs",
+      "default": "r"
+    },
+    "green": {
+      "type": "input",
+      "desc": "Expression to return for green channel with R, G, B, and A inputs",
+      "default": "g"
+    },
+    "blue": {
+      "type": "input",
+      "desc": "Expression to return for blue channel with R, G, B, and A inputs",
+      "default": "b"
+    },
+    "monochrome (fallback)": {
+      "type": "input",
+      "desc": "Expression to return with R, G, B, and A inputs; fallback for other channels if none provided",
+      "default": "r + g + b"
+    }
+  }
+}
+
+},{}],137:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -38420,7 +38536,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":25}],136:[function(require,module,exports){
+},{"fisheyegl":25}],138:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "inputs": {
@@ -38486,7 +38602,7 @@ module.exports={
   }
 }
 
-},{}],137:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -38541,14 +38657,14 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":146}],138:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":148}],140:[function(require,module,exports){
 module.exports={
   "name": "Green Channel",
   "inputs": {
   }
 }
 
-},{}],139:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 /*
  * Invert the image
  */
@@ -38604,7 +38720,7 @@ module.exports = function Invert(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":146}],140:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":148}],142:[function(require,module,exports){
 module.exports={
   "name": "Invert",
   "description": "Inverts the image.",
@@ -38612,7 +38728,7 @@ module.exports={
   }
 }
 
-},{}],141:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -38668,14 +38784,14 @@ module.exports = function NdviRed(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":146}],142:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":148}],144:[function(require,module,exports){
 module.exports={
   "name": "NDVI Red",
   "inputs": {
   }
 }
 
-},{}],143:[function(require,module,exports){
+},{}],145:[function(require,module,exports){
 module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
@@ -38728,7 +38844,7 @@ module.exports = function SegmentedColormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":146,"./SegmentedColormap":144}],144:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":148,"./SegmentedColormap":146}],146:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
  * from a lookup table, which can be specified as an array of [begin, end] 
@@ -38817,7 +38933,7 @@ var colormaps = {
              ])
 }
 
-},{}],145:[function(require,module,exports){
+},{}],147:[function(require,module,exports){
 module.exports={
   "name": "Segmented Colormap",
   "inputs": {
@@ -38830,7 +38946,7 @@ module.exports={
   }
 }
 
-},{}],146:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 (function (Buffer){
 /*
  * General purpose per-pixel manipulation

@@ -1,3 +1,4 @@
+// special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
     var image = {
