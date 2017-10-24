@@ -39,7 +39,7 @@ window.onload = function() {
           <p><i>'+(step.description || '')+'</i></p>\
         </div>\
         <div class="col-md-8">\
-          <div class="load"></div>\
+          <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
           <img alt="" class="img-thumbnail"/>\
         </div>\
       </div>\
@@ -68,14 +68,14 @@ window.onload = function() {
             ioUI += "<span class=\"output\"></span>";
           }
           else if (inputDesc.type.toLowerCase() == "select") {
-            ioUI += "<select name=\""+i+"\">";
+            ioUI += "<select class=\"form-control\" name=\""+i+"\">";
             for (var option in inputDesc.values) {
               ioUI += "<option>"+inputDesc.values[option]+"</option>";
             }
             ioUI += "</select>";
           }
           else {
-            ioUI = "<input type=\""+inputDesc.type+"\" name=\""+i+"\">";
+            ioUI = "<input class=\"form-control\" type=\""+inputDesc.type+"\" name=\""+i+"\">";
           }
           var div = document.createElement('div');
           div.className = "row";
@@ -107,25 +107,29 @@ window.onload = function() {
     },
 
     onDraw: function(step) {
-      step.ui.querySelector('.load').className = "load loading";
+      $(step.ui.querySelector('.load')).show();
+      $(step.ui.querySelector('img')).hide();
     },
 
     onComplete: function(step) {
-      step.ui.querySelector('.load').className = "load";
+      $(step.ui.querySelector('.load')).hide();
+      $(step.ui.querySelector('img')).show();
 
       step.imgElement.src = step.output;
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
         var inputs = sequencer.modulesInfo(step.name).inputs;
         var outputs = sequencer.modulesInfo(step.name).outputs;
         for (var i in inputs) {
-          if (step.options[i] !== undefined && inputs[i].type.toLowerCase()!="select") step.ui.querySelector('div[name="'+i+'"] input')
-                                                 .value = step.options[i];
-          if (step.options[i] !== undefined) step.ui.querySelector('div[name="'+i+'"] select')
-                                                 .value = step.options[i];
+          if (step.options[i] !== undefined && 
+              inputs[i].type.toLowerCase() === "input") step.ui.querySelector('div[name="' + i + '"] input')
+                                                               .value = step.options[i];
+          if (step.options[i] !== undefined &&
+              inputs[i].type.toLowerCase() === "select") step.ui.querySelector('div[name="' + i + '"] select')
+                                                                .value = step.options[i];
         }
         for (var i in outputs) {
           if (step[i] !== undefined) step.ui.querySelector('div[name="'+i+'"] input')
-                                         .value = step[i];
+                                            .value = step[i];
         }
       }
     },
@@ -136,14 +140,18 @@ window.onload = function() {
 
   });
 
-  sequencer.loadImage('images/tulips.png', function loadImageUI(){
+  sequencer.loadImage('images/tulips.png', function loadImageUI() {
 
     // look up needed steps from Url Hash:
-    var stepsFromHash = getUrlHashParameter('steps').split(',')
-    stepsFromHash.forEach(function eachStep(step) {
-      sequencer.addSteps(step)
-    });
-    sequencer.run();
+    var hash = getUrlHashParameter('steps');
+
+    if (hash) {
+      var stepsFromHash = hash.split(',');
+      stepsFromHash.forEach(function eachStep(step) {
+        sequencer.addSteps(step);
+      });
+      sequencer.run();
+    }
 
   });
 
@@ -159,14 +167,14 @@ window.onload = function() {
       var inputUI = "";
       var inputDesc = modulesInfo[m].inputs[input];
       if (inputDesc.type.toLowerCase() == "select") {
-        inputUI += "<select name=\""+input+"\">";
+        inputUI += "<select class=\"form-control\" name=\""+input+"\">";
         for (var option in inputDesc.values) {
           inputUI += "<option>"+inputDesc.values[option]+"</option>";
         }
         inputUI += "</select>";
       }
       else {
-        inputUI = "<input type=\""+inputDesc.type+"\" name=\""+input+"\">";
+        inputUI = "<input class=\"form-control\" type=\""+inputDesc.type+"\" name=\""+input+"\">";
       }
       $('#options').append(
         '<div class="row">\
@@ -188,9 +196,11 @@ window.onload = function() {
     $.each(inputs, function() {
       options[this.name] = $(this).val();
     });
-    if($('#addStep select').val()=="none") return;
+    if($('#addStep select').val() == "none") return;
     // add to URL hash too
-    setUrlHashParameter('steps', getUrlHashParameter('steps') + ',' + $('#addStep select').val())
+    var hash = getUrlHashParameter('steps') || '';
+    if (hash != '') hash += ',';
+    setUrlHashParameter('steps', hash + $('#addStep select').val())
     sequencer.addSteps($('#addStep select').val(),options).run();
   }
 
