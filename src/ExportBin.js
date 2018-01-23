@@ -23,7 +23,7 @@ var getDirectories = function(rootDir, cb) {
   });
 }
 
-module.exports = function ExportBin(dir = "./output/",ref) {
+module.exports = function ExportBin(dir = "./output/",ref,basic) {
   dir = (dir[dir.length-1]=="/") ? dir : dir + "/";
   if(ref.options.inBrowser) return false;
   fs.access(dir, function(err){
@@ -40,13 +40,19 @@ module.exports = function ExportBin(dir = "./output/",ref) {
       var root = dir+'sequencer'+num+'/';
       for(var image in ref.images) {
         var steps = ref.images[image].steps;
-        for(var i in steps) {
-          var datauri = steps[i].output.src;
-          var ext = steps[i].output.format;
-          var buffer = require('data-uri-to-buffer')(datauri);
-          fs.writeFile(root+image+"_"+i+"."+ext,buffer,function(){
-
-          });
+        if(basic){
+          var datauri = steps.slice(-1)[0].output.src;
+            var ext = steps.slice(-1)[0].output.format;
+            var buffer = require('data-uri-to-buffer')(datauri);
+            fs.writeFile(root+image+"_"+(steps.length-1)+"."+ext,buffer,function(){});
+        }
+        else{
+          for(var i in steps) {
+            var datauri = steps[i].output.src;
+            var ext = steps[i].output.format;
+            var buffer = require('data-uri-to-buffer')(datauri);
+            fs.writeFile(root+image+"_"+i+"."+ext,buffer,function(){});
+          }
         }
       }
     })

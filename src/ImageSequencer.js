@@ -177,8 +177,8 @@ ImageSequencer = function ImageSequencer(options) {
     this.events = require('./UserInterface')(UI);
   }
 
-  var exportBin = function(dir) {
-    return require('./ExportBin')(dir,this);
+  var exportBin = function(dir,basic) {
+    return require('./ExportBin')(dir,this,basic);
   }
 
   function modulesInfo(name) {

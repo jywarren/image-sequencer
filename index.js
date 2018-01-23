@@ -16,6 +16,7 @@ program
   .option('-i, --image [PATH/URL]', 'Input image URL')
   .option('-s, --step [step-name]', 'Name of the step to be added.')
   .option('-o, --output [PATH]', 'Directory where output will be stored.')
+  .option('-b, --basic','Basic mode outputs only final image')
   .option('-op, --opions {object}', 'Options for the step')
   .parse(process.argv);
 
@@ -57,6 +58,8 @@ sequencer.setUI({
 sequencer.loadImages(program.image,function(){
     console.warn('\x1b[33m%s\x1b[0m', "The execution will be async\nYou may not see the output for a few seconds or minutes")
 
+    if(program.basic) console.log("Basic mode is enabled, outputting only final image")
+
   // Iterate through the steps and retrieve their inputs.
   program.step.forEach(function(step){
     var options = Object.assign({}, sequencer.modulesInfo(step).inputs);
@@ -86,8 +89,8 @@ sequencer.loadImages(program.image,function(){
   // Run the sequencer.
   sequencer.run(function(){
 
-    // Export all images as binary files.
-    sequencer.exportBin(program.output);
+    // Export all images or final image as binary files.
+    sequencer.exportBin(program.output,program.basic);
 
     console.log("Files will be exported to \""+program.output+"\"");
 

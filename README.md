@@ -95,6 +95,7 @@ Image Sequencer also provides a CLI for applying operations to local files. The 
 
     -i  | --image [PATH/URL] | Input image URL. (required)
     -s  | --step [step-name] | Name of the step to be added. (required)
+    -b  | --basic            | Basic mode only outputs the final image
     -o  | --output [PATH]    | Directory where output will be stored. (optional)
     -op | --opions {object}  | Options for the step. (optional)
 
