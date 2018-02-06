@@ -27,7 +27,7 @@ module.exports = function ExportBin(dir = "./output/",ref,basic) {
   dir = (dir[dir.length-1]=="/") ? dir : dir + "/";
   if(ref.options.inBrowser) return false;
   fs.access(dir, function(err){
-    if(err) fs.mkdir(dir, function() {});
+    if(err) console.error(err)
   });
   getDirectories(dir,function(dirs){
     var num = 1;
