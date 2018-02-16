@@ -98,7 +98,7 @@ Image Sequencer also provides a CLI for applying operations to local files. The 
     -s  | --step [step-name] | Name of the step to be added. (required)
     -b  | --basic            | Basic mode only outputs the final image
     -o  | --output [PATH]    | Directory where output will be stored. (optional)
-    -d  | --details {object} | Options for the step. (optional)
+    -c  | --config {object} | Options for the step. (optional)
 
 The basic format for using the CLI is as follows: 
 
