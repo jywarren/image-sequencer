@@ -8,6 +8,9 @@ module.exports = {
   'brightness': [
     require('./modules/Brightness/Module'),require('./modules/Brightness/info')
   ],
+  'edge-detect':[
+    require('./modules/EdgeDetect/Module'),require('./modules/EdgeDetect/info')
+  ],
   'ndvi-red': [
     require('./modules/NdviRed/Module'),require('./modules/NdviRed/info')
   ],

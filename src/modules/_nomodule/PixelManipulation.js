@@ -8,6 +8,10 @@ module.exports = function PixelManipulation(image, options) {
   options.changePixel = options.changePixel || function changePixel(r, g, b, a) {
     return [r, g, b, a];
   };
+  options.extraManipulation = options.extraManipulation||function extraManipulation(pixels){
+    return pixels;
+  }
+
   var getPixels = require('get-pixels'),
       savePixels = require('save-pixels');
 
@@ -38,6 +42,8 @@ module.exports = function PixelManipulation(image, options) {
 
       }
     }
+
+    pixels = options.extraManipulation(pixels)
 
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
