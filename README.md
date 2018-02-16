@@ -98,7 +98,7 @@ Image Sequencer also provides a CLI for applying operations to local files. The 
     -s  | --step [step-name] | Name of the step to be added. (required)
     -b  | --basic            | Basic mode only outputs the final image
     -o  | --output [PATH]    | Directory where output will be stored. (optional)
-    -op | --opions {object}  | Options for the step. (optional)
+    -d  | --details {object} | Options for the step. (optional)
 
 The basic format for using the CLI is as follows: 
 
@@ -115,6 +115,15 @@ The CLI also can take multiple steps at once, like so:
 ```
 
 But for this, double quotes must wrap the space-separated steps.
+
+Options for the steps can be passed in one line as json in the details option like 
+```
+$ ./index.js -i [PATH] -s "brightness" -d '{"brightness":50}'
+
+```
+Or the values can be given through terminal prompt like
+
+<img width="1436" alt="screen shot 2018-02-14 at 5 18 50 pm" src="https://user-images.githubusercontent.com/25617855/36202790-3c6e8204-11ab-11e8-9e17-7f3387ab0158.png">
 
 ## Classic Usage
 
