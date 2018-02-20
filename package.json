@@ -32,6 +32,7 @@
     "jsqr": "^0.2.2",
     "lodash": "^4.17.5",
     "ndarray-gaussian-filter": "^1.0.0",
+    "pace": "0.0.4",
     "readline-sync": "^1.4.7",
     "save-pixels": "~2.3.4",
     "urify": "^2.1.0"

@@ -2038,7 +2038,338 @@ function numberIsNaN (obj) {
   return obj !== obj // eslint-disable-line no-self-compare
 }
 
-},{"base64-js":1,"ieee754":48}],5:[function(require,module,exports){
+},{"base64-js":1,"ieee754":50}],5:[function(require,module,exports){
+(function (process){
+var tty = require('tty');
+var encode = require('./lib/encode');
+var Stream = require('stream').Stream;
+
+var exports = module.exports = function () {
+    var input = null;
+    function setInput (s) {
+        if (input) throw new Error('multiple inputs specified')
+        else input = s
+    }
+    
+    var output = null;
+    function setOutput (s) {
+        if (output) throw new Error('multiple outputs specified')
+        else output = s
+    }
+    
+    for (var i = 0; i < arguments.length; i++) {
+        var arg = arguments[i];
+        if (!arg) continue;
+        if (arg.readable) setInput(arg)
+        else if (arg.stdin || arg.input) setInput(arg.stdin || arg.input)
+        
+        if (arg.writable) setOutput(arg)
+        else if (arg.stdout || arg.output) setOutput(arg.stdout || arg.output)
+        
+    }
+    
+    if (input && typeof input.fd === 'number' && tty.isatty(input.fd)) {
+        if (process.stdin.setRawMode) {
+            process.stdin.setRawMode(true);
+        }
+        else tty.setRawMode(true);
+    }
+    
+    var charm = new Charm;
+    if (input) {
+        input.pipe(charm);
+    }
+    
+    if (output) {
+        charm.pipe(output);
+    }
+    
+    charm.once('^C', process.exit);
+    charm.once('end', function () {
+      if (input) {
+          if (typeof input.fd === 'number' && tty.isatty(input.fd)) {
+            if (process.stdin.setRawMode) {
+                process.stdin.setRawMode(false);
+            }
+            else tty.setRawMode(false);
+          }
+          input.destroy();
+      }
+    });
+
+    return charm;
+};
+
+var Charm = exports.Charm = function Charm () {
+    this.writable = true;
+    this.readable = true;
+    this.pending = [];
+}
+
+Charm.prototype = new Stream;
+
+Charm.prototype.write = function (buf) {
+    var self = this;
+    
+    if (self.pending.length) {
+        var codes = extractCodes(buf);
+        var matched = false;
+        
+        for (var i = 0; i < codes.length; i++) {
+            for (var j = 0; j < self.pending.length; j++) {
+                var cb = self.pending[j];
+                if (cb(codes[i])) {
+                    matched = true;
+                    self.pending.splice(j, 1);
+                    break;
+                }
+            }
+        }
+        
+        if (matched) return;
+    }
+    
+    if (buf.length === 1) {
+        if (buf[0] === 3) self.emit('^C');
+        if (buf[0] === 4) self.emit('^D');
+    }
+    
+    self.emit('data', buf);
+    
+    return self;
+};
+
+
+Charm.prototype.destroy = function () {
+    this.end();
+};
+
+Charm.prototype.end = function (buf) {
+    if (buf) this.write(buf);
+    this.emit('end');
+};
+
+Charm.prototype.reset = function (cb) {
+    this.write(encode('c'));
+    return this;
+};
+
+Charm.prototype.position = function (x, y) {
+    // get/set absolute coordinates
+    if (typeof x === 'function') {
+        var cb = x;
+        this.pending.push(function (buf) {
+            if (buf[0] === 27 && buf[1] === encode.ord('[')
+            && buf[buf.length-1] === encode.ord('R')) {
+                var pos = buf.toString()
+                    .slice(2,-1)
+                    .split(';')
+                    .map(Number)
+                ;
+                cb(pos[1], pos[0]);
+                return true;
+            }
+        });
+        this.write(encode('[6n'));
+    }
+    else {
+        this.write(encode(
+            '[' + Math.floor(y) + ';' + Math.floor(x) + 'f'
+        ));
+    }
+    return this;
+};
+
+Charm.prototype.move = function (x, y) {
+    // set relative coordinates
+    var bufs = [];
+    
+    if (y < 0) this.up(-y)
+    else if (y > 0) this.down(y)
+    
+    if (x > 0) this.right(x)
+    else if (x < 0) this.left(-x)
+    
+    return this;
+};
+
+Charm.prototype.up = function (y) {
+    if (y === undefined) y = 1;
+    this.write(encode('[' + Math.floor(y) + 'A'));
+    return this;
+};
+
+Charm.prototype.down = function (y) {
+    if (y === undefined) y = 1;
+    this.write(encode('[' + Math.floor(y) + 'B'));
+    return this;
+};
+
+Charm.prototype.right = function (x) {
+    if (x === undefined) x = 1;
+    this.write(encode('[' + Math.floor(x) + 'C'));
+    return this;
+};
+
+Charm.prototype.left = function (x) {
+    if (x === undefined) x = 1;
+    this.write(encode('[' + Math.floor(x) + 'D'));
+    return this;
+};
+
+Charm.prototype.column = function (x) {
+    this.write(encode('[' + Math.floor(x) + 'G'));
+    return this;
+};
+
+Charm.prototype.push = function (withAttributes) {
+    this.write(encode(withAttributes ? '7' : '[s'));
+    return this;
+};
+
+Charm.prototype.pop = function (withAttributes) {
+    this.write(encode(withAttributes ? '8' : '[u'));
+    return this;
+};
+
+Charm.prototype.erase = function (s) {
+    if (s === 'end' || s === '$') {
+        this.write(encode('[K'));
+    }
+    else if (s === 'start' || s === '^') {
+        this.write(encode('[1K'));
+    }
+    else if (s === 'line') {
+        this.write(encode('[2K'));
+    }
+    else if (s === 'down') {
+        this.write(encode('[J'));
+    }
+    else if (s === 'up') {
+        this.write(encode('[1J'));
+    }
+    else if (s === 'screen') {
+        this.write(encode('[1J'));
+    }
+    else {
+        this.emit('error', new Error('Unknown erase type: ' + s));
+    }
+    return this;
+};
+
+Charm.prototype.display = function (attr) {
+    var c = {
+        reset : 0,
+        bright : 1,
+        dim : 2,
+        underscore : 4,
+        blink : 5,
+        reverse : 7,
+        hidden : 8
+    }[attr];
+    if (c === undefined) {
+        this.emit('error', new Error('Unknown attribute: ' + attr));
+    }
+    this.write(encode('[' + c + 'm'));
+    return this;
+};
+
+Charm.prototype.foreground = function (color) {
+    if (typeof color === 'number') {
+        if (color < 0 || color >= 256) {
+            this.emit('error', new Error('Color out of range: ' + color));
+        }
+        this.write(encode('[38;5;' + color + 'm'));
+    }
+    else {
+        var c = {
+            black : 30,
+            red : 31,
+            green : 32,
+            yellow : 33,
+            blue : 34,
+            magenta : 35,
+            cyan : 36,
+            white : 37
+        }[color.toLowerCase()];
+        
+        if (!c) this.emit('error', new Error('Unknown color: ' + color));
+        this.write(encode('[' + c + 'm'));
+    }
+    return this;
+};
+
+Charm.prototype.background = function (color) {
+    if (typeof color === 'number') {
+        if (color < 0 || color >= 256) {
+            this.emit('error', new Error('Color out of range: ' + color));
+        }
+        this.write(encode('[48;5;' + color + 'm'));
+    }
+    else {
+        var c = {
+          black : 40,
+          red : 41,
+          green : 42,
+          yellow : 43,
+          blue : 44,
+          magenta : 45,
+          cyan : 46,
+          white : 47
+        }[color.toLowerCase()];
+        
+        if (!c) this.emit('error', new Error('Unknown color: ' + color));
+        this.write(encode('[' + c + 'm'));
+    }
+    return this;
+};
+
+Charm.prototype.cursor = function (visible) {
+    this.write(encode(visible ? '[?25h' : '[?25l'));
+    return this;
+};
+
+var extractCodes = exports.extractCodes = function (buf) {
+    var codes = [];
+    var start = -1;
+    
+    for (var i = 0; i < buf.length; i++) {
+        if (buf[i] === 27) {
+            if (start >= 0) codes.push(buf.slice(start, i));
+            start = i;
+        }
+        else if (start >= 0 && i === buf.length - 1) {
+            codes.push(buf.slice(start));
+        }
+    }
+    
+    return codes;
+}
+
+}).call(this,require('_process'))
+},{"./lib/encode":6,"_process":93,"stream":105,"tty":123}],6:[function(require,module,exports){
+(function (Buffer){
+var encode = module.exports = function (xs) {
+    function bytes (s) {
+        if (typeof s === 'string') {
+            return s.split('').map(ord);
+        }
+        else if (Array.isArray(s)) {
+            return s.reduce(function (acc, c) {
+                return acc.concat(bytes(c));
+            }, []);
+        }
+    }
+    
+    return new Buffer([ 0x1b ].concat(bytes(xs)));
+};
+
+var ord = encode.ord = function ord (c) {
+    return c.charCodeAt(0)
+};
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":4}],7:[function(require,module,exports){
 (function (Buffer){
 /**!
  * contentstream - index.js
@@ -2087,7 +2418,7 @@ ContentStream.prototype._read = function (n) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"readable-stream":96,"util":126}],6:[function(require,module,exports){
+},{"buffer":4,"readable-stream":99,"util":130}],8:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -2198,7 +2529,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":51}],7:[function(require,module,exports){
+},{"../../is-buffer/index.js":53}],9:[function(require,module,exports){
 "use strict"
 
 var createThunk = require("./lib/thunk.js")
@@ -2309,7 +2640,7 @@ function compileCwise(user_args) {
 
 module.exports = compileCwise
 
-},{"./lib/thunk.js":9}],8:[function(require,module,exports){
+},{"./lib/thunk.js":11}],10:[function(require,module,exports){
 "use strict"
 
 var uniq = require("uniq")
@@ -2669,7 +3000,7 @@ function generateCWiseOp(proc, typesig) {
 }
 module.exports = generateCWiseOp
 
-},{"uniq":121}],9:[function(require,module,exports){
+},{"uniq":125}],11:[function(require,module,exports){
 "use strict"
 
 // The function below is called when constructing a cwise function object, and does the following:
@@ -2757,9 +3088,9 @@ function createThunk(proc) {
 
 module.exports = createThunk
 
-},{"./compile.js":8}],10:[function(require,module,exports){
+},{"./compile.js":10}],12:[function(require,module,exports){
 module.exports = require("cwise-compiler")
-},{"cwise-compiler":7}],11:[function(require,module,exports){
+},{"cwise-compiler":9}],13:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -2829,7 +3160,7 @@ function dataUriToBuffer (uri) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4}],12:[function(require,module,exports){
+},{"buffer":4}],14:[function(require,module,exports){
 "use strict"
 
 function dupe_array(count, value, i) {
@@ -2879,7 +3210,7 @@ function dupe(count, value) {
 }
 
 module.exports = dupe
-},{}],13:[function(require,module,exports){
+},{}],15:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -3183,7 +3514,7 @@ function isUndefined(arg) {
   return arg === void 0;
 }
 
-},{}],14:[function(require,module,exports){
+},{}],16:[function(require,module,exports){
 var FisheyeGl = function FisheyeGl(options){
 
   // Defaults:
@@ -3491,7 +3822,7 @@ if (typeof(document) != 'undefined')
 else
   module.exports = FisheyeGl;
 
-},{"./shaders":15}],15:[function(require,module,exports){
+},{"./shaders":17}],17:[function(require,module,exports){
 module.exports = {
   fragment: require('./shaders/fragment.glfs'),
   fragment2: require('./shaders/fragment2.glfs'),
@@ -3501,7 +3832,7 @@ module.exports = {
   vertex: require('./shaders/vertex.glvs')
 };
 
-},{"./shaders/fragment.glfs":16,"./shaders/fragment2.glfs":17,"./shaders/fragment3.glfs":18,"./shaders/method1.glfs":19,"./shaders/method2.glfs":20,"./shaders/vertex.glvs":21}],16:[function(require,module,exports){
+},{"./shaders/fragment.glfs":18,"./shaders/fragment2.glfs":19,"./shaders/fragment3.glfs":20,"./shaders/method1.glfs":21,"./shaders/method2.glfs":22,"./shaders/vertex.glvs":23}],18:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -3529,7 +3860,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],17:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -3562,7 +3893,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],18:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -3593,7 +3924,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],19:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -3625,7 +3956,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],20:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -3657,7 +3988,7 @@ void main(void){\n\
 	gl_FragColor = texture;\n\
 }\n\
 ";
-},{}],21:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 module.exports = "\
 #ifdef GL_ES\n\
 precision highp float;\n\
@@ -3672,7 +4003,7 @@ void main(void){\n\
 	gl_Position = vec4(vPosition,1.0);\n\
 }\n\
 ";
-},{}],22:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 (function (Buffer,process){
 'use strict'
 
@@ -3810,7 +4141,7 @@ module.exports = function getPixels(url, type, cb) {
   }
 }
 }).call(this,{"isBuffer":require("../is-buffer/index.js")},require('_process'))
-},{"../is-buffer/index.js":51,"_process":90,"data-uri-to-buffer":23,"ndarray":64,"ndarray-pack":62,"omggif":66,"path":67,"through":119}],23:[function(require,module,exports){
+},{"../is-buffer/index.js":53,"_process":93,"data-uri-to-buffer":25,"ndarray":66,"ndarray-pack":64,"omggif":68,"path":70,"through":122}],25:[function(require,module,exports){
 (function (Buffer){
 
 /**
@@ -3868,7 +4199,7 @@ function dataUriToBuffer (uri) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4}],24:[function(require,module,exports){
+},{"buffer":4}],26:[function(require,module,exports){
 (function (Buffer){
 /*
   GIFEncoder.js
@@ -4341,7 +4672,7 @@ GIFEncoder.ByteCapacitor = ByteCapacitor;
 module.exports = GIFEncoder;
 
 }).call(this,require("buffer").Buffer)
-},{"./LZWEncoder.js":25,"./TypedNeuQuant.js":26,"assert":33,"buffer":4,"events":13,"readable-stream":32,"util":126}],25:[function(require,module,exports){
+},{"./LZWEncoder.js":27,"./TypedNeuQuant.js":28,"assert":35,"buffer":4,"events":15,"readable-stream":34,"util":130}],27:[function(require,module,exports){
 /*
   LZWEncoder.js
 
@@ -4555,7 +4886,7 @@ function LZWEncoder(width, height, pixels, colorDepth) {
 
 module.exports = LZWEncoder;
 
-},{}],26:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 /* NeuQuant Neural-Net Quantization Algorithm
  * ------------------------------------------
  *
@@ -4988,7 +5319,7 @@ function NeuQuant(pixels, samplefac) {
 
 module.exports = NeuQuant;
 
-},{}],27:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -5081,7 +5412,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":29,"./_stream_writable":31,"_process":90,"core-util-is":6,"inherits":49}],28:[function(require,module,exports){
+},{"./_stream_readable":31,"./_stream_writable":33,"_process":93,"core-util-is":8,"inherits":51}],30:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5129,7 +5460,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":30,"core-util-is":6,"inherits":49}],29:[function(require,module,exports){
+},{"./_stream_transform":32,"core-util-is":8,"inherits":51}],31:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6084,7 +6415,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":27,"_process":90,"buffer":4,"core-util-is":6,"events":13,"inherits":49,"isarray":52,"stream":102,"string_decoder/":118,"util":3}],30:[function(require,module,exports){
+},{"./_stream_duplex":29,"_process":93,"buffer":4,"core-util-is":8,"events":15,"inherits":51,"isarray":54,"stream":105,"string_decoder/":121,"util":3}],32:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6295,7 +6626,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":27,"core-util-is":6,"inherits":49}],31:[function(require,module,exports){
+},{"./_stream_duplex":29,"core-util-is":8,"inherits":51}],33:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6776,7 +7107,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":27,"_process":90,"buffer":4,"core-util-is":6,"inherits":49,"stream":102}],32:[function(require,module,exports){
+},{"./_stream_duplex":29,"_process":93,"buffer":4,"core-util-is":8,"inherits":51,"stream":105}],34:[function(require,module,exports){
 (function (process){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
@@ -6790,7 +7121,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":27,"./lib/_stream_passthrough.js":28,"./lib/_stream_readable.js":29,"./lib/_stream_transform.js":30,"./lib/_stream_writable.js":31,"_process":90,"stream":102}],33:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":29,"./lib/_stream_passthrough.js":30,"./lib/_stream_readable.js":31,"./lib/_stream_transform.js":32,"./lib/_stream_writable.js":33,"_process":93,"stream":105}],35:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -7284,7 +7615,7 @@ var objectKeys = Object.keys || function (obj) {
 };
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"util/":126}],34:[function(require,module,exports){
+},{"util/":130}],36:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 /* eslint camelcase: "off" */
@@ -7696,7 +8027,7 @@ Zlib.prototype._reset = function () {
 
 exports.Zlib = Zlib;
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":90,"assert":33,"buffer":4,"pako/lib/zlib/constants":39,"pako/lib/zlib/deflate.js":41,"pako/lib/zlib/inflate.js":43,"pako/lib/zlib/zstream":47}],35:[function(require,module,exports){
+},{"_process":93,"assert":35,"buffer":4,"pako/lib/zlib/constants":41,"pako/lib/zlib/deflate.js":43,"pako/lib/zlib/inflate.js":45,"pako/lib/zlib/zstream":49}],37:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -8308,9 +8639,9 @@ util.inherits(DeflateRaw, Zlib);
 util.inherits(InflateRaw, Zlib);
 util.inherits(Unzip, Zlib);
 }).call(this,require('_process'))
-},{"./binding":34,"_process":90,"assert":33,"buffer":4,"stream":102,"util":126}],36:[function(require,module,exports){
+},{"./binding":36,"_process":93,"assert":35,"buffer":4,"stream":105,"util":130}],38:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
-},{"dup":3}],37:[function(require,module,exports){
+},{"dup":3}],39:[function(require,module,exports){
 'use strict';
 
 
@@ -8417,7 +8748,7 @@ exports.setTyped = function (on) {
 
 exports.setTyped(TYPED_OK);
 
-},{}],38:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 'use strict';
 
 // Note: adler32 takes 12% for level 0 and 2% for level 6.
@@ -8470,7 +8801,7 @@ function adler32(adler, buf, len, pos) {
 
 module.exports = adler32;
 
-},{}],39:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -8540,7 +8871,7 @@ module.exports = {
   //Z_NULL:                 null // Use -1 or null inline, depending on var type
 };
 
-},{}],40:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 // Note: we can't get significant speed boost here.
@@ -8601,7 +8932,7 @@ function crc32(crc, buf, len, pos) {
 
 module.exports = crc32;
 
-},{}],41:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -10477,7 +10808,7 @@ exports.deflatePrime = deflatePrime;
 exports.deflateTune = deflateTune;
 */
 
-},{"../utils/common":37,"./adler32":38,"./crc32":40,"./messages":45,"./trees":46}],42:[function(require,module,exports){
+},{"../utils/common":39,"./adler32":40,"./crc32":42,"./messages":47,"./trees":48}],44:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -10824,7 +11155,7 @@ module.exports = function inflate_fast(strm, start) {
   return;
 };
 
-},{}],43:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -12382,7 +12713,7 @@ exports.inflateSyncPoint = inflateSyncPoint;
 exports.inflateUndermine = inflateUndermine;
 */
 
-},{"../utils/common":37,"./adler32":38,"./crc32":40,"./inffast":42,"./inftrees":44}],44:[function(require,module,exports){
+},{"../utils/common":39,"./adler32":40,"./crc32":42,"./inffast":44,"./inftrees":46}],46:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -12727,7 +13058,7 @@ module.exports = function inflate_table(type, lens, lens_index, codes, table, ta
   return 0;
 };
 
-},{"../utils/common":37}],45:[function(require,module,exports){
+},{"../utils/common":39}],47:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -12761,7 +13092,7 @@ module.exports = {
   '-6':   'incompatible version' /* Z_VERSION_ERROR (-6) */
 };
 
-},{}],46:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -13983,7 +14314,7 @@ exports._tr_flush_block  = _tr_flush_block;
 exports._tr_tally = _tr_tally;
 exports._tr_align = _tr_align;
 
-},{"../utils/common":37}],47:[function(require,module,exports){
+},{"../utils/common":39}],49:[function(require,module,exports){
 'use strict';
 
 // (C) 1995-2013 Jean-loup Gailly and Mark Adler
@@ -14032,7 +14363,7 @@ function ZStream() {
 
 module.exports = ZStream;
 
-},{}],48:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = nBytes * 8 - mLen - 1
@@ -14118,7 +14449,7 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
   buffer[offset + i - d] |= s * 128
 }
 
-},{}],49:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 if (typeof Object.create === 'function') {
   // implementation from standard node.js 'util' module
   module.exports = function inherits(ctor, superCtor) {
@@ -14143,7 +14474,7 @@ if (typeof Object.create === 'function') {
   }
 }
 
-},{}],50:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 "use strict"
 
 function iota(n) {
@@ -14155,7 +14486,7 @@ function iota(n) {
 }
 
 module.exports = iota
-},{}],51:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -14178,12 +14509,12 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],52:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 module.exports = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
-},{}],53:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.4
  * http://jquery.com/
@@ -23999,7 +24330,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],54:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -26725,7 +27056,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-},{}],55:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -43826,7 +44157,7 @@ return /******/ (function(modules) { // webpackBootstrap
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],56:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 (function (process){
 var path = require('path');
 var fs = require('fs');
@@ -43938,9 +44269,9 @@ mime.charsets = {
 module.exports = mime;
 
 }).call(this,require('_process'))
-},{"./types.json":57,"_process":90,"fs":36,"path":67}],57:[function(require,module,exports){
+},{"./types.json":59,"_process":93,"fs":38,"path":70}],59:[function(require,module,exports){
 module.exports={"application/andrew-inset":["ez"],"application/applixware":["aw"],"application/atom+xml":["atom"],"application/atomcat+xml":["atomcat"],"application/atomsvc+xml":["atomsvc"],"application/bdoc":["bdoc"],"application/ccxml+xml":["ccxml"],"application/cdmi-capability":["cdmia"],"application/cdmi-container":["cdmic"],"application/cdmi-domain":["cdmid"],"application/cdmi-object":["cdmio"],"application/cdmi-queue":["cdmiq"],"application/cu-seeme":["cu"],"application/dash+xml":["mpd"],"application/davmount+xml":["davmount"],"application/docbook+xml":["dbk"],"application/dssc+der":["dssc"],"application/dssc+xml":["xdssc"],"application/ecmascript":["ecma"],"application/emma+xml":["emma"],"application/epub+zip":["epub"],"application/exi":["exi"],"application/font-tdpfr":["pfr"],"application/font-woff":[],"application/font-woff2":[],"application/geo+json":["geojson"],"application/gml+xml":["gml"],"application/gpx+xml":["gpx"],"application/gxf":["gxf"],"application/gzip":["gz"],"application/hyperstudio":["stk"],"application/inkml+xml":["ink","inkml"],"application/ipfix":["ipfix"],"application/java-archive":["jar","war","ear"],"application/java-serialized-object":["ser"],"application/java-vm":["class"],"application/javascript":["js","mjs"],"application/json":["json","map"],"application/json5":["json5"],"application/jsonml+json":["jsonml"],"application/ld+json":["jsonld"],"application/lost+xml":["lostxml"],"application/mac-binhex40":["hqx"],"application/mac-compactpro":["cpt"],"application/mads+xml":["mads"],"application/manifest+json":["webmanifest"],"application/marc":["mrc"],"application/marcxml+xml":["mrcx"],"application/mathematica":["ma","nb","mb"],"application/mathml+xml":["mathml"],"application/mbox":["mbox"],"application/mediaservercontrol+xml":["mscml"],"application/metalink+xml":["metalink"],"application/metalink4+xml":["meta4"],"application/mets+xml":["mets"],"application/mods+xml":["mods"],"application/mp21":["m21","mp21"],"application/mp4":["mp4s","m4p"],"application/msword":["doc","dot"],"application/mxf":["mxf"],"application/octet-stream":["bin","dms","lrf","mar","so","dist","distz","pkg","bpk","dump","elc","deploy","exe","dll","deb","dmg","iso","img","msi","msp","msm","buffer"],"application/oda":["oda"],"application/oebps-package+xml":["opf"],"application/ogg":["ogx"],"application/omdoc+xml":["omdoc"],"application/onenote":["onetoc","onetoc2","onetmp","onepkg"],"application/oxps":["oxps"],"application/patch-ops-error+xml":["xer"],"application/pdf":["pdf"],"application/pgp-encrypted":["pgp"],"application/pgp-signature":["asc","sig"],"application/pics-rules":["prf"],"application/pkcs10":["p10"],"application/pkcs7-mime":["p7m","p7c"],"application/pkcs7-signature":["p7s"],"application/pkcs8":["p8"],"application/pkix-attr-cert":["ac"],"application/pkix-cert":["cer"],"application/pkix-crl":["crl"],"application/pkix-pkipath":["pkipath"],"application/pkixcmp":["pki"],"application/pls+xml":["pls"],"application/postscript":["ai","eps","ps"],"application/prs.cww":["cww"],"application/pskc+xml":["pskcxml"],"application/raml+yaml":["raml"],"application/rdf+xml":["rdf"],"application/reginfo+xml":["rif"],"application/relax-ng-compact-syntax":["rnc"],"application/resource-lists+xml":["rl"],"application/resource-lists-diff+xml":["rld"],"application/rls-services+xml":["rs"],"application/rpki-ghostbusters":["gbr"],"application/rpki-manifest":["mft"],"application/rpki-roa":["roa"],"application/rsd+xml":["rsd"],"application/rss+xml":["rss"],"application/rtf":["rtf"],"application/sbml+xml":["sbml"],"application/scvp-cv-request":["scq"],"application/scvp-cv-response":["scs"],"application/scvp-vp-request":["spq"],"application/scvp-vp-response":["spp"],"application/sdp":["sdp"],"application/set-payment-initiation":["setpay"],"application/set-registration-initiation":["setreg"],"application/shf+xml":["shf"],"application/smil+xml":["smi","smil"],"application/sparql-query":["rq"],"application/sparql-results+xml":["srx"],"application/srgs":["gram"],"application/srgs+xml":["grxml"],"application/sru+xml":["sru"],"application/ssdl+xml":["ssdl"],"application/ssml+xml":["ssml"],"application/tei+xml":["tei","teicorpus"],"application/thraud+xml":["tfi"],"application/timestamped-data":["tsd"],"application/vnd.3gpp.pic-bw-large":["plb"],"application/vnd.3gpp.pic-bw-small":["psb"],"application/vnd.3gpp.pic-bw-var":["pvb"],"application/vnd.3gpp2.tcap":["tcap"],"application/vnd.3m.post-it-notes":["pwn"],"application/vnd.accpac.simply.aso":["aso"],"application/vnd.accpac.simply.imp":["imp"],"application/vnd.acucobol":["acu"],"application/vnd.acucorp":["atc","acutc"],"application/vnd.adobe.air-application-installer-package+zip":["air"],"application/vnd.adobe.formscentral.fcdt":["fcdt"],"application/vnd.adobe.fxp":["fxp","fxpl"],"application/vnd.adobe.xdp+xml":["xdp"],"application/vnd.adobe.xfdf":["xfdf"],"application/vnd.ahead.space":["ahead"],"application/vnd.airzip.filesecure.azf":["azf"],"application/vnd.airzip.filesecure.azs":["azs"],"application/vnd.amazon.ebook":["azw"],"application/vnd.americandynamics.acc":["acc"],"application/vnd.amiga.ami":["ami"],"application/vnd.android.package-archive":["apk"],"application/vnd.anser-web-certificate-issue-initiation":["cii"],"application/vnd.anser-web-funds-transfer-initiation":["fti"],"application/vnd.antix.game-component":["atx"],"application/vnd.apple.installer+xml":["mpkg"],"application/vnd.apple.mpegurl":["m3u8"],"application/vnd.apple.pkpass":["pkpass"],"application/vnd.aristanetworks.swi":["swi"],"application/vnd.astraea-software.iota":["iota"],"application/vnd.audiograph":["aep"],"application/vnd.blueice.multipass":["mpm"],"application/vnd.bmi":["bmi"],"application/vnd.businessobjects":["rep"],"application/vnd.chemdraw+xml":["cdxml"],"application/vnd.chipnuts.karaoke-mmd":["mmd"],"application/vnd.cinderella":["cdy"],"application/vnd.claymore":["cla"],"application/vnd.cloanto.rp9":["rp9"],"application/vnd.clonk.c4group":["c4g","c4d","c4f","c4p","c4u"],"application/vnd.cluetrust.cartomobile-config":["c11amc"],"application/vnd.cluetrust.cartomobile-config-pkg":["c11amz"],"application/vnd.commonspace":["csp"],"application/vnd.contact.cmsg":["cdbcmsg"],"application/vnd.cosmocaller":["cmc"],"application/vnd.crick.clicker":["clkx"],"application/vnd.crick.clicker.keyboard":["clkk"],"application/vnd.crick.clicker.palette":["clkp"],"application/vnd.crick.clicker.template":["clkt"],"application/vnd.crick.clicker.wordbank":["clkw"],"application/vnd.criticaltools.wbs+xml":["wbs"],"application/vnd.ctc-posml":["pml"],"application/vnd.cups-ppd":["ppd"],"application/vnd.curl.car":["car"],"application/vnd.curl.pcurl":["pcurl"],"application/vnd.dart":["dart"],"application/vnd.data-vision.rdz":["rdz"],"application/vnd.dece.data":["uvf","uvvf","uvd","uvvd"],"application/vnd.dece.ttml+xml":["uvt","uvvt"],"application/vnd.dece.unspecified":["uvx","uvvx"],"application/vnd.dece.zip":["uvz","uvvz"],"application/vnd.denovo.fcselayout-link":["fe_launch"],"application/vnd.dna":["dna"],"application/vnd.dolby.mlp":["mlp"],"application/vnd.dpgraph":["dpg"],"application/vnd.dreamfactory":["dfac"],"application/vnd.ds-keypoint":["kpxx"],"application/vnd.dvb.ait":["ait"],"application/vnd.dvb.service":["svc"],"application/vnd.dynageo":["geo"],"application/vnd.ecowin.chart":["mag"],"application/vnd.enliven":["nml"],"application/vnd.epson.esf":["esf"],"application/vnd.epson.msf":["msf"],"application/vnd.epson.quickanime":["qam"],"application/vnd.epson.salt":["slt"],"application/vnd.epson.ssf":["ssf"],"application/vnd.eszigno3+xml":["es3","et3"],"application/vnd.ezpix-album":["ez2"],"application/vnd.ezpix-package":["ez3"],"application/vnd.fdf":["fdf"],"application/vnd.fdsn.mseed":["mseed"],"application/vnd.fdsn.seed":["seed","dataless"],"application/vnd.flographit":["gph"],"application/vnd.fluxtime.clip":["ftc"],"application/vnd.framemaker":["fm","frame","maker","book"],"application/vnd.frogans.fnc":["fnc"],"application/vnd.frogans.ltf":["ltf"],"application/vnd.fsc.weblaunch":["fsc"],"application/vnd.fujitsu.oasys":["oas"],"application/vnd.fujitsu.oasys2":["oa2"],"application/vnd.fujitsu.oasys3":["oa3"],"application/vnd.fujitsu.oasysgp":["fg5"],"application/vnd.fujitsu.oasysprs":["bh2"],"application/vnd.fujixerox.ddd":["ddd"],"application/vnd.fujixerox.docuworks":["xdw"],"application/vnd.fujixerox.docuworks.binder":["xbd"],"application/vnd.fuzzysheet":["fzs"],"application/vnd.genomatix.tuxedo":["txd"],"application/vnd.geogebra.file":["ggb"],"application/vnd.geogebra.tool":["ggt"],"application/vnd.geometry-explorer":["gex","gre"],"application/vnd.geonext":["gxt"],"application/vnd.geoplan":["g2w"],"application/vnd.geospace":["g3w"],"application/vnd.gmx":["gmx"],"application/vnd.google-apps.document":["gdoc"],"application/vnd.google-apps.presentation":["gslides"],"application/vnd.google-apps.spreadsheet":["gsheet"],"application/vnd.google-earth.kml+xml":["kml"],"application/vnd.google-earth.kmz":["kmz"],"application/vnd.grafeq":["gqf","gqs"],"application/vnd.groove-account":["gac"],"application/vnd.groove-help":["ghf"],"application/vnd.groove-identity-message":["gim"],"application/vnd.groove-injector":["grv"],"application/vnd.groove-tool-message":["gtm"],"application/vnd.groove-tool-template":["tpl"],"application/vnd.groove-vcard":["vcg"],"application/vnd.hal+xml":["hal"],"application/vnd.handheld-entertainment+xml":["zmm"],"application/vnd.hbci":["hbci"],"application/vnd.hhe.lesson-player":["les"],"application/vnd.hp-hpgl":["hpgl"],"application/vnd.hp-hpid":["hpid"],"application/vnd.hp-hps":["hps"],"application/vnd.hp-jlyt":["jlt"],"application/vnd.hp-pcl":["pcl"],"application/vnd.hp-pclxl":["pclxl"],"application/vnd.hydrostatix.sof-data":["sfd-hdstx"],"application/vnd.ibm.minipay":["mpy"],"application/vnd.ibm.modcap":["afp","listafp","list3820"],"application/vnd.ibm.rights-management":["irm"],"application/vnd.ibm.secure-container":["sc"],"application/vnd.iccprofile":["icc","icm"],"application/vnd.igloader":["igl"],"application/vnd.immervision-ivp":["ivp"],"application/vnd.immervision-ivu":["ivu"],"application/vnd.insors.igm":["igm"],"application/vnd.intercon.formnet":["xpw","xpx"],"application/vnd.intergeo":["i2g"],"application/vnd.intu.qbo":["qbo"],"application/vnd.intu.qfx":["qfx"],"application/vnd.ipunplugged.rcprofile":["rcprofile"],"application/vnd.irepository.package+xml":["irp"],"application/vnd.is-xpr":["xpr"],"application/vnd.isac.fcs":["fcs"],"application/vnd.jam":["jam"],"application/vnd.jcp.javame.midlet-rms":["rms"],"application/vnd.jisp":["jisp"],"application/vnd.joost.joda-archive":["joda"],"application/vnd.kahootz":["ktz","ktr"],"application/vnd.kde.karbon":["karbon"],"application/vnd.kde.kchart":["chrt"],"application/vnd.kde.kformula":["kfo"],"application/vnd.kde.kivio":["flw"],"application/vnd.kde.kontour":["kon"],"application/vnd.kde.kpresenter":["kpr","kpt"],"application/vnd.kde.kspread":["ksp"],"application/vnd.kde.kword":["kwd","kwt"],"application/vnd.kenameaapp":["htke"],"application/vnd.kidspiration":["kia"],"application/vnd.kinar":["kne","knp"],"application/vnd.koan":["skp","skd","skt","skm"],"application/vnd.kodak-descriptor":["sse"],"application/vnd.las.las+xml":["lasxml"],"application/vnd.llamagraphics.life-balance.desktop":["lbd"],"application/vnd.llamagraphics.life-balance.exchange+xml":["lbe"],"application/vnd.lotus-1-2-3":["123"],"application/vnd.lotus-approach":["apr"],"application/vnd.lotus-freelance":["pre"],"application/vnd.lotus-notes":["nsf"],"application/vnd.lotus-organizer":["org"],"application/vnd.lotus-screencam":["scm"],"application/vnd.lotus-wordpro":["lwp"],"application/vnd.macports.portpkg":["portpkg"],"application/vnd.mcd":["mcd"],"application/vnd.medcalcdata":["mc1"],"application/vnd.mediastation.cdkey":["cdkey"],"application/vnd.mfer":["mwf"],"application/vnd.mfmp":["mfm"],"application/vnd.micrografx.flo":["flo"],"application/vnd.micrografx.igx":["igx"],"application/vnd.mif":["mif"],"application/vnd.mobius.daf":["daf"],"application/vnd.mobius.dis":["dis"],"application/vnd.mobius.mbk":["mbk"],"application/vnd.mobius.mqy":["mqy"],"application/vnd.mobius.msl":["msl"],"application/vnd.mobius.plc":["plc"],"application/vnd.mobius.txf":["txf"],"application/vnd.mophun.application":["mpn"],"application/vnd.mophun.certificate":["mpc"],"application/vnd.mozilla.xul+xml":["xul"],"application/vnd.ms-artgalry":["cil"],"application/vnd.ms-cab-compressed":["cab"],"application/vnd.ms-excel":["xls","xlm","xla","xlc","xlt","xlw"],"application/vnd.ms-excel.addin.macroenabled.12":["xlam"],"application/vnd.ms-excel.sheet.binary.macroenabled.12":["xlsb"],"application/vnd.ms-excel.sheet.macroenabled.12":["xlsm"],"application/vnd.ms-excel.template.macroenabled.12":["xltm"],"application/vnd.ms-fontobject":["eot"],"application/vnd.ms-htmlhelp":["chm"],"application/vnd.ms-ims":["ims"],"application/vnd.ms-lrm":["lrm"],"application/vnd.ms-officetheme":["thmx"],"application/vnd.ms-outlook":["msg"],"application/vnd.ms-pki.seccat":["cat"],"application/vnd.ms-pki.stl":["stl"],"application/vnd.ms-powerpoint":["ppt","pps","pot"],"application/vnd.ms-powerpoint.addin.macroenabled.12":["ppam"],"application/vnd.ms-powerpoint.presentation.macroenabled.12":["pptm"],"application/vnd.ms-powerpoint.slide.macroenabled.12":["sldm"],"application/vnd.ms-powerpoint.slideshow.macroenabled.12":["ppsm"],"application/vnd.ms-powerpoint.template.macroenabled.12":["potm"],"application/vnd.ms-project":["mpp","mpt"],"application/vnd.ms-word.document.macroenabled.12":["docm"],"application/vnd.ms-word.template.macroenabled.12":["dotm"],"application/vnd.ms-works":["wps","wks","wcm","wdb"],"application/vnd.ms-wpl":["wpl"],"application/vnd.ms-xpsdocument":["xps"],"application/vnd.mseq":["mseq"],"application/vnd.musician":["mus"],"application/vnd.muvee.style":["msty"],"application/vnd.mynfc":["taglet"],"application/vnd.neurolanguage.nlu":["nlu"],"application/vnd.nitf":["ntf","nitf"],"application/vnd.noblenet-directory":["nnd"],"application/vnd.noblenet-sealer":["nns"],"application/vnd.noblenet-web":["nnw"],"application/vnd.nokia.n-gage.data":["ngdat"],"application/vnd.nokia.n-gage.symbian.install":["n-gage"],"application/vnd.nokia.radio-preset":["rpst"],"application/vnd.nokia.radio-presets":["rpss"],"application/vnd.novadigm.edm":["edm"],"application/vnd.novadigm.edx":["edx"],"application/vnd.novadigm.ext":["ext"],"application/vnd.oasis.opendocument.chart":["odc"],"application/vnd.oasis.opendocument.chart-template":["otc"],"application/vnd.oasis.opendocument.database":["odb"],"application/vnd.oasis.opendocument.formula":["odf"],"application/vnd.oasis.opendocument.formula-template":["odft"],"application/vnd.oasis.opendocument.graphics":["odg"],"application/vnd.oasis.opendocument.graphics-template":["otg"],"application/vnd.oasis.opendocument.image":["odi"],"application/vnd.oasis.opendocument.image-template":["oti"],"application/vnd.oasis.opendocument.presentation":["odp"],"application/vnd.oasis.opendocument.presentation-template":["otp"],"application/vnd.oasis.opendocument.spreadsheet":["ods"],"application/vnd.oasis.opendocument.spreadsheet-template":["ots"],"application/vnd.oasis.opendocument.text":["odt"],"application/vnd.oasis.opendocument.text-master":["odm"],"application/vnd.oasis.opendocument.text-template":["ott"],"application/vnd.oasis.opendocument.text-web":["oth"],"application/vnd.olpc-sugar":["xo"],"application/vnd.oma.dd2+xml":["dd2"],"application/vnd.openofficeorg.extension":["oxt"],"application/vnd.openxmlformats-officedocument.presentationml.presentation":["pptx"],"application/vnd.openxmlformats-officedocument.presentationml.slide":["sldx"],"application/vnd.openxmlformats-officedocument.presentationml.slideshow":["ppsx"],"application/vnd.openxmlformats-officedocument.presentationml.template":["potx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":["xlsx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.template":["xltx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.document":["docx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.template":["dotx"],"application/vnd.osgeo.mapguide.package":["mgp"],"application/vnd.osgi.dp":["dp"],"application/vnd.osgi.subsystem":["esa"],"application/vnd.palm":["pdb","pqa","oprc"],"application/vnd.pawaafile":["paw"],"application/vnd.pg.format":["str"],"application/vnd.pg.osasli":["ei6"],"application/vnd.picsel":["efif"],"application/vnd.pmi.widget":["wg"],"application/vnd.pocketlearn":["plf"],"application/vnd.powerbuilder6":["pbd"],"application/vnd.previewsystems.box":["box"],"application/vnd.proteus.magazine":["mgz"],"application/vnd.publishare-delta-tree":["qps"],"application/vnd.pvi.ptid1":["ptid"],"application/vnd.quark.quarkxpress":["qxd","qxt","qwd","qwt","qxl","qxb"],"application/vnd.realvnc.bed":["bed"],"application/vnd.recordare.musicxml":["mxl"],"application/vnd.recordare.musicxml+xml":["musicxml"],"application/vnd.rig.cryptonote":["cryptonote"],"application/vnd.rim.cod":["cod"],"application/vnd.rn-realmedia":["rm"],"application/vnd.rn-realmedia-vbr":["rmvb"],"application/vnd.route66.link66+xml":["link66"],"application/vnd.sailingtracker.track":["st"],"application/vnd.seemail":["see"],"application/vnd.sema":["sema"],"application/vnd.semd":["semd"],"application/vnd.semf":["semf"],"application/vnd.shana.informed.formdata":["ifm"],"application/vnd.shana.informed.formtemplate":["itp"],"application/vnd.shana.informed.interchange":["iif"],"application/vnd.shana.informed.package":["ipk"],"application/vnd.simtech-mindmapper":["twd","twds"],"application/vnd.smaf":["mmf"],"application/vnd.smart.teacher":["teacher"],"application/vnd.solent.sdkm+xml":["sdkm","sdkd"],"application/vnd.spotfire.dxp":["dxp"],"application/vnd.spotfire.sfs":["sfs"],"application/vnd.stardivision.calc":["sdc"],"application/vnd.stardivision.draw":["sda"],"application/vnd.stardivision.impress":["sdd"],"application/vnd.stardivision.math":["smf"],"application/vnd.stardivision.writer":["sdw","vor"],"application/vnd.stardivision.writer-global":["sgl"],"application/vnd.stepmania.package":["smzip"],"application/vnd.stepmania.stepchart":["sm"],"application/vnd.sun.wadl+xml":["wadl"],"application/vnd.sun.xml.calc":["sxc"],"application/vnd.sun.xml.calc.template":["stc"],"application/vnd.sun.xml.draw":["sxd"],"application/vnd.sun.xml.draw.template":["std"],"application/vnd.sun.xml.impress":["sxi"],"application/vnd.sun.xml.impress.template":["sti"],"application/vnd.sun.xml.math":["sxm"],"application/vnd.sun.xml.writer":["sxw"],"application/vnd.sun.xml.writer.global":["sxg"],"application/vnd.sun.xml.writer.template":["stw"],"application/vnd.sus-calendar":["sus","susp"],"application/vnd.svd":["svd"],"application/vnd.symbian.install":["sis","sisx"],"application/vnd.syncml+xml":["xsm"],"application/vnd.syncml.dm+wbxml":["bdm"],"application/vnd.syncml.dm+xml":["xdm"],"application/vnd.tao.intent-module-archive":["tao"],"application/vnd.tcpdump.pcap":["pcap","cap","dmp"],"application/vnd.tmobile-livetv":["tmo"],"application/vnd.trid.tpt":["tpt"],"application/vnd.triscape.mxs":["mxs"],"application/vnd.trueapp":["tra"],"application/vnd.ufdl":["ufd","ufdl"],"application/vnd.uiq.theme":["utz"],"application/vnd.umajin":["umj"],"application/vnd.unity":["unityweb"],"application/vnd.uoml+xml":["uoml"],"application/vnd.vcx":["vcx"],"application/vnd.visio":["vsd","vst","vss","vsw"],"application/vnd.visionary":["vis"],"application/vnd.vsf":["vsf"],"application/vnd.wap.wbxml":["wbxml"],"application/vnd.wap.wmlc":["wmlc"],"application/vnd.wap.wmlscriptc":["wmlsc"],"application/vnd.webturbo":["wtb"],"application/vnd.wolfram.player":["nbp"],"application/vnd.wordperfect":["wpd"],"application/vnd.wqd":["wqd"],"application/vnd.wt.stf":["stf"],"application/vnd.xara":["xar"],"application/vnd.xfdl":["xfdl"],"application/vnd.yamaha.hv-dic":["hvd"],"application/vnd.yamaha.hv-script":["hvs"],"application/vnd.yamaha.hv-voice":["hvp"],"application/vnd.yamaha.openscoreformat":["osf"],"application/vnd.yamaha.openscoreformat.osfpvg+xml":["osfpvg"],"application/vnd.yamaha.smaf-audio":["saf"],"application/vnd.yamaha.smaf-phrase":["spf"],"application/vnd.yellowriver-custom-menu":["cmp"],"application/vnd.zul":["zir","zirz"],"application/vnd.zzazz.deck+xml":["zaz"],"application/voicexml+xml":["vxml"],"application/wasm":["wasm"],"application/widget":["wgt"],"application/winhlp":["hlp"],"application/wsdl+xml":["wsdl"],"application/wspolicy+xml":["wspolicy"],"application/x-7z-compressed":["7z"],"application/x-abiword":["abw"],"application/x-ace-compressed":["ace"],"application/x-apple-diskimage":[],"application/x-arj":["arj"],"application/x-authorware-bin":["aab","x32","u32","vox"],"application/x-authorware-map":["aam"],"application/x-authorware-seg":["aas"],"application/x-bcpio":["bcpio"],"application/x-bdoc":[],"application/x-bittorrent":["torrent"],"application/x-blorb":["blb","blorb"],"application/x-bzip":["bz"],"application/x-bzip2":["bz2","boz"],"application/x-cbr":["cbr","cba","cbt","cbz","cb7"],"application/x-cdlink":["vcd"],"application/x-cfs-compressed":["cfs"],"application/x-chat":["chat"],"application/x-chess-pgn":["pgn"],"application/x-chrome-extension":["crx"],"application/x-cocoa":["cco"],"application/x-conference":["nsc"],"application/x-cpio":["cpio"],"application/x-csh":["csh"],"application/x-debian-package":["udeb"],"application/x-dgc-compressed":["dgc"],"application/x-director":["dir","dcr","dxr","cst","cct","cxt","w3d","fgd","swa"],"application/x-doom":["wad"],"application/x-dtbncx+xml":["ncx"],"application/x-dtbook+xml":["dtb"],"application/x-dtbresource+xml":["res"],"application/x-dvi":["dvi"],"application/x-envoy":["evy"],"application/x-eva":["eva"],"application/x-font-bdf":["bdf"],"application/x-font-ghostscript":["gsf"],"application/x-font-linux-psf":["psf"],"application/x-font-pcf":["pcf"],"application/x-font-snf":["snf"],"application/x-font-type1":["pfa","pfb","pfm","afm"],"application/x-freearc":["arc"],"application/x-futuresplash":["spl"],"application/x-gca-compressed":["gca"],"application/x-glulx":["ulx"],"application/x-gnumeric":["gnumeric"],"application/x-gramps-xml":["gramps"],"application/x-gtar":["gtar"],"application/x-hdf":["hdf"],"application/x-httpd-php":["php"],"application/x-install-instructions":["install"],"application/x-iso9660-image":[],"application/x-java-archive-diff":["jardiff"],"application/x-java-jnlp-file":["jnlp"],"application/x-latex":["latex"],"application/x-lua-bytecode":["luac"],"application/x-lzh-compressed":["lzh","lha"],"application/x-makeself":["run"],"application/x-mie":["mie"],"application/x-mobipocket-ebook":["prc","mobi"],"application/x-ms-application":["application"],"application/x-ms-shortcut":["lnk"],"application/x-ms-wmd":["wmd"],"application/x-ms-wmz":["wmz"],"application/x-ms-xbap":["xbap"],"application/x-msaccess":["mdb"],"application/x-msbinder":["obd"],"application/x-mscardfile":["crd"],"application/x-msclip":["clp"],"application/x-msdos-program":[],"application/x-msdownload":["com","bat"],"application/x-msmediaview":["mvb","m13","m14"],"application/x-msmetafile":["wmf","emf","emz"],"application/x-msmoney":["mny"],"application/x-mspublisher":["pub"],"application/x-msschedule":["scd"],"application/x-msterminal":["trm"],"application/x-mswrite":["wri"],"application/x-netcdf":["nc","cdf"],"application/x-ns-proxy-autoconfig":["pac"],"application/x-nzb":["nzb"],"application/x-perl":["pl","pm"],"application/x-pilot":[],"application/x-pkcs12":["p12","pfx"],"application/x-pkcs7-certificates":["p7b","spc"],"application/x-pkcs7-certreqresp":["p7r"],"application/x-rar-compressed":["rar"],"application/x-redhat-package-manager":["rpm"],"application/x-research-info-systems":["ris"],"application/x-sea":["sea"],"application/x-sh":["sh"],"application/x-shar":["shar"],"application/x-shockwave-flash":["swf"],"application/x-silverlight-app":["xap"],"application/x-sql":["sql"],"application/x-stuffit":["sit"],"application/x-stuffitx":["sitx"],"application/x-subrip":["srt"],"application/x-sv4cpio":["sv4cpio"],"application/x-sv4crc":["sv4crc"],"application/x-t3vm-image":["t3"],"application/x-tads":["gam"],"application/x-tar":["tar"],"application/x-tcl":["tcl","tk"],"application/x-tex":["tex"],"application/x-tex-tfm":["tfm"],"application/x-texinfo":["texinfo","texi"],"application/x-tgif":["obj"],"application/x-ustar":["ustar"],"application/x-virtualbox-hdd":["hdd"],"application/x-virtualbox-ova":["ova"],"application/x-virtualbox-ovf":["ovf"],"application/x-virtualbox-vbox":["vbox"],"application/x-virtualbox-vbox-extpack":["vbox-extpack"],"application/x-virtualbox-vdi":["vdi"],"application/x-virtualbox-vhd":["vhd"],"application/x-virtualbox-vmdk":["vmdk"],"application/x-wais-source":["src"],"application/x-web-app-manifest+json":["webapp"],"application/x-x509-ca-cert":["der","crt","pem"],"application/x-xfig":["fig"],"application/x-xliff+xml":["xlf"],"application/x-xpinstall":["xpi"],"application/x-xz":["xz"],"application/x-zmachine":["z1","z2","z3","z4","z5","z6","z7","z8"],"application/xaml+xml":["xaml"],"application/xcap-diff+xml":["xdf"],"application/xenc+xml":["xenc"],"application/xhtml+xml":["xhtml","xht"],"application/xml":["xml","xsl","xsd","rng"],"application/xml-dtd":["dtd"],"application/xop+xml":["xop"],"application/xproc+xml":["xpl"],"application/xslt+xml":["xslt"],"application/xspf+xml":["xspf"],"application/xv+xml":["mxml","xhvml","xvml","xvm"],"application/yang":["yang"],"application/yin+xml":["yin"],"application/zip":["zip"],"audio/3gpp":[],"audio/adpcm":["adp"],"audio/basic":["au","snd"],"audio/midi":["mid","midi","kar","rmi"],"audio/mp3":[],"audio/mp4":["m4a","mp4a"],"audio/mpeg":["mpga","mp2","mp2a","mp3","m2a","m3a"],"audio/ogg":["oga","ogg","spx"],"audio/s3m":["s3m"],"audio/silk":["sil"],"audio/vnd.dece.audio":["uva","uvva"],"audio/vnd.digital-winds":["eol"],"audio/vnd.dra":["dra"],"audio/vnd.dts":["dts"],"audio/vnd.dts.hd":["dtshd"],"audio/vnd.lucent.voice":["lvp"],"audio/vnd.ms-playready.media.pya":["pya"],"audio/vnd.nuera.ecelp4800":["ecelp4800"],"audio/vnd.nuera.ecelp7470":["ecelp7470"],"audio/vnd.nuera.ecelp9600":["ecelp9600"],"audio/vnd.rip":["rip"],"audio/wav":["wav"],"audio/wave":[],"audio/webm":["weba"],"audio/x-aac":["aac"],"audio/x-aiff":["aif","aiff","aifc"],"audio/x-caf":["caf"],"audio/x-flac":["flac"],"audio/x-m4a":[],"audio/x-matroska":["mka"],"audio/x-mpegurl":["m3u"],"audio/x-ms-wax":["wax"],"audio/x-ms-wma":["wma"],"audio/x-pn-realaudio":["ram","ra"],"audio/x-pn-realaudio-plugin":["rmp"],"audio/x-realaudio":[],"audio/x-wav":[],"audio/xm":["xm"],"chemical/x-cdx":["cdx"],"chemical/x-cif":["cif"],"chemical/x-cmdf":["cmdf"],"chemical/x-cml":["cml"],"chemical/x-csml":["csml"],"chemical/x-xyz":["xyz"],"font/collection":["ttc"],"font/otf":["otf"],"font/ttf":["ttf"],"font/woff":["woff"],"font/woff2":["woff2"],"image/apng":["apng"],"image/bmp":["bmp"],"image/cgm":["cgm"],"image/g3fax":["g3"],"image/gif":["gif"],"image/ief":["ief"],"image/jp2":["jp2","jpg2"],"image/jpeg":["jpeg","jpg","jpe"],"image/jpm":["jpm"],"image/jpx":["jpx","jpf"],"image/ktx":["ktx"],"image/png":["png"],"image/prs.btif":["btif"],"image/sgi":["sgi"],"image/svg+xml":["svg","svgz"],"image/tiff":["tiff","tif"],"image/vnd.adobe.photoshop":["psd"],"image/vnd.dece.graphic":["uvi","uvvi","uvg","uvvg"],"image/vnd.djvu":["djvu","djv"],"image/vnd.dvb.subtitle":[],"image/vnd.dwg":["dwg"],"image/vnd.dxf":["dxf"],"image/vnd.fastbidsheet":["fbs"],"image/vnd.fpx":["fpx"],"image/vnd.fst":["fst"],"image/vnd.fujixerox.edmics-mmr":["mmr"],"image/vnd.fujixerox.edmics-rlc":["rlc"],"image/vnd.ms-modi":["mdi"],"image/vnd.ms-photo":["wdp"],"image/vnd.net-fpx":["npx"],"image/vnd.wap.wbmp":["wbmp"],"image/vnd.xiff":["xif"],"image/webp":["webp"],"image/x-3ds":["3ds"],"image/x-cmu-raster":["ras"],"image/x-cmx":["cmx"],"image/x-freehand":["fh","fhc","fh4","fh5","fh7"],"image/x-icon":["ico"],"image/x-jng":["jng"],"image/x-mrsid-image":["sid"],"image/x-ms-bmp":[],"image/x-pcx":["pcx"],"image/x-pict":["pic","pct"],"image/x-portable-anymap":["pnm"],"image/x-portable-bitmap":["pbm"],"image/x-portable-graymap":["pgm"],"image/x-portable-pixmap":["ppm"],"image/x-rgb":["rgb"],"image/x-tga":["tga"],"image/x-xbitmap":["xbm"],"image/x-xpixmap":["xpm"],"image/x-xwindowdump":["xwd"],"message/rfc822":["eml","mime"],"model/gltf+json":["gltf"],"model/gltf-binary":["glb"],"model/iges":["igs","iges"],"model/mesh":["msh","mesh","silo"],"model/vnd.collada+xml":["dae"],"model/vnd.dwf":["dwf"],"model/vnd.gdl":["gdl"],"model/vnd.gtw":["gtw"],"model/vnd.mts":["mts"],"model/vnd.vtu":["vtu"],"model/vrml":["wrl","vrml"],"model/x3d+binary":["x3db","x3dbz"],"model/x3d+vrml":["x3dv","x3dvz"],"model/x3d+xml":["x3d","x3dz"],"text/cache-manifest":["appcache","manifest"],"text/calendar":["ics","ifb"],"text/coffeescript":["coffee","litcoffee"],"text/css":["css"],"text/csv":["csv"],"text/hjson":["hjson"],"text/html":["html","htm","shtml"],"text/jade":["jade"],"text/jsx":["jsx"],"text/less":["less"],"text/markdown":["markdown","md"],"text/mathml":["mml"],"text/n3":["n3"],"text/plain":["txt","text","conf","def","list","log","in","ini"],"text/prs.lines.tag":["dsc"],"text/richtext":["rtx"],"text/rtf":[],"text/sgml":["sgml","sgm"],"text/slim":["slim","slm"],"text/stylus":["stylus","styl"],"text/tab-separated-values":["tsv"],"text/troff":["t","tr","roff","man","me","ms"],"text/turtle":["ttl"],"text/uri-list":["uri","uris","urls"],"text/vcard":["vcard"],"text/vnd.curl":["curl"],"text/vnd.curl.dcurl":["dcurl"],"text/vnd.curl.mcurl":["mcurl"],"text/vnd.curl.scurl":["scurl"],"text/vnd.dvb.subtitle":["sub"],"text/vnd.fly":["fly"],"text/vnd.fmi.flexstor":["flx"],"text/vnd.graphviz":["gv"],"text/vnd.in3d.3dml":["3dml"],"text/vnd.in3d.spot":["spot"],"text/vnd.sun.j2me.app-descriptor":["jad"],"text/vnd.wap.wml":["wml"],"text/vnd.wap.wmlscript":["wmls"],"text/vtt":["vtt"],"text/x-asm":["s","asm"],"text/x-c":["c","cc","cxx","cpp","h","hh","dic"],"text/x-component":["htc"],"text/x-fortran":["f","for","f77","f90"],"text/x-handlebars-template":["hbs"],"text/x-java-source":["java"],"text/x-lua":["lua"],"text/x-markdown":["mkd"],"text/x-nfo":["nfo"],"text/x-opml":["opml"],"text/x-org":[],"text/x-pascal":["p","pas"],"text/x-processing":["pde"],"text/x-sass":["sass"],"text/x-scss":["scss"],"text/x-setext":["etx"],"text/x-sfv":["sfv"],"text/x-suse-ymp":["ymp"],"text/x-uuencode":["uu"],"text/x-vcalendar":["vcs"],"text/x-vcard":["vcf"],"text/xml":[],"text/yaml":["yaml","yml"],"video/3gpp":["3gp","3gpp"],"video/3gpp2":["3g2"],"video/h261":["h261"],"video/h263":["h263"],"video/h264":["h264"],"video/jpeg":["jpgv"],"video/jpm":["jpgm"],"video/mj2":["mj2","mjp2"],"video/mp2t":["ts"],"video/mp4":["mp4","mp4v","mpg4"],"video/mpeg":["mpeg","mpg","mpe","m1v","m2v"],"video/ogg":["ogv"],"video/quicktime":["qt","mov"],"video/vnd.dece.hd":["uvh","uvvh"],"video/vnd.dece.mobile":["uvm","uvvm"],"video/vnd.dece.pd":["uvp","uvvp"],"video/vnd.dece.sd":["uvs","uvvs"],"video/vnd.dece.video":["uvv","uvvv"],"video/vnd.dvb.file":["dvb"],"video/vnd.fvt":["fvt"],"video/vnd.mpegurl":["mxu","m4u"],"video/vnd.ms-playready.media.pyv":["pyv"],"video/vnd.uvvu.mp4":["uvu","uvvu"],"video/vnd.vivo":["viv"],"video/webm":["webm"],"video/x-f4v":["f4v"],"video/x-fli":["fli"],"video/x-flv":["flv"],"video/x-m4v":["m4v"],"video/x-matroska":["mkv","mk3d","mks"],"video/x-mng":["mng"],"video/x-ms-asf":["asf","asx"],"video/x-ms-vob":["vob"],"video/x-ms-wm":["wm"],"video/x-ms-wmv":["wmv"],"video/x-ms-wmx":["wmx"],"video/x-ms-wvx":["wvx"],"video/x-msvideo":["avi"],"video/x-sgi-movie":["movie"],"video/x-smv":["smv"],"x-conference/x-cooltalk":["ice"]}
-},{}],58:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 'use strict'
 
 var ops = require('ndarray-ops')
@@ -44023,7 +44354,7 @@ function ndfft(dir, x, y) {
 }
 
 module.exports = ndfft
-},{"./lib/fft-matrix.js":59,"ndarray":64,"ndarray-ops":61,"typedarray-pool":120}],59:[function(require,module,exports){
+},{"./lib/fft-matrix.js":61,"ndarray":66,"ndarray-ops":63,"typedarray-pool":124}],61:[function(require,module,exports){
 var bits = require('bit-twiddle')
 
 function fft(dir, nrows, ncols, buffer, x_ptr, y_ptr, scratch_ptr) {
@@ -44242,7 +44573,7 @@ function fftBluestein(dir, nrows, ncols, buffer, x_ptr, y_ptr, scratch_ptr) {
   }
 }
 
-},{"bit-twiddle":2}],60:[function(require,module,exports){
+},{"bit-twiddle":2}],62:[function(require,module,exports){
 "use strict"
 
 module.exports = gaussBlur
@@ -44288,7 +44619,7 @@ function gaussBlur(arr, sigma, wrap) {
   pool.freeDouble(im)
   return arr
 }
-},{"cwise/lib/wrapper":10,"dup":12,"ndarray":64,"ndarray-fft":58,"ndarray-ops":61,"next-pow-2":65,"typedarray-pool":120}],61:[function(require,module,exports){
+},{"cwise/lib/wrapper":12,"dup":14,"ndarray":66,"ndarray-fft":60,"ndarray-ops":63,"next-pow-2":67,"typedarray-pool":124}],63:[function(require,module,exports){
 "use strict"
 
 var compile = require("cwise-compiler")
@@ -44751,7 +45082,7 @@ exports.equals = compile({
 
 
 
-},{"cwise-compiler":7}],62:[function(require,module,exports){
+},{"cwise-compiler":9}],64:[function(require,module,exports){
 "use strict"
 
 var ndarray = require("ndarray")
@@ -44774,10 +45105,10 @@ module.exports = function convert(arr, result) {
   return result
 }
 
-},{"./doConvert.js":63,"ndarray":64}],63:[function(require,module,exports){
+},{"./doConvert.js":65,"ndarray":66}],65:[function(require,module,exports){
 module.exports=require('cwise-compiler')({"args":["array","scalar","index"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{\nvar _inline_1_v=_inline_1_arg1_,_inline_1_i\nfor(_inline_1_i=0;_inline_1_i<_inline_1_arg2_.length-1;++_inline_1_i) {\n_inline_1_v=_inline_1_v[_inline_1_arg2_[_inline_1_i]]\n}\n_inline_1_arg0_=_inline_1_v[_inline_1_arg2_[_inline_1_arg2_.length-1]]\n}","args":[{"name":"_inline_1_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_1_arg1_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_1_arg2_","lvalue":false,"rvalue":true,"count":4}],"thisVars":[],"localVars":["_inline_1_i","_inline_1_v"]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"funcName":"convert","blockSize":64})
 
-},{"cwise-compiler":7}],64:[function(require,module,exports){
+},{"cwise-compiler":9}],66:[function(require,module,exports){
 var iota = require("iota-array")
 var isBuffer = require("is-buffer")
 
@@ -45122,7 +45453,7 @@ function wrappedNDArrayCtor(data, shape, stride, offset) {
 
 module.exports = wrappedNDArrayCtor
 
-},{"iota-array":50,"is-buffer":51}],65:[function(require,module,exports){
+},{"iota-array":52,"is-buffer":53}],67:[function(require,module,exports){
 module.exports = function(v) {
   v += v === 0
   --v
@@ -45134,7 +45465,7 @@ module.exports = function(v) {
   return v + 1
 }
 
-},{}],66:[function(require,module,exports){
+},{}],68:[function(require,module,exports){
 // (c) Dean McNamee <dean@gmail.com>, 2013.
 //
 // https://github.com/deanm/omggif
@@ -45943,7 +46274,281 @@ function GifReaderLZWOutputIndexStream(code_stream, p, output, output_length) {
 // CommonJS.
 try { exports.GifWriter = GifWriter; exports.GifReader = GifReader } catch(e) {}
 
-},{}],67:[function(require,module,exports){
+},{}],69:[function(require,module,exports){
+(function (process){
+/**
+ * Pace
+ *
+ * A progress bar for the command-line.
+ *
+ * Example usage:
+ *
+ *     var total = 50000,
+ *         count = 0,
+ *         pace = require('pace')(total);
+ *
+ *     while (count++ < total) {
+ *       pace.op();
+ *
+ *       // Cause some work to be done.
+ *       for (var i = 0; i < 1000000; i++) {
+ *         count = count;
+ *       }
+ *     }
+ */
+
+// Module dependencies.
+var charm = require('charm');
+
+/**
+ * Pace 'class'.
+ */
+function Pace(options) {
+  options = options || {};
+
+  // Total number of items to process.
+  if (!options.total) {
+    throw new Error('You MUST specify the total number of operations that will be processed.');
+  }
+  this.total = options.total;
+
+  // Current item number.
+  this.current = 0;
+
+  // Maximum percent of total time the progressbar is allowed to take during processing.
+  // Defaults to 0.5%
+  this.max_burden = options.maxBurden || 0.5;
+
+  // Whether to show current burden %.
+  this.show_burden = options.showBurden || false;
+
+  // Internal time tracking properties.
+  this.started = false;
+  this.size = 50;
+  this.inner_time = 0;
+  this.outer_time = 0;
+  this.elapsed = 0;
+  this.time_start = 0;
+  this.time_end = 0;
+  this.time_left = 0;
+  this.time_burden = 0;
+  this.skip_steps = 0;
+  this.skipped = 0;
+  this.aborted = false;
+
+  // Setup charm.
+  this.charm = charm();
+  this.charm.pipe(process.stdout);
+
+  // Prepare the output.
+  this.charm.write("\n\n\n");
+}
+
+/**
+ * Export a factory function for new pace instances.
+ */
+module.exports = function(options) {
+  if (typeof options === 'number') {
+    options = {
+      total: options
+    };
+  }
+  return new Pace(options);
+};
+
+/**
+ * An operation has been emitted.
+ */
+Pace.prototype.op = function op(count) {
+  if (count) {
+    this.current = count;
+  }
+  else {
+    this.current++;
+  }
+
+  if (this.burdenReached()) {
+    return;
+  }
+
+  // Record the start time of the whole task.
+  if (!this.started) {
+    this.started = new Date().getTime();
+  }
+
+  // Record start time.
+  this.time_start = new Date().getTime();
+
+  this.updateTimes();
+  this.clear();
+  this.outputProgress();
+  this.outputStats();
+  this.outputTimes();
+
+  // The task is complete.
+  if (this.current >= this.total) {
+    this.finished();
+  }
+
+  // Record end time.
+  this.time_end = new Date().getTime();
+  this.inner_time = this.time_end - this.time_start;
+};
+
+/**
+ * Update times.
+ */
+Pace.prototype.updateTimes = function updateTimes() {
+  this.elapsed = this.time_start - this.started;
+  if (this.time_end > 0) {
+    this.outer_time = this.time_start - this.time_end;
+  }
+  if (this.inner_time > 0 && this.outer_time > 0) {
+    // Set Current Burden
+    this.time_burden = (this.inner_time / (this.inner_time + this.outer_time)) * 100;
+
+    // Estimate time left.
+    this.time_left = (this.elapsed / this.current) * (this.total - this.current);
+
+    if (this.time_left < 0) this.time_left = 0;
+  }
+  // If our "burden" is too high, increase the skip steps.
+  if (this.time_burden > this.max_burden && (this.skip_steps < (this.total / this.size))) {
+    this.skip_steps = Math.floor(++this.skip_steps * 1.3);
+  }
+};
+
+/**
+ * Move the cursor back to the beginning and clear old output.
+ */
+Pace.prototype.clear = function clear() {
+  this.charm.erase('line').up(1).erase('line').up(1).erase('line').write("\r");
+};
+
+/**
+ * Output the progress bar.
+ */
+Pace.prototype.outputProgress = function outputProgress() {
+  this.charm.write('Processing: ');
+  this.charm.foreground('green').background('green');
+  for (var i = 0; i < ((this.current / this.total) * this.size) - 1 ; i++) {
+     this.charm.write(' ');
+  }
+  this.charm.foreground('white').background('white');
+  while (i < this.size - 1) {
+    this.charm.write(' ');
+    i++;
+  }
+  this.charm.display('reset').down(1).left(100);
+};
+
+/**
+ * Output numerical progress stats.
+ */
+Pace.prototype.outputStats = function outputStats() {
+  this.perc = (this.current/this.total)*100;
+  this.perc = padLeft(this.perc.toFixed(2), 2);
+  this.charm.write('            ').display('bright').write(this.perc + '%').display('reset');
+  this.total_len = formatNumber(this.total).length;
+  this.charm.write('   ').display('bright').write(padLeft(formatNumber(this.current), this.total_len)).display('reset');
+  this.charm.write('/' + formatNumber(this.total));
+
+  // Output burden.
+  if (this.show_burden) {
+    this.charm.write('    ').display('bright').write('Burden: ').display('reset');
+    this.charm.write(this.time_burden.toFixed(2) + '% / ' + this.skip_steps);
+  }
+
+  this.charm.display('reset').down(1).left(100);
+};
+
+/**
+ * Output times.
+ */
+Pace.prototype.outputTimes = function outputTimes() {
+  // Output times.
+  var hours = Math.floor(this.elapsed / (1000 * 60 * 60));
+  var min = Math.floor(((this.elapsed / 1000) % (60 * 60)) / 60);
+  var sec = Math.floor((this.elapsed / 1000) % 60);
+
+  this.charm.write('            ').display('bright').write('Elapsed: ').display('reset');
+  this.charm.write(hours + 'h ' + min + 'm ' + sec + 's');
+
+  if (this.time_left){
+    hours = Math.floor(this.time_left / (1000 * 60 * 60));
+    min = Math.floor(((this.time_left / 1000) % (60 * 60)) / 60);
+    sec = Math.ceil((this.time_left / 1000) % 60);
+
+    this.charm.write('   ').display('bright').write('Remaining: ').display('reset');
+    this.charm.write(hours + 'h ' + min + 'm ' + sec + 's');
+  }
+};
+
+/**
+ * The progress has finished.
+ */
+Pace.prototype.finished = function finished() {
+  this.charm.write("\n\n");
+  this.charm.write('Finished!');
+  this.charm.write("\n\n");
+};
+
+/**
+ * Check if the burden threshold has been reached.
+ */
+Pace.prototype.burdenReached = function burdenReached() {
+  // Skip this cycle if the burden has determined we should.
+  if ((this.skip_steps > 0) && (this.current < this.total)) {
+    if (this.skipped < this.skip_steps) {
+      this.skipped++;
+      return true;
+    }
+    else {
+      this.skipped = 0;
+    }
+  }
+  return false;
+};
+
+
+/**
+ * Utility functions.
+ */
+
+// Left-pad a string.
+function padLeft(str, length, pad) {
+  pad = pad || ' ';
+  while (str.length < length)
+    str = pad + str;
+  return str;
+}
+
+// Ported from php.js. Same has php's number_format().
+function formatNumber(number, decimals, dec_point, thousands_sep) {
+  number = (number + '').replace(/[^0-9+\-Ee.]/g, '');
+  var n = !isFinite(+number) ? 0 : +number,
+    prec = !isFinite(+decimals) ? 0 : Math.abs(decimals),
+    sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+    dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+    s = '',
+    toFixedFix = function (n, prec) {
+      var k = Math.pow(10, prec);
+      return '' + Math.round(n * k) / k;
+    };
+  // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+  s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+  if (s[0].length > 3) {
+    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+  }
+  if ((s[1] || '').length < prec) {
+    s[1] = s[1] || '';
+    s[1] += new Array(prec - s[1].length + 1).join('0');
+  }
+  return s.join(dec);
+}
+
+}).call(this,require('_process'))
+},{"_process":93,"charm":5}],70:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -46171,7 +46776,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":90}],68:[function(require,module,exports){
+},{"_process":93}],71:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -46367,7 +46972,7 @@ exports.dataToBitMap = function(data, bitmapInfo) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./interlace":78,"buffer":4}],69:[function(require,module,exports){
+},{"./interlace":81,"buffer":4}],72:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -46435,7 +47040,7 @@ module.exports = function(data, width, height, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":71,"buffer":4}],70:[function(require,module,exports){
+},{"./constants":74,"buffer":4}],73:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 
@@ -46648,7 +47253,7 @@ ChunkStream.prototype._process = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":90,"buffer":4,"stream":102,"util":126}],71:[function(require,module,exports){
+},{"_process":93,"buffer":4,"stream":105,"util":130}],74:[function(require,module,exports){
 'use strict';
 
 
@@ -46684,7 +47289,7 @@ module.exports = {
   GAMMA_DIVISION: 100000
 };
 
-},{}],72:[function(require,module,exports){
+},{}],75:[function(require,module,exports){
 'use strict';
 
 var crcTable = [];
@@ -46730,7 +47335,7 @@ CrcCalculator.crc32 = function(buf) {
   return crc ^ -1;
 };
 
-},{}],73:[function(require,module,exports){
+},{}],76:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -46917,7 +47522,7 @@ module.exports = function(pxData, width, height, options, bpp) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./paeth-predictor":82,"buffer":4}],74:[function(require,module,exports){
+},{"./paeth-predictor":85,"buffer":4}],77:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -46946,7 +47551,7 @@ var FilterAsync = module.exports = function(bitmapInfo) {
 util.inherits(FilterAsync, ChunkStream);
 
 }).call(this,require("buffer").Buffer)
-},{"./chunkstream":70,"./filter-parse":76,"buffer":4,"util":126}],75:[function(require,module,exports){
+},{"./chunkstream":73,"./filter-parse":79,"buffer":4,"util":130}],78:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -46973,7 +47578,7 @@ exports.process = function(inBuffer, bitmapInfo) {
   return Buffer.concat(outBuffers);
 };
 }).call(this,require("buffer").Buffer)
-},{"./filter-parse":76,"./sync-reader":88,"buffer":4}],76:[function(require,module,exports){
+},{"./filter-parse":79,"./sync-reader":91,"buffer":4}],79:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -47148,7 +47753,7 @@ Filter.prototype._reverseFilterLine = function(rawData) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./interlace":78,"./paeth-predictor":82,"buffer":4}],77:[function(require,module,exports){
+},{"./interlace":81,"./paeth-predictor":85,"buffer":4}],80:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -47241,7 +47846,7 @@ module.exports = function(indata, imageData) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4}],78:[function(require,module,exports){
+},{"buffer":4}],81:[function(require,module,exports){
 'use strict';
 
 // Adam 7
@@ -47329,7 +47934,7 @@ exports.getInterlaceIterator = function(width) {
     return (outerX * 4) + (outerY * width * 4);
   };
 };
-},{}],79:[function(require,module,exports){
+},{}],82:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -47378,7 +47983,7 @@ PackerAsync.prototype.pack = function(data, width, height, gamma) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":71,"./packer":81,"buffer":4,"stream":102,"util":126}],80:[function(require,module,exports){
+},{"./constants":74,"./packer":84,"buffer":4,"stream":105,"util":130}],83:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -47430,7 +48035,7 @@ module.exports = function(metaData, opt) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":71,"./packer":81,"buffer":4,"zlib":35}],81:[function(require,module,exports){
+},{"./constants":74,"./packer":84,"buffer":4,"zlib":37}],84:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -47525,7 +48130,7 @@ Packer.prototype.packIEND = function() {
   return this._packChunk(constants.TYPE_IEND, null);
 };
 }).call(this,require("buffer").Buffer)
-},{"./bitpacker":69,"./constants":71,"./crc":72,"./filter-pack":73,"buffer":4,"zlib":35}],82:[function(require,module,exports){
+},{"./bitpacker":72,"./constants":74,"./crc":75,"./filter-pack":76,"buffer":4,"zlib":37}],85:[function(require,module,exports){
 'use strict';
 
 module.exports = function paethPredictor(left, above, upLeft) {
@@ -47543,7 +48148,7 @@ module.exports = function paethPredictor(left, above, upLeft) {
   }
   return upLeft;
 };
-},{}],83:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 'use strict';
 
 var util = require('util');
@@ -47655,7 +48260,7 @@ ParserAsync.prototype._complete = function(filteredData) {
   this.emit('parsed', normalisedBitmapData);
 };
 
-},{"./bitmapper":68,"./chunkstream":70,"./filter-parse-async":74,"./format-normaliser":77,"./parser":85,"util":126,"zlib":35}],84:[function(require,module,exports){
+},{"./bitmapper":71,"./chunkstream":73,"./filter-parse-async":77,"./format-normaliser":80,"./parser":88,"util":130,"zlib":37}],87:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -47750,7 +48355,7 @@ module.exports = function(buffer, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./bitmapper":68,"./filter-parse-sync":75,"./format-normaliser":77,"./parser":85,"./sync-reader":88,"buffer":4,"zlib":35}],85:[function(require,module,exports){
+},{"./bitmapper":71,"./filter-parse-sync":78,"./format-normaliser":80,"./parser":88,"./sync-reader":91,"buffer":4,"zlib":37}],88:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -48044,7 +48649,7 @@ Parser.prototype._parseIEND = function(data) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":71,"./crc":72,"buffer":4}],86:[function(require,module,exports){
+},{"./constants":74,"./crc":75,"buffer":4}],89:[function(require,module,exports){
 'use strict';
 
 
@@ -48062,7 +48667,7 @@ exports.write = function(png) {
   return pack(png);
 };
 
-},{"./packer-sync":80,"./parser-sync":84}],87:[function(require,module,exports){
+},{"./packer-sync":83,"./parser-sync":87}],90:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 
@@ -48229,7 +48834,7 @@ PNG.prototype.adjustGamma = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./packer-async":79,"./parser-async":83,"./png-sync":86,"_process":90,"buffer":4,"stream":102,"util":126}],88:[function(require,module,exports){
+},{"./packer-async":82,"./parser-async":86,"./png-sync":89,"_process":93,"buffer":4,"stream":105,"util":130}],91:[function(require,module,exports){
 'use strict';
 
 var SyncReader = module.exports = function(buffer) {
@@ -48282,7 +48887,7 @@ SyncReader.prototype.process = function() {
 
 };
 
-},{}],89:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -48329,7 +48934,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 }
 
 }).call(this,require('_process'))
-},{"_process":90}],90:[function(require,module,exports){
+},{"_process":93}],93:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -48515,11 +49120,11 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],91:[function(require,module,exports){
-arguments[4][27][0].apply(exports,arguments)
-},{"./_stream_readable":93,"./_stream_writable":95,"_process":90,"core-util-is":6,"dup":27,"inherits":49}],92:[function(require,module,exports){
-arguments[4][28][0].apply(exports,arguments)
-},{"./_stream_transform":94,"core-util-is":6,"dup":28,"inherits":49}],93:[function(require,module,exports){
+},{}],94:[function(require,module,exports){
+arguments[4][29][0].apply(exports,arguments)
+},{"./_stream_readable":96,"./_stream_writable":98,"_process":93,"core-util-is":8,"dup":29,"inherits":51}],95:[function(require,module,exports){
+arguments[4][30][0].apply(exports,arguments)
+},{"./_stream_transform":97,"core-util-is":8,"dup":30,"inherits":51}],96:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -49505,7 +50110,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"_process":90,"buffer":4,"core-util-is":6,"events":13,"inherits":49,"isarray":52,"stream":102,"string_decoder/":118}],94:[function(require,module,exports){
+},{"_process":93,"buffer":4,"core-util-is":8,"events":15,"inherits":51,"isarray":54,"stream":105,"string_decoder/":121}],97:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -49717,7 +50322,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":91,"core-util-is":6,"inherits":49}],95:[function(require,module,exports){
+},{"./_stream_duplex":94,"core-util-is":8,"inherits":51}],98:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -50107,7 +50712,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":91,"_process":90,"buffer":4,"core-util-is":6,"inherits":49,"stream":102}],96:[function(require,module,exports){
+},{"./_stream_duplex":94,"_process":93,"buffer":4,"core-util-is":8,"inherits":51,"stream":105}],99:[function(require,module,exports){
 (function (process){
 var Stream = require('stream'); // hack to fix a circular dependency issue when used with browserify
 exports = module.exports = require('./lib/_stream_readable.js');
@@ -50122,7 +50727,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":91,"./lib/_stream_passthrough.js":92,"./lib/_stream_readable.js":93,"./lib/_stream_transform.js":94,"./lib/_stream_writable.js":95,"_process":90,"stream":102}],97:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":94,"./lib/_stream_passthrough.js":95,"./lib/_stream_readable.js":96,"./lib/_stream_transform.js":97,"./lib/_stream_writable.js":98,"_process":93,"stream":105}],100:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -50186,7 +50791,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":4}],98:[function(require,module,exports){
+},{"buffer":4}],101:[function(require,module,exports){
 var encode = require('./lib/encoder'),
     decode = require('./lib/decoder');
 
@@ -50195,7 +50800,7 @@ module.exports = {
   decode: decode
 };
 
-},{"./lib/decoder":99,"./lib/encoder":100}],99:[function(require,module,exports){
+},{"./lib/decoder":102,"./lib/encoder":103}],102:[function(require,module,exports){
 (function (Buffer){
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- /
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
@@ -51178,7 +51783,7 @@ function decode(jpegData) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4}],100:[function(require,module,exports){
+},{"buffer":4}],103:[function(require,module,exports){
 (function (Buffer){
 /*
   Copyright (c) 2008, Adobe Systems Incorporated
@@ -51948,7 +52553,7 @@ function getImageDataFromImage(idOrElement){
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4}],101:[function(require,module,exports){
+},{"buffer":4}],104:[function(require,module,exports){
 (function (Buffer){
 'use strict'
 
@@ -52093,7 +52698,7 @@ module.exports = function savePixels (array, type, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"contentstream":5,"gif-encoder":24,"jpeg-js":98,"ndarray":64,"ndarray-ops":61,"pngjs-nozlib":87,"through":119}],102:[function(require,module,exports){
+},{"buffer":4,"contentstream":7,"gif-encoder":26,"jpeg-js":101,"ndarray":66,"ndarray-ops":63,"pngjs-nozlib":90,"through":122}],105:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -52222,17 +52827,17 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":13,"inherits":49,"readable-stream/duplex.js":104,"readable-stream/passthrough.js":113,"readable-stream/readable.js":114,"readable-stream/transform.js":115,"readable-stream/writable.js":116}],103:[function(require,module,exports){
+},{"events":15,"inherits":51,"readable-stream/duplex.js":107,"readable-stream/passthrough.js":116,"readable-stream/readable.js":117,"readable-stream/transform.js":118,"readable-stream/writable.js":119}],106:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],104:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 module.exports = require('./lib/_stream_duplex.js');
 
-},{"./lib/_stream_duplex.js":105}],105:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":108}],108:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -52357,7 +52962,7 @@ function forEach(xs, f) {
     f(xs[i], i);
   }
 }
-},{"./_stream_readable":107,"./_stream_writable":109,"core-util-is":6,"inherits":49,"process-nextick-args":89}],106:[function(require,module,exports){
+},{"./_stream_readable":110,"./_stream_writable":112,"core-util-is":8,"inherits":51,"process-nextick-args":92}],109:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -52405,7 +53010,7 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-},{"./_stream_transform":108,"core-util-is":6,"inherits":49}],107:[function(require,module,exports){
+},{"./_stream_transform":111,"core-util-is":8,"inherits":51}],110:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -53415,7 +54020,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":105,"./internal/streams/BufferList":110,"./internal/streams/destroy":111,"./internal/streams/stream":112,"_process":90,"core-util-is":6,"events":13,"inherits":49,"isarray":103,"process-nextick-args":89,"safe-buffer":97,"string_decoder/":117,"util":3}],108:[function(require,module,exports){
+},{"./_stream_duplex":108,"./internal/streams/BufferList":113,"./internal/streams/destroy":114,"./internal/streams/stream":115,"_process":93,"core-util-is":8,"events":15,"inherits":51,"isarray":106,"process-nextick-args":92,"safe-buffer":100,"string_decoder/":120,"util":3}],111:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -53630,7 +54235,7 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":105,"core-util-is":6,"inherits":49}],109:[function(require,module,exports){
+},{"./_stream_duplex":108,"core-util-is":8,"inherits":51}],112:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -54297,7 +54902,7 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":105,"./internal/streams/destroy":111,"./internal/streams/stream":112,"_process":90,"core-util-is":6,"inherits":49,"process-nextick-args":89,"safe-buffer":97,"util-deprecate":123}],110:[function(require,module,exports){
+},{"./_stream_duplex":108,"./internal/streams/destroy":114,"./internal/streams/stream":115,"_process":93,"core-util-is":8,"inherits":51,"process-nextick-args":92,"safe-buffer":100,"util-deprecate":127}],113:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -54372,7 +54977,7 @@ module.exports = function () {
 
   return BufferList;
 }();
-},{"safe-buffer":97}],111:[function(require,module,exports){
+},{"safe-buffer":100}],114:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -54445,13 +55050,13 @@ module.exports = {
   destroy: destroy,
   undestroy: undestroy
 };
-},{"process-nextick-args":89}],112:[function(require,module,exports){
+},{"process-nextick-args":92}],115:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":13}],113:[function(require,module,exports){
+},{"events":15}],116:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
-},{"./readable":114}],114:[function(require,module,exports){
+},{"./readable":117}],117:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -54460,13 +55065,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":105,"./lib/_stream_passthrough.js":106,"./lib/_stream_readable.js":107,"./lib/_stream_transform.js":108,"./lib/_stream_writable.js":109}],115:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":108,"./lib/_stream_passthrough.js":109,"./lib/_stream_readable.js":110,"./lib/_stream_transform.js":111,"./lib/_stream_writable.js":112}],118:[function(require,module,exports){
 module.exports = require('./readable').Transform
 
-},{"./readable":114}],116:[function(require,module,exports){
+},{"./readable":117}],119:[function(require,module,exports){
 module.exports = require('./lib/_stream_writable.js');
 
-},{"./lib/_stream_writable.js":109}],117:[function(require,module,exports){
+},{"./lib/_stream_writable.js":112}],120:[function(require,module,exports){
 'use strict';
 
 var Buffer = require('safe-buffer').Buffer;
@@ -54739,7 +55344,7 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":97}],118:[function(require,module,exports){
+},{"safe-buffer":100}],121:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -54962,7 +55567,7 @@ function base64DetectIncompleteChar(buffer) {
   this.charLength = this.charReceived ? 3 : 0;
 }
 
-},{"buffer":4}],119:[function(require,module,exports){
+},{"buffer":4}],122:[function(require,module,exports){
 (function (process){
 var Stream = require('stream')
 
@@ -55074,7 +55679,20 @@ function through (write, end, opts) {
 
 
 }).call(this,require('_process'))
-},{"_process":90,"stream":102}],120:[function(require,module,exports){
+},{"_process":93,"stream":105}],123:[function(require,module,exports){
+exports.isatty = function () { return false; };
+
+function ReadStream() {
+  throw new Error('tty.ReadStream is not implemented');
+}
+exports.ReadStream = ReadStream;
+
+function WriteStream() {
+  throw new Error('tty.WriteStream is not implemented');
+}
+exports.WriteStream = WriteStream;
+
+},{}],124:[function(require,module,exports){
 (function (global,Buffer){
 'use strict'
 
@@ -55291,7 +55909,7 @@ exports.clearCache = function clearCache() {
   }
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"bit-twiddle":2,"buffer":4,"dup":12}],121:[function(require,module,exports){
+},{"bit-twiddle":2,"buffer":4,"dup":14}],125:[function(require,module,exports){
 "use strict"
 
 function unique_pred(list, compare) {
@@ -55350,7 +55968,7 @@ function unique(list, compare, sorted) {
 
 module.exports = unique
 
-},{}],122:[function(require,module,exports){
+},{}],126:[function(require,module,exports){
 var mime = require('mime');
 var fs = require('fs');
 
@@ -55360,7 +55978,7 @@ module.exports = function urifyNode (file) {
   return 'data:' + type + ';base64,' + data;
 };
 
-},{"fs":36,"mime":56}],123:[function(require,module,exports){
+},{"fs":38,"mime":58}],127:[function(require,module,exports){
 (function (global){
 
 /**
@@ -55431,16 +56049,16 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],124:[function(require,module,exports){
-arguments[4][49][0].apply(exports,arguments)
-},{"dup":49}],125:[function(require,module,exports){
+},{}],128:[function(require,module,exports){
+arguments[4][51][0].apply(exports,arguments)
+},{"dup":51}],129:[function(require,module,exports){
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
     && typeof arg.fill === 'function'
     && typeof arg.readUInt8 === 'function';
 }
-},{}],126:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -56030,7 +56648,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":125,"_process":90,"inherits":124}],127:[function(require,module,exports){
+},{"./support/isBuffer":129,"_process":93,"inherits":128}],131:[function(require,module,exports){
 function AddStep(ref, image, name, o) {
 
   function addStep(image, name, o_) {
@@ -56061,7 +56679,7 @@ function AddStep(ref, image, name, o) {
 }
 module.exports = AddStep;
 
-},{}],128:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
@@ -56123,7 +56741,7 @@ module.exports = function ExportBin(dir = "./output/",ref,basic) {
   });
 }
 
-},{"data-uri-to-buffer":11,"fs":36}],129:[function(require,module,exports){
+},{"data-uri-to-buffer":13,"fs":38}],133:[function(require,module,exports){
 function objTypeOf(object){
   return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
 }
@@ -56289,7 +56907,7 @@ function formatInput(args,format,images) {
 }
 module.exports = formatInput;
 
-},{}],130:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 if (typeof window !== 'undefined') {window.$ = window.jQuery = require('jquery'); isBrowser = true}
 else {var isBrowser = false}
 
@@ -56514,7 +57132,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":127,"./ExportBin":128,"./FormatInput":129,"./InsertStep":131,"./LoadImage":132,"./Modules":133,"./ReplaceImage":134,"./Run":135,"./UserInterface":136,"fs":36,"jquery":53}],131:[function(require,module,exports){
+},{"./AddStep":131,"./ExportBin":132,"./FormatInput":133,"./InsertStep":135,"./LoadImage":136,"./Modules":137,"./ReplaceImage":138,"./Run":139,"./UserInterface":140,"fs":38,"jquery":55}],135:[function(require,module,exports){
 function InsertStep(ref, image, index, name, o) {
 
   function insertStep(image, index, name, o_) {
@@ -56548,7 +57166,7 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{}],132:[function(require,module,exports){
+},{}],136:[function(require,module,exports){
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -56655,7 +57273,7 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
-},{"urify":122}],133:[function(require,module,exports){
+},{"urify":126}],137:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
@@ -56692,7 +57310,7 @@ module.exports = {
   ]
 }
 
-},{"./modules/Brightness/Module":137,"./modules/Brightness/info":138,"./modules/Crop/Module":140,"./modules/Crop/info":141,"./modules/DecodeQr/Module":142,"./modules/DecodeQr/info":143,"./modules/Dynamic/Module":144,"./modules/Dynamic/info":145,"./modules/EdgeDetect/Module":147,"./modules/EdgeDetect/info":148,"./modules/FisheyeGl/Module":149,"./modules/FisheyeGl/info":150,"./modules/GreenChannel/Module":151,"./modules/GreenChannel/info":152,"./modules/Invert/Module":153,"./modules/Invert/info":154,"./modules/NdviRed/Module":155,"./modules/NdviRed/info":156,"./modules/SegmentedColormap/Module":157,"./modules/SegmentedColormap/info":159}],134:[function(require,module,exports){
+},{"./modules/Brightness/Module":141,"./modules/Brightness/info":142,"./modules/Crop/Module":144,"./modules/Crop/info":145,"./modules/DecodeQr/Module":146,"./modules/DecodeQr/info":147,"./modules/Dynamic/Module":148,"./modules/Dynamic/info":149,"./modules/EdgeDetect/Module":151,"./modules/EdgeDetect/info":152,"./modules/FisheyeGl/Module":153,"./modules/FisheyeGl/info":154,"./modules/GreenChannel/Module":155,"./modules/GreenChannel/info":156,"./modules/Invert/Module":157,"./modules/Invert/info":158,"./modules/NdviRed/Module":159,"./modules/NdviRed/info":160,"./modules/SegmentedColormap/Module":161,"./modules/SegmentedColormap/info":163}],138:[function(require,module,exports){
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var tempSequencer = ImageSequencer({ui: false});
@@ -56739,7 +57357,7 @@ function ReplaceImage(ref,selector,steps,options) {
 
 module.exports = ReplaceImage;
 
-},{}],135:[function(require,module,exports){
+},{}],139:[function(require,module,exports){
 function Run(ref, json_q, callback) {
 
   function drawStep(drawarray, pos) {
@@ -56796,7 +57414,7 @@ function Run(ref, json_q, callback) {
 }
 module.exports = Run;
 
-},{}],136:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
@@ -56864,7 +57482,7 @@ module.exports = function UserInterface(events = {}) {
 
 }
 
-},{}],137:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 /* 
 * Changes the Image Brightness
 */
@@ -56911,6 +57529,7 @@ module.exports = function Brightness(options,UI){
             changePixel: changePixel,
             format: input.format,
             image: options.image,
+            inBrowser: options.inBrowser,
             callback: callback
         });
         
@@ -56922,7 +57541,7 @@ module.exports = function Brightness(options,UI){
         UI: UI
     }
 }
-},{"../_nomodule/PixelManipulation.js":160}],138:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":164}],142:[function(require,module,exports){
 module.exports={
     "name": "Brightness",
     "description": "Change the brightness of the image by given value",
@@ -56934,7 +57553,7 @@ module.exports={
         }
     } 
 }
-},{}],139:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Crop(input,options,callback) {
 
@@ -56980,7 +57599,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"get-pixels":22,"save-pixels":101}],140:[function(require,module,exports){
+},{"buffer":4,"get-pixels":24,"save-pixels":104}],144:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -57041,7 +57660,7 @@ module.exports = function Crop(input,options,callback) {
    }
  }
 
-},{"./Crop":139}],141:[function(require,module,exports){
+},{"./Crop":143}],145:[function(require,module,exports){
 module.exports={
   "name": "Crop",
   "description": "Crop image to given x, y, w, h",
@@ -57070,7 +57689,7 @@ module.exports={
   }
 }
 
-},{}],142:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -57126,7 +57745,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":22,"jsqr":54}],143:[function(require,module,exports){
+},{"get-pixels":24,"jsqr":56}],147:[function(require,module,exports){
 module.exports={
   "name": "Decode QR",
   "inputs": {
@@ -57138,7 +57757,7 @@ module.exports={
   }
 }
 
-},{}],144:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 module.exports = function Dynamic(options,UI) {
 
   options = options || {};
@@ -57202,6 +57821,7 @@ module.exports = function Dynamic(options,UI) {
       changePixel: changePixel,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback
     });
 
@@ -57215,7 +57835,7 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":160}],145:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":164}],149:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -57243,8 +57863,9 @@ module.exports={
   }
 }
 
-},{}],146:[function(require,module,exports){
+},{}],150:[function(require,module,exports){
 const _ = require('lodash')
+var pace = require('pace')
 
 //define kernels for the sobel filter
 const kernelx = [[-1,0,1],[-2,0,2],[-1,0,1]],
@@ -57254,9 +57875,10 @@ let angles = []
 let mags = []
 let strongEdgePixels = []
 let weakEdgePixels = []
-
-module.exports = exports =  function(pixels,highThresholdRatio,lowThresholdRatio){
-    
+let notInUI
+module.exports = exports =  function(pixels,highThresholdRatio,lowThresholdRatio,inBrowser){
+    notInUI = !inBrowser
+    if(notInUI) var progressbar1 = pace((pixels.shape[0] * pixels.shape[1]))
     for(var x = 0; x < pixels.shape[0]; x++) {
         angles.push([])
         mags.push([])
@@ -57277,6 +57899,7 @@ module.exports = exports =  function(pixels,highThresholdRatio,lowThresholdRatio
             
             mags.slice(-1)[0].push(pixel[3])
             angles.slice(-1)[0].push(result.angle)  
+            if(notInUI)progressbar1.op()
         }
     }
     
@@ -57318,6 +57941,7 @@ function changePixel(pixels,val,a,x,y){
 function nonMaxSupress(pixels) { 
     angles = angles.map((arr)=>arr.map(convertToDegrees))
     
+    if(notInUI) var progressbar2 = pace((pixels.shape[0] * pixels.shape[1]))
     for(let i = 1;i<pixels.shape[0]-1;i++){
         for(let j=1;j<pixels.shape[1]-1;j++){
             
@@ -57359,11 +57983,13 @@ function nonMaxSupress(pixels) {
             pixels.set(i,j,3,mags[i][j])
             else
             pixels.set(i,j,3,0)  
+
+            if(notInUI) progressbar2.op()
         }
     }
     return pixels
 }
-//Converts rasians to degrees
+//Converts radians to degrees
 var convertToDegrees = radians => (radians * 180)/Math.PI
 
 //Finds the max value in a 2d array like mags
@@ -57373,7 +57999,8 @@ var findMaxInMatrix = arr => Math.max(...arr.map(el=>el.map(val=>!!val?val:0)).m
 function doubleThreshold(pixels,highThresholdRatio,lowThresholdRatio){
     const highThreshold = findMaxInMatrix(mags) * 0.2
     const lowThreshold = highThreshold * lowThresholdRatio
-    
+    if(notInUI) var progressbar3 = pace((pixels.shape[0] * pixels.shape[1]))
+
     for(let i =0;i<pixels.shape[0];i++){
         for(let j=0;j<pixels.shape[1];j++){
             let pixelPos = [i,j]
@@ -57383,7 +58010,7 @@ function doubleThreshold(pixels,highThresholdRatio,lowThresholdRatio){
             ?strongEdgePixels.push(pixelPos)
             :weakEdgePixels.push(pixelPos)
             :pixels.set(i,j,3,0)
-            
+            if(notInUI) progressbar3.op()
         }
     }
 
@@ -57417,13 +58044,14 @@ function hysteresis(pixels){
             }
         }
     }
+    weakEdgePixels.forEach(pix=>pixels.set(pix[0],pix[1],3,0))
     return pixels
 }
 
 
 
 
-},{"lodash":55}],147:[function(require,module,exports){
+},{"lodash":57,"pace":69}],151:[function(require,module,exports){
 /*
  * Detect Edges in an Image
  */
@@ -57452,7 +58080,7 @@ module.exports = function edgeDetect(options,UI) {
     //   Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
       function extraManipulation(pixels){
         pixels = require('ndarray-gaussian-filter')(pixels,options.blur)
-        return require('./Convolution')(pixels,options.highThresholdRatio,options.lowThresholdRatio)
+        return require('./EdgeUtils')(pixels,options.highThresholdRatio,options.lowThresholdRatio,options.inBrowser)
       }
   
       function changePixel(r, g, b, a) {
@@ -57477,6 +58105,7 @@ module.exports = function edgeDetect(options,UI) {
         extraManipulation: extraManipulation,
         format: input.format,
         image: options.image,
+        inBrowser: inBrowser,
         callback: callback
       });
   
@@ -57489,7 +58118,7 @@ module.exports = function edgeDetect(options,UI) {
       UI: UI
     }
   }
-},{"../_nomodule/PixelManipulation.js":160,"./Convolution":146,"ndarray-gaussian-filter":60}],148:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":164,"./EdgeUtils":150,"ndarray-gaussian-filter":62}],152:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
@@ -57511,7 +58140,7 @@ module.exports={
         }
     }
 }
-},{}],149:[function(require,module,exports){
+},{}],153:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -57595,7 +58224,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":14}],150:[function(require,module,exports){
+},{"fisheyegl":16}],154:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "inputs": {
@@ -57661,7 +58290,7 @@ module.exports={
   }
 }
 
-},{}],151:[function(require,module,exports){
+},{}],155:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -57702,6 +58331,7 @@ module.exports = function GreenChannel(options,UI) {
       changePixel: changePixel,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback
     });
 
@@ -57716,14 +58346,14 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":160}],152:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":164}],156:[function(require,module,exports){
 module.exports={
   "name": "Green Channel",
   "inputs": {
   }
 }
 
-},{}],153:[function(require,module,exports){
+},{}],157:[function(require,module,exports){
 /*
  * Invert the image
  */
@@ -57766,6 +58396,7 @@ module.exports = function Invert(options,UI) {
       changePixel: changePixel,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback
     });
 
@@ -57779,7 +58410,7 @@ module.exports = function Invert(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":160}],154:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":164}],158:[function(require,module,exports){
 module.exports={
   "name": "Invert",
   "description": "Inverts the image.",
@@ -57787,7 +58418,7 @@ module.exports={
   }
 }
 
-},{}],155:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -57830,6 +58461,7 @@ module.exports = function NdviRed(options,UI) {
       changePixel: changePixel,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback
     });
 
@@ -57843,14 +58475,14 @@ module.exports = function NdviRed(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":160}],156:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":164}],160:[function(require,module,exports){
 module.exports={
   "name": "NDVI Red",
   "inputs": {
   }
 }
 
-},{}],157:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
@@ -57890,6 +58522,7 @@ module.exports = function SegmentedColormap(options,UI) {
       changePixel: changePixel,
       format: input.format,
       image: options.image,
+      inBrowser: options.inBrowser,
       callback: callback
     });
 
@@ -57903,7 +58536,7 @@ module.exports = function SegmentedColormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":160,"./SegmentedColormap":158}],158:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":164,"./SegmentedColormap":162}],162:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
  * from a lookup table, which can be specified as an array of [begin, end] 
@@ -57992,7 +58625,7 @@ var colormaps = {
              ])
 }
 
-},{}],159:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 module.exports={
   "name": "Segmented Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.",
@@ -58006,14 +58639,14 @@ module.exports={
   }
 }
 
-},{}],160:[function(require,module,exports){
+},{}],164:[function(require,module,exports){
 (function (Buffer){
 /*
- * General purpose per-pixel manipulation
- * accepting a changePixel() method to remix a pixel's channels
- */
+* General purpose per-pixel manipulation
+* accepting a changePixel() method to remix a pixel's channels
+*/
 module.exports = function PixelManipulation(image, options) {
-
+  
   options = options || {};
   options.changePixel = options.changePixel || function changePixel(r, g, b, a) {
     return [r, g, b, a];
@@ -58021,51 +58654,58 @@ module.exports = function PixelManipulation(image, options) {
   options.extraManipulation = options.extraManipulation||function extraManipulation(pixels){
     return pixels;
   }
-
+  
   var getPixels = require('get-pixels'),
-      savePixels = require('save-pixels');
-
+  savePixels = require('save-pixels');
+  
   getPixels(image.src, function(err, pixels) {
-
+    
     if(err) {
       console.log('Bad image path');
       return;
     }
-
+    
     // iterate through pixels;
     // this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
+    
+    if(!options.inBrowser)
+    var pace = require('pace')((pixels.shape[0] * pixels.shape[1]))
+    
     for(var x = 0; x < pixels.shape[0]; x++) {
       for(var y = 0; y < pixels.shape[1]; y++) {
-
+        
         var pixel = options.changePixel(
           pixels.get(x, y, 0),
           pixels.get(x, y, 1),
           pixels.get(x, y, 2),
           pixels.get(x, y, 3)
         );
-
+        
         pixels.set(x, y, 0, pixel[0]);
         pixels.set(x, y, 1, pixel[1]);
         pixels.set(x, y, 2, pixel[2]);
         pixels.set(x, y, 3, pixel[3]);
-
+        
+        if(!options.inBrowser)
+        pace.op()
       }
     }
 
-    pixels = options.extraManipulation(pixels)
-
+    if(options.extraManipulation)
+      pixels = options.extraManipulation(pixels)
+    
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
     var chunks = [];
     var totalLength = 0;
     var r = savePixels(pixels, options.format, {quality: 100});
-
+    
     r.on('data', function(chunk){
       totalLength += chunk.length;
       chunks.push(chunk);
     });
-
+    
     r.on('end', function(){
       var data = Buffer.concat(chunks, totalLength).toString('base64');
       var datauri = 'data:image/' + options.format + ';base64,' + data;
@@ -58076,4 +58716,4 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"get-pixels":22,"save-pixels":101}]},{},[130]);
+},{"buffer":4,"get-pixels":24,"pace":69,"save-pixels":104}]},{},[134]);
