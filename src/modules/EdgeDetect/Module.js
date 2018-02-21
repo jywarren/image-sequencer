@@ -51,7 +51,7 @@ module.exports = function edgeDetect(options,UI) {
         extraManipulation: extraManipulation,
         format: input.format,
         image: options.image,
-        inBrowser: inBrowser,
+        inBrowser: options.inBrowser,
         callback: callback
       });
   
