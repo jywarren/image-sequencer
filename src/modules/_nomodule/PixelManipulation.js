@@ -21,6 +21,12 @@ module.exports = function PixelManipulation(image, options) {
       console.log('Bad image path');
       return;
     }
+
+    if(options.getNeighbourPixel){
+      options.getNeighbourPixel.fun = function (distX,distY) { 
+        return options.getNeighbourPixel(pixels,x,y,distX,distY);
+      };
+    }
     
     // iterate through pixels;
     // this could possibly be more efficient; see
@@ -31,13 +37,13 @@ module.exports = function PixelManipulation(image, options) {
     
     for(var x = 0; x < pixels.shape[0]; x++) {
       for(var y = 0; y < pixels.shape[1]; y++) {
-        
+          
         var pixel = options.changePixel(
-          pixels.get(x, y, 0),
-          pixels.get(x, y, 1),
-          pixels.get(x, y, 2),
-          pixels.get(x, y, 3)
-        );
+            pixels.get(x, y, 0),
+            pixels.get(x, y, 1),
+            pixels.get(x, y, 2),
+            pixels.get(x, y, 3)
+          );
         
         pixels.set(x, y, 0, pixel[0]);
         pixels.set(x, y, 1, pixel[1]);
@@ -48,9 +54,9 @@ module.exports = function PixelManipulation(image, options) {
         pace.op()
       }
     }
-
+    
     if(options.extraManipulation)
-      pixels = options.extraManipulation(pixels)
+    pixels = options.extraManipulation(pixels)
     
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
