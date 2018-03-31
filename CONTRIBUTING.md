@@ -31,17 +31,64 @@ Any module must follow this basic format:
 
 ```js
 module.exports = function ModuleName(options,UI) {
+
   options = options || {};
   options.title = "Title of the Module";
   UI.onSetup(options.step);
   var output;
 
   function draw(input,callback) {
+
     UI.onDraw(options.step);
 
-    var output = /*do something with the input*/ ;
+    var output = function(input){
+      /* do something with the input */
+      return input;
+    }
 
-    this.output = output;
+    this.output = output(input);
+    options.step.output = output.src;
+    callback();
+    UI.onComplete(options.step);
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}
+```
+The default loading spinner can be optionally overriden with a custom progress object to draw progress on the CLI, following is a basic module format for the same
+
+```js
+module.exports = function ModuleName(options,UI) {
+
+  options = options || {};
+  options.title = "Title of the Module";
+  UI.onSetup(options.step);
+  var output;
+
+  function draw(input,callback,progressObj) {
+
+    /* If you wish to supply your own progress bar you need to override progressObj */
+
+    progressObj.stop() // Stop the current progress spinner
+
+    progressObj.overrideFlag = true; // Tell image sequencer that you will supply your own progressBar 
+
+    /* Override the object and give your own progress Bar */
+    progressObj = /* Your own progress Object */
+
+    UI.onDraw(options.step);
+
+    var output = function(input){
+      /* do something with the input */ 
+      return input;
+    };
+
+    this.output = output();
     options.step.output = output.src;
     callback();
     UI.onComplete(options.step);
@@ -88,6 +135,8 @@ step has been "drawn".
 When you have done your calculations and produced an image output, you are required
 to set `this.output` to an object similar to what the input object was, call
 `callback()`, and set `options.step.output` equal to the output DataURL
+
+* `progressObj` is an optional Object which handles the progress output of the step in the CLI, this is not consumed unless a custom progress bar needs to be drawn, for which this default spinner should be stopped with `progressObj.stop()` and image-sequencer is informed about the custom progress bar with `progressObj.overrideFlag = true;` following which this object can be overriden with custom progress object.
 
 ### UI Methods
 

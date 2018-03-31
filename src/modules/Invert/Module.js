@@ -12,8 +12,10 @@ module.exports = function Invert(options,UI) {
   var output;
 
   // The function which is called on every draw.
-  function draw(input,callback) {
+  function draw(input,callback,progressObj) {
 
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
     // Tell UI that a step is being drawn.
     UI.onDraw(options.step);
 

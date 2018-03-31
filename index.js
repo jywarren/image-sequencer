@@ -2,6 +2,7 @@
 
 require('./src/ImageSequencer');
 sequencer = ImageSequencer({ui: false});
+var Spinner = require('ora')
 
 var program = require('commander');
 var readlineSync = require('readline-sync');
@@ -109,12 +110,19 @@ sequencer.loadImages(program.image,function(){
       sequencer.addSteps(step, options);
     });
     
+    var spinnerObj = Spinner('Your Image is being processed..').start();
+    
     // Run the sequencer.
-    sequencer.run(function(){
-      
+    sequencer.run(spinnerObj,function(){
+
       // Export all images or final image as binary files.
       sequencer.exportBin(program.output,program.basic);
-      
+
+      //check if spinner was not overriden stop it
+      if(!spinnerObj.overrideFlag) {
+        spinnerObj.succeed()
+        console.log(`\nDone!!`)
+      }
       
     });
     
@@ -143,15 +151,15 @@ function validateConfig(config_,options_){
   options_ = Object.keys(options_);
   if (
     (function(){
-    for(var input in options_){
-      if(!config_[options_[input]]){
-        console.error('\x1b[31m%s\x1b[0m',`Options Object does not have the required details "${options_[input]}" not specified. Fallback case activated`);
-        return false;
-      } 
-    }
-  })()
-   == false)
-     return false;
-  else
-     return true;
-}
+      for(var input in options_){
+        if(!config_[options_[input]]){
+          console.error('\x1b[31m%s\x1b[0m',`Options Object does not have the required details "${options_[input]}" not specified. Fallback case activated`);
+          return false;
+        } 
+      }
+    })()
+    == false)
+    return false;
+    else
+    return true;
+  }

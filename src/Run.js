@@ -1,4 +1,5 @@
-function Run(ref, json_q, callback) {
+function Run(ref, json_q, callback,progressObj) {
+  if(!progressObj) progressObj = {stop: function(){}}
 
   function drawStep(drawarray, pos) {
     if (pos == drawarray.length && drawarray[pos - 1] !== undefined) {
@@ -17,7 +18,7 @@ function Run(ref, json_q, callback) {
       var input = ref.images[image].steps[i - 1].output;
       ref.images[image].steps[i].draw(ref.copy(input), function onEachStep() {
         drawStep(drawarray, ++pos);
-      });
+      },progressObj);
     }
   }
 

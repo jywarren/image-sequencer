@@ -8,8 +8,11 @@ module.exports = function Dynamic(options,UI) {
   var output;
   
   // This function is called on every draw.
-  function draw(input,callback) {
-    
+  function draw(input,callback,progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
+
     // Tell the UI that the step is being drawn
     UI.onDraw(options.step);
     var step = this;

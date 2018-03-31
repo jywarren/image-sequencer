@@ -32,8 +32,14 @@ module.exports = function PixelManipulation(image, options) {
     // this could possibly be more efficient; see
     // https://github.com/p-v-o-s/infragram-js/blob/master/public/infragram.js#L173-L181
     
-    if(!options.inBrowser)
-    var pace = require('pace')((pixels.shape[0] * pixels.shape[1]))
+    if(!options.inBrowser){
+      try{
+        var pace = require('pace')((pixels.shape[0] * pixels.shape[1]));
+      }
+      catch(e){
+        options.inBrowser = true;
+      }
+    }
     
     for(var x = 0; x < pixels.shape[0]; x++) {
       for(var y = 0; y < pixels.shape[1]; y++) {

@@ -11,8 +11,17 @@ module.exports = function Brightness(options,UI){
     UI.onSetup(options.step);
     var output;
 
-    function draw(input,callback){
+    function draw(input,callback,progressObj){
         
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        /*
+        In this case progress is handled by changepixel internally otherwise progressObj
+        needs to be overriden and used 
+        For eg. progressObj = new SomeProgressModule()
+        */
+
         // Tell the UI that a step is being drawn
         UI.onDraw(options.step);
         

@@ -11,7 +11,10 @@ module.exports = function GreenChannel(options,UI) {
   UI.onSetup(options.step);
   var output;
 
-  function draw(input,callback) {
+  function draw(input,callback,progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
     // Tell UI that a step is being drawn
     UI.onDraw(options.step);

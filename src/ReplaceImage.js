@@ -28,7 +28,7 @@ function ReplaceImage(ref,selector,steps,options) {
 
     function make(url) {
       tempSequencer.loadImage(url, function(){
-        this.addSteps(steps).run(function(out){
+        this.addSteps(steps).run({stop:function(){}},function(out){
           img.src = out;
         });
       });
