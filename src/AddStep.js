@@ -22,9 +22,9 @@ function AddStep(ref, image, name, o) {
       ui: ref.options.ui,
       options: o
     };
-    ref.images[image].steps.push(module);
     var UI = ref.events;
     var module = ref.modules[name][0](o,UI);
+    ref.images[image].steps.push(module);
 
     return true;
   }
