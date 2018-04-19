@@ -7,7 +7,7 @@ function AddStep(ref, image, name, o) {
     var o = ref.copy(o_);
     o.number = ref.options.sequencerCounter++; // gives a unique ID to each step
     o.name = o_.name || name || moduleInfo.name;
-//    o.description = o_.description || moduleInfo.description;
+    o.description = o_.description || moduleInfo.description;
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
     o.image = image;
