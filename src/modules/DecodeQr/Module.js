@@ -4,7 +4,6 @@
 module.exports = function DoNothing(options,UI) {
 
   options = options || {};
-  options.title = "Decode QR Code";
 
   // Tell the UI that a step has been added
   UI.onSetup(options.step);

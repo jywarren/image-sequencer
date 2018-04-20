@@ -1,7 +1,6 @@
 module.exports = function Dynamic(options,UI) {
   
   options = options || {};
-  options.title = "Dynamic";
   
   // Tell the UI that a step has been set up.
   UI.onSetup(options.step);

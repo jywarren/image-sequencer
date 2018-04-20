@@ -4,8 +4,6 @@
 module.exports = function DoNothing(options,UI) {
 
   options = options || {};
-  options.title = "Fisheye GL";
-
   var output;
 
   // Tell the UI that a step has been set up.

@@ -4,7 +4,6 @@
 module.exports = function NdviRed(options,UI) {
 
   options = options || {};
-  options.title = "NDVI for red-filtered cameras (blue is infrared)";
 
   // Tell the UI that a step has been set up.
   UI.onSetup(options.step);

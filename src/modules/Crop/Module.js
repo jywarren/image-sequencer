@@ -15,8 +15,8 @@
  */
  module.exports = function CropModule(options,UI) {
 
+   // TODO: we could also set this to {} if nil in AddModule.js to avoid this line:
    options = options || {};
-   options.title = "Crop Image";
 
    // Tell the UI that a step has been added
    UI.onSetup(options.step);

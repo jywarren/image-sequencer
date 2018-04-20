@@ -3,8 +3,6 @@
 */
 module.exports = function Blur(options,UI){
     options = options || {};
-    options.title = "Blur";
-    options.description = "Blur an Image";
     options.blur = options.blur || 2
     
     //Tell the UI that a step has been set up
