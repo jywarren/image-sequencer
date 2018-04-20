@@ -40,7 +40,7 @@ window.onload = function() {
         </div>\
         <div class="col-md-8">\
           <div class="load" style="display:none;"><i class="fa fa-circle-o-notch fa-spin"></i></div>\
-          <img alt="" class="img-thumbnail"/>\
+          <a><img alt="" class=“img-thumbnail” /></a>\
         </div>\
       </div>\
       ';
@@ -54,7 +54,8 @@ window.onload = function() {
 
       step.ui = parser.parseFromString(step.ui,'text/html');
       step.ui = step.ui.querySelector('div.row');
-      step.imgElement = step.ui.querySelector('img');
+      step.linkElement =  step.ui.querySelector('a');
+      step.imgElement = step.ui.querySelector('a img');
 
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
         var inputs = sequencer.modulesInfo(step.name).inputs;
@@ -116,11 +117,20 @@ window.onload = function() {
       $(step.ui.querySelector('img')).show();
 
       step.imgElement.src = step.output;
+      step.linkElement.href = step.output;
+
+      function fileExtension(output) {
+        return output.split('/')[1].split(';')[0];
+      }
+
+      step.linkElement.download = step.name + "." + fileExtension(step.output);
+      step.linkElement.target = "_blank";
+
       if(sequencer.modulesInfo().hasOwnProperty(step.name)) {
         var inputs = sequencer.modulesInfo(step.name).inputs;
         var outputs = sequencer.modulesInfo(step.name).outputs;
         for (var i in inputs) {
-          if (step.options[i] !== undefined && 
+          if (step.options[i] !== undefined &&
               inputs[i].type.toLowerCase() === "input") step.ui.querySelector('div[name="' + i + '"] input')
                                                                .value = step.options[i];
           if (step.options[i] !== undefined &&
