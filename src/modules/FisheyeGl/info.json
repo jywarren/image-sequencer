@@ -1,5 +1,7 @@
 {
   "name": "Fisheye GL",
+  "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
+  "requires": [ "webgl" ],
   "inputs": {
     "a": {
       "type": "float",

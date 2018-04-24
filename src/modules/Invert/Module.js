@@ -4,8 +4,6 @@
 module.exports = function Invert(options,UI) {
 
   options = options || {};
-  options.title = "Invert Colors";
-  options.description = "Inverts the colors of the image";
 
   // Tell UI that a step has been set up.
   UI.onSetup(options.step);

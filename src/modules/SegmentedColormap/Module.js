@@ -1,7 +1,6 @@
 module.exports = function SegmentedColormap(options,UI) {
 
   options = options || {};
-  options.title = "Segmented Colormap";
 
   // Tell the UI that a step has been set up.
   UI.onSetup(options.step);

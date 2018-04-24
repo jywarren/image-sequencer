@@ -4,8 +4,6 @@
 
 module.exports = function Brightness(options,UI){
     options = options || {};
-    options.title = "Brightness";
-    options.description = "Changes the brightness of the image";
 
     //Tell the UI that a step has been set up
     UI.onSetup(options.step);
