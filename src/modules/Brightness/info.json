@@ -1,6 +1,6 @@
 {
     "name": "Brightness",
-    "description": "Change the brightness of the image by given value",
+    "description": "Change the brightness of the image by given percent value",
     "inputs": {
         "brightness": {
             "type": "integer",

@@ -1,9 +1,10 @@
 /*
- * Display only the green channel
+ * Display only one color channel
  */
-module.exports = function GreenChannel(options,UI) {
+module.exports = function Channel(options,UI) {
 
   options = options || {};
+  options.channel = options.channel || "green";
 
   // Tell UI that a step has been set up
   UI.onSetup(options.step);
@@ -19,7 +20,9 @@ module.exports = function GreenChannel(options,UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      return [0, g, 0, a];
+      if (options.channel == "red")   return [r, 0, 0, a];
+      if (options.channel == "green") return [0, g, 0, a];
+      if (options.channel == "blue")  return [0, 0, b, a];
     }
 
     function output(image,datauri,mimetype){

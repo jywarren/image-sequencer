@@ -2,8 +2,8 @@
 * Core modules and their info files
 */
 module.exports = {
-  'green-channel': [
-    require('./modules/GreenChannel/Module'),require('./modules/GreenChannel/info')
+  'channel': [
+    require('./modules/Channel/Module'),require('./modules/Channel/info')
   ],
   'brightness': [
     require('./modules/Brightness/Module'),require('./modules/Brightness/info')

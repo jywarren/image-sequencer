@@ -56420,8 +56420,8 @@ module.exports = InsertStep;
 * Core modules and their info files
 */
 module.exports = {
-  'green-channel': [
-    require('./modules/GreenChannel/Module'),require('./modules/GreenChannel/info')
+  'channel': [
+    require('./modules/Channel/Module'),require('./modules/Channel/info')
   ],
   'brightness': [
     require('./modules/Brightness/Module'),require('./modules/Brightness/info')
@@ -56458,7 +56458,7 @@ module.exports = {
   ]
 }
 
-},{"./modules/Blur/Module":142,"./modules/Blur/info":143,"./modules/Brightness/Module":144,"./modules/Brightness/info":145,"./modules/Colormap/Module":147,"./modules/Colormap/info":148,"./modules/Crop/Module":150,"./modules/Crop/info":151,"./modules/DecodeQr/Module":152,"./modules/DecodeQr/info":153,"./modules/Dynamic/Module":154,"./modules/Dynamic/info":155,"./modules/EdgeDetect/Module":157,"./modules/EdgeDetect/info":158,"./modules/FisheyeGl/Module":159,"./modules/FisheyeGl/info":160,"./modules/GreenChannel/Module":161,"./modules/GreenChannel/info":162,"./modules/Invert/Module":163,"./modules/Invert/info":164,"./modules/Ndvi/Module":165,"./modules/Ndvi/info":166,"./modules/Saturation/Module":167,"./modules/Saturation/info":168}],139:[function(require,module,exports){
+},{"./modules/Blur/Module":142,"./modules/Blur/info":143,"./modules/Brightness/Module":144,"./modules/Brightness/info":145,"./modules/Channel/Module":146,"./modules/Channel/info":147,"./modules/Colormap/Module":149,"./modules/Colormap/info":150,"./modules/Crop/Module":152,"./modules/Crop/info":153,"./modules/DecodeQr/Module":154,"./modules/DecodeQr/info":155,"./modules/Dynamic/Module":156,"./modules/Dynamic/info":157,"./modules/EdgeDetect/Module":159,"./modules/EdgeDetect/info":160,"./modules/FisheyeGl/Module":161,"./modules/FisheyeGl/info":162,"./modules/Invert/Module":163,"./modules/Invert/info":164,"./modules/Ndvi/Module":165,"./modules/Ndvi/info":166,"./modules/Saturation/Module":167,"./modules/Saturation/info":168}],139:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser. 
 function ReplaceImage(ref,selector,steps,options) {
@@ -56715,7 +56715,7 @@ module.exports = function Blur(options,UI){
 },{"../_nomodule/PixelManipulation.js":169,"./Blur":141}],143:[function(require,module,exports){
 module.exports={
     "name": "Blur",
-    "description": "Blur an image by a given value",
+    "description": "Gaussian blur an image by a given value, typically 0-5",
     "inputs": {
         "blur": {
             "type": "integer",
@@ -56795,7 +56795,7 @@ module.exports = function Brightness(options,UI){
 },{"../_nomodule/PixelManipulation.js":169}],145:[function(require,module,exports){
 module.exports={
     "name": "Brightness",
-    "description": "Change the brightness of the image by given value",
+    "description": "Change the brightness of the image by given percent value",
     "inputs": {
         "brightness": {
             "type": "integer",
@@ -56806,6 +56806,80 @@ module.exports={
 }
 
 },{}],146:[function(require,module,exports){
+/*
+ * Display only one color channel
+ */
+module.exports = function Channel(options,UI) {
+
+  options = options || {};
+  options.channel = options.channel || "green";
+
+  // Tell UI that a step has been set up
+  UI.onSetup(options.step);
+  var output;
+
+  function draw(input,callback,progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
+
+    // Tell UI that a step is being drawn
+    UI.onDraw(options.step);
+    var step = this;
+
+    function changePixel(r, g, b, a) {
+      if (options.channel == "red")   return [r, 0, 0, a];
+      if (options.channel == "green") return [0, g, 0, a];
+      if (options.channel == "blue")  return [0, 0, b, a];
+    }
+
+    function output(image,datauri,mimetype){
+
+      // This output is accesible by Image Sequencer
+      step.output = {src:datauri,format:mimetype};
+
+      // This output is accessible by UI
+      options.step.output = datauri;
+
+      // Tell UI that step ahs been drawn
+      UI.onComplete(options.step);
+    }
+
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback
+    });
+
+  }
+
+  return {
+    options: options,
+    //setup: setup, // optional
+    draw:  draw,
+    output: output,
+    UI: UI
+  }
+}
+
+},{"../_nomodule/PixelManipulation.js":169}],147:[function(require,module,exports){
+module.exports={
+  "name": "Channel",
+  "description": "Displays only one color channel of an image -- default is green",
+  "inputs": {
+    "channel": {
+      "type": "select",
+      "desc": "Color channel",
+      "default": "green",
+      "values": ["red", "green", "blue"]
+    }
+  }
+}
+
+},{}],148:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
  * from a lookup table, which can be specified as an array of [begin, end] 
@@ -56894,7 +56968,7 @@ var colormaps = {
              ])
 }
 
-},{}],147:[function(require,module,exports){
+},{}],149:[function(require,module,exports){
 module.exports = function Colormap(options,UI) {
 
   options = options || {};
@@ -56950,10 +57024,10 @@ module.exports = function Colormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":169,"./Colormap":146}],148:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169,"./Colormap":148}],150:[function(require,module,exports){
 module.exports={
-  "name": "Segmented Colormap",
-  "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.",
+  "name": "Colormap",
+  "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
   "inputs": {
     "colormap": {
       "type": "select",
@@ -56964,7 +57038,7 @@ module.exports={
   }
 }
 
-},{}],149:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Crop(input,options,callback) {
 
@@ -57010,7 +57084,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":8,"get-pixels":38,"save-pixels":121}],150:[function(require,module,exports){
+},{"buffer":8,"get-pixels":38,"save-pixels":121}],152:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -57071,10 +57145,10 @@ module.exports = function Crop(input,options,callback) {
    }
  }
 
-},{"./Crop":149}],151:[function(require,module,exports){
+},{"./Crop":151}],153:[function(require,module,exports){
 module.exports={
   "name": "Crop",
-  "description": "Crop image to given x, y, w, h",
+  "description": "Crop image to given x, y, w, h in pixels, measured from top left",
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "x": {
@@ -57100,7 +57174,7 @@ module.exports={
   }
 }
 
-},{}],152:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -57155,7 +57229,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":38,"jsqr":57}],153:[function(require,module,exports){
+},{"get-pixels":38,"jsqr":57}],155:[function(require,module,exports){
 module.exports={
   "name": "Decode QR",
   "description": "Search for and decode a QR code in the image",
@@ -57168,7 +57242,7 @@ module.exports={
   }
 }
 
-},{}],154:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 module.exports = function Dynamic(options,UI) {
   
   options = options || {};
@@ -57265,7 +57339,7 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":169}],155:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169}],157:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -57293,7 +57367,7 @@ module.exports={
   }
 }
 
-},{}],156:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 const _ = require('lodash')
 
 //define kernels for the sobel filter
@@ -57474,7 +57548,7 @@ function hysteresis(pixels){
 
 
 
-},{"lodash":58}],157:[function(require,module,exports){
+},{"lodash":58}],159:[function(require,module,exports){
 /*
  * Detect Edges in an Image
  */
@@ -57543,7 +57617,7 @@ module.exports = function edgeDetect(options,UI) {
     }
   }
 
-},{"../_nomodule/PixelManipulation.js":169,"./EdgeUtils":156,"ndarray-gaussian-filter":63}],158:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169,"./EdgeUtils":158,"ndarray-gaussian-filter":63}],160:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
@@ -57566,7 +57640,7 @@ module.exports={
     }
 }
 
-},{}],159:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -57648,7 +57722,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":30}],160:[function(require,module,exports){
+},{"fisheyegl":30}],162:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
@@ -57713,71 +57787,6 @@ module.exports={
       "desc": "Patht to a WebGL vertex shader file",
       "default": "(inbuilt)"
     }
-  }
-}
-
-},{}],161:[function(require,module,exports){
-/*
- * Display only the green channel
- */
-module.exports = function GreenChannel(options,UI) {
-
-  options = options || {};
-
-  // Tell UI that a step has been set up
-  UI.onSetup(options.step);
-  var output;
-
-  function draw(input,callback,progressObj) {
-
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
-
-    // Tell UI that a step is being drawn
-    UI.onDraw(options.step);
-    var step = this;
-
-    function changePixel(r, g, b, a) {
-      return [0, g, 0, a];
-    }
-
-    function output(image,datauri,mimetype){
-
-      // This output is accesible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
-
-      // This output is accessible by UI
-      options.step.output = datauri;
-
-      // Tell UI that step ahs been drawn
-      UI.onComplete(options.step);
-    }
-
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      format: input.format,
-      image: options.image,
-      inBrowser: options.inBrowser,
-      callback: callback
-    });
-
-  }
-
-  return {
-    options: options,
-    //setup: setup, // optional
-    draw:  draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"../_nomodule/PixelManipulation.js":169}],162:[function(require,module,exports){
-module.exports={
-  "name": "Green Channel",
-  "description": "Displays only the green channel of an image",
-  "inputs": {
   }
 }
 
@@ -57853,6 +57862,7 @@ module.exports={
 module.exports = function Ndvi(options,UI) {
 
   options = options || {};
+  options.filter = options.filter || "red";
 
   // Tell the UI that a step has been set up.
   UI.onSetup(options.step);
@@ -57869,7 +57879,8 @@ module.exports = function Ndvi(options,UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      var ndvi = (b - r) / (1.00 * b + r);
+      if (options.filter == "red") var ndvi = (b - r) / (1.00 * b + r);
+      if (options.filter == "blue") var ndvi = (r - b) / (1.00 * b + r);
       var x = 255 * (ndvi + 1) / 2;
       return [x, x, x, a];
     }
@@ -57907,15 +57918,21 @@ module.exports = function Ndvi(options,UI) {
 
 },{"../_nomodule/PixelManipulation.js":169}],166:[function(require,module,exports){
 module.exports={
-  "name": "NDVI for red filters",
-  "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation. Because both these methods compare ratios of blue and red light absorbed versus green and IR light reflected, they can be used to evaluate the health of vegetation. It's a snapshot of how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>.",
+  "name": "NDVI",
+  "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
   "inputs": {
+    "filter": {
+      "type": "select",
+      "desc": "Filter color",
+      "default": "red",
+      "values": ["red", "blue"]
+    }
   }
 }
 
 },{}],167:[function(require,module,exports){
 /*
- * Saturate an image
+ * Saturate an image with a value from 0 to 1
  */
 module.exports = function Saturation(options,UI) {
 
@@ -57985,11 +58002,11 @@ module.exports = function Saturation(options,UI) {
 },{"../_nomodule/PixelManipulation.js":169}],168:[function(require,module,exports){
 module.exports={
     "name": "Saturation",
-    "description": "Change the saturation of the image by given value",
+    "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
     "inputs": {
         "saturation": {
             "type": "integer",
-            "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being fully saturated",
+            "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
             "default": 0
         }
     }
