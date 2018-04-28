@@ -165,6 +165,12 @@ window.onload = function() {
 
   });
 
+  $('#addStep select').on('change', selectNewStepUI);
+
+  function selectNewStepUI() {
+    var m = $('#addStep select').val();
+    $('#addStep .info').html(sequencer.modulesInfo(m).description);
+  }
 
   function addStepUI() {
     var options = {};
