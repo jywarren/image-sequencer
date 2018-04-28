@@ -1,4 +1,4 @@
-module.exports = function SegmentedColormap(options,UI) {
+module.exports = function Colormap(options,UI) {
 
   options = options || {};
 
@@ -18,7 +18,7 @@ module.exports = function SegmentedColormap(options,UI) {
 
     function changePixel(r, g, b, a) {
       var combined = (r + g + b) / 3.000;
-      var res = require('./SegmentedColormap')(combined, options);
+      var res = require('./Colormap')(combined, options);
       return [res[0], res[1], res[2], 255];
     }
 

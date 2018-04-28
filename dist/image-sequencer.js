@@ -56159,7 +56159,6 @@ ImageSequencer = function ImageSequencer(options) {
   
   options = options || {};
   options.inBrowser = options.inBrowser || isBrowser;
-  // if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
   options.sequencerCounter = 0;
   
   function objTypeOf(object){
@@ -56196,7 +56195,7 @@ ImageSequencer = function ImageSequencer(options) {
   formatInput = require('./FormatInput'),
   images = {},
   inputlog = [],
-  events = require('./UserInterface')(),
+  events = require('./ui/UserInterface')(),
   fs = require('fs');
   
   // if in browser, prompt for an image
@@ -56299,7 +56298,6 @@ ImageSequencer = function ImageSequencer(options) {
     
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
     var loadedimages = this.copy(json_q.loadedimages);
-    // require('./LoadImage')(this,i,json_q.images[i]);
     
     var ret = {
       name: "ImageSequencer Wrapper",
@@ -56319,7 +56317,7 @@ ImageSequencer = function ImageSequencer(options) {
         return;
       }
       var img = loadedimages[i];
-      require('./LoadImage')(sequencer,img,json_q.images[img],function(){
+      require('./ui/LoadImage')(sequencer,img,json_q.images[img],function(){
         load(++i);
       });
     }
@@ -56334,7 +56332,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
   
   function setUI(UI) {
-    this.events = require('./UserInterface')(UI);
+    this.events = require('./ui/UserInterface')(UI);
   }
   
   var exportBin = function(dir,basic) {
@@ -56382,7 +56380,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":133,"./ExportBin":134,"./FormatInput":135,"./InsertStep":137,"./LoadImage":138,"./Modules":139,"./ReplaceImage":140,"./Run":141,"./UserInterface":142,"fs":7,"jquery":56}],137:[function(require,module,exports){
+},{"./AddStep":133,"./ExportBin":134,"./FormatInput":135,"./InsertStep":137,"./Modules":138,"./ReplaceImage":139,"./Run":140,"./ui/LoadImage":170,"./ui/UserInterface":171,"fs":7,"jquery":56}],137:[function(require,module,exports){
 // insert one or more steps at a given index in the sequencer
 function InsertStep(ref, image, index, name, o) {
 
@@ -56418,113 +56416,6 @@ function InsertStep(ref, image, index, name, o) {
 module.exports = InsertStep;
 
 },{}],138:[function(require,module,exports){
-// special module to load an image into the start of the sequence; used in the HTML UI
-function LoadImage(ref, name, src, main_callback) {
-  function makeImage(datauri) {
-    var image = {
-      src: datauri,
-      format: datauri.split(':')[1].split(';')[0].split('/')[1]
-    }
-    return image;
-  }
-  function CImage(src, callback) {
-    var datauri;
-    if (!!src.match(/^data:/i)) {
-      datauri = src;
-      callback(datauri);
-    }
-    else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
-      require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
-        var data = '';
-        var contentType = res.headers['content-type'];
-        res.setEncoding('base64');
-        res.on('data',function(chunk) {data += chunk;});
-        res.on('end',function() {
-          callback("data:"+contentType+";base64,"+data);
-        });
-      });
-    }
-    else if (ref.options.inBrowser) {
-      var ext = src.split('.').pop();
-      var image = document.createElement('img');
-      var canvas = document.createElement('canvas');
-      var context = canvas.getContext('2d');
-      image.onload = function() {
-        canvas.width = image.naturalWidth;
-        canvas.height = image.naturalHeight;
-        context.drawImage(image,0,0);
-        datauri = canvas.toDataURL(ext);
-        callback(datauri);
-      }
-      image.src = src;
-    }
-    else {
-      datauri = require('urify')(src);
-      callback(datauri);
-    }
-  }
-
-  function loadImage(name, src) {
-    var step = {
-      name: "load-image",
-      description: "This initial step loads and displays the original image without any modifications.",
-      ID: ref.options.sequencerCounter++,
-      imageName: name,
-      inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
-    };
-
-    var image = {
-      src: src,
-      steps: [{
-        options: {
-          id: step.ID,
-          name: "load-image",
-          description: "This initial step loads and displays the original image without any modifications.",
-          title: "Load Image",
-          step: step
-        },
-        UI: ref.events,
-        draw: function() {
-          UI.onDraw(options.step);
-          if(arguments.length==1){
-            this.output = CImage(arguments[0]);
-            options.step.output = this.output;
-            UI.onComplete(options.step);
-            return true;
-          }
-          else if(arguments.length==2) {
-            this.output = CImage(arguments[0]);
-            options.step.output = this.output;
-            arguments[1]();
-            UI.onComplete(options.step);
-            return true;
-          }
-          return false;
-        },
-      }]
-    };
-    CImage(src, function(datauri) {
-      var output = makeImage(datauri);
-      ref.images[name] = image;
-      var loadImageStep = ref.images[name].steps[0];
-      loadImageStep.output = output;
-      loadImageStep.options.step.output = loadImageStep.output.src;
-      loadImageStep.UI.onSetup(loadImageStep.options.step);
-      loadImageStep.UI.onDraw(loadImageStep.options.step);
-      loadImageStep.UI.onComplete(loadImageStep.options.step);
-
-      main_callback();
-      return true;
-    });
-  }
-
-  return loadImage(name,src);
-}
-
-module.exports = LoadImage;
-
-},{"urify":128}],139:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
@@ -56538,8 +56429,8 @@ module.exports = {
   'edge-detect':[
     require('./modules/EdgeDetect/Module'),require('./modules/EdgeDetect/info')
   ],
-  'ndvi-red': [
-    require('./modules/NdviRed/Module'),require('./modules/NdviRed/info')
+  'ndvi': [
+    require('./modules/Ndvi/Module'),require('./modules/Ndvi/info')
   ],
   'invert': [
     require('./modules/Invert/Module'),require('./modules/Invert/info')
@@ -56548,7 +56439,7 @@ module.exports = {
     require('./modules/Crop/Module'),require('./modules/Crop/info')
   ],
   'segmented-colormap': [
-    require('./modules/SegmentedColormap/Module'),require('./modules/SegmentedColormap/info')
+    require('./modules/Colormap/Module'),require('./modules/Colormap/info')
   ],
   'decode-qr': [
     require('./modules/DecodeQr/Module'),require('./modules/DecodeQr/info')
@@ -56567,7 +56458,9 @@ module.exports = {
   ]
 }
 
-},{"./modules/Blur/Module":144,"./modules/Blur/info":145,"./modules/Brightness/Module":146,"./modules/Brightness/info":147,"./modules/Crop/Module":149,"./modules/Crop/info":150,"./modules/DecodeQr/Module":151,"./modules/DecodeQr/info":152,"./modules/Dynamic/Module":153,"./modules/Dynamic/info":154,"./modules/EdgeDetect/Module":156,"./modules/EdgeDetect/info":157,"./modules/FisheyeGl/Module":158,"./modules/FisheyeGl/info":159,"./modules/GreenChannel/Module":160,"./modules/GreenChannel/info":161,"./modules/Invert/Module":162,"./modules/Invert/info":163,"./modules/NdviRed/Module":164,"./modules/NdviRed/info":165,"./modules/Saturation/Module":166,"./modules/Saturation/info":167,"./modules/SegmentedColormap/Module":168,"./modules/SegmentedColormap/info":170}],140:[function(require,module,exports){
+},{"./modules/Blur/Module":142,"./modules/Blur/info":143,"./modules/Brightness/Module":144,"./modules/Brightness/info":145,"./modules/Colormap/Module":147,"./modules/Colormap/info":148,"./modules/Crop/Module":150,"./modules/Crop/info":151,"./modules/DecodeQr/Module":152,"./modules/DecodeQr/info":153,"./modules/Dynamic/Module":154,"./modules/Dynamic/info":155,"./modules/EdgeDetect/Module":157,"./modules/EdgeDetect/info":158,"./modules/FisheyeGl/Module":159,"./modules/FisheyeGl/info":160,"./modules/GreenChannel/Module":161,"./modules/GreenChannel/info":162,"./modules/Invert/Module":163,"./modules/Invert/info":164,"./modules/Ndvi/Module":165,"./modules/Ndvi/info":166,"./modules/Saturation/Module":167,"./modules/Saturation/info":168}],139:[function(require,module,exports){
+// Uses a given image as input and replaces it with the output.
+// Works only in the browser. 
 function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var tempSequencer = ImageSequencer({ui: false});
@@ -56614,7 +56507,7 @@ function ReplaceImage(ref,selector,steps,options) {
 
 module.exports = ReplaceImage;
 
-},{}],141:[function(require,module,exports){
+},{}],140:[function(require,module,exports){
 function Run(ref, json_q, callback,progressObj) {
   if(!progressObj) progressObj = {stop: function(){}}
 
@@ -56672,75 +56565,7 @@ function Run(ref, json_q, callback,progressObj) {
 }
 module.exports = Run;
 
-},{}],142:[function(require,module,exports){
-/*
- * User Interface Handling Module
- */
-
-module.exports = function UserInterface(events = {}) {
-
-  events.onSetup = events.onSetup || function(step) {
-    if(step.ui == false) {
-        // No UI
-    }
-    else if(step.inBrowser) {
-      // Create and append an HTML Element
-      console.log("Added Step \""+step.name+"\" to \""+step.imageName+"\".");
-    }
-    else {
-      // Create a NodeJS Object
-      console.log('\x1b[36m%s\x1b[0m',"Added Step \""+step.name+"\" to \""+step.imageName+"\".");
-    }
-  }
-
-  events.onDraw = events.onDraw || function(step) {
-    if (step.ui == false) {
-      // No UI
-    }
-    else if(step.inBrowser) {
-      // Overlay a loading spinner
-      console.log("Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
-    }
-    else {
-      // Don't do anything
-      console.log('\x1b[33m%s\x1b[0m',"Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
-    }
-  }
-
-  events.onComplete = events.onComplete || function(step) {
-    if (step.ui == false) {
-      // No UI
-    }
-    else if(step.inBrowser) {
-      // Update the DIV Element
-      // Hide the laoding spinner
-      console.log("Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
-    }
-    else {
-      // Update the NodeJS Object
-      console.log('\x1b[32m%s\x1b[0m',"Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
-    }
-  }
-
-  events.onRemove = events.onRemove || function(step) {
-    if(step.ui == false){
-      // No UI
-    }
-    else if(step.inBrowser) {
-      // Remove the DIV Element
-      console.log("Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
-    }
-    else {
-      // Delete the NodeJS Object
-      console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
-    }
-  }
-
-  return events;
-
-}
-
-},{}],143:[function(require,module,exports){
+},{}],141:[function(require,module,exports){
 module.exports = exports = function(pixels,blur){
     let kernel = kernelGenerator(blur,1)
     kernel = flipKernel(kernel)
@@ -56826,7 +56651,7 @@ function flipKernel(kernel){
     return result
 }
 }
-},{}],144:[function(require,module,exports){
+},{}],142:[function(require,module,exports){
 /*
 * Blur an Image
 */
@@ -56887,9 +56712,9 @@ module.exports = function Blur(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":171,"./Blur":143}],145:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169,"./Blur":141}],143:[function(require,module,exports){
 module.exports={
-    "name": "blur",
+    "name": "Blur",
     "description": "Blur an image by a given value",
     "inputs": {
         "blur": {
@@ -56900,7 +56725,7 @@ module.exports={
     }
 }
 
-},{}],146:[function(require,module,exports){
+},{}],144:[function(require,module,exports){
 /* 
 * Changes the Image Brightness
 */
@@ -56967,7 +56792,7 @@ module.exports = function Brightness(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],147:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169}],145:[function(require,module,exports){
 module.exports={
     "name": "Brightness",
     "description": "Change the brightness of the image by given value",
@@ -56980,7 +56805,166 @@ module.exports={
     } 
 }
 
-},{}],148:[function(require,module,exports){
+},{}],146:[function(require,module,exports){
+/*
+ * Accepts a value from 0-255 and returns the new color-mapped pixel 
+ * from a lookup table, which can be specified as an array of [begin, end] 
+ * gradients, where begin and end are represented as [r, g, b] colors. In 
+ * combination, a lookup table which maps values from 0 - 255 smoothly from black to white looks like:
+ * [
+ *   [0, [0, 0, 0], [255, 255, 255]],
+ *   [1, [255, 255, 255], [255, 255, 255]]
+ * ]
+ * 
+ * Adapted from bgamari's work in Infragram: https://github.com/p-v-o-s/infragram-js/commit/346c97576a07b71a55671d17e0153b7df74e803b
+ */
+
+module.exports = function Colormap(value, options) {
+  options.colormap = options.colormap || colormaps.default;
+  // if a lookup table is provided as an array:
+  if(typeof(options.colormap) == "object")
+    colormapFunction = colormap(options.colormap);
+  // if a stored colormap is named with a string like "fastie":
+  else if(colormaps.hasOwnProperty(options.colormap))
+    colormapFunction = colormaps[options.colormap];
+  else colormapFunction = colormaps.default;
+  return colormapFunction(value / 255.00);
+}
+
+function colormap(segments) {
+  return function(x) {
+    var i, result, x0, x1, xstart, y0, y1, _i, _j, _len, _ref, _ref1, _ref2, _ref3;
+    _ref = [0, 0], y0 = _ref[0], y1 = _ref[1];
+    _ref1 = [segments[0][0], 1], x0 = _ref1[0], x1 = _ref1[1];
+    if (x < x0) {
+      return y0;
+    }
+    for (i = _i = 0, _len = segments.length; _i < _len; i = ++_i) {
+      _ref2 = segments[i], xstart = _ref2[0], y0 = _ref2[1], y1 = _ref2[2];
+      x0 = xstart;
+      if (i === segments.length - 1) {
+        x1 = 1;
+        break;
+      }
+      x1 = segments[i + 1][0];
+      if ((xstart <= x && x < x1)) {
+        break;
+      }
+    }
+    result = [];
+    for (i = _j = 0, _ref3 = y0.length; 0 <= _ref3 ? _j < _ref3 : _j > _ref3; i = 0 <= _ref3 ? ++_j : --_j) {
+      result[i] = (x - x0) / (x1 - x0) * (y1[i] - y0[i]) + y0[i];
+    }
+    return result;
+  };
+};
+
+var colormaps = {
+  greyscale: colormap([
+               [0,     [0,   0,   0],   [255, 255, 255] ],
+               [1,     [255, 255, 255], [255, 255, 255] ]
+             ]),
+  default:   colormap([
+               [0,     [0,   0,   255], [0,   255, 0]   ],
+               [0.25,  [0,   255, 0],   [255, 255, 0]   ],
+               [0.50,  [0,   255, 255], [255, 255, 0]   ],
+               [0.75,  [255, 255, 0],   [255, 0,   0]   ]
+             ]),
+  ndvi:      colormap([
+               [0,     [0,   0,   255], [38,  195, 195] ],
+               [0.5,   [0,   150, 0],   [255, 255, 0]   ],
+               [0.75,  [255, 255, 0],   [255, 50,  50]  ]
+             ]),
+  stretched: colormap([
+               [0,     [0,   0,   255], [0,   0,   255] ],
+               [0.1,   [0,   0,   255], [38,  195, 195] ],
+               [0.5,   [0,   150, 0],   [255, 255, 0]   ],
+               [0.7,   [255, 255, 0],   [255, 50,  50]  ],
+               [0.9,   [255, 50,  50],  [255, 50,  50]  ]
+             ]),
+  fastie:    colormap([
+               [0,     [255, 255, 255], [0,   0,   0]   ],
+               [0.167, [0,   0,   0],   [255, 255, 255] ],
+               [0.33,  [255, 255, 255], [0,   0,   0]   ],
+               [0.5,   [0,   0,   0],   [140, 140, 255] ],
+               [0.55,  [140, 140, 255], [0,   255, 0]   ],
+               [0.63,  [0,   255, 0],   [255, 255, 0]   ],
+               [0.75,  [255, 255, 0],   [255, 0,   0]   ],
+               [0.95,  [255, 0,   0],   [255, 0,   255] ]
+             ])
+}
+
+},{}],147:[function(require,module,exports){
+module.exports = function Colormap(options,UI) {
+
+  options = options || {};
+
+  // Tell the UI that a step has been set up.
+  UI.onSetup(options.step);
+  var output;
+
+  // This function is called on every draw.
+  function draw(input,callback,progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
+
+    // Tell the UI that the step is being drawn
+    UI.onDraw(options.step);
+    var step = this;
+
+    function changePixel(r, g, b, a) {
+      var combined = (r + g + b) / 3.000;
+      var res = require('./Colormap')(combined, options);
+      return [res[0], res[1], res[2], 255];
+    }
+
+    function output(image,datauri,mimetype){
+
+      // This output is accessible by Image Sequencer
+      step.output = { src: datauri, format: mimetype };
+
+      // This output is accessible by the UI
+      options.step.output = datauri;
+
+      // Tell the UI that the draw is complete
+      UI.onComplete(options.step);
+
+    }
+    return require('../_nomodule/PixelManipulation.js')(input, {
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback
+    });
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}
+
+},{"../_nomodule/PixelManipulation.js":169,"./Colormap":146}],148:[function(require,module,exports){
+module.exports={
+  "name": "Segmented Colormap",
+  "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.",
+  "inputs": {
+    "colormap": {
+      "type": "select",
+      "desc": "Name of the Colormap",
+      "default": "default",
+      "values": ["default","greyscale","stretched","fastie"]
+    }
+  }
+}
+
+},{}],149:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Crop(input,options,callback) {
 
@@ -57026,7 +57010,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":8,"get-pixels":38,"save-pixels":121}],149:[function(require,module,exports){
+},{"buffer":8,"get-pixels":38,"save-pixels":121}],150:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -57087,7 +57071,7 @@ module.exports = function Crop(input,options,callback) {
    }
  }
 
-},{"./Crop":148}],150:[function(require,module,exports){
+},{"./Crop":149}],151:[function(require,module,exports){
 module.exports={
   "name": "Crop",
   "description": "Crop image to given x, y, w, h",
@@ -57116,7 +57100,7 @@ module.exports={
   }
 }
 
-},{}],151:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -57171,7 +57155,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":38,"jsqr":57}],152:[function(require,module,exports){
+},{"get-pixels":38,"jsqr":57}],153:[function(require,module,exports){
 module.exports={
   "name": "Decode QR",
   "description": "Search for and decode a QR code in the image",
@@ -57184,7 +57168,7 @@ module.exports={
   }
 }
 
-},{}],153:[function(require,module,exports){
+},{}],154:[function(require,module,exports){
 module.exports = function Dynamic(options,UI) {
   
   options = options || {};
@@ -57281,7 +57265,7 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],154:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169}],155:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -57309,7 +57293,7 @@ module.exports={
   }
 }
 
-},{}],155:[function(require,module,exports){
+},{}],156:[function(require,module,exports){
 const _ = require('lodash')
 
 //define kernels for the sobel filter
@@ -57490,7 +57474,7 @@ function hysteresis(pixels){
 
 
 
-},{"lodash":58}],156:[function(require,module,exports){
+},{"lodash":58}],157:[function(require,module,exports){
 /*
  * Detect Edges in an Image
  */
@@ -57559,7 +57543,7 @@ module.exports = function edgeDetect(options,UI) {
     }
   }
 
-},{"../_nomodule/PixelManipulation.js":171,"./EdgeUtils":155,"ndarray-gaussian-filter":63}],157:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169,"./EdgeUtils":156,"ndarray-gaussian-filter":63}],158:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
@@ -57582,7 +57566,7 @@ module.exports={
     }
 }
 
-},{}],158:[function(require,module,exports){
+},{}],159:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -57664,7 +57648,7 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":30}],159:[function(require,module,exports){
+},{"fisheyegl":30}],160:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
@@ -57732,7 +57716,7 @@ module.exports={
   }
 }
 
-},{}],160:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 /*
  * Display only the green channel
  */
@@ -57789,7 +57773,7 @@ module.exports = function GreenChannel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],161:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169}],162:[function(require,module,exports){
 module.exports={
   "name": "Green Channel",
   "description": "Displays only the green channel of an image",
@@ -57797,7 +57781,7 @@ module.exports={
   }
 }
 
-},{}],162:[function(require,module,exports){
+},{}],163:[function(require,module,exports){
 /*
  * Invert the image
  */
@@ -57854,7 +57838,7 @@ module.exports = function Invert(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],163:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169}],164:[function(require,module,exports){
 module.exports={
   "name": "Invert",
   "description": "Inverts the image.",
@@ -57862,11 +57846,11 @@ module.exports={
   }
 }
 
-},{}],164:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
-module.exports = function NdviRed(options,UI) {
+module.exports = function Ndvi(options,UI) {
 
   options = options || {};
 
@@ -57921,7 +57905,7 @@ module.exports = function NdviRed(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],165:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169}],166:[function(require,module,exports){
 module.exports={
   "name": "NDVI for red filters",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation. Because both these methods compare ratios of blue and red light absorbed versus green and IR light reflected, they can be used to evaluate the health of vegetation. It's a snapshot of how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>.",
@@ -57929,7 +57913,7 @@ module.exports={
   }
 }
 
-},{}],166:[function(require,module,exports){
+},{}],167:[function(require,module,exports){
 /*
  * Saturate an image
  */
@@ -57998,7 +57982,7 @@ module.exports = function Saturation(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":171}],167:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":169}],168:[function(require,module,exports){
 module.exports={
     "name": "Saturation",
     "description": "Change the saturation of the image by given value",
@@ -58011,166 +57995,7 @@ module.exports={
     }
 }
 
-},{}],168:[function(require,module,exports){
-module.exports = function SegmentedColormap(options,UI) {
-
-  options = options || {};
-
-  // Tell the UI that a step has been set up.
-  UI.onSetup(options.step);
-  var output;
-
-  // This function is called on every draw.
-  function draw(input,callback,progressObj) {
-
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
-
-    // Tell the UI that the step is being drawn
-    UI.onDraw(options.step);
-    var step = this;
-
-    function changePixel(r, g, b, a) {
-      var combined = (r + g + b) / 3.000;
-      var res = require('./SegmentedColormap')(combined, options);
-      return [res[0], res[1], res[2], 255];
-    }
-
-    function output(image,datauri,mimetype){
-
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
-      // This output is accessible by the UI
-      options.step.output = datauri;
-
-      // Tell the UI that the draw is complete
-      UI.onComplete(options.step);
-
-    }
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      format: input.format,
-      image: options.image,
-      inBrowser: options.inBrowser,
-      callback: callback
-    });
-
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"../_nomodule/PixelManipulation.js":171,"./SegmentedColormap":169}],169:[function(require,module,exports){
-/*
- * Accepts a value from 0-255 and returns the new color-mapped pixel 
- * from a lookup table, which can be specified as an array of [begin, end] 
- * gradients, where begin and end are represented as [r, g, b] colors. In 
- * combination, a lookup table which maps values from 0 - 255 smoothly from black to white looks like:
- * [
- *   [0, [0, 0, 0], [255, 255, 255]],
- *   [1, [255, 255, 255], [255, 255, 255]]
- * ]
- * 
- * Adapted from bgamari's work in Infragram: https://github.com/p-v-o-s/infragram-js/commit/346c97576a07b71a55671d17e0153b7df74e803b
- */
-
-module.exports = function SegmentedColormap(value, options) {
-  options.colormap = options.colormap || colormaps.default;
-  // if a lookup table is provided as an array:
-  if(typeof(options.colormap) == "object")
-    colormapFunction = segmented_colormap(options.colormap);
-  // if a stored colormap is named with a string like "fastie":
-  else if(colormaps.hasOwnProperty(options.colormap))
-    colormapFunction = colormaps[options.colormap];
-  else colormapFunction = colormaps.default;
-  return colormapFunction(value / 255.00);
-}
-
-function segmented_colormap(segments) {
-  return function(x) {
-    var i, result, x0, x1, xstart, y0, y1, _i, _j, _len, _ref, _ref1, _ref2, _ref3;
-    _ref = [0, 0], y0 = _ref[0], y1 = _ref[1];
-    _ref1 = [segments[0][0], 1], x0 = _ref1[0], x1 = _ref1[1];
-    if (x < x0) {
-      return y0;
-    }
-    for (i = _i = 0, _len = segments.length; _i < _len; i = ++_i) {
-      _ref2 = segments[i], xstart = _ref2[0], y0 = _ref2[1], y1 = _ref2[2];
-      x0 = xstart;
-      if (i === segments.length - 1) {
-        x1 = 1;
-        break;
-      }
-      x1 = segments[i + 1][0];
-      if ((xstart <= x && x < x1)) {
-        break;
-      }
-    }
-    result = [];
-    for (i = _j = 0, _ref3 = y0.length; 0 <= _ref3 ? _j < _ref3 : _j > _ref3; i = 0 <= _ref3 ? ++_j : --_j) {
-      result[i] = (x - x0) / (x1 - x0) * (y1[i] - y0[i]) + y0[i];
-    }
-    return result;
-  };
-};
-
-var colormaps = {
-  greyscale: segmented_colormap([
-               [0,     [0,   0,   0],   [255, 255, 255] ],
-               [1,     [255, 255, 255], [255, 255, 255] ]
-             ]),
-  default:   segmented_colormap([
-               [0,     [0,   0,   255], [0,   255, 0]   ],
-               [0.25,  [0,   255, 0],   [255, 255, 0]   ],
-               [0.50,  [0,   255, 255], [255, 255, 0]   ],
-               [0.75,  [255, 255, 0],   [255, 0,   0]   ]
-             ]),
-  ndvi:      segmented_colormap([
-               [0,     [0,   0,   255], [38,  195, 195] ],
-               [0.5,   [0,   150, 0],   [255, 255, 0]   ],
-               [0.75,  [255, 255, 0],   [255, 50,  50]  ]
-             ]),
-  stretched: segmented_colormap([
-               [0,     [0,   0,   255], [0,   0,   255] ],
-               [0.1,   [0,   0,   255], [38,  195, 195] ],
-               [0.5,   [0,   150, 0],   [255, 255, 0]   ],
-               [0.7,   [255, 255, 0],   [255, 50,  50]  ],
-               [0.9,   [255, 50,  50],  [255, 50,  50]  ]
-             ]),
-  fastie:    segmented_colormap([
-               [0,     [255, 255, 255], [0,   0,   0]   ],
-               [0.167, [0,   0,   0],   [255, 255, 255] ],
-               [0.33,  [255, 255, 255], [0,   0,   0]   ],
-               [0.5,   [0,   0,   0],   [140, 140, 255] ],
-               [0.55,  [140, 140, 255], [0,   255, 0]   ],
-               [0.63,  [0,   255, 0],   [255, 255, 0]   ],
-               [0.75,  [255, 255, 0],   [255, 0,   0]   ],
-               [0.95,  [255, 0,   0],   [255, 0,   255] ]
-             ])
-}
-
-},{}],170:[function(require,module,exports){
-module.exports={
-  "name": "Segmented Colormap",
-  "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.",
-  "inputs": {
-    "colormap": {
-      "type": "select",
-      "desc": "Name of the Colormap",
-      "default": "default",
-      "values": ["default","greyscale","stretched","fastie"]
-    }
-  }
-}
-
-},{}],171:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 (function (Buffer){
 /*
 * General purpose per-pixel manipulation
@@ -58259,4 +58084,179 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":8,"get-pixels":38,"pace":70,"save-pixels":121}]},{},[136]);
+},{"buffer":8,"get-pixels":38,"pace":70,"save-pixels":121}],170:[function(require,module,exports){
+// special module to load an image into the start of the sequence; used in the HTML UI
+function LoadImage(ref, name, src, main_callback) {
+  function makeImage(datauri) {
+    var image = {
+      src: datauri,
+      format: datauri.split(':')[1].split(';')[0].split('/')[1]
+    }
+    return image;
+  }
+  function CImage(src, callback) {
+    var datauri;
+    if (!!src.match(/^data:/i)) {
+      datauri = src;
+      callback(datauri);
+    }
+    else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
+      require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
+        var data = '';
+        var contentType = res.headers['content-type'];
+        res.setEncoding('base64');
+        res.on('data',function(chunk) {data += chunk;});
+        res.on('end',function() {
+          callback("data:"+contentType+";base64,"+data);
+        });
+      });
+    }
+    else if (ref.options.inBrowser) {
+      var ext = src.split('.').pop();
+      var image = document.createElement('img');
+      var canvas = document.createElement('canvas');
+      var context = canvas.getContext('2d');
+      image.onload = function() {
+        canvas.width = image.naturalWidth;
+        canvas.height = image.naturalHeight;
+        context.drawImage(image,0,0);
+        datauri = canvas.toDataURL(ext);
+        callback(datauri);
+      }
+      image.src = src;
+    }
+    else {
+      datauri = require('urify')(src);
+      callback(datauri);
+    }
+  }
+
+  function loadImage(name, src) {
+    var step = {
+      name: "load-image",
+      description: "This initial step loads and displays the original image without any modifications.<br /><br />To work with a new or different image, drag one into the drop zone.",
+      ID: ref.options.sequencerCounter++,
+      imageName: name,
+      inBrowser: ref.options.inBrowser,
+      ui: ref.options.ui
+    };
+
+    var image = {
+      src: src,
+      steps: [{
+        options: {
+          id: step.ID,
+          name: "load-image",
+          description: "This initial step loads and displays the original image without any modifications.",
+          title: "Load Image",
+          step: step
+        },
+        UI: ref.events,
+        draw: function() {
+          UI.onDraw(options.step);
+          if(arguments.length==1){
+            this.output = CImage(arguments[0]);
+            options.step.output = this.output;
+            UI.onComplete(options.step);
+            return true;
+          }
+          else if(arguments.length==2) {
+            this.output = CImage(arguments[0]);
+            options.step.output = this.output;
+            arguments[1]();
+            UI.onComplete(options.step);
+            return true;
+          }
+          return false;
+        },
+      }]
+    };
+    CImage(src, function(datauri) {
+      var output = makeImage(datauri);
+      ref.images[name] = image;
+      var loadImageStep = ref.images[name].steps[0];
+      loadImageStep.output = output;
+      loadImageStep.options.step.output = loadImageStep.output.src;
+      loadImageStep.UI.onSetup(loadImageStep.options.step);
+      loadImageStep.UI.onDraw(loadImageStep.options.step);
+      loadImageStep.UI.onComplete(loadImageStep.options.step);
+
+      main_callback();
+      return true;
+    });
+  }
+
+  return loadImage(name,src);
+}
+
+module.exports = LoadImage;
+
+},{"urify":128}],171:[function(require,module,exports){
+/*
+ * User Interface Handling Module
+ */
+
+module.exports = function UserInterface(events = {}) {
+
+  events.onSetup = events.onSetup || function(step) {
+    if(step.ui == false) {
+        // No UI
+    }
+    else if(step.inBrowser) {
+      // Create and append an HTML Element
+      console.log("Added Step \""+step.name+"\" to \""+step.imageName+"\".");
+    }
+    else {
+      // Create a NodeJS Object
+      console.log('\x1b[36m%s\x1b[0m',"Added Step \""+step.name+"\" to \""+step.imageName+"\".");
+    }
+  }
+
+  events.onDraw = events.onDraw || function(step) {
+    if (step.ui == false) {
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Overlay a loading spinner
+      console.log("Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
+    else {
+      // Don't do anything
+      console.log('\x1b[33m%s\x1b[0m',"Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
+  }
+
+  events.onComplete = events.onComplete || function(step) {
+    if (step.ui == false) {
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Update the DIV Element
+      // Hide the laoding spinner
+      console.log("Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
+    else {
+      // Update the NodeJS Object
+      console.log('\x1b[32m%s\x1b[0m',"Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
+    }
+  }
+
+  events.onRemove = events.onRemove || function(step) {
+    if(step.ui == false){
+      // No UI
+    }
+    else if(step.inBrowser) {
+      // Remove the DIV Element
+      console.log("Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
+    }
+    else {
+      // Delete the NodeJS Object
+      console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
+    }
+  }
+
+  return events;
+
+}
+
+},{}]},{},[136]);
