@@ -11,11 +11,11 @@
  * Adapted from bgamari's work in Infragram: https://github.com/p-v-o-s/infragram-js/commit/346c97576a07b71a55671d17e0153b7df74e803b
  */
 
-module.exports = function SegmentedColormap(value, options) {
+module.exports = function Colormap(value, options) {
   options.colormap = options.colormap || colormaps.default;
   // if a lookup table is provided as an array:
   if(typeof(options.colormap) == "object")
-    colormapFunction = segmented_colormap(options.colormap);
+    colormapFunction = colormap(options.colormap);
   // if a stored colormap is named with a string like "fastie":
   else if(colormaps.hasOwnProperty(options.colormap))
     colormapFunction = colormaps[options.colormap];
@@ -23,7 +23,7 @@ module.exports = function SegmentedColormap(value, options) {
   return colormapFunction(value / 255.00);
 }
 
-function segmented_colormap(segments) {
+function colormap(segments) {
   return function(x) {
     var i, result, x0, x1, xstart, y0, y1, _i, _j, _len, _ref, _ref1, _ref2, _ref3;
     _ref = [0, 0], y0 = _ref[0], y1 = _ref[1];
@@ -52,29 +52,29 @@ function segmented_colormap(segments) {
 };
 
 var colormaps = {
-  greyscale: segmented_colormap([
+  greyscale: colormap([
                [0,     [0,   0,   0],   [255, 255, 255] ],
                [1,     [255, 255, 255], [255, 255, 255] ]
              ]),
-  default:   segmented_colormap([
+  default:   colormap([
                [0,     [0,   0,   255], [0,   255, 0]   ],
                [0.25,  [0,   255, 0],   [255, 255, 0]   ],
                [0.50,  [0,   255, 255], [255, 255, 0]   ],
                [0.75,  [255, 255, 0],   [255, 0,   0]   ]
              ]),
-  ndvi:      segmented_colormap([
+  ndvi:      colormap([
                [0,     [0,   0,   255], [38,  195, 195] ],
                [0.5,   [0,   150, 0],   [255, 255, 0]   ],
                [0.75,  [255, 255, 0],   [255, 50,  50]  ]
              ]),
-  stretched: segmented_colormap([
+  stretched: colormap([
                [0,     [0,   0,   255], [0,   0,   255] ],
                [0.1,   [0,   0,   255], [38,  195, 195] ],
                [0.5,   [0,   150, 0],   [255, 255, 0]   ],
                [0.7,   [255, 255, 0],   [255, 50,  50]  ],
                [0.9,   [255, 50,  50],  [255, 50,  50]  ]
              ]),
-  fastie:    segmented_colormap([
+  fastie:    colormap([
                [0,     [255, 255, 255], [0,   0,   0]   ],
                [0.167, [0,   0,   0],   [255, 255, 255] ],
                [0.33,  [255, 255, 255], [0,   0,   0]   ],

@@ -5,7 +5,6 @@ ImageSequencer = function ImageSequencer(options) {
   
   options = options || {};
   options.inBrowser = options.inBrowser || isBrowser;
-  // if (options.inBrowser) options.ui = options.ui || require('./UserInterface');
   options.sequencerCounter = 0;
   
   function objTypeOf(object){
@@ -42,7 +41,7 @@ ImageSequencer = function ImageSequencer(options) {
   formatInput = require('./FormatInput'),
   images = {},
   inputlog = [],
-  events = require('./UserInterface')(),
+  events = require('./ui/UserInterface')(),
   fs = require('fs');
   
   // if in browser, prompt for an image
@@ -145,7 +144,6 @@ ImageSequencer = function ImageSequencer(options) {
     
     inputlog.push({method:"loadImages", json_q:copy(json_q)});
     var loadedimages = this.copy(json_q.loadedimages);
-    // require('./LoadImage')(this,i,json_q.images[i]);
     
     var ret = {
       name: "ImageSequencer Wrapper",
@@ -165,7 +163,7 @@ ImageSequencer = function ImageSequencer(options) {
         return;
       }
       var img = loadedimages[i];
-      require('./LoadImage')(sequencer,img,json_q.images[img],function(){
+      require('./ui/LoadImage')(sequencer,img,json_q.images[img],function(){
         load(++i);
       });
     }
@@ -180,7 +178,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
   
   function setUI(UI) {
-    this.events = require('./UserInterface')(UI);
+    this.events = require('./ui/UserInterface')(UI);
   }
   
   var exportBin = function(dir,basic) {

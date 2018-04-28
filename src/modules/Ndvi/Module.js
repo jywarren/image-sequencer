@@ -1,7 +1,7 @@
 /*
  * NDVI with red filter (blue channel is infrared)
  */
-module.exports = function NdviRed(options,UI) {
+module.exports = function Ndvi(options,UI) {
 
   options = options || {};
 
