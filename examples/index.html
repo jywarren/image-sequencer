@@ -48,18 +48,20 @@
 
       <section id="steps" class="row"></section>
 
-      <section id="addStep">
-        <div class="row">
-          <select class="form-control">
-            <option value="none" disabled selected>Select a new step...</option>
-          </select>
-        </div>
-        <hr />
-        <div class="row">
-          <div id="options"></div>
-        </div>
-        <div class="row add">
-          <button class="btn btn-success btn-lg" name="add">Add Step</button>
+      <hr />
+
+      <section id="addStep" class="panel panel-primary">
+        <div class="form-inline">
+          <div class="panel-body">
+            <div style="text-align:center;">
+              <select class="form-control input-lg">
+                <option value="none" disabled selected>Select a new step...</option>
+              </select>
+              <button class="btn btn-success btn-lg" name="add">Add Step</button>
+            </div>
+            <br />
+	    <p class="info" style="padding:8px;">Select a new module to add to your sequence.</p>
+	  </div>
         </div>
       </section>
 
@@ -68,7 +70,6 @@
     <script type="text/javascript">
 
       var sequencer;
-    
 
     </script>
 

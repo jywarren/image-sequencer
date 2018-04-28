@@ -165,40 +165,12 @@ window.onload = function() {
 
   });
 
-
-  // File handling
-
   $('#addStep select').on('change', selectNewStepUI);
 
   function selectNewStepUI() {
-    $('#options').html('');
     var m = $('#addStep select').val();
-    for(var input in modulesInfo[m].inputs) {
-      var inputUI = "";
-      var inputDesc = modulesInfo[m].inputs[input];
-      if (inputDesc.type.toLowerCase() == "select") {
-        inputUI += "<select class=\"form-control\" name=\""+input+"\">";
-        for (var option in inputDesc.values) {
-          inputUI += "<option>"+inputDesc.values[option]+"</option>";
-        }
-        inputUI += "</select>";
-      }
-      else {
-        inputUI = "<input class=\"form-control\" type=\""+inputDesc.type+"\" name=\""+input+"\">";
-      }
-      $('#options').append(
-        '<div class="row">\
-           <div class="col-md-5 labels">\
-             '+input+':\
-           </div>\
-           <div class="col-md-5">\
-             '+inputUI+'\
-           </div>\
-         </div>'
-      );
-    }
+    $('#addStep .info').html(sequencer.modulesInfo(m).description);
   }
-
 
   function addStepUI() {
     var options = {};
