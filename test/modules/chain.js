@@ -41,10 +41,10 @@ test('addSteps is two-way chainable.', function (t){
 });
 
 test('addSteps is two-way chainable without loadImages.', function (t){
-  var returnval = sequencer.addSteps("image3","ndvi-red");
+  var returnval = sequencer.addSteps("image3","ndvi");
   t.equal(returnval.name,"ImageSequencer","Sequencer is returned");
   t.equal(sequencer.images.image3.steps.length,3,"Step length increased");
-  t.equal(sequencer.images.image3.steps[2].options.name,"ndvi-red","Correct Step Added");
+  t.equal(sequencer.images.image3.steps[2].options.name,"ndvi","Correct Step Added");
   t.end();
 });
 
@@ -79,9 +79,9 @@ test('insertSteps is two-way chainable.', function (t){
 });
 
 test('insertSteps is two-way chainable without loadImages.', function (t){
-  var returnval = sequencer.insertSteps("image5",1,"ndvi-red");
+  var returnval = sequencer.insertSteps("image5",1,"ndvi");
   t.equal(returnval.name,"ImageSequencer","Sequencer is returned");
   t.equal(sequencer.images.image5.steps.length,3);
-  t.equal(sequencer.images.image5.steps[1].options.name,"ndvi-red","Correct Step Inserrted");
+  t.equal(sequencer.images.image5.steps[1].options.name,"ndvi","Correct Step Inserrted");
   t.end();
 });

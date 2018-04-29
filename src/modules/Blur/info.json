@@ -1,6 +1,6 @@
 {
-    "name": "blur",
-    "description": "Blur an image by a given value",
+    "name": "Blur",
+    "description": "Gaussian blur an image by a given value, typically 0-5",
     "inputs": {
         "blur": {
             "type": "integer",

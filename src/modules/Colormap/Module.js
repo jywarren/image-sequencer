@@ -1,7 +1,4 @@
-/*
- * NDVI with red filter (blue channel is infrared)
- */
-module.exports = function NdviRed(options,UI) {
+module.exports = function Colormap(options,UI) {
 
   options = options || {};
 
@@ -9,34 +6,34 @@ module.exports = function NdviRed(options,UI) {
   UI.onSetup(options.step);
   var output;
 
-  // The function which is called on every draw.
+  // This function is called on every draw.
   function draw(input,callback,progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    // Tell the UI that a step is being drawn.
+    // Tell the UI that the step is being drawn
     UI.onDraw(options.step);
     var step = this;
 
     function changePixel(r, g, b, a) {
-      var ndvi = (b - r) / (1.00 * b + r);
-      var x = 255 * (ndvi + 1) / 2;
-      return [x, x, x, a];
+      var combined = (r + g + b) / 3.000;
+      var res = require('./Colormap')(combined, options);
+      return [res[0], res[1], res[2], 255];
     }
 
     function output(image,datauri,mimetype){
 
       // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
-      // This output is accessible by the UI.
+      // This output is accessible by the UI
       options.step.output = datauri;
 
-      // Tell the UI that step has been drawn succesfully.
+      // Tell the UI that the draw is complete
       UI.onComplete(options.step);
+
     }
-    
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,
@@ -52,6 +49,6 @@ module.exports = function NdviRed(options,UI) {
     options: options,
     draw: draw,
     output: output,
-    UI:UI
+    UI: UI
   }
 }
