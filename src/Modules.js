@@ -20,7 +20,7 @@ module.exports = {
   'crop': [
     require('./modules/Crop/Module'),require('./modules/Crop/info')
   ],
-  'segmented-colormap': [
+  'colormap': [
     require('./modules/Colormap/Module'),require('./modules/Colormap/info')
   ],
   'decode-qr': [
