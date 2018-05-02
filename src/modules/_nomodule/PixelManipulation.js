@@ -18,7 +18,7 @@ module.exports = function PixelManipulation(image, options) {
   getPixels(image.src, function(err, pixels) {
     
     if(err) {
-      console.log('Bad image path');
+      console.log('Bad image path', image);
       return;
     }
 
