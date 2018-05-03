@@ -1,4 +1,4 @@
-if (typeof window !== 'undefined') {window.$ = window.jQuery = require('jquery'); isBrowser = true}
+if (typeof window !== 'undefined') {isBrowser = true}
 else {var isBrowser = false}
 
 ImageSequencer = function ImageSequencer(options) {
