@@ -46649,7 +46649,8 @@ function ReplaceImage(ref,selector,steps,options) {
   if(!ref.options.inBrowser) return false; // This isn't for Node.js
   var tempSequencer = ImageSequencer({ui: false});
   var this_ = ref;
-  var input = document.querySelectorAll(selector);
+  if (window.hasOwnProperty('$')) var input = $(selector);
+  else var input = document.querySelectorAll(selector);
   var images = [];
   for (var i = 0; i < input.length; i++) {
     if (input[i] instanceof HTMLImageElement) images.push(input[i]);
