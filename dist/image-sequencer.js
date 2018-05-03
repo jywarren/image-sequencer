@@ -56473,7 +56473,8 @@ function ReplaceImage(ref,selector,steps,options) {
 
   function replaceImage (img, steps) {
     var url = img.src;
-    var ext = url.split('.').pop();
+    // refactor to filetypeFromUrl()
+    var ext = url.split('?')[0].split('.').pop();
 
     var xmlHTTP = new XMLHttpRequest();
     xmlHTTP.open('GET', url, true);
