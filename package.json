@@ -1,6 +1,6 @@
 {
   "name": "image-sequencer",
-  "version": "1.3.3",
+  "version": "1.4.0",
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
@@ -36,7 +36,8 @@
     "pace": "0.0.4",
     "readline-sync": "^1.4.7",
     "save-pixels": "~2.3.4",
-    "urify": "^2.1.0"
+    "urify": "^2.1.0",
+    "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2"
   },
   "devDependencies": {
     "browserify": "13.0.0",
