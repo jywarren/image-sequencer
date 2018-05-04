@@ -20,8 +20,9 @@ module.exports = function CropModule(options, UI) {
 
   // Tell the UI that a step has been added
   UI.onSetup(options.step); // we should get UI to return the image thumbnail so we can attach our own UI extensions
+
   // add our custom in-module html ui:
-  var ui = require('./Ui.js')(options.step, UI);
+  if (options.step.inBrowser) var ui = require('./Ui.js')(options.step, UI);
   var output,
       setupComplete = false;
 
@@ -49,6 +50,9 @@ module.exports = function CropModule(options, UI) {
 
       // Tell the UI that the step has been drawn
       UI.onComplete(options.step);
+
+      // we should do this via event/listener:
+      if (ui && ui.hide) ui.hide();
 
       // start custom UI setup (draggable UI)
       // only once we have an input image

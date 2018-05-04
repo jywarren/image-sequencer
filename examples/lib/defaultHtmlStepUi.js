@@ -52,6 +52,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       var inputs = _sequencer.modulesInfo(step.name).inputs;
       var outputs = _sequencer.modulesInfo(step.name).outputs;
       var merged = Object.assign(inputs, outputs); // combine outputs w inputs
+
       for (var paramName in merged) {
         var isInput = inputs.hasOwnProperty(paramName);
         var html = "";
@@ -72,6 +73,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
             paramName +
             '">';
         }
+
         var div = document.createElement("div");
         div.className = "row";
         div.setAttribute("name", paramName);
@@ -105,16 +107,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       saveOptions();
 
       // on clicking Save in the details pane of the step
-      $(step.ui.querySelector("div.details .btn-save")).click(
-        function saveOptions() {
-	  $(step.ui.querySelector("div.details"))
-            .find("input,select")
-            .each(function(i, input) {
-              step.options[$(input).attr("name")] = input.value;
-            });
-          _sequencer.run();
-        }
-      );
+      $(step.ui.querySelector("div.details .btn-save")).click(saveOptions);
     }
 
     if (step.name != "load-image")
@@ -139,6 +132,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
     step.imgElement.src = step.output;
     step.linkElement.href = step.output;
 
+    // TODO: use a generalized version of this
     function fileExtension(output) {
       return output.split("/")[1].split(";")[0];
     }
