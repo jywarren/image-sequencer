@@ -46666,7 +46666,17 @@ function ReplaceImage(ref,selector,steps,options) {
     xmlHTTP.responseType = 'arraybuffer';
     xmlHTTP.onload = function(e) {
       var arr = new Uint8Array(this.response);
-      var raw = String.fromCharCode.apply(null,arr);
+
+      // in chunks to avoid "RangeError: Maximum call stack exceeded"
+      // https://github.com/publiclab/image-sequencer/issues/241
+      // https://stackoverflow.com/a/20048852/1116657
+      var raw = '';
+      var i,j,subArray,chunk = 5000;
+      for (i=0,j=arr.length; i<j; i+=chunk) {
+        subArray = arr.subarray(i,i+chunk);
+        raw += String.fromCharCode.apply(null, subArray);
+      }
+
       var base64 = btoa(raw);
       var dataURL="data:image/"+ext+";base64," + base64;
       make(dataURL);
