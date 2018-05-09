@@ -3,6 +3,7 @@ else {var isBrowser = false}
 
 ImageSequencer = function ImageSequencer(options) {
   
+  var sequencer = (this.name == "ImageSequencer")?this:this.sequencer;
   options = options || {};
   options.inBrowser = options.inBrowser || isBrowser;
   options.sequencerCounter = 0;
@@ -220,7 +221,9 @@ ImageSequencer = function ImageSequencer(options) {
     //other functions
     log: log,
     objTypeOf: objTypeOf,
-    copy: copy
+    copy: copy,
+
+    setInputStep: require('./ui/SetInputStep')(sequencer)
   }
   
 }

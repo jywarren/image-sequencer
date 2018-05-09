@@ -24,5 +24,15 @@ window.onload = function() {
   $('body').on('click', 'button.remove', ui.removeStepUi);
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js
-  setupFileHandling(sequencer);
+  sequencer.setInputStep({
+    dropZoneSelector: "#dropzone",
+    fileInputSelector: "#fileInput",
+    onLoad: function onFileReaderLoad(progress) {
+      var reader = progress.target;
+      step = sequencer.images.image1.steps[0];
+      step.output.src = reader.result;
+      sequencer.run(0);
+      step.options.step.imgElement.src = reader.result;
+    }
+  });
 };

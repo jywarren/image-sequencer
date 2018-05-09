@@ -46341,6 +46341,7 @@ else {var isBrowser = false}
 
 ImageSequencer = function ImageSequencer(options) {
   
+  var sequencer = (this.name == "ImageSequencer")?this:this.sequencer;
   options = options || {};
   options.inBrowser = options.inBrowser || isBrowser;
   options.sequencerCounter = 0;
@@ -46558,13 +46559,15 @@ ImageSequencer = function ImageSequencer(options) {
     //other functions
     log: log,
     objTypeOf: objTypeOf,
-    copy: copy
+    copy: copy,
+
+    setInputStep: require('./ui/SetInputStep')(sequencer)
   }
   
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":132,"./ExportBin":133,"./FormatInput":134,"./InsertStep":136,"./Modules":137,"./ReplaceImage":138,"./Run":139,"./ui/LoadImage":172,"./ui/UserInterface":173,"fs":7}],136:[function(require,module,exports){
+},{"./AddStep":132,"./ExportBin":133,"./FormatInput":134,"./InsertStep":136,"./Modules":137,"./ReplaceImage":138,"./Run":139,"./ui/LoadImage":172,"./ui/SetInputStep":173,"./ui/UserInterface":174,"fs":7}],136:[function(require,module,exports){
 // insert one or more steps at a given index in the sequencer
 function InsertStep(ref, image, index, name, o) {
 
@@ -48625,6 +48628,57 @@ function LoadImage(ref, name, src, main_callback) {
 module.exports = LoadImage;
 
 },{"urify":127}],173:[function(require,module,exports){
+function setInputStepInit(_sequencer) {
+
+  return function setInputStep(options) {
+
+    var dropzone = $(options.dropZoneSelector);
+    var fileInput = $(options.fileInputSelector);
+ 
+    onLoad = options.onLoad;
+ 
+    var reader = new FileReader();
+ 
+    function handleFile(e) {
+ 
+      e.preventDefault();
+      e.stopPropagation(); // stops the browser from redirecting.
+ 
+      if (e.target && e.target.files) var file = e.target.files[0];
+      else var file = e.dataTransfer.files[0];
+      if(!file) return;
+ 
+      var reader = new FileReader();
+      
+      reader.onload = onLoad;
+ 
+      reader.readAsDataURL(file);
+    }
+ 
+    fileInput.on('change', handleFile);
+ 
+    dropzone[0].addEventListener('drop', handleFile, false);
+ 
+    dropzone.on('dragover', function onDragover(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy'; // Explicitly show this is a copy.
+    }, false);
+ 
+    dropzone.on('dragenter', function onDragEnter(e) {
+      dropzone.addClass('hover');
+    });
+ 
+    dropzone.on('dragleave', function onDragLeave(e) {
+      dropzone.removeClass('hover');
+    });
+
+  }
+
+}
+module.exports = setInputStepInit;
+
+},{}],174:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
