@@ -37,5 +37,8 @@ module.exports = {
   ],
   'saturation': [
     require('./modules/Saturation/Module'),require('./modules/Saturation/info')
+  ],
+  'average': [
+    require('./modules/Average/Module'),require('./modules/Average/info')
   ]
 }
