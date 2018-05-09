@@ -7,7 +7,6 @@ function setInputStepInit(_sequencer) {
     step = options.step;
  
     onLoad = options.onLoad || function onFileReaderLoad() {
-      var loadStep = ;
       step.output.src = reader.result;
       _sequencer.run(0);
       step.options.step.imgElement.src = reader.result;

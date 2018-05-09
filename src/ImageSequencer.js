@@ -3,6 +3,7 @@ else {var isBrowser = false}
 
 ImageSequencer = function ImageSequencer(options) {
   
+  var sequencer = (this.name == "ImageSequencer")?this:this.sequencer;
   options = options || {};
   options.inBrowser = options.inBrowser || isBrowser;
   options.sequencerCounter = 0;
