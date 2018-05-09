@@ -220,7 +220,9 @@ ImageSequencer = function ImageSequencer(options) {
     //other functions
     log: log,
     objTypeOf: objTypeOf,
-    copy: copy
+    copy: copy,
+
+    setInputStep: require('./ui/SetInputStep')(sequencer)
   }
   
 }
