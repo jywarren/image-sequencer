@@ -27,6 +27,12 @@ window.onload = function() {
   sequencer.setInputStep({
     dropZoneSelector: "#dropzone",
     fileInputSelector: "#fileInput",
-    step: sequencer.images.image1.steps[0]
+    onLoad: function onFileReaderLoad(progress) {
+      var reader = progress.target;
+      step = sequencer.images.image1.steps[0];
+      step.output.src = reader.result;
+      sequencer.run(0);
+      step.options.step.imgElement.src = reader.result;
+    }
   });
 };

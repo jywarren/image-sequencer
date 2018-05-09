@@ -48633,14 +48633,9 @@ function setInputStepInit(_sequencer) {
   return function setInputStep(options) {
 
     var dropzone = $(options.dropZoneSelector);
-    var fileInput = $(fileInputId);
-    step = options.step;
+    var fileInput = $(options.fileInputSelector);
  
-    onLoad = options.onLoad || function onFileReaderLoad() {
-      step.output.src = reader.result;
-      _sequencer.run(0);
-      step.options.step.imgElement.src = reader.result;
-    }
+    onLoad = options.onLoad;
  
     var reader = new FileReader();
  
