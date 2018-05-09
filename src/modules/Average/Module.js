@@ -24,23 +24,32 @@ module.exports = function Average(options, UI){
         function changePixel(r, g, b, a){
             return [r,g,b,a]
         }
-        
+
+        // do the averaging        
         function extraManipulation(pixels){
             var sum = [0,0,0,0];
-            pixels.forEach(function(pixel) {
-              sum[0] += pixel[0];
-              sum[1] += pixel[1];
-              sum[2] += pixel[2];
-              sum[3] += pixel[3];
-            });
-            sum[0] = parseInt(sum[0] / pixels.length);
-            sum[1] = parseInt(sum[1] / pixels.length);
-            sum[2] = parseInt(sum[2] / pixels.length);
-            sum[3] = parseInt(sum[3] / pixels.length);
+            for (var i = 0; i < pixels.data.length; i += 4) {
+              sum[0] += pixels.data[i + 0];
+              sum[1] += pixels.data[i + 1];
+              sum[2] += pixels.data[i + 2];
+              sum[3] += pixels.data[i + 3];
+            }
+
+            sum[0] = parseInt(sum[0] / (pixels.data.length / 4));
+            sum[1] = parseInt(sum[1] / (pixels.data.length / 4));
+            sum[2] = parseInt(sum[2] / (pixels.data.length / 4));
+            sum[3] = parseInt(sum[3] / (pixels.data.length / 4));
+
+            for (var i = 0; i < pixels.data.length; i += 4) {
+              pixels.data[i + 0] = sum[0];
+              pixels.data[i + 1] = sum[1];
+              pixels.data[i + 2] = sum[2];
+              pixels.data[i + 3] = sum[3];
+            }
             // report back and store average in metadata:
-            options.step.metadata.average = sum;
+            options.step.metadata.averages = sum;
             console.log("average: ", sum);
-            return sum;
+            return pixels;
         }
 
         function output(image, datauri, mimetype){
