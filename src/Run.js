@@ -6,7 +6,6 @@ function Run(ref, json_q, callback,progressObj) {
       var image = drawarray[pos-1].image;
       if(ref.objTypeOf(callback) == 'Function') {
         var steps = ref.images[image].steps;
-console.log(steps[steps.length-1])
         var out = steps[steps.length-1].output.src;
         callback(out);
         return true;
