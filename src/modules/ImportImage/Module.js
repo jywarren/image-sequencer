@@ -1,5 +1,10 @@
 /*
- * Import Image module
+ * Import Image module; this fetches a given remote or local image via URL 
+ * or data-url, and overwrites the current one. It saves the original as 
+ * step.metadata.input for use in future modules such as blending.
+ * TODO: we could accept an operation for blending like "screen" or "overlay",
+ * or a function with blend(r1,g1,b1,a1,r2,g2,b2,a2), OR we could simply allow
+ * subsequent modules to do this blending and keep this one simple. 
  */
 module.exports = function ImportImageModule(options, UI) {
 
@@ -25,15 +30,17 @@ module.exports = function ImportImageModule(options, UI) {
     UI.onDraw(options.step);
     var step = this;
 
-    // save the input image; 
-    //options.step.input = input.src;
+    step.metadata = step.metadata || {};
+    // TODO: develop a standard API method for saving each input state,
+    // for reference in future steps (for blending, for example)
+    step.metadata.input = input;
 
     function onLoad() {
 
       // This output is accessible to Image Sequencer
       step.output = {
         src: imgObj.src,
-        format: require('../../util/GetFormat')(imgObj.src)
+        format: options.format
       }
 
       // This output is accessible to the UI
@@ -46,6 +53,7 @@ module.exports = function ImportImageModule(options, UI) {
       callback();
     }
 
+    options.format = require('../../util/GetFormat')(options.imageUrl);
     imgObj.onload = onLoad;
     imgObj.src = options.imageUrl;
 

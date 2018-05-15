@@ -48212,7 +48212,12 @@ module.exports={
 
 },{}],165:[function(require,module,exports){
 /*
- * Import Image module
+ * Import Image module; this fetches a given remote or local image via URL 
+ * or data-url, and overwrites the current one. It saves the original as 
+ * step.metadata.input for use in future modules such as blending.
+ * TODO: we could accept an operation for blending like "screen" or "overlay",
+ * or a function with blend(r1,g1,b1,a1,r2,g2,b2,a2), OR we could simply allow
+ * subsequent modules to do this blending and keep this one simple. 
  */
 module.exports = function ImportImageModule(options, UI) {
 
@@ -48238,15 +48243,17 @@ module.exports = function ImportImageModule(options, UI) {
     UI.onDraw(options.step);
     var step = this;
 
-    // save the input image; 
-    //options.step.input = input.src;
+    step.metadata = step.metadata || {};
+    // TODO: develop a standard API method for saving each input state,
+    // for reference in future steps (for blending, for example)
+    step.metadata.input = input;
 
     function onLoad() {
 
       // This output is accessible to Image Sequencer
       step.output = {
         src: imgObj.src,
-        format: require('../../util/GetFormat')(imgObj.src)
+        format: options.format
       }
 
       // This output is accessible to the UI
@@ -48259,6 +48266,7 @@ module.exports = function ImportImageModule(options, UI) {
       callback();
     }
 
+    options.format = require('../../util/GetFormat')(options.imageUrl);
     imgObj.onload = onLoad;
     imgObj.src = options.imageUrl;
 
@@ -48279,11 +48287,11 @@ module.exports = function ImportImageModuleUi(step, ui) {
   function setup(setImage, onLoad) {
 
     // generate a unique timestamp based id for the dropzone
-    var dropzoneId = 'dropzone-NUMBER';
+    var dropzoneId = 'dropzone-import-image-' + step.ID;
 
     // add a file input listener
     var dropZone ='\
-    <div style="padding: 30px;margin: 0 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
+    <div style="padding: 30px;margin: 10px 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
       <p>\
         <i>Select or drag in an image to overlay.</i>\
       </p>\
@@ -48303,11 +48311,20 @@ module.exports = function ImportImageModuleUi(step, ui) {
       dropZoneSelector: "#" + dropzoneId,
       fileInputSelector: "#" + dropzoneId + " .file-input",
       onLoad: function onLoadFromInput(progress) {
-console.log('onLoadFromInput')
         var reader = progress.target;
         step.options.imageUrl = reader.result;
         sequencer.run();
       }
+    });
+
+    $(step.ui)
+      .find('.btn-save').on('click', function onClickSave() {
+
+        var src = $(step.ui)
+          .find('.det input').val();
+        step.options.imageUrl = src;
+        sequencer.run();
+
     });
 
   }
@@ -48320,7 +48337,7 @@ console.log('onLoadFromInput')
 },{}],167:[function(require,module,exports){
 module.exports={
   "name": "Import Image",
-  "description": "Import a new image and overlay it on the original. Future versions will enable a blend mode. Specify an image by URL or by file selector.",
+  "description": "Import a new image and replace the original with it. Future versions may enable a blend mode. Specify an image by URL or by file selector.",
   "url": "https://github.com/publiclab/image-sequencer/tree/master/MODULES.md",
   "inputs": {
     "url": {
@@ -48866,6 +48883,7 @@ module.exports = function UserInterface(events = {}) {
 },{}],178:[function(require,module,exports){
 /*
 * Determine format from a URL or data-url, return "jpg" "png" "gif" etc
+* TODO: write a test for this using the examples
 */
 module.exports = function GetFormat(src) {
 
@@ -48882,7 +48900,7 @@ module.exports = function GetFormat(src) {
   }
 
   function isDataUrl(src) {
-    return src.substr(0, 9) === "data:image"
+    return src.substr(0, 10) === "data:image"
   }
 
   format = format.toLowerCase();

@@ -4,11 +4,11 @@ module.exports = function ImportImageModuleUi(step, ui) {
   function setup(setImage, onLoad) {
 
     // generate a unique timestamp based id for the dropzone
-    var dropzoneId = 'dropzone-NUMBER';
+    var dropzoneId = 'dropzone-import-image-' + step.ID;
 
     // add a file input listener
     var dropZone ='\
-    <div style="padding: 30px;margin: 0 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
+    <div style="padding: 30px;margin: 10px 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
       <p>\
         <i>Select or drag in an image to overlay.</i>\
       </p>\
@@ -28,11 +28,20 @@ module.exports = function ImportImageModuleUi(step, ui) {
       dropZoneSelector: "#" + dropzoneId,
       fileInputSelector: "#" + dropzoneId + " .file-input",
       onLoad: function onLoadFromInput(progress) {
-console.log('onLoadFromInput')
         var reader = progress.target;
         step.options.imageUrl = reader.result;
         sequencer.run();
       }
+    });
+
+    $(step.ui)
+      .find('.btn-save').on('click', function onClickSave() {
+
+        var src = $(step.ui)
+          .find('.det input').val();
+        step.options.imageUrl = src;
+        sequencer.run();
+
     });
 
   }

@@ -1,5 +1,6 @@
 /*
 * Determine format from a URL or data-url, return "jpg" "png" "gif" etc
+* TODO: write a test for this using the examples
 */
 module.exports = function GetFormat(src) {
 
@@ -16,7 +17,7 @@ module.exports = function GetFormat(src) {
   }
 
   function isDataUrl(src) {
-    return src.substr(0, 9) === "data:image"
+    return src.substr(0, 10) === "data:image"
   }
 
   format = format.toLowerCase();
