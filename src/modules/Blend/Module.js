@@ -1,4 +1,4 @@
-module.exports = function Dynamic(options,UI) {
+module.exports = function Dynamic(options, UI, util) {
   
   options = options || {};
   options.func = options.func || "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }";
@@ -18,20 +18,28 @@ module.exports = function Dynamic(options,UI) {
     var step = this;
 
     // convert to runnable code:
-    if (typeof func === "string") func = eval(options.func);
+    if (typeof options.func === "string") eval('options.func = ' + options.func);
 
-    var getPixels = require('get-pixels'),
+    var getPixels = require('get-pixels');
    
-    // save first image's pixels 
-    getPixels(image.src, function(err, pixels) {
+    // save first image's pixels
+    var priorStep = util.getStep(-1);
+console.log(priorStep);
+
+    getPixels(priorStep.output.src, function(err, pixels) {
       options.firstImagePixels = pixels;
     });
 
-    function changePixel(r2, g2, b2, a2) {
+    function changePixel(r2, g2, b2, a2, x, y) {
       // blend!
       var p = options.firstImagePixels;
-      //func(r2, g2, b2, a2,
-        //p
+      return options.func(
+        r2, g2, b2, a2,
+        p.get(x, y, 0),
+        p.get(x, y, 1),
+        p.get(x, y, 2),
+        p.get(x, y, 3)
+      )
     }
     
     function output(image, datauri, mimetype){
