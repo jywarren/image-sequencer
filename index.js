@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-require('./src/ImageSequencer');
-sequencer = ImageSequencer({ui: false});
-var Spinner = require('ora')
+require("./src/ImageSequencer");
+sequencer = ImageSequencer({ ui: false });
+var Spinner = require("ora");
 
-var program = require('commander');
-var readlineSync = require('readline-sync');
+var program = require("commander");
+var readlineSync = require("readline-sync");
 
 function exit(message) {
   console.error(message);
@@ -13,127 +13,140 @@ function exit(message) {
 }
 
 program
-.version('0.1.0')
-.option('-i, --image [PATH/URL]', 'Input image URL')
-.option('-s, --step [step-name]', 'Name of the step to be added.')
-.option('-o, --output [PATH]', 'Directory where output will be stored.')
-.option('-b, --basic','Basic mode outputs only final image')
-.option('-c, --config [Object]', 'Options for the step')
-.parse(process.argv);
+  .version("0.1.0")
+  .option("-i, --image [PATH/URL]", "Input image URL")
+  .option("-s, --step [step-name]", "Name of the step to be added.")
+  .option("-o, --output [PATH]", "Directory where output will be stored.")
+  .option("-b, --basic", "Basic mode outputs only final image")
+  .option("-c, --config [Object]", "Options for the step")
+  .parse(process.argv);
 
 // Parse step into an array to allow for multiple steps.
-if(!program.step) exit("No steps passed")
+if (!program.step) exit("No steps passed");
 program.step = program.step.split(" ");
 
 // User must input an image.
-if(!program.image) exit("Can't read file.")
+if (!program.image) exit("Can't read file.");
 
 // User must input an image.
-require('fs').access(program.image, function(err){
-  if(err) exit("Can't read file.")
+require("fs").access(program.image, function(err) {
+  if (err) exit("Can't read file.");
 });
 
 // User must input a step. If steps exist, check that every step is a valid step.
-if(!program.step || !validateSteps(program.step))
-exit("Please ensure all steps are valid.");
+if (!program.step || !validateSteps(program.step))
+  exit("Please ensure all steps are valid.");
 
 // If there's no user defined output directory, select a default directory.
 program.output = program.output || "./output/";
 
 // Set sequencer to log module outputs, if any.
 sequencer.setUI({
-  
   onComplete: function(step) {
-    
     // Get information of outputs.
     step.info = sequencer.modulesInfo(step.name);
-    
+
     for (var output in step.info.outputs) {
-      console.log("["+program.step+"]: "+output+" = "+step[output]);
+      console.log("[" + program.step + "]: " + output + " = " + step[output]);
     }
-    
   }
-  
 });
 
 // Finally, if everything is alright, load the image, add the steps and run the sequencer.
-sequencer.loadImages(program.image,function(){
-  console.warn('\x1b[33m%s\x1b[0m', "Please wait \n output directory generated will be empty until the execution is complete")
-  
+sequencer.loadImages(program.image, function() {
+  console.warn(
+    "\x1b[33m%s\x1b[0m",
+    "Please wait \n output directory generated will be empty until the execution is complete"
+  );
+
   //Generate the Output Directory
-  require('./src/CliUtils').makedir(program.output,()=>{
-    console.log("Files will be exported to \""+program.output+"\"");
-    
-    if(program.basic) console.log("Basic mode is enabled, outputting only final image")
-    
+  require("./src/CliUtils").makedir(program.output, () => {
+    console.log('Files will be exported to "' + program.output + '"');
+
+    if (program.basic)
+      console.log("Basic mode is enabled, outputting only final image");
+
     // Iterate through the steps and retrieve their inputs.
-    program.step.forEach(function(step){
+    program.step.forEach(function(step) {
       var options = Object.assign({}, sequencer.modulesInfo(step).inputs);
-      
+
       // If inputs exists, print to console.
       if (Object.keys(options).length) {
         console.log("[" + step + "]: Inputs");
       }
-      
+
       // If inputs exists, print them out with descriptions.
       Object.keys(options).forEach(function(input) {
-        // The array below creates a variable number of spaces. This is done with (length + 1). 
+        // The array below creates a variable number of spaces. This is done with (length + 1).
         // The extra 4 that makes it (length + 5) is to account for the []: characters
-        console.log(new Array(step.length + 5).join(' ') + input + ": " + options[input].desc);
+        console.log(
+          new Array(step.length + 5).join(" ") +
+            input +
+            ": " +
+            options[input].desc
+        );
       });
-      
-      if(program.config){
-        try{
+
+      if (program.config) {
+        try {
           program.config = JSON.parse(program.config);
           console.log(`The parsed options object: `, program.config);
-        }
-        catch(e){
-          console.error('\x1b[31m%s\x1b[0m',`Options(Config) is not a not valid JSON Fallback activate`);
+        } catch (e) {
+          console.error(
+            "\x1b[31m%s\x1b[0m",
+            `Options(Config) is not a not valid JSON Fallback activate`
+          );
           program.config = false;
           console.log(e);
         }
       }
-      if(program.config && validateConfig(program.config,options)){
+      if (program.config && validateConfig(program.config, options)) {
         console.log("Now using Options object");
-        Object.keys(options).forEach(function (input) {
+        Object.keys(options).forEach(function(input) {
           options[input] = program.config[input];
-        })
-      }
-      else{
+        });
+      } else {
         // If inputs exist, iterate through them and prompt for values.
         Object.keys(options).forEach(function(input) {
-          var value = readlineSync.question("[" + step + "]: Enter a value for " + input + " (" + options[input].type + ", default: " + options[input].default + "): ");
+          var value = readlineSync.question(
+            "[" +
+              step +
+              "]: Enter a value for " +
+              input +
+              " (" +
+              options[input].type +
+              ", default: " +
+              options[input].default +
+              "): "
+          );
           options[input] = value;
         });
       }
       // Add the step and its inputs to the sequencer.
       sequencer.addSteps(step, options);
     });
-    
-    var spinnerObj = Spinner('Your Image is being processed..').start();
-    
-    // Run the sequencer.
-    sequencer.run(spinnerObj,function(){
 
+    var spinnerObj = { succeed: () => {}, stop: () => {} };
+    if (!process.env.TEST)
+      spinnerObj = Spinner("Your Image is being processed..").start();
+
+    // Run the sequencer.
+    sequencer.run(spinnerObj, function() {
       // Export all images or final image as binary files.
-      sequencer.exportBin(program.output,program.basic);
+      sequencer.exportBin(program.output, program.basic);
 
       //check if spinner was not overriden stop it
-      if(!spinnerObj.overrideFlag) {
-        spinnerObj.succeed()
-        console.log(`\nDone!!`)
+      if (!spinnerObj.overrideFlag) {
+        spinnerObj.succeed();
+        console.log(`\nDone!!`);
       }
-      
     });
-    
   });
-  
 });
 
 // Takes an array of steps and checks if they are valid steps for the sequencer.
 function validateSteps(steps) {
-  
-  // Assume all are valid in the beginning. 
+  // Assume all are valid in the beginning.
   var valid = true;
   steps.forEach(function(step) {
     // If any step in the array is not valid (not a property of modulesInfo), set valid to false.
@@ -141,25 +154,29 @@ function validateSteps(steps) {
       valid = false;
     }
   });
-  
+
   // Return valid. (If all of the steps are valid properties, valid will have remained true).
   return valid;
 }
 
-//Takes config and options object and checks if all the keys exist in config 
-function validateConfig(config_,options_){
+//Takes config and options object and checks if all the keys exist in config
+function validateConfig(config_, options_) {
   options_ = Object.keys(options_);
   if (
-    (function(){
-      for(var input in options_){
-        if(!config_[options_[input]]){
-          console.error('\x1b[31m%s\x1b[0m',`Options Object does not have the required details "${options_[input]}" not specified. Fallback case activated`);
+    (function() {
+      for (var input in options_) {
+        if (!config_[options_[input]]) {
+          console.error(
+            "\x1b[31m%s\x1b[0m",
+            `Options Object does not have the required details "${
+              options_[input]
+            }" not specified. Fallback case activated`
+          );
           return false;
-        } 
+        }
       }
-    })()
-    == false)
+    })() == false
+  )
     return false;
-    else
-    return true;
-  }
+  else return true;
+}

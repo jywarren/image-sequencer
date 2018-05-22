@@ -1,20 +1,20 @@
 {
   "name": "image-sequencer",
   "version": "1.6.0",
-  "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
+  "description":
+    "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
-    "debug": "node ./index.js -i ./examples/images/monarch.png -s",
-    "test": "tape test/**/*.js test/*.js | tap-spec; browserify test/modules/image-sequencer.js test/modules/chain.js test/modules/replace.js | tape-run --render=\"tap-spec\""
+    "debug":
+      "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
+    "test":
+      "TEST=true tape test/**/*.js test/*.js | tap-spec; browserify test/modules/image-sequencer.js test/modules/chain.js test/modules/replace.js | tape-run --render=\"tap-spec\""
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/publiclab/image-sequencer.git"
   },
-  "keywords": [
-    "images",
-    "Public Lab"
-  ],
+  "keywords": ["images", "Public Lab"],
   "author": "Public Lab",
   "license": "GPL-3.0",
   "bugs": {
@@ -45,7 +45,8 @@
     "grunt": "^0.4.5",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^0.5.0",
-    "grunt-contrib-uglify-es": "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
+    "grunt-contrib-uglify-es":
+      "git://github.com/gruntjs/grunt-contrib-uglify.git#harmony",
     "grunt-contrib-watch": "^0.6.1",
     "image-filter-core": "~1.0.0",
     "image-filter-threshold": "~1.0.0",
