@@ -20,7 +20,7 @@ module.exports = function PixelManipulation(image, options) {
   var getPixels = require("get-pixels"),
     savePixels = require("save-pixels");
 
-  getPixels(image.src, function(err, pixels) {
+  getPixels(image.src, function (err, pixels) {
     if (err) {
       console.log("Bad image path", image);
       return;
@@ -50,7 +50,9 @@ module.exports = function PixelManipulation(image, options) {
           pixels.get(x, y, 0),
           pixels.get(x, y, 1),
           pixels.get(x, y, 2),
-          pixels.get(x, y, 3)
+          pixels.get(x, y, 3),
+          x,
+          y
         );
 
         pixels.set(x, y, 0, pixel[0]);
@@ -71,12 +73,12 @@ module.exports = function PixelManipulation(image, options) {
     var totalLength = 0;
     var r = savePixels(pixels, options.format, { quality: 100 });
 
-    r.on("data", function(chunk) {
+    r.on("data", function (chunk) {
       totalLength += chunk.length;
       chunks.push(chunk);
     });
 
-    r.on("end", function() {
+    r.on("end", function () {
       var data = Buffer.concat(chunks, totalLength).toString("base64");
       var datauri = "data:image/" + options.format + ";base64," + data;
       if (options.output)
