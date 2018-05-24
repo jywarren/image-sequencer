@@ -9,7 +9,7 @@ function InsertStep(ref, image, index, name, o) {
     o.container = o_.container || ref.options.selector;
     o.image = image;
 
-    if(index==-1) index = ref.images[image].steps.length;
+    if (index == -1) index = ref.images[image].steps.length;
 
     o.step = {
       name: o.name,
@@ -22,8 +22,11 @@ function InsertStep(ref, image, index, name, o) {
       options: o
     };
     var UI = ref.events;
-    var module = ref.modules[name][0](o,UI);
-    ref.images[image].steps.splice(index,0,module);
+    this.getStep = function getStep(offset) {
+      return ref.images[image].steps.slice(offset)[0];
+    }
+    var module = ref.modules[name][0].bind(this)(o, UI);
+    ref.images[image].steps.splice(index, 0, module);
 
     return true;
   }
