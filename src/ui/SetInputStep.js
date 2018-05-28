@@ -6,7 +6,7 @@ function setInputStepInit() {
     var dropzone = $(options.dropZoneSelector);
     var fileInput = $(options.fileInputSelector);
  
-    onLoad = options.onLoad;
+    var onLoad = options.onLoad;
  
     var reader = new FileReader();
  
