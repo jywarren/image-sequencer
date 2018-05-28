@@ -1,4 +1,4 @@
-module.exports = function(grunt) {
+module.exports = function (grunt) {
   grunt.loadNpmTasks("grunt-browserify");
   grunt.loadNpmTasks("grunt-contrib-uglify-es");
   grunt.loadNpmTasks("grunt-browser-sync");
@@ -46,5 +46,5 @@ module.exports = function(grunt) {
   /* Default (development): Watch files and build on change. */
   grunt.registerTask("default", ["watch"]);
   grunt.registerTask("build", ["browserify:dist", "uglify:dist"]);
-  grunt.registerTask("serve", ["browserSync", "watch"]);
+  grunt.registerTask("serve", ["browserify:dist", "uglify:dist", "browserSync", "watch"]);
 };

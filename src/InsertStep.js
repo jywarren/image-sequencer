@@ -1,3 +1,5 @@
+const getStepUtils = require('./util/getStep.js');
+
 // insert one or more steps at a given index in the sequencer
 function InsertStep(ref, image, index, name, o) {
 
@@ -22,10 +24,7 @@ function InsertStep(ref, image, index, name, o) {
       options: o
     };
     var UI = ref.events;
-    this.getStep = function getStep(offset) {
-      return ref.images[image].steps.slice(offset)[0];
-    }
-    var module = ref.modules[name][0].bind(this)(o, UI);
+    var module = ref.modules[name][0](o, UI);
     ref.images[image].steps.splice(index, 0, module);
 
     return true;

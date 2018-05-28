@@ -1,5 +1,6 @@
 if (typeof window !== 'undefined') {isBrowser = true}
 else {var isBrowser = false}
+require('./util/getStep.js')
 
 ImageSequencer = function ImageSequencer(options) {
   

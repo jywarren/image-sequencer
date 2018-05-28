@@ -23,7 +23,7 @@ module.exports = function Dynamic(options, UI, util) {
     var getPixels = require('get-pixels');
 
     // save first image's pixels
-    var priorStep = getStep(-2);
+    var priorStep = this.getStep(-2);
 
     getPixels(priorStep.output.src, function (err, pixels) {
       options.firstImagePixels = pixels;
