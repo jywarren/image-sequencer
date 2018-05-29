@@ -168,8 +168,18 @@ test('run() runs the sequencer and returns output to callback', function (t) {
   sequencer.run('test', function (out) {
     t.equal(typeof (sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output), "object", "Output is Generated");
     t.equal(out, sequencer.images.test.steps[sequencer.images.test.steps.length - 1].output.src, "Output callback works");
+    t.end();
   });
-  t.end();
+});
+
+
+test('getStep(offset) returns the step at offset distance relative to current step',function(t){
+  sequencer.addSteps('test','invert',{});
+  sequencer.addSteps('test','blend',{});
+  sequencer.run('test',function(out){
+    t.equal(!!out,true,"Blend generates output");
+    t.end();
+  });
 });
 
 test('replaceImage returns false in NodeJS', function (t) {

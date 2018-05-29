@@ -47913,7 +47913,7 @@ function Run(ref, json_q, callback, progressObj) {
   function drawStep(drawarray, pos) {
     if (pos == drawarray.length && drawarray[pos - 1] !== undefined) {
       var image = drawarray[pos - 1].image;
-      if (ref.objTypeOf(callback) == "Function") {
+      if (ref.objTypeOf(callback) == "Function" && ref.images[image].steps.slice(-1)[0].output) {
         var steps = ref.images[image].steps;
         var out = steps[steps.length - 1].output.src;
         callback(out);
@@ -49668,9 +49668,6 @@ module.exports = function Invert(options, UI) {
   // The function which is called on every draw.
   function draw(input, callback, progressObj) {
 
-    console.log(this.getIndex());
-    console.log(this.getPreviousStep().options.name);
-    console.log(this.getStep(0).options.name);
     progressObj.stop(true);
     progressObj.overrideFlag = true;
     // Tell UI that a step is being drawn.
