@@ -217,7 +217,7 @@ ImageSequencer = function ImageSequencer(options) {
       inputs[input] = encodeURIComponent(inputs[input]);
     }
 
-    var configurations = Object.keys(inputs).map(key=>key + ':' + inputs[key]).join(',');
+    var configurations = Object.keys(inputs).map(key => key + ':' + inputs[key]).join('|');
     return `${step.options.name}(${configurations})`;
   }
 
@@ -237,7 +237,7 @@ ImageSequencer = function ImageSequencer(options) {
           stepSettings = str.slice(str.indexOf('(') + 1, -1);
     }
 
-    stepSettings = stepSettings.split(',').reduce(function formatSettings(accumulator, current, i){
+    stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i){
       var settingName = current.substr(0, current.indexOf(':')),
           settingValue = decodeURIComponent(current.substr(current.indexOf(':') + 1));
       current = [
