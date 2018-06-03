@@ -226,32 +226,31 @@ ImageSequencer = function ImageSequencer(options) {
     let steps = str.split(',');
     return steps.map(importStringtoJsonStep);
   }
+
   // Converts one stringified step into JSON
   function importStringtoJsonStep(str){
-    if(str.indexOf('(') === -1) {
-      str = [
-        str.substr(0),
-        ""
-      ]
+    if(str.indexOf('(') === -1) { // if there are no settings specified
+      var moduleName = str.substr(0);
+          stepSettings = "";
     } else {
-      str = [
-      str.substr(0,str.indexOf('(')),
-      str.slice(str.indexOf('(')+1,-1)
-    ];
+      var moduleName = str.substr(0, str.indexOf('('));
+          stepSettings = str.slice(str.indexOf('(') + 1, -1);
     }
 
-    str[1] = str[1].split(',').reduce(function(acc,cur,i){
-      cur = [
-        cur.substr(0,cur.indexOf(':')),
-        decodeURIComponent(cur.substr(cur.indexOf(':') + 1))
+    stepSettings = stepSettings.split(',').reduce(function formatSettings(accumulator, current, i){
+      var settingName = current.substr(0, current.indexOf(':')),
+          settingValue = decodeURIComponent(current.substr(current.indexOf(':') + 1));
+      current = [
+        settingName,
+        settingValue
       ];
-      if(!!cur[0]) acc[cur[0]] = cur[1];
-      return acc;
-    },{});
+      if (!!settingName) accumulator[settingName] = settingValue;
+      return accumulator;
+    }, {});
 
     return {
-      name : str[0],
-      options:str[1]
+      name : moduleName,
+      options: stepSettings
     }
   }
 
