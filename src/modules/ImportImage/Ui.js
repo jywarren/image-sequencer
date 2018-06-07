@@ -30,7 +30,9 @@ module.exports = function ImportImageModuleUi(step, ui) {
       onLoad: function onLoadFromInput(progress) {
         var reader = progress.target;
         step.options.imageUrl = reader.result;
+        step.options.url = reader.result;
         sequencer.run();
+        setUrlHashParameter("steps", sequencer.toString());
       }
     });
 

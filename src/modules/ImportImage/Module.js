@@ -9,7 +9,7 @@
 module.exports = function ImportImageModule(options, UI) {
 
   options = options || {};
-  options.imageUrl = options.imageUrl || "/examples/images/monarch.png";
+  options.imageUrl = options.url || "/examples/images/monarch.png";
 
   var output,
       imgObj = new Image();

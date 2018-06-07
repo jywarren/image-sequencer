@@ -6,7 +6,7 @@
     "url": {
       "type": "string",
       "desc": "URL of image to import",
-      "default": "/examples/images/monarch.png"
+      "default": "./images/monarch.png"
     }
   }
 }
