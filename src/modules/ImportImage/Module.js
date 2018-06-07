@@ -1,15 +1,15 @@
 /*
- * Import Image module; this fetches a given remote or local image via URL 
- * or data-url, and overwrites the current one. It saves the original as 
+ * Import Image module; this fetches a given remote or local image via URL
+ * or data-url, and overwrites the current one. It saves the original as
  * step.metadata.input for use in future modules such as blending.
  * TODO: we could accept an operation for blending like "screen" or "overlay",
  * or a function with blend(r1,g1,b1,a1,r2,g2,b2,a2), OR we could simply allow
- * subsequent modules to do this blending and keep this one simple. 
+ * subsequent modules to do this blending and keep this one simple.
  */
 module.exports = function ImportImageModule(options, UI) {
 
   options = options || {};
-  options.imageUrl = options.url || "/examples/images/monarch.png";
+  options.imageUrl = options.url || "./images/monarch.png";
 
   var output,
       imgObj = new Image();

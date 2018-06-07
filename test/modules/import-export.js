@@ -13,19 +13,19 @@ test('toString() and stepToString() return the step/steps in string format', fun
   t.end();
 });
 
-test('importStringtoJson() and importStringtoJsonStep() return the step/steps from a string', function(t){
-  t.deepEqual(sequencer.importStringtoJson('channel(channel:green),invert(),crop(x:0|y:0|w:50%25|h:50%25),blend(blend:function(r1%2C%20g1%2C%20b1%2C%20a1%2C%20r2%2C%20g2%2C%20b2%2C%20a2)%20%7B%20return%20%5B%20r1%2C%20g2%2C%20b2%2C%20a2%20%5D%20%7D)'),[
+test('stringToJSON() and stringToJSONstep() return the step/steps from a string', function(t){
+  t.deepEqual(sequencer.stringToJSON('channel(channel:green),invert(),crop(x:0|y:0|w:50%25|h:50%25),blend(blend:function(r1%2C%20g1%2C%20b1%2C%20a1%2C%20r2%2C%20g2%2C%20b2%2C%20a2)%20%7B%20return%20%5B%20r1%2C%20g2%2C%20b2%2C%20a2%20%5D%20%7D)'),[
     { name: 'channel', options: { channel: 'green' } },
     { name: 'invert', options: {} },
     { name: 'crop', options: { x: '0', y: '0', w: '50%', h: '50%'} },
     { name: 'blend', options: { blend: 'function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }' } }
   ]);
-  t.deepEqual(sequencer.importStringtoJsonStep("channel(channel:green)"),{ name: 'channel', options: { channel: 'green' } });
+  t.deepEqual(sequencer.stringToJSONstep("channel(channel:green)"),{ name: 'channel', options: { channel: 'green' } });
   t.end();
 });
 
-test('importStringtoJson() and importStringtoJsonStep() return the step/steps from a string without configs, using defaults', function(t){
-  t.deepEqual(sequencer.importStringtoJson('channel,blur,invert,blend'),[
+test('stringToJSON() and stringToJSONstep() return the step/steps from a string without configs, using defaults', function(t){
+  t.deepEqual(sequencer.stringToJSON('channel,blur,invert,blend'),[
     { name: 'channel', options: { } },
     { name: 'blur', options: { } },
     { name: 'invert', options: { } },
@@ -33,3 +33,26 @@ test('importStringtoJson() and importStringtoJsonStep() return the step/steps fr
   ]);
   t.end();
 });
+
+test('toJSON() returns the right sequence of steps',function(t){
+  t.deepEqual(sequencer.toJSON(), [
+    { name: 'channel', options: { channel: 'green' } },
+    { name: 'invert', options: {} }
+  ]);
+  t.end();
+});
+
+test('importString() imports a string of steps into the sequencer', function(t){
+  sequencer.importString('brightness(brightness:50),invert');
+  t.equal(sequencer.toString(),"channel(channel:green),invert(),brightness(brightness:50),invert()");
+  t.end();
+});
+
+test('importJSON() imports a JSON array of steps into the sequencer', function(t){
+  sequencer.importJSON([
+    { name: 'blur',options: {}}
+  ]);
+  t.equal(sequencer.toString(),"channel(channel:green),invert(),brightness(brightness:50),invert(),blur(blur:2)")
+  t.end();
+});
+

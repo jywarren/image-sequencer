@@ -221,25 +221,30 @@ ImageSequencer = function ImageSequencer(options) {
     return `${step.options.name}(${configurations})`;
   }
 
-  // Coverts stringified sequence into JSON
-  function importStringtoJson(str){
+  // exports the current sequence as an array of JSON steps
+  function toJSON(str){
+    return this.stringToJSON(this.toString());
+  }
+
+  // Coverts stringified sequence into an array of JSON steps
+  function stringToJSON(str){
     let steps = str.split(',');
-    return steps.map(importStringtoJsonStep);
+    return steps.map(stringToJSONstep);
   }
 
   // Converts one stringified step into JSON
-  function importStringtoJsonStep(str){
+  function stringToJSONstep(str){
     if(str.indexOf('(') === -1) { // if there are no settings specified
       var moduleName = str.substr(0);
-          stepSettings = "";
+      stepSettings = "";
     } else {
       var moduleName = str.substr(0, str.indexOf('('));
-          stepSettings = str.slice(str.indexOf('(') + 1, -1);
+      stepSettings = str.slice(str.indexOf('(') + 1, -1);
     }
 
     stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i){
       var settingName = current.substr(0, current.indexOf(':')),
-          settingValue = current.substr(current.indexOf(':') + 1);
+      settingValue = current.substr(current.indexOf(':') + 1);
       settingValue = settingValue.replace(/^\(/, '').replace(/\)$/, ''); // strip () at start/end
       settingValue = decodeURIComponent(settingValue);
       current = [
@@ -254,6 +259,27 @@ ImageSequencer = function ImageSequencer(options) {
       name : moduleName,
       options: stepSettings
     }
+  }
+
+  // imports a string into the sequencer steps
+  function importString(str){
+    let sequencer = this;
+    if(this.name != "ImageSequencer")
+      sequencer = this.sequencer;
+    var stepsFromString = stringToJSON(str);
+    stepsFromString.forEach(function eachStep(stepObj) {
+      sequencer.addSteps(stepObj.name,stepObj.options);
+    });
+  }
+
+  // imports a array of JSON steps into the sequencer steps
+  function importJSON(obj){
+    let sequencer = this;
+    if(this.name != "ImageSequencer")
+      sequencer = this.sequencer;
+    obj.forEach(function eachStep(stepObj) {
+      sequencer.addSteps(stepObj.name,stepObj.options);
+    });
   }
 
   return {
@@ -278,8 +304,11 @@ ImageSequencer = function ImageSequencer(options) {
     modulesInfo: modulesInfo,
     toString: toString,
     stepToString: stepToString,
-    importStringtoJson: importStringtoJson,
-    importStringtoJsonStep: importStringtoJsonStep,
+    toJSON: toJSON,
+    stringToJSON: stringToJSON,
+    stringToJSONstep: stringToJSONstep,
+    importString: importString,
+    importJSON: importJSON,
 
     //other functions
     log: log,

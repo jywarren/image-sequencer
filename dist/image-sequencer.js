@@ -47750,25 +47750,30 @@ ImageSequencer = function ImageSequencer(options) {
     return `${step.options.name}(${configurations})`;
   }
 
-  // Coverts stringified sequence into JSON
-  function importStringtoJson(str){
+  // exports the current sequence as an array of JSON steps
+  function toJSON(str){
+    return this.stringToJSON(this.toString());
+  }
+
+  // Coverts stringified sequence into an array of JSON steps
+  function stringToJSON(str){
     let steps = str.split(',');
-    return steps.map(importStringtoJsonStep);
+    return steps.map(stringToJSONstep);
   }
 
   // Converts one stringified step into JSON
-  function importStringtoJsonStep(str){
+  function stringToJSONstep(str){
     if(str.indexOf('(') === -1) { // if there are no settings specified
       var moduleName = str.substr(0);
-          stepSettings = "";
+      stepSettings = "";
     } else {
       var moduleName = str.substr(0, str.indexOf('('));
-          stepSettings = str.slice(str.indexOf('(') + 1, -1);
+      stepSettings = str.slice(str.indexOf('(') + 1, -1);
     }
 
     stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i){
       var settingName = current.substr(0, current.indexOf(':')),
-          settingValue = current.substr(current.indexOf(':') + 1);
+      settingValue = current.substr(current.indexOf(':') + 1);
       settingValue = settingValue.replace(/^\(/, '').replace(/\)$/, ''); // strip () at start/end
       settingValue = decodeURIComponent(settingValue);
       current = [
@@ -47783,6 +47788,27 @@ ImageSequencer = function ImageSequencer(options) {
       name : moduleName,
       options: stepSettings
     }
+  }
+
+  // imports a string into the sequencer steps
+  function importString(str){
+    let sequencer = this;
+    if(this.name != "ImageSequencer")
+      sequencer = this.sequencer;
+    var stepsFromString = stringToJSON(str);
+    stepsFromString.forEach(function eachStep(stepObj) {
+      sequencer.addSteps(stepObj.name,stepObj.options);
+    });
+  }
+
+  // imports a array of JSON steps into the sequencer steps
+  function importJSON(obj){
+    let sequencer = this;
+    if(this.name != "ImageSequencer")
+      sequencer = this.sequencer;
+    obj.forEach(function eachStep(stepObj) {
+      sequencer.addSteps(stepObj.name,stepObj.options);
+    });
   }
 
   return {
@@ -47807,8 +47833,11 @@ ImageSequencer = function ImageSequencer(options) {
     modulesInfo: modulesInfo,
     toString: toString,
     stepToString: stepToString,
-    importStringtoJson: importStringtoJson,
-    importStringtoJsonStep: importStringtoJsonStep,
+    toJSON: toJSON,
+    stringToJSON: stringToJSON,
+    stringToJSONstep: stringToJSONstep,
+    importString: importString,
+    importJSON: importJSON,
 
     //other functions
     log: log,
@@ -49584,17 +49613,17 @@ module.exports={
 
 },{}],170:[function(require,module,exports){
 /*
- * Import Image module; this fetches a given remote or local image via URL 
- * or data-url, and overwrites the current one. It saves the original as 
+ * Import Image module; this fetches a given remote or local image via URL
+ * or data-url, and overwrites the current one. It saves the original as
  * step.metadata.input for use in future modules such as blending.
  * TODO: we could accept an operation for blending like "screen" or "overlay",
  * or a function with blend(r1,g1,b1,a1,r2,g2,b2,a2), OR we could simply allow
- * subsequent modules to do this blending and keep this one simple. 
+ * subsequent modules to do this blending and keep this one simple.
  */
 module.exports = function ImportImageModule(options, UI) {
 
   options = options || {};
-  options.imageUrl = options.url || "/examples/images/monarch.png";
+  options.imageUrl = options.url || "./images/monarch.png";
 
   var output,
       imgObj = new Image();

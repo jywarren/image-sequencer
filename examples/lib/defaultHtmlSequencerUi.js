@@ -14,10 +14,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     var hash = getUrlHashParameter("steps");
 
     if (hash) {
-      var stepsFromHash = _sequencer.importStringtoJson(hash);
-      stepsFromHash.forEach(function eachStep(stepObj) {
-        _sequencer.addSteps(stepObj.name,stepObj.options);
-      });
+      _sequencer.importString(hash);
       _sequencer.run();
     }
     setUrlHashParameter("steps", sequencer.toString());
