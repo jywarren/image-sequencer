@@ -27,7 +27,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function removeStepUi() {
     var index = $(removeStepSel).index(this) + 1;
-    sequencer.removeSteps(index).run({index : sequencer.images.image1.steps.length-1});
+    sequencer.removeSteps(index).run({index : index-1});
     // remove from URL hash too
     setUrlHashParameter("steps", sequencer.toString());
   }
