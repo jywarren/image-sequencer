@@ -1,6 +1,6 @@
 const getStepUtils = require('./util/getStep.js');
 
-function Run(ref, json_q, callback, progressObj) {
+function Run(ref, json_q, callback,ind, progressObj) {
   if (!progressObj) progressObj = { stop: function () { } };
   
   function drawStep(drawarray, pos) {
@@ -53,7 +53,7 @@ function Run(ref, json_q, callback, progressObj) {
         drawarray.push({ image: image, i: init + i });
       }
     }
-    drawStep(drawarray, 0);
+    drawStep(drawarray, ind);
   }
   
   function filter(json_q) {

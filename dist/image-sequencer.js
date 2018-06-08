@@ -47644,11 +47644,21 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
-  function run(spinnerObj,t_image,t_from) {
-    let progressObj;
-    if(arguments[0] != 'test'){
-      progressObj = spinnerObj
-      delete arguments['0']
+  // Config is an object which contains the runtime configuration like progress bar
+  // information and index from which the sequencer should run
+  function run(config,t_image,t_from) {
+    let progressObj,index=0;
+    config = config || {mode: 'no-arg'};
+    if(config.index) index = config.index;
+
+    if(config.mode != 'test'){
+      if(config.mode != "no-arg" && typeof config != 'function'){
+        if(config.progressObj) progressObj = config.progressObj;
+        delete arguments['0'];
+      }
+    }
+    else{
+      arguments['0'] = config.mode;
     }
 
     var this_ = (this.name == "ImageSequencer")?this:this.sequencer;
@@ -47662,7 +47672,7 @@ ImageSequencer = function ImageSequencer(options) {
 
     var json_q = formatInput.call(this_,args,"r");
 
-    require('./Run')(this_, json_q, callback,progressObj);
+    require('./Run')(this_, json_q, callback,index,progressObj);
 
     return true;
   }
@@ -47794,7 +47804,7 @@ ImageSequencer = function ImageSequencer(options) {
   function importString(str){
     let sequencer = this;
     if(this.name != "ImageSequencer")
-      sequencer = this.sequencer;
+    sequencer = this.sequencer;
     var stepsFromString = stringToJSON(str);
     stepsFromString.forEach(function eachStep(stepObj) {
       sequencer.addSteps(stepObj.name,stepObj.options);
@@ -47805,7 +47815,7 @@ ImageSequencer = function ImageSequencer(options) {
   function importJSON(obj){
     let sequencer = this;
     if(this.name != "ImageSequencer")
-      sequencer = this.sequencer;
+    sequencer = this.sequencer;
     obj.forEach(function eachStep(stepObj) {
       sequencer.addSteps(stepObj.name,stepObj.options);
     });
@@ -48003,7 +48013,7 @@ module.exports = ReplaceImage;
 },{}],142:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
-function Run(ref, json_q, callback, progressObj) {
+function Run(ref, json_q, callback,ind, progressObj) {
   if (!progressObj) progressObj = { stop: function () { } };
   
   function drawStep(drawarray, pos) {
@@ -48056,7 +48066,7 @@ function Run(ref, json_q, callback, progressObj) {
         drawarray.push({ image: image, i: init + i });
       }
     }
-    drawStep(drawarray, 0);
+    drawStep(drawarray, ind);
   }
   
   function filter(json_q) {

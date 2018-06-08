@@ -204,12 +204,34 @@ modules.
 sequencer.run();
 ```
 
-Additionally, an optional callback can be passed to this method.
+Sequencer can be run with a custom config object
 
 ```js
-sequencer.run(function(out){
+// The config object enables custom progress bars in node environment and
+// ability to run the sequencer from a particular index(of the steps array)
+
+sequencer.run(config);
+
+```
+
+The config object can have the following keys
+
+```js
+config: {
+  progressObj: , //A custom object to handle progress bar
+  index: //Index to run the sequencer from (defaults to 0)
+}
+```
+
+Additionally, an optional callback function can be passed to this method.
+
+```js
+sequencer.run(function callback(out){
   // this gets called back.
   // "out" is the DataURL of the final image.
+});
+sequencer.run(config,function callback(out){
+  // the callback is supported with all types of invocations
 });
 ```
 

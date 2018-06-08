@@ -131,7 +131,7 @@ sequencer.loadImages(program.image, function() {
       spinnerObj = Spinner("Your Image is being processed..").start();
 
     // Run the sequencer.
-    sequencer.run(spinnerObj, function() {
+    sequencer.run({progressObj: spinnerObj}, function() {
       // Export all images or final image as binary files.
       sequencer.exportBin(program.output, program.basic);
 
