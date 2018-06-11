@@ -31,7 +31,7 @@ window.onload = function() {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
       step.output.src = reader.result;
-      sequencer.run(0);
+      sequencer.run({index:0});
       step.options.step.imgElement.src = reader.result;
     }
   });
