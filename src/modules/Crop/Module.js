@@ -15,12 +15,7 @@
  */
 module.exports = function CropModule(options, UI) {
 
-  // TODO: we could also set this to {} if nil in AddModule.js to avoid this line:
-  options = options || {};
-
-  // Tell the UI that a step has been added
-  UI.onSetup(options.step); // we should get UI to return the image thumbnail so we can attach our own UI extensions
-
+  // we should get UI to return the image thumbnail so we can attach our own UI extensions
   // add our custom in-module html ui:
   if (options.step.inBrowser) var ui = require('./Ui.js')(options.step, UI);
   var output,
@@ -29,11 +24,9 @@ module.exports = function CropModule(options, UI) {
   // This function is caled everytime the step has to be redrawn
   function draw(input,callback) {
 
-    // Tell the UI that the step has been triggered
-    UI.onDraw(options.step);
     var step = this;
 
-    // save the input image; 
+    // save the input image;
     // TODO: this should be moved to module API to persist the input image
     options.step.input = input.src;
 

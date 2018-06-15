@@ -3,17 +3,11 @@
  */
 module.exports = function DoNothing(options,UI) {
 
-  options = options || {};
   var output;
 
-  // Tell the UI that a step has been set up.
-  UI.onSetup(options.step);
   require('fisheyegl');
 
   function draw(input,callback) {
-
-    // Tell the UI that the step is being drawn
-    UI.onDraw(options.step);
 
     var step = this;
 
@@ -59,13 +53,9 @@ module.exports = function DoNothing(options,UI) {
         // this output is accessible to Image Sequencer
         step.output = {src: canvas.toDataURL(), format: input.format};
 
-        // This output is accessible to the UI
-        options.step.output = step.output.src;
-
         // Tell Image Sequencer and UI that step has been drawn
         callback();
-        UI.onComplete(options.step);
-        
+
       });
 
     }

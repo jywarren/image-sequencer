@@ -1,9 +1,5 @@
 module.exports = function Colormap(options,UI) {
 
-  options = options || {};
-
-  // Tell the UI that a step has been set up.
-  UI.onSetup(options.step);
   var output;
 
   // This function is called on every draw.
@@ -12,8 +8,6 @@ module.exports = function Colormap(options,UI) {
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    // Tell the UI that the step is being drawn
-    UI.onDraw(options.step);
     var step = this;
 
     function changePixel(r, g, b, a) {
@@ -26,12 +20,6 @@ module.exports = function Colormap(options,UI) {
 
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
-
-      // This output is accessible by the UI
-      options.step.output = datauri;
-
-      // Tell the UI that the draw is complete
-      UI.onComplete(options.step);
 
     }
     return require('../_nomodule/PixelManipulation.js')(input, {

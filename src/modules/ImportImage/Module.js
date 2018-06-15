@@ -8,14 +8,12 @@
  */
 module.exports = function ImportImageModule(options, UI) {
 
-  options = options || {};
   options.imageUrl = options.url || "./images/monarch.png";
 
   var output,
       imgObj = new Image();
 
-  // Tell the UI that a step has been added
-  UI.onSetup(options.step); // we should get UI to return the image thumbnail so we can attach our own UI extensions
+  // we should get UI to return the image thumbnail so we can attach our own UI extensions
 
   // add our custom in-module html ui:
   if (options.step.inBrowser) {
@@ -26,8 +24,6 @@ module.exports = function ImportImageModule(options, UI) {
   // This function is caled everytime the step has to be redrawn
   function draw(input,callback) {
 
-    // Tell the UI that the step has been triggered
-    UI.onDraw(options.step);
     var step = this;
 
     step.metadata = step.metadata || {};
@@ -42,12 +38,6 @@ module.exports = function ImportImageModule(options, UI) {
         src: imgObj.src,
         format: options.format
       }
-
-      // This output is accessible to the UI
-      options.step.output = imgObj.src;
- 
-      // Tell the UI that the step has been drawn
-      UI.onComplete(options.step);
 
       // Tell Image Sequencer that step has been drawn
       callback();

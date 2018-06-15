@@ -3,11 +3,8 @@
  */
 module.exports = function Ndvi(options,UI) {
 
-  options = options || {};
   options.filter = options.filter || "red";
 
-  // Tell the UI that a step has been set up.
-  UI.onSetup(options.step);
   var output;
 
   // The function which is called on every draw.
@@ -16,8 +13,6 @@ module.exports = function Ndvi(options,UI) {
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    // Tell the UI that a step is being drawn.
-    UI.onDraw(options.step);
     var step = this;
 
     function changePixel(r, g, b, a) {
@@ -32,13 +27,8 @@ module.exports = function Ndvi(options,UI) {
       // This output is accessible by Image Sequencer
       step.output = {src:datauri,format:mimetype};
 
-      // This output is accessible by the UI.
-      options.step.output = datauri;
-
-      // Tell the UI that step has been drawn succesfully.
-      UI.onComplete(options.step);
     }
-    
+
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
       changePixel: changePixel,

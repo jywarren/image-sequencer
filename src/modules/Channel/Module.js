@@ -3,11 +3,8 @@
  */
 module.exports = function Channel(options,UI) {
 
-  options = options || {};
   options.channel = options.channel || "green";
 
-  // Tell UI that a step has been set up
-  UI.onSetup(options.step);
   var output;
 
   function draw(input,callback,progressObj) {
@@ -15,8 +12,6 @@ module.exports = function Channel(options,UI) {
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
-    // Tell UI that a step is being drawn
-    UI.onDraw(options.step);
     var step = this;
 
     function changePixel(r, g, b, a) {
@@ -30,11 +25,6 @@ module.exports = function Channel(options,UI) {
       // This output is accesible by Image Sequencer
       step.output = {src:datauri,format:mimetype};
 
-      // This output is accessible by UI
-      options.step.output = datauri;
-
-      // Tell UI that step ahs been drawn
-      UI.onComplete(options.step);
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

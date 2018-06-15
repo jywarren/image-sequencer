@@ -2,30 +2,24 @@
 * Average all pixel colors
 */
 module.exports = function Average(options, UI){
-    options = options || {};
+
     options.blur = options.blur || 2
-    
-    //Tell the UI that a step has been set up
-    UI.onSetup(options.step);
     var output;
 
     options.step.metadata = options.step.metadata || {};
-    
+
     function draw(input,callback,progressObj){
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
-        
-        // Tell the UI that a step is being drawn
-        UI.onDraw(options.step);
-        
+
         var step = this;
-        
+
         function changePixel(r, g, b, a){
             return [r,g,b,a]
         }
 
-        // do the averaging        
+        // do the averaging
         function extraManipulation(pixels){
             var sum = [0,0,0,0];
             for (var i = 0; i < pixels.data.length; i += 4) {
@@ -55,20 +49,14 @@ module.exports = function Average(options, UI){
         }
 
         function output(image, datauri, mimetype){
-            
+
             // This output is accessible by Image Sequencer
             step.output = {
               src: datauri,
               format: mimetype
             };
-            
-            // This output is accessible by UI
-            options.step.output = datauri;
-            
-            // Tell UI that step has been drawn.
-            UI.onComplete(options.step);
         }
-        
+
         return require('../_nomodule/PixelManipulation.js')(input, {
             output: output,
             changePixel: changePixel,
@@ -77,7 +65,7 @@ module.exports = function Average(options, UI){
             image: options.image,
             callback: callback
         });
-        
+
     }
     return {
         options: options,

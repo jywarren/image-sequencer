@@ -4,7 +4,7 @@ module.exports = function CropModuleUi(step, ui) {
   let inputWidth = 0,
       inputHeight = 0;
 
-  // We don't have input image dimensions at the 
+  // We don't have input image dimensions at the
   // time of setting up the UI; that comes when draw() is triggered.
   // So we trigger setup only on first run of draw()
   // TODO: link this to an event rather than an explicit call in Module.js
@@ -13,7 +13,7 @@ module.exports = function CropModuleUi(step, ui) {
         y = 0;
 
     // display original uncropped input image on initial setup
-    showOriginal()
+    showOriginal();
 
     inputWidth = Math.floor(imgEl().naturalWidth);
     inputHeight = Math.floor(imgEl().naturalHeight);

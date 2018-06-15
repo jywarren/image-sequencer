@@ -1,4 +1,4 @@
-// add steps to the sequencer 
+// add steps to the sequencer
 // TODO: reduce redundancy with InsertStep; this should be a specific usage of InsertStep at the final position
 function AddStep(_sequencer, image, name, o) {
 
@@ -25,7 +25,12 @@ function AddStep(_sequencer, image, name, o) {
       options: o
     };
     var UI = _sequencer.events;
+
+    // Tell UI that a step has been set up.
+    o = o || {};
+    UI.onSetup(o.step);
     var module = _sequencer.modules[name][0](o, UI);
+
     _sequencer.images[image].steps.push(module);
 
     return true;

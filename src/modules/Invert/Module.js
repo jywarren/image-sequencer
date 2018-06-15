@@ -3,10 +3,6 @@
  */
 module.exports = function Invert(options, UI) {
 
-  options = options || {};
-
-  // Tell UI that a step has been set up.
-  UI.onSetup(options.step);
   var output;
 
   // The function which is called on every draw.
@@ -14,8 +10,6 @@ module.exports = function Invert(options, UI) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
-    // Tell UI that a step is being drawn.
-    UI.onDraw(options.step);
 
     var step = this;
 
@@ -28,11 +22,6 @@ module.exports = function Invert(options, UI) {
       // This output is accessible by Image Sequencer
       step.output = { src: datauri, format: mimetype };
 
-      // This output is accessible by UI
-      options.step.output = datauri;
-
-      // Tell UI that step has been drawn.
-      UI.onComplete(options.step);
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {

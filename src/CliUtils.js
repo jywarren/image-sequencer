@@ -2,7 +2,7 @@ const fs = require('fs')
 
 
 
-/* 
+/*
 * This function checks if the directory exists, if not it creates one on the given path
 * Callback is called with argument error if an error is encountered
 */

@@ -7,8 +7,8 @@ module.exports = function Crop(input,options,callback) {
   options.y = parseInt(options.y) || 0;
 
   getPixels(input.src,function(err,pixels){
-    options.w = parseInt(options.w) || Math.floor(0.5*pixels.shape[0]);
-    options.h = parseInt(options.h) || Math.floor(0.5*pixels.shape[1]);
+    options.w = parseInt(options.w) || Math.floor(pixels.shape[0]);
+    options.h = parseInt(options.h) || Math.floor(pixels.shape[1]);
     var ox = options.x;
     var oy = options.y;
     var w = options.w;
