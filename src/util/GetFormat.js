@@ -24,6 +24,17 @@ module.exports = function GetFormat(src) {
 
   if (format === "jpeg") format = "jpg";
 
-  return format;
+  function validateFormat(data){
+    let supportedFormats = [
+      'jpg',
+      'jpeg',
+      'png',
+      'gif',
+      'canvas',
+    ];
+    return supportedFormats.includes(data);
+  }
+
+  return validateFormat(format)?format:'jpg';
 
 }
