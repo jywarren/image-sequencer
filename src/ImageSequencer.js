@@ -47,6 +47,7 @@ ImageSequencer = function ImageSequencer(options) {
     fs = require('fs');
 
 
+
   if (options.inBrowser) {
     for (o in sequencer) {
       modules[o] = sequencer[o];
@@ -200,8 +201,8 @@ ImageSequencer = function ImageSequencer(options) {
     this.events = require('./ui/UserInterface')(UI);
   }
 
-  var exportBin = function(dir, basic) {
-    return require('./ExportBin')(dir, this, basic);
+  var exportBin = function(dir, basic, filename) {
+    return require('./ExportBin')(dir, this, basic, filename);
   }
 
   function modulesInfo(name) {

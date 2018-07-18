@@ -60,6 +60,14 @@ sequencer.loadImages(program.image, function() {
   );
 
   //Generate the Output Directory
+  var outputFilename = program.output.split('/').slice(-1)[0];
+  if (outputFilename.includes('.')) {
+    // user did give an output filename we have to remove it from dir
+    program.output = program.output.split('/').slice(0, -1).join('/');
+  }
+  else {
+    outputFilename = null;
+  }
   require("./src/CliUtils").makedir(program.output, () => {
     console.log('Files will be exported to "' + program.output + '"');
 
@@ -81,9 +89,9 @@ sequencer.loadImages(program.image, function() {
         // The extra 4 that makes it (length + 5) is to account for the []: characters
         console.log(
           new Array(step.length + 5).join(" ") +
-            input +
-            ": " +
-            options[input].desc
+          input +
+          ": " +
+          options[input].desc
         );
       });
 
@@ -110,14 +118,14 @@ sequencer.loadImages(program.image, function() {
         Object.keys(options).forEach(function(input) {
           var value = readlineSync.question(
             "[" +
-              step +
-              "]: Enter a value for " +
-              input +
-              " (" +
-              options[input].type +
-              ", default: " +
-              options[input].default +
-              "): "
+            step +
+            "]: Enter a value for " +
+            input +
+            " (" +
+            options[input].type +
+            ", default: " +
+            options[input].default +
+            "): "
           );
           options[input] = value;
         });
@@ -126,14 +134,14 @@ sequencer.loadImages(program.image, function() {
       sequencer.addSteps(step, options);
     });
 
-    var spinnerObj = { succeed: () => {}, stop: () => {} };
+    var spinnerObj = { succeed: () => { }, stop: () => { } };
     if (!process.env.TEST)
       spinnerObj = Spinner("Your Image is being processed..").start();
 
     // Run the sequencer.
-    sequencer.run({progressObj: spinnerObj}, function() {
+    sequencer.run({ progressObj: spinnerObj }, function() {
       // Export all images or final image as binary files.
-      sequencer.exportBin(program.output, program.basic);
+      sequencer.exportBin(program.output, program.basic, outputFilename);
 
       //check if spinner was not overriden stop it
       if (!spinnerObj.overrideFlag) {
@@ -169,7 +177,7 @@ function validateConfig(config_, options_) {
           console.error(
             "\x1b[31m%s\x1b[0m",
             `Options Object does not have the required details "${
-              options_[input]
+            options_[input]
             }" not specified. Fallback case activated`
           );
           return false;
