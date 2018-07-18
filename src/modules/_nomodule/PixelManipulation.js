@@ -3,6 +3,14 @@
 * accepting a changePixel() method to remix a pixel's channels
 */
 module.exports = function PixelManipulation(image, options) {
+
+  // To handle the case where pixelmanipulation is called on the input object itself
+  // like input.pixelManipulation(options)
+  if(arguments.length <= 1){
+    options = image;
+    image = this;
+  }
+
   options = options || {};
   options.changePixel =
     options.changePixel ||

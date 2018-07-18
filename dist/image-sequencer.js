@@ -2384,7 +2384,7 @@ var extractCodes = exports.extractCodes = function (buf) {
 }
 
 }).call(this,require('_process'))
-},{"./lib/encode":6,"_process":97,"stream":111,"tty":128}],6:[function(require,module,exports){
+},{"./lib/encode":6,"_process":98,"stream":112,"tty":129}],6:[function(require,module,exports){
 (function (Buffer){
 var encode = module.exports = function (xs) {
     function bytes (s) {
@@ -2455,7 +2455,7 @@ ContentStream.prototype._read = function (n) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"readable-stream":105,"util":134}],8:[function(require,module,exports){
+},{"buffer":4,"readable-stream":106,"util":135}],8:[function(require,module,exports){
 (function (Buffer){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -2566,7 +2566,7 @@ function objectToString(o) {
 }
 
 }).call(this,{"isBuffer":require("../../is-buffer/index.js")})
-},{"../../is-buffer/index.js":58}],9:[function(require,module,exports){
+},{"../../is-buffer/index.js":59}],9:[function(require,module,exports){
 "use strict"
 
 var createThunk = require("./lib/thunk.js")
@@ -3037,7 +3037,7 @@ function generateCWiseOp(proc, typesig) {
 }
 module.exports = generateCWiseOp
 
-},{"uniq":130}],11:[function(require,module,exports){
+},{"uniq":131}],11:[function(require,module,exports){
 "use strict"
 
 // The function below is called when constructing a cwise function object, and does the following:
@@ -3874,7 +3874,7 @@ module.exports = function getPixels(url, type, cb) {
   }
 }
 }).call(this,{"isBuffer":require("../is-buffer/index.js")},require('_process'))
-},{"../is-buffer/index.js":58,"_process":97,"data-uri-to-buffer":24,"ndarray":70,"ndarray-pack":68,"omggif":72,"path":74,"through":126}],24:[function(require,module,exports){
+},{"../is-buffer/index.js":59,"_process":98,"data-uri-to-buffer":24,"ndarray":71,"ndarray-pack":69,"omggif":73,"path":75,"through":127}],24:[function(require,module,exports){
 (function (Buffer){
 
 /**
@@ -4405,7 +4405,7 @@ GIFEncoder.ByteCapacitor = ByteCapacitor;
 module.exports = GIFEncoder;
 
 }).call(this,require("buffer").Buffer)
-},{"./LZWEncoder.js":26,"./TypedNeuQuant.js":27,"assert":36,"buffer":4,"events":43,"readable-stream":34,"util":134}],26:[function(require,module,exports){
+},{"./LZWEncoder.js":26,"./TypedNeuQuant.js":27,"assert":36,"buffer":4,"events":43,"readable-stream":34,"util":135}],26:[function(require,module,exports){
 /*
   LZWEncoder.js
 
@@ -5150,7 +5150,7 @@ function forEach (xs, f) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_readable":31,"./_stream_writable":33,"_process":97,"core-util-is":8,"inherits":56}],30:[function(require,module,exports){
+},{"./_stream_readable":31,"./_stream_writable":33,"_process":98,"core-util-is":8,"inherits":57}],30:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -5198,7 +5198,7 @@ PassThrough.prototype._transform = function(chunk, encoding, cb) {
   cb(null, chunk);
 };
 
-},{"./_stream_transform":32,"core-util-is":8,"inherits":56}],31:[function(require,module,exports){
+},{"./_stream_transform":32,"core-util-is":8,"inherits":57}],31:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6153,7 +6153,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":29,"_process":97,"buffer":4,"core-util-is":8,"events":43,"inherits":56,"isarray":28,"stream":111,"string_decoder/":35,"util":3}],32:[function(require,module,exports){
+},{"./_stream_duplex":29,"_process":98,"buffer":4,"core-util-is":8,"events":43,"inherits":57,"isarray":28,"stream":112,"string_decoder/":35,"util":3}],32:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -6364,7 +6364,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":29,"core-util-is":8,"inherits":56}],33:[function(require,module,exports){
+},{"./_stream_duplex":29,"core-util-is":8,"inherits":57}],33:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -6845,7 +6845,7 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":29,"_process":97,"buffer":4,"core-util-is":8,"inherits":56,"stream":111}],34:[function(require,module,exports){
+},{"./_stream_duplex":29,"_process":98,"buffer":4,"core-util-is":8,"inherits":57,"stream":112}],34:[function(require,module,exports){
 (function (process){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = require('stream');
@@ -6859,7 +6859,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":29,"./lib/_stream_passthrough.js":30,"./lib/_stream_readable.js":31,"./lib/_stream_transform.js":32,"./lib/_stream_writable.js":33,"_process":97,"stream":111}],35:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":29,"./lib/_stream_passthrough.js":30,"./lib/_stream_readable.js":31,"./lib/_stream_transform.js":32,"./lib/_stream_writable.js":33,"_process":98,"stream":112}],35:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -8198,7 +8198,7 @@ function hasOwnProperty(obj, prop) {
 }
 
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./support/isBuffer":38,"_process":97,"inherits":37}],40:[function(require,module,exports){
+},{"./support/isBuffer":38,"_process":98,"inherits":37}],40:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 /* eslint camelcase: "off" */
@@ -8610,7 +8610,7 @@ Zlib.prototype._reset = function () {
 
 exports.Zlib = Zlib;
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":97,"assert":36,"buffer":4,"pako/lib/zlib/constants":46,"pako/lib/zlib/deflate.js":48,"pako/lib/zlib/inflate.js":50,"pako/lib/zlib/zstream":54}],41:[function(require,module,exports){
+},{"_process":98,"assert":36,"buffer":4,"pako/lib/zlib/constants":46,"pako/lib/zlib/deflate.js":48,"pako/lib/zlib/inflate.js":50,"pako/lib/zlib/zstream":54}],41:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -9222,7 +9222,7 @@ util.inherits(DeflateRaw, Zlib);
 util.inherits(InflateRaw, Zlib);
 util.inherits(Unzip, Zlib);
 }).call(this,require('_process'))
-},{"./binding":40,"_process":97,"assert":36,"buffer":4,"stream":111,"util":134}],42:[function(require,module,exports){
+},{"./binding":40,"_process":98,"assert":36,"buffer":4,"stream":112,"util":135}],42:[function(require,module,exports){
 arguments[4][3][0].apply(exports,arguments)
 },{"dup":3}],43:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
@@ -15558,8 +15558,60 @@ exports.write = function (buffer, value, offset, isLE, mLen, nBytes) {
 }
 
 },{}],56:[function(require,module,exports){
+/*
+ * Invert the image
+ */
+function Invert(options, UI) {
+
+  var output;
+
+  // The function which is called on every draw.
+  function draw(input, callback, progressObj) {
+
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
+
+    var step = this;
+
+    function changePixel(r, g, b, a) {
+      return [255 - r, 255 - g, 255 - b, a];
+    }
+
+    function output(image, datauri, mimetype) {
+
+      // This output is accessible by Image Sequencer
+      step.output = { src: datauri, format: mimetype };
+
+    }
+
+    return input.pixelManipulation({
+      output: output,
+      changePixel: changePixel,
+      format: input.format,
+      image: options.image,
+      inBrowser: options.inBrowser,
+      callback: callback
+    });
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
+}
+var info = {
+  "name": "Invert",
+  "description": "Inverts the image.",
+  "inputs": {
+  }
+}
+module.exports = [Invert,info];
+},{}],57:[function(require,module,exports){
 arguments[4][37][0].apply(exports,arguments)
-},{"dup":37}],57:[function(require,module,exports){
+},{"dup":37}],58:[function(require,module,exports){
 "use strict"
 
 function iota(n) {
@@ -15571,7 +15623,7 @@ function iota(n) {
 }
 
 module.exports = iota
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 /*!
  * Determine if an object is a Buffer
  *
@@ -15594,14 +15646,14 @@ function isSlowBuffer (obj) {
   return typeof obj.readFloatLE === 'function' && typeof obj.slice === 'function' && isBuffer(obj.slice(0, 0))
 }
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 var toString = {}.toString;
 
 module.exports = Array.isArray || function (arr) {
   return toString.call(arr) == '[object Array]';
 };
 
-},{}],60:[function(require,module,exports){
+},{}],61:[function(require,module,exports){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -18327,7 +18379,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 (function (global){
 /**
  * @license
@@ -35436,7 +35488,7 @@ return /******/ (function(modules) { // webpackBootstrap
 }.call(this));
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],62:[function(require,module,exports){
+},{}],63:[function(require,module,exports){
 (function (process){
 var path = require('path');
 var fs = require('fs');
@@ -35548,9 +35600,9 @@ mime.charsets = {
 module.exports = mime;
 
 }).call(this,require('_process'))
-},{"./types.json":63,"_process":97,"fs":42,"path":74}],63:[function(require,module,exports){
+},{"./types.json":64,"_process":98,"fs":42,"path":75}],64:[function(require,module,exports){
 module.exports={"application/andrew-inset":["ez"],"application/applixware":["aw"],"application/atom+xml":["atom"],"application/atomcat+xml":["atomcat"],"application/atomsvc+xml":["atomsvc"],"application/bdoc":["bdoc"],"application/ccxml+xml":["ccxml"],"application/cdmi-capability":["cdmia"],"application/cdmi-container":["cdmic"],"application/cdmi-domain":["cdmid"],"application/cdmi-object":["cdmio"],"application/cdmi-queue":["cdmiq"],"application/cu-seeme":["cu"],"application/dash+xml":["mpd"],"application/davmount+xml":["davmount"],"application/docbook+xml":["dbk"],"application/dssc+der":["dssc"],"application/dssc+xml":["xdssc"],"application/ecmascript":["ecma"],"application/emma+xml":["emma"],"application/epub+zip":["epub"],"application/exi":["exi"],"application/font-tdpfr":["pfr"],"application/font-woff":[],"application/font-woff2":[],"application/geo+json":["geojson"],"application/gml+xml":["gml"],"application/gpx+xml":["gpx"],"application/gxf":["gxf"],"application/gzip":["gz"],"application/hyperstudio":["stk"],"application/inkml+xml":["ink","inkml"],"application/ipfix":["ipfix"],"application/java-archive":["jar","war","ear"],"application/java-serialized-object":["ser"],"application/java-vm":["class"],"application/javascript":["js","mjs"],"application/json":["json","map"],"application/json5":["json5"],"application/jsonml+json":["jsonml"],"application/ld+json":["jsonld"],"application/lost+xml":["lostxml"],"application/mac-binhex40":["hqx"],"application/mac-compactpro":["cpt"],"application/mads+xml":["mads"],"application/manifest+json":["webmanifest"],"application/marc":["mrc"],"application/marcxml+xml":["mrcx"],"application/mathematica":["ma","nb","mb"],"application/mathml+xml":["mathml"],"application/mbox":["mbox"],"application/mediaservercontrol+xml":["mscml"],"application/metalink+xml":["metalink"],"application/metalink4+xml":["meta4"],"application/mets+xml":["mets"],"application/mods+xml":["mods"],"application/mp21":["m21","mp21"],"application/mp4":["mp4s","m4p"],"application/msword":["doc","dot"],"application/mxf":["mxf"],"application/octet-stream":["bin","dms","lrf","mar","so","dist","distz","pkg","bpk","dump","elc","deploy","exe","dll","deb","dmg","iso","img","msi","msp","msm","buffer"],"application/oda":["oda"],"application/oebps-package+xml":["opf"],"application/ogg":["ogx"],"application/omdoc+xml":["omdoc"],"application/onenote":["onetoc","onetoc2","onetmp","onepkg"],"application/oxps":["oxps"],"application/patch-ops-error+xml":["xer"],"application/pdf":["pdf"],"application/pgp-encrypted":["pgp"],"application/pgp-signature":["asc","sig"],"application/pics-rules":["prf"],"application/pkcs10":["p10"],"application/pkcs7-mime":["p7m","p7c"],"application/pkcs7-signature":["p7s"],"application/pkcs8":["p8"],"application/pkix-attr-cert":["ac"],"application/pkix-cert":["cer"],"application/pkix-crl":["crl"],"application/pkix-pkipath":["pkipath"],"application/pkixcmp":["pki"],"application/pls+xml":["pls"],"application/postscript":["ai","eps","ps"],"application/prs.cww":["cww"],"application/pskc+xml":["pskcxml"],"application/raml+yaml":["raml"],"application/rdf+xml":["rdf"],"application/reginfo+xml":["rif"],"application/relax-ng-compact-syntax":["rnc"],"application/resource-lists+xml":["rl"],"application/resource-lists-diff+xml":["rld"],"application/rls-services+xml":["rs"],"application/rpki-ghostbusters":["gbr"],"application/rpki-manifest":["mft"],"application/rpki-roa":["roa"],"application/rsd+xml":["rsd"],"application/rss+xml":["rss"],"application/rtf":["rtf"],"application/sbml+xml":["sbml"],"application/scvp-cv-request":["scq"],"application/scvp-cv-response":["scs"],"application/scvp-vp-request":["spq"],"application/scvp-vp-response":["spp"],"application/sdp":["sdp"],"application/set-payment-initiation":["setpay"],"application/set-registration-initiation":["setreg"],"application/shf+xml":["shf"],"application/smil+xml":["smi","smil"],"application/sparql-query":["rq"],"application/sparql-results+xml":["srx"],"application/srgs":["gram"],"application/srgs+xml":["grxml"],"application/sru+xml":["sru"],"application/ssdl+xml":["ssdl"],"application/ssml+xml":["ssml"],"application/tei+xml":["tei","teicorpus"],"application/thraud+xml":["tfi"],"application/timestamped-data":["tsd"],"application/vnd.3gpp.pic-bw-large":["plb"],"application/vnd.3gpp.pic-bw-small":["psb"],"application/vnd.3gpp.pic-bw-var":["pvb"],"application/vnd.3gpp2.tcap":["tcap"],"application/vnd.3m.post-it-notes":["pwn"],"application/vnd.accpac.simply.aso":["aso"],"application/vnd.accpac.simply.imp":["imp"],"application/vnd.acucobol":["acu"],"application/vnd.acucorp":["atc","acutc"],"application/vnd.adobe.air-application-installer-package+zip":["air"],"application/vnd.adobe.formscentral.fcdt":["fcdt"],"application/vnd.adobe.fxp":["fxp","fxpl"],"application/vnd.adobe.xdp+xml":["xdp"],"application/vnd.adobe.xfdf":["xfdf"],"application/vnd.ahead.space":["ahead"],"application/vnd.airzip.filesecure.azf":["azf"],"application/vnd.airzip.filesecure.azs":["azs"],"application/vnd.amazon.ebook":["azw"],"application/vnd.americandynamics.acc":["acc"],"application/vnd.amiga.ami":["ami"],"application/vnd.android.package-archive":["apk"],"application/vnd.anser-web-certificate-issue-initiation":["cii"],"application/vnd.anser-web-funds-transfer-initiation":["fti"],"application/vnd.antix.game-component":["atx"],"application/vnd.apple.installer+xml":["mpkg"],"application/vnd.apple.mpegurl":["m3u8"],"application/vnd.apple.pkpass":["pkpass"],"application/vnd.aristanetworks.swi":["swi"],"application/vnd.astraea-software.iota":["iota"],"application/vnd.audiograph":["aep"],"application/vnd.blueice.multipass":["mpm"],"application/vnd.bmi":["bmi"],"application/vnd.businessobjects":["rep"],"application/vnd.chemdraw+xml":["cdxml"],"application/vnd.chipnuts.karaoke-mmd":["mmd"],"application/vnd.cinderella":["cdy"],"application/vnd.claymore":["cla"],"application/vnd.cloanto.rp9":["rp9"],"application/vnd.clonk.c4group":["c4g","c4d","c4f","c4p","c4u"],"application/vnd.cluetrust.cartomobile-config":["c11amc"],"application/vnd.cluetrust.cartomobile-config-pkg":["c11amz"],"application/vnd.commonspace":["csp"],"application/vnd.contact.cmsg":["cdbcmsg"],"application/vnd.cosmocaller":["cmc"],"application/vnd.crick.clicker":["clkx"],"application/vnd.crick.clicker.keyboard":["clkk"],"application/vnd.crick.clicker.palette":["clkp"],"application/vnd.crick.clicker.template":["clkt"],"application/vnd.crick.clicker.wordbank":["clkw"],"application/vnd.criticaltools.wbs+xml":["wbs"],"application/vnd.ctc-posml":["pml"],"application/vnd.cups-ppd":["ppd"],"application/vnd.curl.car":["car"],"application/vnd.curl.pcurl":["pcurl"],"application/vnd.dart":["dart"],"application/vnd.data-vision.rdz":["rdz"],"application/vnd.dece.data":["uvf","uvvf","uvd","uvvd"],"application/vnd.dece.ttml+xml":["uvt","uvvt"],"application/vnd.dece.unspecified":["uvx","uvvx"],"application/vnd.dece.zip":["uvz","uvvz"],"application/vnd.denovo.fcselayout-link":["fe_launch"],"application/vnd.dna":["dna"],"application/vnd.dolby.mlp":["mlp"],"application/vnd.dpgraph":["dpg"],"application/vnd.dreamfactory":["dfac"],"application/vnd.ds-keypoint":["kpxx"],"application/vnd.dvb.ait":["ait"],"application/vnd.dvb.service":["svc"],"application/vnd.dynageo":["geo"],"application/vnd.ecowin.chart":["mag"],"application/vnd.enliven":["nml"],"application/vnd.epson.esf":["esf"],"application/vnd.epson.msf":["msf"],"application/vnd.epson.quickanime":["qam"],"application/vnd.epson.salt":["slt"],"application/vnd.epson.ssf":["ssf"],"application/vnd.eszigno3+xml":["es3","et3"],"application/vnd.ezpix-album":["ez2"],"application/vnd.ezpix-package":["ez3"],"application/vnd.fdf":["fdf"],"application/vnd.fdsn.mseed":["mseed"],"application/vnd.fdsn.seed":["seed","dataless"],"application/vnd.flographit":["gph"],"application/vnd.fluxtime.clip":["ftc"],"application/vnd.framemaker":["fm","frame","maker","book"],"application/vnd.frogans.fnc":["fnc"],"application/vnd.frogans.ltf":["ltf"],"application/vnd.fsc.weblaunch":["fsc"],"application/vnd.fujitsu.oasys":["oas"],"application/vnd.fujitsu.oasys2":["oa2"],"application/vnd.fujitsu.oasys3":["oa3"],"application/vnd.fujitsu.oasysgp":["fg5"],"application/vnd.fujitsu.oasysprs":["bh2"],"application/vnd.fujixerox.ddd":["ddd"],"application/vnd.fujixerox.docuworks":["xdw"],"application/vnd.fujixerox.docuworks.binder":["xbd"],"application/vnd.fuzzysheet":["fzs"],"application/vnd.genomatix.tuxedo":["txd"],"application/vnd.geogebra.file":["ggb"],"application/vnd.geogebra.tool":["ggt"],"application/vnd.geometry-explorer":["gex","gre"],"application/vnd.geonext":["gxt"],"application/vnd.geoplan":["g2w"],"application/vnd.geospace":["g3w"],"application/vnd.gmx":["gmx"],"application/vnd.google-apps.document":["gdoc"],"application/vnd.google-apps.presentation":["gslides"],"application/vnd.google-apps.spreadsheet":["gsheet"],"application/vnd.google-earth.kml+xml":["kml"],"application/vnd.google-earth.kmz":["kmz"],"application/vnd.grafeq":["gqf","gqs"],"application/vnd.groove-account":["gac"],"application/vnd.groove-help":["ghf"],"application/vnd.groove-identity-message":["gim"],"application/vnd.groove-injector":["grv"],"application/vnd.groove-tool-message":["gtm"],"application/vnd.groove-tool-template":["tpl"],"application/vnd.groove-vcard":["vcg"],"application/vnd.hal+xml":["hal"],"application/vnd.handheld-entertainment+xml":["zmm"],"application/vnd.hbci":["hbci"],"application/vnd.hhe.lesson-player":["les"],"application/vnd.hp-hpgl":["hpgl"],"application/vnd.hp-hpid":["hpid"],"application/vnd.hp-hps":["hps"],"application/vnd.hp-jlyt":["jlt"],"application/vnd.hp-pcl":["pcl"],"application/vnd.hp-pclxl":["pclxl"],"application/vnd.hydrostatix.sof-data":["sfd-hdstx"],"application/vnd.ibm.minipay":["mpy"],"application/vnd.ibm.modcap":["afp","listafp","list3820"],"application/vnd.ibm.rights-management":["irm"],"application/vnd.ibm.secure-container":["sc"],"application/vnd.iccprofile":["icc","icm"],"application/vnd.igloader":["igl"],"application/vnd.immervision-ivp":["ivp"],"application/vnd.immervision-ivu":["ivu"],"application/vnd.insors.igm":["igm"],"application/vnd.intercon.formnet":["xpw","xpx"],"application/vnd.intergeo":["i2g"],"application/vnd.intu.qbo":["qbo"],"application/vnd.intu.qfx":["qfx"],"application/vnd.ipunplugged.rcprofile":["rcprofile"],"application/vnd.irepository.package+xml":["irp"],"application/vnd.is-xpr":["xpr"],"application/vnd.isac.fcs":["fcs"],"application/vnd.jam":["jam"],"application/vnd.jcp.javame.midlet-rms":["rms"],"application/vnd.jisp":["jisp"],"application/vnd.joost.joda-archive":["joda"],"application/vnd.kahootz":["ktz","ktr"],"application/vnd.kde.karbon":["karbon"],"application/vnd.kde.kchart":["chrt"],"application/vnd.kde.kformula":["kfo"],"application/vnd.kde.kivio":["flw"],"application/vnd.kde.kontour":["kon"],"application/vnd.kde.kpresenter":["kpr","kpt"],"application/vnd.kde.kspread":["ksp"],"application/vnd.kde.kword":["kwd","kwt"],"application/vnd.kenameaapp":["htke"],"application/vnd.kidspiration":["kia"],"application/vnd.kinar":["kne","knp"],"application/vnd.koan":["skp","skd","skt","skm"],"application/vnd.kodak-descriptor":["sse"],"application/vnd.las.las+xml":["lasxml"],"application/vnd.llamagraphics.life-balance.desktop":["lbd"],"application/vnd.llamagraphics.life-balance.exchange+xml":["lbe"],"application/vnd.lotus-1-2-3":["123"],"application/vnd.lotus-approach":["apr"],"application/vnd.lotus-freelance":["pre"],"application/vnd.lotus-notes":["nsf"],"application/vnd.lotus-organizer":["org"],"application/vnd.lotus-screencam":["scm"],"application/vnd.lotus-wordpro":["lwp"],"application/vnd.macports.portpkg":["portpkg"],"application/vnd.mcd":["mcd"],"application/vnd.medcalcdata":["mc1"],"application/vnd.mediastation.cdkey":["cdkey"],"application/vnd.mfer":["mwf"],"application/vnd.mfmp":["mfm"],"application/vnd.micrografx.flo":["flo"],"application/vnd.micrografx.igx":["igx"],"application/vnd.mif":["mif"],"application/vnd.mobius.daf":["daf"],"application/vnd.mobius.dis":["dis"],"application/vnd.mobius.mbk":["mbk"],"application/vnd.mobius.mqy":["mqy"],"application/vnd.mobius.msl":["msl"],"application/vnd.mobius.plc":["plc"],"application/vnd.mobius.txf":["txf"],"application/vnd.mophun.application":["mpn"],"application/vnd.mophun.certificate":["mpc"],"application/vnd.mozilla.xul+xml":["xul"],"application/vnd.ms-artgalry":["cil"],"application/vnd.ms-cab-compressed":["cab"],"application/vnd.ms-excel":["xls","xlm","xla","xlc","xlt","xlw"],"application/vnd.ms-excel.addin.macroenabled.12":["xlam"],"application/vnd.ms-excel.sheet.binary.macroenabled.12":["xlsb"],"application/vnd.ms-excel.sheet.macroenabled.12":["xlsm"],"application/vnd.ms-excel.template.macroenabled.12":["xltm"],"application/vnd.ms-fontobject":["eot"],"application/vnd.ms-htmlhelp":["chm"],"application/vnd.ms-ims":["ims"],"application/vnd.ms-lrm":["lrm"],"application/vnd.ms-officetheme":["thmx"],"application/vnd.ms-outlook":["msg"],"application/vnd.ms-pki.seccat":["cat"],"application/vnd.ms-pki.stl":["stl"],"application/vnd.ms-powerpoint":["ppt","pps","pot"],"application/vnd.ms-powerpoint.addin.macroenabled.12":["ppam"],"application/vnd.ms-powerpoint.presentation.macroenabled.12":["pptm"],"application/vnd.ms-powerpoint.slide.macroenabled.12":["sldm"],"application/vnd.ms-powerpoint.slideshow.macroenabled.12":["ppsm"],"application/vnd.ms-powerpoint.template.macroenabled.12":["potm"],"application/vnd.ms-project":["mpp","mpt"],"application/vnd.ms-word.document.macroenabled.12":["docm"],"application/vnd.ms-word.template.macroenabled.12":["dotm"],"application/vnd.ms-works":["wps","wks","wcm","wdb"],"application/vnd.ms-wpl":["wpl"],"application/vnd.ms-xpsdocument":["xps"],"application/vnd.mseq":["mseq"],"application/vnd.musician":["mus"],"application/vnd.muvee.style":["msty"],"application/vnd.mynfc":["taglet"],"application/vnd.neurolanguage.nlu":["nlu"],"application/vnd.nitf":["ntf","nitf"],"application/vnd.noblenet-directory":["nnd"],"application/vnd.noblenet-sealer":["nns"],"application/vnd.noblenet-web":["nnw"],"application/vnd.nokia.n-gage.data":["ngdat"],"application/vnd.nokia.n-gage.symbian.install":["n-gage"],"application/vnd.nokia.radio-preset":["rpst"],"application/vnd.nokia.radio-presets":["rpss"],"application/vnd.novadigm.edm":["edm"],"application/vnd.novadigm.edx":["edx"],"application/vnd.novadigm.ext":["ext"],"application/vnd.oasis.opendocument.chart":["odc"],"application/vnd.oasis.opendocument.chart-template":["otc"],"application/vnd.oasis.opendocument.database":["odb"],"application/vnd.oasis.opendocument.formula":["odf"],"application/vnd.oasis.opendocument.formula-template":["odft"],"application/vnd.oasis.opendocument.graphics":["odg"],"application/vnd.oasis.opendocument.graphics-template":["otg"],"application/vnd.oasis.opendocument.image":["odi"],"application/vnd.oasis.opendocument.image-template":["oti"],"application/vnd.oasis.opendocument.presentation":["odp"],"application/vnd.oasis.opendocument.presentation-template":["otp"],"application/vnd.oasis.opendocument.spreadsheet":["ods"],"application/vnd.oasis.opendocument.spreadsheet-template":["ots"],"application/vnd.oasis.opendocument.text":["odt"],"application/vnd.oasis.opendocument.text-master":["odm"],"application/vnd.oasis.opendocument.text-template":["ott"],"application/vnd.oasis.opendocument.text-web":["oth"],"application/vnd.olpc-sugar":["xo"],"application/vnd.oma.dd2+xml":["dd2"],"application/vnd.openofficeorg.extension":["oxt"],"application/vnd.openxmlformats-officedocument.presentationml.presentation":["pptx"],"application/vnd.openxmlformats-officedocument.presentationml.slide":["sldx"],"application/vnd.openxmlformats-officedocument.presentationml.slideshow":["ppsx"],"application/vnd.openxmlformats-officedocument.presentationml.template":["potx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":["xlsx"],"application/vnd.openxmlformats-officedocument.spreadsheetml.template":["xltx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.document":["docx"],"application/vnd.openxmlformats-officedocument.wordprocessingml.template":["dotx"],"application/vnd.osgeo.mapguide.package":["mgp"],"application/vnd.osgi.dp":["dp"],"application/vnd.osgi.subsystem":["esa"],"application/vnd.palm":["pdb","pqa","oprc"],"application/vnd.pawaafile":["paw"],"application/vnd.pg.format":["str"],"application/vnd.pg.osasli":["ei6"],"application/vnd.picsel":["efif"],"application/vnd.pmi.widget":["wg"],"application/vnd.pocketlearn":["plf"],"application/vnd.powerbuilder6":["pbd"],"application/vnd.previewsystems.box":["box"],"application/vnd.proteus.magazine":["mgz"],"application/vnd.publishare-delta-tree":["qps"],"application/vnd.pvi.ptid1":["ptid"],"application/vnd.quark.quarkxpress":["qxd","qxt","qwd","qwt","qxl","qxb"],"application/vnd.realvnc.bed":["bed"],"application/vnd.recordare.musicxml":["mxl"],"application/vnd.recordare.musicxml+xml":["musicxml"],"application/vnd.rig.cryptonote":["cryptonote"],"application/vnd.rim.cod":["cod"],"application/vnd.rn-realmedia":["rm"],"application/vnd.rn-realmedia-vbr":["rmvb"],"application/vnd.route66.link66+xml":["link66"],"application/vnd.sailingtracker.track":["st"],"application/vnd.seemail":["see"],"application/vnd.sema":["sema"],"application/vnd.semd":["semd"],"application/vnd.semf":["semf"],"application/vnd.shana.informed.formdata":["ifm"],"application/vnd.shana.informed.formtemplate":["itp"],"application/vnd.shana.informed.interchange":["iif"],"application/vnd.shana.informed.package":["ipk"],"application/vnd.simtech-mindmapper":["twd","twds"],"application/vnd.smaf":["mmf"],"application/vnd.smart.teacher":["teacher"],"application/vnd.solent.sdkm+xml":["sdkm","sdkd"],"application/vnd.spotfire.dxp":["dxp"],"application/vnd.spotfire.sfs":["sfs"],"application/vnd.stardivision.calc":["sdc"],"application/vnd.stardivision.draw":["sda"],"application/vnd.stardivision.impress":["sdd"],"application/vnd.stardivision.math":["smf"],"application/vnd.stardivision.writer":["sdw","vor"],"application/vnd.stardivision.writer-global":["sgl"],"application/vnd.stepmania.package":["smzip"],"application/vnd.stepmania.stepchart":["sm"],"application/vnd.sun.wadl+xml":["wadl"],"application/vnd.sun.xml.calc":["sxc"],"application/vnd.sun.xml.calc.template":["stc"],"application/vnd.sun.xml.draw":["sxd"],"application/vnd.sun.xml.draw.template":["std"],"application/vnd.sun.xml.impress":["sxi"],"application/vnd.sun.xml.impress.template":["sti"],"application/vnd.sun.xml.math":["sxm"],"application/vnd.sun.xml.writer":["sxw"],"application/vnd.sun.xml.writer.global":["sxg"],"application/vnd.sun.xml.writer.template":["stw"],"application/vnd.sus-calendar":["sus","susp"],"application/vnd.svd":["svd"],"application/vnd.symbian.install":["sis","sisx"],"application/vnd.syncml+xml":["xsm"],"application/vnd.syncml.dm+wbxml":["bdm"],"application/vnd.syncml.dm+xml":["xdm"],"application/vnd.tao.intent-module-archive":["tao"],"application/vnd.tcpdump.pcap":["pcap","cap","dmp"],"application/vnd.tmobile-livetv":["tmo"],"application/vnd.trid.tpt":["tpt"],"application/vnd.triscape.mxs":["mxs"],"application/vnd.trueapp":["tra"],"application/vnd.ufdl":["ufd","ufdl"],"application/vnd.uiq.theme":["utz"],"application/vnd.umajin":["umj"],"application/vnd.unity":["unityweb"],"application/vnd.uoml+xml":["uoml"],"application/vnd.vcx":["vcx"],"application/vnd.visio":["vsd","vst","vss","vsw"],"application/vnd.visionary":["vis"],"application/vnd.vsf":["vsf"],"application/vnd.wap.wbxml":["wbxml"],"application/vnd.wap.wmlc":["wmlc"],"application/vnd.wap.wmlscriptc":["wmlsc"],"application/vnd.webturbo":["wtb"],"application/vnd.wolfram.player":["nbp"],"application/vnd.wordperfect":["wpd"],"application/vnd.wqd":["wqd"],"application/vnd.wt.stf":["stf"],"application/vnd.xara":["xar"],"application/vnd.xfdl":["xfdl"],"application/vnd.yamaha.hv-dic":["hvd"],"application/vnd.yamaha.hv-script":["hvs"],"application/vnd.yamaha.hv-voice":["hvp"],"application/vnd.yamaha.openscoreformat":["osf"],"application/vnd.yamaha.openscoreformat.osfpvg+xml":["osfpvg"],"application/vnd.yamaha.smaf-audio":["saf"],"application/vnd.yamaha.smaf-phrase":["spf"],"application/vnd.yellowriver-custom-menu":["cmp"],"application/vnd.zul":["zir","zirz"],"application/vnd.zzazz.deck+xml":["zaz"],"application/voicexml+xml":["vxml"],"application/wasm":["wasm"],"application/widget":["wgt"],"application/winhlp":["hlp"],"application/wsdl+xml":["wsdl"],"application/wspolicy+xml":["wspolicy"],"application/x-7z-compressed":["7z"],"application/x-abiword":["abw"],"application/x-ace-compressed":["ace"],"application/x-apple-diskimage":[],"application/x-arj":["arj"],"application/x-authorware-bin":["aab","x32","u32","vox"],"application/x-authorware-map":["aam"],"application/x-authorware-seg":["aas"],"application/x-bcpio":["bcpio"],"application/x-bdoc":[],"application/x-bittorrent":["torrent"],"application/x-blorb":["blb","blorb"],"application/x-bzip":["bz"],"application/x-bzip2":["bz2","boz"],"application/x-cbr":["cbr","cba","cbt","cbz","cb7"],"application/x-cdlink":["vcd"],"application/x-cfs-compressed":["cfs"],"application/x-chat":["chat"],"application/x-chess-pgn":["pgn"],"application/x-chrome-extension":["crx"],"application/x-cocoa":["cco"],"application/x-conference":["nsc"],"application/x-cpio":["cpio"],"application/x-csh":["csh"],"application/x-debian-package":["udeb"],"application/x-dgc-compressed":["dgc"],"application/x-director":["dir","dcr","dxr","cst","cct","cxt","w3d","fgd","swa"],"application/x-doom":["wad"],"application/x-dtbncx+xml":["ncx"],"application/x-dtbook+xml":["dtb"],"application/x-dtbresource+xml":["res"],"application/x-dvi":["dvi"],"application/x-envoy":["evy"],"application/x-eva":["eva"],"application/x-font-bdf":["bdf"],"application/x-font-ghostscript":["gsf"],"application/x-font-linux-psf":["psf"],"application/x-font-pcf":["pcf"],"application/x-font-snf":["snf"],"application/x-font-type1":["pfa","pfb","pfm","afm"],"application/x-freearc":["arc"],"application/x-futuresplash":["spl"],"application/x-gca-compressed":["gca"],"application/x-glulx":["ulx"],"application/x-gnumeric":["gnumeric"],"application/x-gramps-xml":["gramps"],"application/x-gtar":["gtar"],"application/x-hdf":["hdf"],"application/x-httpd-php":["php"],"application/x-install-instructions":["install"],"application/x-iso9660-image":[],"application/x-java-archive-diff":["jardiff"],"application/x-java-jnlp-file":["jnlp"],"application/x-latex":["latex"],"application/x-lua-bytecode":["luac"],"application/x-lzh-compressed":["lzh","lha"],"application/x-makeself":["run"],"application/x-mie":["mie"],"application/x-mobipocket-ebook":["prc","mobi"],"application/x-ms-application":["application"],"application/x-ms-shortcut":["lnk"],"application/x-ms-wmd":["wmd"],"application/x-ms-wmz":["wmz"],"application/x-ms-xbap":["xbap"],"application/x-msaccess":["mdb"],"application/x-msbinder":["obd"],"application/x-mscardfile":["crd"],"application/x-msclip":["clp"],"application/x-msdos-program":[],"application/x-msdownload":["com","bat"],"application/x-msmediaview":["mvb","m13","m14"],"application/x-msmetafile":["wmf","emf","emz"],"application/x-msmoney":["mny"],"application/x-mspublisher":["pub"],"application/x-msschedule":["scd"],"application/x-msterminal":["trm"],"application/x-mswrite":["wri"],"application/x-netcdf":["nc","cdf"],"application/x-ns-proxy-autoconfig":["pac"],"application/x-nzb":["nzb"],"application/x-perl":["pl","pm"],"application/x-pilot":[],"application/x-pkcs12":["p12","pfx"],"application/x-pkcs7-certificates":["p7b","spc"],"application/x-pkcs7-certreqresp":["p7r"],"application/x-rar-compressed":["rar"],"application/x-redhat-package-manager":["rpm"],"application/x-research-info-systems":["ris"],"application/x-sea":["sea"],"application/x-sh":["sh"],"application/x-shar":["shar"],"application/x-shockwave-flash":["swf"],"application/x-silverlight-app":["xap"],"application/x-sql":["sql"],"application/x-stuffit":["sit"],"application/x-stuffitx":["sitx"],"application/x-subrip":["srt"],"application/x-sv4cpio":["sv4cpio"],"application/x-sv4crc":["sv4crc"],"application/x-t3vm-image":["t3"],"application/x-tads":["gam"],"application/x-tar":["tar"],"application/x-tcl":["tcl","tk"],"application/x-tex":["tex"],"application/x-tex-tfm":["tfm"],"application/x-texinfo":["texinfo","texi"],"application/x-tgif":["obj"],"application/x-ustar":["ustar"],"application/x-virtualbox-hdd":["hdd"],"application/x-virtualbox-ova":["ova"],"application/x-virtualbox-ovf":["ovf"],"application/x-virtualbox-vbox":["vbox"],"application/x-virtualbox-vbox-extpack":["vbox-extpack"],"application/x-virtualbox-vdi":["vdi"],"application/x-virtualbox-vhd":["vhd"],"application/x-virtualbox-vmdk":["vmdk"],"application/x-wais-source":["src"],"application/x-web-app-manifest+json":["webapp"],"application/x-x509-ca-cert":["der","crt","pem"],"application/x-xfig":["fig"],"application/x-xliff+xml":["xlf"],"application/x-xpinstall":["xpi"],"application/x-xz":["xz"],"application/x-zmachine":["z1","z2","z3","z4","z5","z6","z7","z8"],"application/xaml+xml":["xaml"],"application/xcap-diff+xml":["xdf"],"application/xenc+xml":["xenc"],"application/xhtml+xml":["xhtml","xht"],"application/xml":["xml","xsl","xsd","rng"],"application/xml-dtd":["dtd"],"application/xop+xml":["xop"],"application/xproc+xml":["xpl"],"application/xslt+xml":["xslt"],"application/xspf+xml":["xspf"],"application/xv+xml":["mxml","xhvml","xvml","xvm"],"application/yang":["yang"],"application/yin+xml":["yin"],"application/zip":["zip"],"audio/3gpp":[],"audio/adpcm":["adp"],"audio/basic":["au","snd"],"audio/midi":["mid","midi","kar","rmi"],"audio/mp3":[],"audio/mp4":["m4a","mp4a"],"audio/mpeg":["mpga","mp2","mp2a","mp3","m2a","m3a"],"audio/ogg":["oga","ogg","spx"],"audio/s3m":["s3m"],"audio/silk":["sil"],"audio/vnd.dece.audio":["uva","uvva"],"audio/vnd.digital-winds":["eol"],"audio/vnd.dra":["dra"],"audio/vnd.dts":["dts"],"audio/vnd.dts.hd":["dtshd"],"audio/vnd.lucent.voice":["lvp"],"audio/vnd.ms-playready.media.pya":["pya"],"audio/vnd.nuera.ecelp4800":["ecelp4800"],"audio/vnd.nuera.ecelp7470":["ecelp7470"],"audio/vnd.nuera.ecelp9600":["ecelp9600"],"audio/vnd.rip":["rip"],"audio/wav":["wav"],"audio/wave":[],"audio/webm":["weba"],"audio/x-aac":["aac"],"audio/x-aiff":["aif","aiff","aifc"],"audio/x-caf":["caf"],"audio/x-flac":["flac"],"audio/x-m4a":[],"audio/x-matroska":["mka"],"audio/x-mpegurl":["m3u"],"audio/x-ms-wax":["wax"],"audio/x-ms-wma":["wma"],"audio/x-pn-realaudio":["ram","ra"],"audio/x-pn-realaudio-plugin":["rmp"],"audio/x-realaudio":[],"audio/x-wav":[],"audio/xm":["xm"],"chemical/x-cdx":["cdx"],"chemical/x-cif":["cif"],"chemical/x-cmdf":["cmdf"],"chemical/x-cml":["cml"],"chemical/x-csml":["csml"],"chemical/x-xyz":["xyz"],"font/collection":["ttc"],"font/otf":["otf"],"font/ttf":["ttf"],"font/woff":["woff"],"font/woff2":["woff2"],"image/apng":["apng"],"image/bmp":["bmp"],"image/cgm":["cgm"],"image/g3fax":["g3"],"image/gif":["gif"],"image/ief":["ief"],"image/jp2":["jp2","jpg2"],"image/jpeg":["jpeg","jpg","jpe"],"image/jpm":["jpm"],"image/jpx":["jpx","jpf"],"image/ktx":["ktx"],"image/png":["png"],"image/prs.btif":["btif"],"image/sgi":["sgi"],"image/svg+xml":["svg","svgz"],"image/tiff":["tiff","tif"],"image/vnd.adobe.photoshop":["psd"],"image/vnd.dece.graphic":["uvi","uvvi","uvg","uvvg"],"image/vnd.djvu":["djvu","djv"],"image/vnd.dvb.subtitle":[],"image/vnd.dwg":["dwg"],"image/vnd.dxf":["dxf"],"image/vnd.fastbidsheet":["fbs"],"image/vnd.fpx":["fpx"],"image/vnd.fst":["fst"],"image/vnd.fujixerox.edmics-mmr":["mmr"],"image/vnd.fujixerox.edmics-rlc":["rlc"],"image/vnd.ms-modi":["mdi"],"image/vnd.ms-photo":["wdp"],"image/vnd.net-fpx":["npx"],"image/vnd.wap.wbmp":["wbmp"],"image/vnd.xiff":["xif"],"image/webp":["webp"],"image/x-3ds":["3ds"],"image/x-cmu-raster":["ras"],"image/x-cmx":["cmx"],"image/x-freehand":["fh","fhc","fh4","fh5","fh7"],"image/x-icon":["ico"],"image/x-jng":["jng"],"image/x-mrsid-image":["sid"],"image/x-ms-bmp":[],"image/x-pcx":["pcx"],"image/x-pict":["pic","pct"],"image/x-portable-anymap":["pnm"],"image/x-portable-bitmap":["pbm"],"image/x-portable-graymap":["pgm"],"image/x-portable-pixmap":["ppm"],"image/x-rgb":["rgb"],"image/x-tga":["tga"],"image/x-xbitmap":["xbm"],"image/x-xpixmap":["xpm"],"image/x-xwindowdump":["xwd"],"message/rfc822":["eml","mime"],"model/gltf+json":["gltf"],"model/gltf-binary":["glb"],"model/iges":["igs","iges"],"model/mesh":["msh","mesh","silo"],"model/vnd.collada+xml":["dae"],"model/vnd.dwf":["dwf"],"model/vnd.gdl":["gdl"],"model/vnd.gtw":["gtw"],"model/vnd.mts":["mts"],"model/vnd.vtu":["vtu"],"model/vrml":["wrl","vrml"],"model/x3d+binary":["x3db","x3dbz"],"model/x3d+vrml":["x3dv","x3dvz"],"model/x3d+xml":["x3d","x3dz"],"text/cache-manifest":["appcache","manifest"],"text/calendar":["ics","ifb"],"text/coffeescript":["coffee","litcoffee"],"text/css":["css"],"text/csv":["csv"],"text/hjson":["hjson"],"text/html":["html","htm","shtml"],"text/jade":["jade"],"text/jsx":["jsx"],"text/less":["less"],"text/markdown":["markdown","md"],"text/mathml":["mml"],"text/n3":["n3"],"text/plain":["txt","text","conf","def","list","log","in","ini"],"text/prs.lines.tag":["dsc"],"text/richtext":["rtx"],"text/rtf":[],"text/sgml":["sgml","sgm"],"text/slim":["slim","slm"],"text/stylus":["stylus","styl"],"text/tab-separated-values":["tsv"],"text/troff":["t","tr","roff","man","me","ms"],"text/turtle":["ttl"],"text/uri-list":["uri","uris","urls"],"text/vcard":["vcard"],"text/vnd.curl":["curl"],"text/vnd.curl.dcurl":["dcurl"],"text/vnd.curl.mcurl":["mcurl"],"text/vnd.curl.scurl":["scurl"],"text/vnd.dvb.subtitle":["sub"],"text/vnd.fly":["fly"],"text/vnd.fmi.flexstor":["flx"],"text/vnd.graphviz":["gv"],"text/vnd.in3d.3dml":["3dml"],"text/vnd.in3d.spot":["spot"],"text/vnd.sun.j2me.app-descriptor":["jad"],"text/vnd.wap.wml":["wml"],"text/vnd.wap.wmlscript":["wmls"],"text/vtt":["vtt"],"text/x-asm":["s","asm"],"text/x-c":["c","cc","cxx","cpp","h","hh","dic"],"text/x-component":["htc"],"text/x-fortran":["f","for","f77","f90"],"text/x-handlebars-template":["hbs"],"text/x-java-source":["java"],"text/x-lua":["lua"],"text/x-markdown":["mkd"],"text/x-nfo":["nfo"],"text/x-opml":["opml"],"text/x-org":[],"text/x-pascal":["p","pas"],"text/x-processing":["pde"],"text/x-sass":["sass"],"text/x-scss":["scss"],"text/x-setext":["etx"],"text/x-sfv":["sfv"],"text/x-suse-ymp":["ymp"],"text/x-uuencode":["uu"],"text/x-vcalendar":["vcs"],"text/x-vcard":["vcf"],"text/xml":[],"text/yaml":["yaml","yml"],"video/3gpp":["3gp","3gpp"],"video/3gpp2":["3g2"],"video/h261":["h261"],"video/h263":["h263"],"video/h264":["h264"],"video/jpeg":["jpgv"],"video/jpm":["jpgm"],"video/mj2":["mj2","mjp2"],"video/mp2t":["ts"],"video/mp4":["mp4","mp4v","mpg4"],"video/mpeg":["mpeg","mpg","mpe","m1v","m2v"],"video/ogg":["ogv"],"video/quicktime":["qt","mov"],"video/vnd.dece.hd":["uvh","uvvh"],"video/vnd.dece.mobile":["uvm","uvvm"],"video/vnd.dece.pd":["uvp","uvvp"],"video/vnd.dece.sd":["uvs","uvvs"],"video/vnd.dece.video":["uvv","uvvv"],"video/vnd.dvb.file":["dvb"],"video/vnd.fvt":["fvt"],"video/vnd.mpegurl":["mxu","m4u"],"video/vnd.ms-playready.media.pyv":["pyv"],"video/vnd.uvvu.mp4":["uvu","uvvu"],"video/vnd.vivo":["viv"],"video/webm":["webm"],"video/x-f4v":["f4v"],"video/x-fli":["fli"],"video/x-flv":["flv"],"video/x-m4v":["m4v"],"video/x-matroska":["mkv","mk3d","mks"],"video/x-mng":["mng"],"video/x-ms-asf":["asf","asx"],"video/x-ms-vob":["vob"],"video/x-ms-wm":["wm"],"video/x-ms-wmv":["wmv"],"video/x-ms-wmx":["wmx"],"video/x-ms-wvx":["wvx"],"video/x-msvideo":["avi"],"video/x-sgi-movie":["movie"],"video/x-smv":["smv"],"x-conference/x-cooltalk":["ice"]}
-},{}],64:[function(require,module,exports){
+},{}],65:[function(require,module,exports){
 'use strict'
 
 var ops = require('ndarray-ops')
@@ -35633,7 +35685,7 @@ function ndfft(dir, x, y) {
 }
 
 module.exports = ndfft
-},{"./lib/fft-matrix.js":65,"ndarray":70,"ndarray-ops":67,"typedarray-pool":129}],65:[function(require,module,exports){
+},{"./lib/fft-matrix.js":66,"ndarray":71,"ndarray-ops":68,"typedarray-pool":130}],66:[function(require,module,exports){
 var bits = require('bit-twiddle')
 
 function fft(dir, nrows, ncols, buffer, x_ptr, y_ptr, scratch_ptr) {
@@ -35852,7 +35904,7 @@ function fftBluestein(dir, nrows, ncols, buffer, x_ptr, y_ptr, scratch_ptr) {
   }
 }
 
-},{"bit-twiddle":2}],66:[function(require,module,exports){
+},{"bit-twiddle":2}],67:[function(require,module,exports){
 "use strict"
 
 module.exports = gaussBlur
@@ -35898,7 +35950,7 @@ function gaussBlur(arr, sigma, wrap) {
   pool.freeDouble(im)
   return arr
 }
-},{"cwise/lib/wrapper":12,"dup":14,"ndarray":70,"ndarray-fft":64,"ndarray-ops":67,"next-pow-2":71,"typedarray-pool":129}],67:[function(require,module,exports){
+},{"cwise/lib/wrapper":12,"dup":14,"ndarray":71,"ndarray-fft":65,"ndarray-ops":68,"next-pow-2":72,"typedarray-pool":130}],68:[function(require,module,exports){
 "use strict"
 
 var compile = require("cwise-compiler")
@@ -36361,7 +36413,7 @@ exports.equals = compile({
 
 
 
-},{"cwise-compiler":9}],68:[function(require,module,exports){
+},{"cwise-compiler":9}],69:[function(require,module,exports){
 "use strict"
 
 var ndarray = require("ndarray")
@@ -36384,10 +36436,10 @@ module.exports = function convert(arr, result) {
   return result
 }
 
-},{"./doConvert.js":69,"ndarray":70}],69:[function(require,module,exports){
+},{"./doConvert.js":70,"ndarray":71}],70:[function(require,module,exports){
 module.exports=require('cwise-compiler')({"args":["array","scalar","index"],"pre":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"body":{"body":"{\nvar _inline_1_v=_inline_1_arg1_,_inline_1_i\nfor(_inline_1_i=0;_inline_1_i<_inline_1_arg2_.length-1;++_inline_1_i) {\n_inline_1_v=_inline_1_v[_inline_1_arg2_[_inline_1_i]]\n}\n_inline_1_arg0_=_inline_1_v[_inline_1_arg2_[_inline_1_arg2_.length-1]]\n}","args":[{"name":"_inline_1_arg0_","lvalue":true,"rvalue":false,"count":1},{"name":"_inline_1_arg1_","lvalue":false,"rvalue":true,"count":1},{"name":"_inline_1_arg2_","lvalue":false,"rvalue":true,"count":4}],"thisVars":[],"localVars":["_inline_1_i","_inline_1_v"]},"post":{"body":"{}","args":[],"thisVars":[],"localVars":[]},"funcName":"convert","blockSize":64})
 
-},{"cwise-compiler":9}],70:[function(require,module,exports){
+},{"cwise-compiler":9}],71:[function(require,module,exports){
 var iota = require("iota-array")
 var isBuffer = require("is-buffer")
 
@@ -36732,7 +36784,7 @@ function wrappedNDArrayCtor(data, shape, stride, offset) {
 
 module.exports = wrappedNDArrayCtor
 
-},{"iota-array":57,"is-buffer":58}],71:[function(require,module,exports){
+},{"iota-array":58,"is-buffer":59}],72:[function(require,module,exports){
 module.exports = function(v) {
   v += v === 0
   --v
@@ -36744,7 +36796,7 @@ module.exports = function(v) {
   return v + 1
 }
 
-},{}],72:[function(require,module,exports){
+},{}],73:[function(require,module,exports){
 // (c) Dean McNamee <dean@gmail.com>, 2013.
 //
 // https://github.com/deanm/omggif
@@ -37553,7 +37605,7 @@ function GifReaderLZWOutputIndexStream(code_stream, p, output, output_length) {
 // CommonJS.
 try { exports.GifWriter = GifWriter; exports.GifReader = GifReader } catch(e) {}
 
-},{}],73:[function(require,module,exports){
+},{}],74:[function(require,module,exports){
 (function (process){
 /**
  * Pace
@@ -37827,7 +37879,7 @@ function formatNumber(number, decimals, dec_point, thousands_sep) {
 }
 
 }).call(this,require('_process'))
-},{"_process":97,"charm":5}],74:[function(require,module,exports){
+},{"_process":98,"charm":5}],75:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -38055,7 +38107,7 @@ var substr = 'ab'.substr(-1) === 'b'
 ;
 
 }).call(this,require('_process'))
-},{"_process":97}],75:[function(require,module,exports){
+},{"_process":98}],76:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -38251,7 +38303,7 @@ exports.dataToBitMap = function(data, bitmapInfo) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./interlace":85,"buffer":4}],76:[function(require,module,exports){
+},{"./interlace":86,"buffer":4}],77:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -38319,7 +38371,7 @@ module.exports = function(data, width, height, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":78,"buffer":4}],77:[function(require,module,exports){
+},{"./constants":79,"buffer":4}],78:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 
@@ -38532,7 +38584,7 @@ ChunkStream.prototype._process = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":97,"buffer":4,"stream":111,"util":134}],78:[function(require,module,exports){
+},{"_process":98,"buffer":4,"stream":112,"util":135}],79:[function(require,module,exports){
 'use strict';
 
 
@@ -38568,7 +38620,7 @@ module.exports = {
   GAMMA_DIVISION: 100000
 };
 
-},{}],79:[function(require,module,exports){
+},{}],80:[function(require,module,exports){
 'use strict';
 
 var crcTable = [];
@@ -38614,7 +38666,7 @@ CrcCalculator.crc32 = function(buf) {
   return crc ^ -1;
 };
 
-},{}],80:[function(require,module,exports){
+},{}],81:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -38801,7 +38853,7 @@ module.exports = function(pxData, width, height, options, bpp) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./paeth-predictor":89,"buffer":4}],81:[function(require,module,exports){
+},{"./paeth-predictor":90,"buffer":4}],82:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -38830,7 +38882,7 @@ var FilterAsync = module.exports = function(bitmapInfo) {
 util.inherits(FilterAsync, ChunkStream);
 
 }).call(this,require("buffer").Buffer)
-},{"./chunkstream":77,"./filter-parse":83,"buffer":4,"util":134}],82:[function(require,module,exports){
+},{"./chunkstream":78,"./filter-parse":84,"buffer":4,"util":135}],83:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -38857,7 +38909,7 @@ exports.process = function(inBuffer, bitmapInfo) {
   return Buffer.concat(outBuffers);
 };
 }).call(this,require("buffer").Buffer)
-},{"./filter-parse":83,"./sync-reader":95,"buffer":4}],83:[function(require,module,exports){
+},{"./filter-parse":84,"./sync-reader":96,"buffer":4}],84:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39032,7 +39084,7 @@ Filter.prototype._reverseFilterLine = function(rawData) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./interlace":85,"./paeth-predictor":89,"buffer":4}],84:[function(require,module,exports){
+},{"./interlace":86,"./paeth-predictor":90,"buffer":4}],85:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39125,7 +39177,7 @@ module.exports = function(indata, imageData) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4}],85:[function(require,module,exports){
+},{"buffer":4}],86:[function(require,module,exports){
 'use strict';
 
 // Adam 7
@@ -39213,7 +39265,7 @@ exports.getInterlaceIterator = function(width) {
     return (outerX * 4) + (outerY * width * 4);
   };
 };
-},{}],86:[function(require,module,exports){
+},{}],87:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39262,7 +39314,7 @@ PackerAsync.prototype.pack = function(data, width, height, gamma) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":78,"./packer":88,"buffer":4,"stream":111,"util":134}],87:[function(require,module,exports){
+},{"./constants":79,"./packer":89,"buffer":4,"stream":112,"util":135}],88:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39314,7 +39366,7 @@ module.exports = function(metaData, opt) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":78,"./packer":88,"buffer":4,"zlib":41}],88:[function(require,module,exports){
+},{"./constants":79,"./packer":89,"buffer":4,"zlib":41}],89:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39409,7 +39461,7 @@ Packer.prototype.packIEND = function() {
   return this._packChunk(constants.TYPE_IEND, null);
 };
 }).call(this,require("buffer").Buffer)
-},{"./bitpacker":76,"./constants":78,"./crc":79,"./filter-pack":80,"buffer":4,"zlib":41}],89:[function(require,module,exports){
+},{"./bitpacker":77,"./constants":79,"./crc":80,"./filter-pack":81,"buffer":4,"zlib":41}],90:[function(require,module,exports){
 'use strict';
 
 module.exports = function paethPredictor(left, above, upLeft) {
@@ -39427,7 +39479,7 @@ module.exports = function paethPredictor(left, above, upLeft) {
   }
   return upLeft;
 };
-},{}],90:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 'use strict';
 
 var util = require('util');
@@ -39539,7 +39591,7 @@ ParserAsync.prototype._complete = function(filteredData) {
   this.emit('parsed', normalisedBitmapData);
 };
 
-},{"./bitmapper":75,"./chunkstream":77,"./filter-parse-async":81,"./format-normaliser":84,"./parser":92,"util":134,"zlib":41}],91:[function(require,module,exports){
+},{"./bitmapper":76,"./chunkstream":78,"./filter-parse-async":82,"./format-normaliser":85,"./parser":93,"util":135,"zlib":41}],92:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39634,7 +39686,7 @@ module.exports = function(buffer, options) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./bitmapper":75,"./filter-parse-sync":82,"./format-normaliser":84,"./parser":92,"./sync-reader":95,"buffer":4,"zlib":41}],92:[function(require,module,exports){
+},{"./bitmapper":76,"./filter-parse-sync":83,"./format-normaliser":85,"./parser":93,"./sync-reader":96,"buffer":4,"zlib":41}],93:[function(require,module,exports){
 (function (Buffer){
 'use strict';
 
@@ -39928,7 +39980,7 @@ Parser.prototype._parseIEND = function(data) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"./constants":78,"./crc":79,"buffer":4}],93:[function(require,module,exports){
+},{"./constants":79,"./crc":80,"buffer":4}],94:[function(require,module,exports){
 'use strict';
 
 
@@ -39946,7 +39998,7 @@ exports.write = function(png) {
   return pack(png);
 };
 
-},{"./packer-sync":87,"./parser-sync":91}],94:[function(require,module,exports){
+},{"./packer-sync":88,"./parser-sync":92}],95:[function(require,module,exports){
 (function (process,Buffer){
 'use strict';
 
@@ -40113,7 +40165,7 @@ PNG.prototype.adjustGamma = function() {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"./packer-async":86,"./parser-async":90,"./png-sync":93,"_process":97,"buffer":4,"stream":111,"util":134}],95:[function(require,module,exports){
+},{"./packer-async":87,"./parser-async":91,"./png-sync":94,"_process":98,"buffer":4,"stream":112,"util":135}],96:[function(require,module,exports){
 'use strict';
 
 var SyncReader = module.exports = function(buffer) {
@@ -40166,7 +40218,7 @@ SyncReader.prototype.process = function() {
 
 };
 
-},{}],96:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 (function (process){
 'use strict';
 
@@ -40214,7 +40266,7 @@ function nextTick(fn, arg1, arg2, arg3) {
 
 
 }).call(this,require('_process'))
-},{"_process":97}],97:[function(require,module,exports){
+},{"_process":98}],98:[function(require,module,exports){
 // shim for using process in browser
 var process = module.exports = {};
 
@@ -40400,11 +40452,11 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],98:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 arguments[4][29][0].apply(exports,arguments)
-},{"./_stream_readable":100,"./_stream_writable":102,"_process":97,"core-util-is":8,"dup":29,"inherits":56}],99:[function(require,module,exports){
+},{"./_stream_readable":101,"./_stream_writable":103,"_process":98,"core-util-is":8,"dup":29,"inherits":57}],100:[function(require,module,exports){
 arguments[4][30][0].apply(exports,arguments)
-},{"./_stream_transform":101,"core-util-is":8,"dup":30,"inherits":56}],100:[function(require,module,exports){
+},{"./_stream_transform":102,"core-util-is":8,"dup":30,"inherits":57}],101:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -41390,7 +41442,7 @@ function indexOf (xs, x) {
 }
 
 }).call(this,require('_process'))
-},{"_process":97,"buffer":4,"core-util-is":8,"events":43,"inherits":56,"isarray":103,"stream":111,"string_decoder/":104}],101:[function(require,module,exports){
+},{"_process":98,"buffer":4,"core-util-is":8,"events":43,"inherits":57,"isarray":104,"stream":112,"string_decoder/":105}],102:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -41602,7 +41654,7 @@ function done(stream, er) {
   return stream.push(null);
 }
 
-},{"./_stream_duplex":98,"core-util-is":8,"inherits":56}],102:[function(require,module,exports){
+},{"./_stream_duplex":99,"core-util-is":8,"inherits":57}],103:[function(require,module,exports){
 (function (process){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -41992,11 +42044,11 @@ function endWritable(stream, state, cb) {
 }
 
 }).call(this,require('_process'))
-},{"./_stream_duplex":98,"_process":97,"buffer":4,"core-util-is":8,"inherits":56,"stream":111}],103:[function(require,module,exports){
+},{"./_stream_duplex":99,"_process":98,"buffer":4,"core-util-is":8,"inherits":57,"stream":112}],104:[function(require,module,exports){
 arguments[4][28][0].apply(exports,arguments)
-},{"dup":28}],104:[function(require,module,exports){
+},{"dup":28}],105:[function(require,module,exports){
 arguments[4][35][0].apply(exports,arguments)
-},{"buffer":4,"dup":35}],105:[function(require,module,exports){
+},{"buffer":4,"dup":35}],106:[function(require,module,exports){
 (function (process){
 var Stream = require('stream'); // hack to fix a circular dependency issue when used with browserify
 exports = module.exports = require('./lib/_stream_readable.js');
@@ -42011,7 +42063,7 @@ if (!process.browser && process.env.READABLE_STREAM === 'disable') {
 }
 
 }).call(this,require('_process'))
-},{"./lib/_stream_duplex.js":98,"./lib/_stream_passthrough.js":99,"./lib/_stream_readable.js":100,"./lib/_stream_transform.js":101,"./lib/_stream_writable.js":102,"_process":97,"stream":111}],106:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":99,"./lib/_stream_passthrough.js":100,"./lib/_stream_readable.js":101,"./lib/_stream_transform.js":102,"./lib/_stream_writable.js":103,"_process":98,"stream":112}],107:[function(require,module,exports){
 /* eslint-disable node/no-deprecated-api */
 var buffer = require('buffer')
 var Buffer = buffer.Buffer
@@ -42075,7 +42127,7 @@ SafeBuffer.allocUnsafeSlow = function (size) {
   return buffer.SlowBuffer(size)
 }
 
-},{"buffer":4}],107:[function(require,module,exports){
+},{"buffer":4}],108:[function(require,module,exports){
 var encode = require('./lib/encoder'),
     decode = require('./lib/decoder');
 
@@ -42084,7 +42136,7 @@ module.exports = {
   decode: decode
 };
 
-},{"./lib/decoder":108,"./lib/encoder":109}],108:[function(require,module,exports){
+},{"./lib/decoder":109,"./lib/encoder":110}],109:[function(require,module,exports){
 (function (Buffer){
 /* -*- Mode: Java; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- /
 /* vim: set shiftwidth=2 tabstop=2 autoindent cindent expandtab: */
@@ -43067,7 +43119,7 @@ function decode(jpegData) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4}],109:[function(require,module,exports){
+},{"buffer":4}],110:[function(require,module,exports){
 (function (Buffer){
 /*
   Copyright (c) 2008, Adobe Systems Incorporated
@@ -43837,7 +43889,7 @@ function getImageDataFromImage(idOrElement){
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4}],110:[function(require,module,exports){
+},{"buffer":4}],111:[function(require,module,exports){
 (function (Buffer){
 'use strict'
 
@@ -43982,7 +44034,7 @@ module.exports = function savePixels (array, type, options) {
 }
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"contentstream":7,"gif-encoder":25,"jpeg-js":107,"ndarray":70,"ndarray-ops":67,"pngjs-nozlib":94,"through":126}],111:[function(require,module,exports){
+},{"buffer":4,"contentstream":7,"gif-encoder":25,"jpeg-js":108,"ndarray":71,"ndarray-ops":68,"pngjs-nozlib":95,"through":127}],112:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -44111,10 +44163,10 @@ Stream.prototype.pipe = function(dest, options) {
   return dest;
 };
 
-},{"events":43,"inherits":56,"readable-stream/duplex.js":112,"readable-stream/passthrough.js":121,"readable-stream/readable.js":122,"readable-stream/transform.js":123,"readable-stream/writable.js":124}],112:[function(require,module,exports){
+},{"events":43,"inherits":57,"readable-stream/duplex.js":113,"readable-stream/passthrough.js":122,"readable-stream/readable.js":123,"readable-stream/transform.js":124,"readable-stream/writable.js":125}],113:[function(require,module,exports){
 module.exports = require('./lib/_stream_duplex.js');
 
-},{"./lib/_stream_duplex.js":113}],113:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":114}],114:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -44246,7 +44298,7 @@ Duplex.prototype._destroy = function (err, cb) {
 
   pna.nextTick(cb, err);
 };
-},{"./_stream_readable":115,"./_stream_writable":117,"core-util-is":8,"inherits":56,"process-nextick-args":96}],114:[function(require,module,exports){
+},{"./_stream_readable":116,"./_stream_writable":118,"core-util-is":8,"inherits":57,"process-nextick-args":97}],115:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -44294,7 +44346,7 @@ function PassThrough(options) {
 PassThrough.prototype._transform = function (chunk, encoding, cb) {
   cb(null, chunk);
 };
-},{"./_stream_transform":116,"core-util-is":8,"inherits":56}],115:[function(require,module,exports){
+},{"./_stream_transform":117,"core-util-is":8,"inherits":57}],116:[function(require,module,exports){
 (function (process,global){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -45316,7 +45368,7 @@ function indexOf(xs, x) {
   return -1;
 }
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"./_stream_duplex":113,"./internal/streams/BufferList":118,"./internal/streams/destroy":119,"./internal/streams/stream":120,"_process":97,"core-util-is":8,"events":43,"inherits":56,"isarray":59,"process-nextick-args":96,"safe-buffer":106,"string_decoder/":125,"util":3}],116:[function(require,module,exports){
+},{"./_stream_duplex":114,"./internal/streams/BufferList":119,"./internal/streams/destroy":120,"./internal/streams/stream":121,"_process":98,"core-util-is":8,"events":43,"inherits":57,"isarray":60,"process-nextick-args":97,"safe-buffer":107,"string_decoder/":126,"util":3}],117:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -45531,7 +45583,7 @@ function done(stream, er, data) {
 
   return stream.push(null);
 }
-},{"./_stream_duplex":113,"core-util-is":8,"inherits":56}],117:[function(require,module,exports){
+},{"./_stream_duplex":114,"core-util-is":8,"inherits":57}],118:[function(require,module,exports){
 (function (process,global,setImmediate){
 // Copyright Joyent, Inc. and other Node contributors.
 //
@@ -46221,7 +46273,7 @@ Writable.prototype._destroy = function (err, cb) {
   cb(err);
 };
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("timers").setImmediate)
-},{"./_stream_duplex":113,"./internal/streams/destroy":119,"./internal/streams/stream":120,"_process":97,"core-util-is":8,"inherits":56,"process-nextick-args":96,"safe-buffer":106,"timers":127,"util-deprecate":132}],118:[function(require,module,exports){
+},{"./_stream_duplex":114,"./internal/streams/destroy":120,"./internal/streams/stream":121,"_process":98,"core-util-is":8,"inherits":57,"process-nextick-args":97,"safe-buffer":107,"timers":128,"util-deprecate":133}],119:[function(require,module,exports){
 'use strict';
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -46301,7 +46353,7 @@ if (util && util.inspect && util.inspect.custom) {
     return this.constructor.name + ' ' + obj;
   };
 }
-},{"safe-buffer":106,"util":3}],119:[function(require,module,exports){
+},{"safe-buffer":107,"util":3}],120:[function(require,module,exports){
 'use strict';
 
 /*<replacement>*/
@@ -46376,13 +46428,13 @@ module.exports = {
   destroy: destroy,
   undestroy: undestroy
 };
-},{"process-nextick-args":96}],120:[function(require,module,exports){
+},{"process-nextick-args":97}],121:[function(require,module,exports){
 module.exports = require('events').EventEmitter;
 
-},{"events":43}],121:[function(require,module,exports){
+},{"events":43}],122:[function(require,module,exports){
 module.exports = require('./readable').PassThrough
 
-},{"./readable":122}],122:[function(require,module,exports){
+},{"./readable":123}],123:[function(require,module,exports){
 exports = module.exports = require('./lib/_stream_readable.js');
 exports.Stream = exports;
 exports.Readable = exports;
@@ -46391,13 +46443,13 @@ exports.Duplex = require('./lib/_stream_duplex.js');
 exports.Transform = require('./lib/_stream_transform.js');
 exports.PassThrough = require('./lib/_stream_passthrough.js');
 
-},{"./lib/_stream_duplex.js":113,"./lib/_stream_passthrough.js":114,"./lib/_stream_readable.js":115,"./lib/_stream_transform.js":116,"./lib/_stream_writable.js":117}],123:[function(require,module,exports){
+},{"./lib/_stream_duplex.js":114,"./lib/_stream_passthrough.js":115,"./lib/_stream_readable.js":116,"./lib/_stream_transform.js":117,"./lib/_stream_writable.js":118}],124:[function(require,module,exports){
 module.exports = require('./readable').Transform
 
-},{"./readable":122}],124:[function(require,module,exports){
+},{"./readable":123}],125:[function(require,module,exports){
 module.exports = require('./lib/_stream_writable.js');
 
-},{"./lib/_stream_writable.js":117}],125:[function(require,module,exports){
+},{"./lib/_stream_writable.js":118}],126:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -46694,7 +46746,7 @@ function simpleWrite(buf) {
 function simpleEnd(buf) {
   return buf && buf.length ? this.write(buf) : '';
 }
-},{"safe-buffer":106}],126:[function(require,module,exports){
+},{"safe-buffer":107}],127:[function(require,module,exports){
 (function (process){
 var Stream = require('stream')
 
@@ -46806,7 +46858,7 @@ function through (write, end, opts) {
 
 
 }).call(this,require('_process'))
-},{"_process":97,"stream":111}],127:[function(require,module,exports){
+},{"_process":98,"stream":112}],128:[function(require,module,exports){
 (function (setImmediate,clearImmediate){
 var nextTick = require('process/browser.js').nextTick;
 var apply = Function.prototype.apply;
@@ -46885,7 +46937,7 @@ exports.clearImmediate = typeof clearImmediate === "function" ? clearImmediate :
   delete immediateIds[id];
 };
 }).call(this,require("timers").setImmediate,require("timers").clearImmediate)
-},{"process/browser.js":97,"timers":127}],128:[function(require,module,exports){
+},{"process/browser.js":98,"timers":128}],129:[function(require,module,exports){
 exports.isatty = function () { return false; };
 
 function ReadStream() {
@@ -46898,7 +46950,7 @@ function WriteStream() {
 }
 exports.WriteStream = WriteStream;
 
-},{}],129:[function(require,module,exports){
+},{}],130:[function(require,module,exports){
 (function (global,Buffer){
 'use strict'
 
@@ -47115,7 +47167,7 @@ exports.clearCache = function clearCache() {
   }
 }
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
-},{"bit-twiddle":2,"buffer":4,"dup":14}],130:[function(require,module,exports){
+},{"bit-twiddle":2,"buffer":4,"dup":14}],131:[function(require,module,exports){
 "use strict"
 
 function unique_pred(list, compare) {
@@ -47174,7 +47226,7 @@ function unique(list, compare, sorted) {
 
 module.exports = unique
 
-},{}],131:[function(require,module,exports){
+},{}],132:[function(require,module,exports){
 var mime = require('mime');
 var fs = require('fs');
 
@@ -47184,7 +47236,7 @@ module.exports = function urifyNode (file) {
   return 'data:' + type + ';base64,' + data;
 };
 
-},{"fs":42,"mime":62}],132:[function(require,module,exports){
+},{"fs":42,"mime":63}],133:[function(require,module,exports){
 (function (global){
 
 /**
@@ -47255,18 +47307,18 @@ function config (name) {
 }
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],133:[function(require,module,exports){
+},{}],134:[function(require,module,exports){
 arguments[4][38][0].apply(exports,arguments)
-},{"dup":38}],134:[function(require,module,exports){
+},{"dup":38}],135:[function(require,module,exports){
 arguments[4][39][0].apply(exports,arguments)
-},{"./support/isBuffer":133,"_process":97,"dup":39,"inherits":56}],135:[function(require,module,exports){
+},{"./support/isBuffer":134,"_process":98,"dup":39,"inherits":57}],136:[function(require,module,exports){
 // add steps to the sequencer
 function AddStep(_sequencer, image, name, o) {
   return require('./InsertStep')(_sequencer,image,-1,name,o);
 }
 module.exports = AddStep;
 
-},{"./InsertStep":139}],136:[function(require,module,exports){
+},{"./InsertStep":140}],137:[function(require,module,exports){
 var fs = require('fs');
 var getDirectories = function(rootDir, cb) {
   fs.readdir(rootDir, function(err, files) {
@@ -47328,7 +47380,7 @@ module.exports = function ExportBin(dir = "./output/",ref,basic) {
   });
 }
 
-},{"data-uri-to-buffer":13,"fs":42}],137:[function(require,module,exports){
+},{"data-uri-to-buffer":13,"fs":42}],138:[function(require,module,exports){
 function objTypeOf(object){
   return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
 }
@@ -47494,31 +47546,31 @@ function formatInput(args,format,images) {
 }
 module.exports = formatInput;
 
-},{}],138:[function(require,module,exports){
-if (typeof window !== 'undefined') {isBrowser = true}
-else {var isBrowser = false}
-require('./util/getStep.js')
+},{}],139:[function(require,module,exports){
+if (typeof window !== 'undefined') { isBrowser = true }
+else { var isBrowser = false }
+require('./util/getStep.js');
 
 ImageSequencer = function ImageSequencer(options) {
 
-  var sequencer = (this.name == "ImageSequencer")?this:this.sequencer;
+  var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
   options = options || {};
   options.inBrowser = options.inBrowser || isBrowser;
   options.sequencerCounter = 0;
 
-  function objTypeOf(object){
-    return Object.prototype.toString.call(object).split(" ")[1].slice(0,-1)
+  function objTypeOf(object) {
+    return Object.prototype.toString.call(object).split(" ")[1].slice(0, -1)
   }
 
-  function log(color,msg) {
-    if(options.ui!="none") {
-      if(arguments.length==1) console.log(arguments[0]);
-      else if(arguments.length==2) console.log(color,msg);
+  function log(color, msg) {
+    if (options.ui != "none") {
+      if (arguments.length == 1) console.log(arguments[0]);
+      else if (arguments.length == 2) console.log(color, msg);
     }
   }
 
   function copy(a) {
-    if (!typeof(a) == "object") return a;
+    if (!typeof (a) == "object") return a;
     if (objTypeOf(a) == "Array") return a.slice();
     if (objTypeOf(a) == "Object") {
       var b = {};
@@ -47531,62 +47583,69 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function makeArray(input) {
-    return (objTypeOf(input)=="Array")?input:[input];
+    return (objTypeOf(input) == "Array") ? input : [input];
   }
 
   var image,
-  steps = [],
-  modules = require('./Modules'),
-  formatInput = require('./FormatInput'),
-  images = {},
-  inputlog = [],
-  events = require('./ui/UserInterface')(),
-  fs = require('fs');
+    steps = [],
+    modules = require('./Modules'),
+    formatInput = require('./FormatInput'),
+    images = {},
+    inputlog = [],
+    events = require('./ui/UserInterface')(),
+    fs = require('fs');
+
+
+  if (options.inBrowser) {
+    for (o in sequencer) {
+      modules[o] = sequencer[o];
+    }
+  }
 
   // if in browser, prompt for an image
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
   // else if (options.imageUrl) loadImage(imageUrl);
 
-  function addSteps(){
-    var this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    var args = (this.name == "ImageSequencer")?[]:[this.images];
+  function addSteps() {
+    var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
+    var args = (this.name == "ImageSequencer") ? [] : [this.images];
     var json_q = {};
-    for(var arg in arguments){args.push(copy(arguments[arg]));}
-    json_q = formatInput.call(this_,args,"+");
+    for (var arg in arguments) { args.push(copy(arguments[arg])); }
+    json_q = formatInput.call(this_, args, "+");
 
-    inputlog.push({method:"addSteps", json_q:copy(json_q)});
+    inputlog.push({ method: "addSteps", json_q: copy(json_q) });
 
     for (var i in json_q)
-    for (var j in json_q[i])
-    require("./AddStep")(this_,i,json_q[i][j].name,json_q[i][j].o);
+      for (var j in json_q[i])
+        require("./AddStep")(this_, i, json_q[i][j].name, json_q[i][j].o);
 
     return this;
   }
 
-  function removeStep(image,index) {
+  function removeStep(image, index) {
     //remove the step from images[image].steps and redraw remaining images
-    if(index>0) {
+    if (index > 0) {
       thisStep = images[image].steps[index];
       thisStep.UI.onRemove(thisStep.options.step);
-      images[image].steps.splice(index,1);
+      images[image].steps.splice(index, 1);
     }
     //tell the UI a step has been removed
   }
 
-  function removeSteps(image,index) {
+  function removeSteps(image, index) {
     var run = {}, indices;
-    var this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    var args = (this.name == "ImageSequencer")?[]:[this.images];
-    for(var arg in arguments) args.push(copy(arguments[arg]));
+    var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
+    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    for (var arg in arguments) args.push(copy(arguments[arg]));
 
-    var json_q = formatInput.call(this_,args,"-");
-    inputlog.push({method:"removeSteps", json_q:copy(json_q)});
+    var json_q = formatInput.call(this_, args, "-");
+    inputlog.push({ method: "removeSteps", json_q: copy(json_q) });
 
     for (var img in json_q) {
-      indices = json_q[img].sort(function(a,b){return b-a});
-      run[img] = indices[indices.length-1];
+      indices = json_q[img].sort(function(a, b) { return b - a });
+      run[img] = indices[indices.length - 1];
       for (var i in indices)
-      removeStep(img,indices[i]);
+        removeStep(img, indices[i]);
     }
     // this.run(run); // This is creating problems
     return this;
@@ -47594,19 +47653,19 @@ ImageSequencer = function ImageSequencer(options) {
 
   function insertSteps(image, index, name, o) {
     var run = {};
-    var this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    var args = (this.name == "ImageSequencer")?[]:[this.images];
+    var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
+    var args = (this.name == "ImageSequencer") ? [] : [this.images];
     for (var arg in arguments) args.push(arguments[arg]);
 
-    var json_q = formatInput.call(this_,args,"^");
-    inputlog.push({method:"insertSteps", json_q:copy(json_q)});
+    var json_q = formatInput.call(this_, args, "^");
+    inputlog.push({ method: "insertSteps", json_q: copy(json_q) });
 
     for (var img in json_q) {
       var details = json_q[img];
-      details = details.sort(function(a,b){return b.index-a.index});
+      details = details.sort(function(a, b) { return b.index - a.index });
       for (var i in details)
-      require("./InsertStep")(this_,img,details[i].index,details[i].name,details[i].o);
-      run[img] = details[details.length-1].index;
+        require("./InsertStep")(this_, img, details[i].index, details[i].name, details[i].o);
+      run[img] = details[details.length - 1].index;
     }
     // this.run(run); // This is Creating issues
     return this;
@@ -47614,33 +47673,33 @@ ImageSequencer = function ImageSequencer(options) {
 
   // Config is an object which contains the runtime configuration like progress bar
   // information and index from which the sequencer should run
-  function run(config,t_image,t_from) {
-    let progressObj,index=0;
-    config = config || {mode: 'no-arg'};
-    if(config.index) index = config.index;
+  function run(config, t_image, t_from) {
+    let progressObj, index = 0;
+    config = config || { mode: 'no-arg' };
+    if (config.index) index = config.index;
 
-    if(config.mode != 'test'){
-      if(config.mode != "no-arg" && typeof config != 'function'){
-        if(config.progressObj) progressObj = config.progressObj;
+    if (config.mode != 'test') {
+      if (config.mode != "no-arg" && typeof config != 'function') {
+        if (config.progressObj) progressObj = config.progressObj;
         delete arguments['0'];
       }
     }
-    else{
+    else {
       arguments['0'] = config.mode;
     }
 
-    var this_ = (this.name == "ImageSequencer")?this:this.sequencer;
-    var args = (this.name == "ImageSequencer")?[]:[this.images];
+    var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
+    var args = (this.name == "ImageSequencer") ? [] : [this.images];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
-    var callback = function() {};
+    var callback = function() { };
     for (var arg in args)
-    if(objTypeOf(args[arg]) == "Function")
-    callback = args.splice(arg,1)[0];
+      if (objTypeOf(args[arg]) == "Function")
+        callback = args.splice(arg, 1)[0];
 
-    var json_q = formatInput.call(this_,args,"r");
+    var json_q = formatInput.call(this_, args, "r");
 
-    require('./Run')(this_, json_q, callback,index,progressObj);
+    require('./Run')(this_, json_q, callback, index, progressObj);
 
     return true;
   }
@@ -47649,9 +47708,9 @@ ImageSequencer = function ImageSequencer(options) {
     var args = [];
     var sequencer = this;
     for (var arg in arguments) args.push(copy(arguments[arg]));
-    var json_q = formatInput.call(this,args,"l");
+    var json_q = formatInput.call(this, args, "l");
 
-    inputlog.push({method:"loadImages", json_q:copy(json_q)});
+    inputlog.push({ method: "loadImages", json_q: copy(json_q) });
     var loadedimages = this.copy(json_q.loadedimages);
 
     var ret = {
@@ -47667,12 +47726,12 @@ ImageSequencer = function ImageSequencer(options) {
     };
 
     function load(i) {
-      if(i==loadedimages.length) {
+      if (i == loadedimages.length) {
         json_q.callback.call(ret);
         return;
       }
       var img = loadedimages[i];
-      require('./ui/LoadImage')(sequencer,img,json_q.images[img],function(){
+      require('./ui/LoadImage')(sequencer, img, json_q.images[img], function() {
         load(++i);
       });
     }
@@ -47680,34 +47739,34 @@ ImageSequencer = function ImageSequencer(options) {
     load(0);
   }
 
-  function replaceImage(selector,steps,options) {
+  function replaceImage(selector, steps, options) {
     options = options || {};
-    options.callback = options.callback || function() {};
-    return require('./ReplaceImage')(this,selector,steps,options);
+    options.callback = options.callback || function() { };
+    return require('./ReplaceImage')(this, selector, steps, options);
   }
 
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
   }
 
-  var exportBin = function(dir,basic) {
-    return require('./ExportBin')(dir,this,basic);
+  var exportBin = function(dir, basic) {
+    return require('./ExportBin')(dir, this, basic);
   }
 
   function modulesInfo(name) {
     var modulesdata = {}
-    if(name == "load-image") return {};
-    if(arguments.length==0)
-    for (var modulename in modules) {
-      modulesdata[modulename] = modules[modulename][1];
-    }
+    if (name == "load-image") return {};
+    if (arguments.length == 0)
+      for (var modulename in modules) {
+        modulesdata[modulename] = modules[modulename][1];
+      }
     else modulesdata = modules[name][1];
     return modulesdata;
   }
 
   // Strigifies the current sequence
   function toString(step) {
-    if(step) {
+    if (step) {
       return stepToString(step);
     } else {
       return copy(this.images.image1.steps).map(stepToString).slice(1).join(',');
@@ -47719,7 +47778,7 @@ ImageSequencer = function ImageSequencer(options) {
     let inputs = copy(modulesInfo(step.options.name).inputs);
     inputs = inputs || {};
 
-    for(let input in inputs) {
+    for (let input in inputs) {
       inputs[input] = step.options[input] || inputs[input].default;
       inputs[input] = encodeURIComponent(inputs[input]);
     }
@@ -47729,19 +47788,19 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   // exports the current sequence as an array of JSON steps
-  function toJSON(str){
+  function toJSON(str) {
     return this.stringToJSON(this.toString());
   }
 
   // Coverts stringified sequence into an array of JSON steps
-  function stringToJSON(str){
+  function stringToJSON(str) {
     let steps = str.split(',');
     return steps.map(stringToJSONstep);
   }
 
   // Converts one stringified step into JSON
-  function stringToJSONstep(str){
-    if(str.indexOf('(') === -1) { // if there are no settings specified
+  function stringToJSONstep(str) {
+    if (str.indexOf('(') === -1) { // if there are no settings specified
       var moduleName = str.substr(0);
       stepSettings = "";
     } else {
@@ -47749,9 +47808,9 @@ ImageSequencer = function ImageSequencer(options) {
       stepSettings = str.slice(str.indexOf('(') + 1, -1);
     }
 
-    stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i){
+    stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i) {
       var settingName = current.substr(0, current.indexOf(':')),
-      settingValue = current.substr(current.indexOf(':') + 1);
+        settingValue = current.substr(current.indexOf(':') + 1);
       settingValue = settingValue.replace(/^\(/, '').replace(/\)$/, ''); // strip () at start/end
       settingValue = decodeURIComponent(settingValue);
       current = [
@@ -47763,30 +47822,54 @@ ImageSequencer = function ImageSequencer(options) {
     }, {});
 
     return {
-      name : moduleName,
+      name: moduleName,
       options: stepSettings
     }
   }
 
   // imports a string into the sequencer steps
-  function importString(str){
+  function importString(str) {
     let sequencer = this;
-    if(this.name != "ImageSequencer")
-    sequencer = this.sequencer;
+    if (this.name != "ImageSequencer")
+      sequencer = this.sequencer;
     var stepsFromString = stringToJSON(str);
     stepsFromString.forEach(function eachStep(stepObj) {
-      sequencer.addSteps(stepObj.name,stepObj.options);
+      sequencer.addSteps(stepObj.name, stepObj.options);
     });
   }
 
   // imports a array of JSON steps into the sequencer steps
-  function importJSON(obj){
+  function importJSON(obj) {
     let sequencer = this;
-    if(this.name != "ImageSequencer")
-    sequencer = this.sequencer;
+    if (this.name != "ImageSequencer")
+      sequencer = this.sequencer;
     obj.forEach(function eachStep(stepObj) {
-      sequencer.addSteps(stepObj.name,stepObj.options);
+      sequencer.addSteps(stepObj.name, stepObj.options);
     });
+  }
+
+  function loadNewModule(name, options) {
+
+    if (!options) {
+      return this;
+    } else if (Array.isArray(options)) {
+      // contains the array of module and info
+      this.module[name] = options;
+
+    } else if (options.func && options.info) {
+      // passed in options object
+      this.modules[name] = [
+        options.func, options.info
+      ];
+    } else if (options.path && !this.inBrowser) {
+      // load from path(only in node)
+      const module = [
+        require(`${options.path}/Module.js`),
+        require(`${options.path}/info.json`)
+      ];
+      this.modules[name] = module;
+    }
+    return this;
   }
 
   return {
@@ -47816,6 +47899,7 @@ ImageSequencer = function ImageSequencer(options) {
     stringToJSONstep: stringToJSONstep,
     importString: importString,
     importJSON: importJSON,
+    loadNewModule: loadNewModule,
 
     //other functions
     log: log,
@@ -47828,7 +47912,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":135,"./ExportBin":136,"./FormatInput":137,"./InsertStep":139,"./Modules":140,"./ReplaceImage":141,"./Run":142,"./ui/LoadImage":180,"./ui/SetInputStep":181,"./ui/UserInterface":182,"./util/getStep.js":184,"fs":42}],139:[function(require,module,exports){
+},{"./AddStep":136,"./ExportBin":137,"./FormatInput":138,"./InsertStep":140,"./Modules":141,"./ReplaceImage":142,"./Run":143,"./ui/LoadImage":194,"./ui/SetInputStep":195,"./ui/UserInterface":196,"./util/getStep.js":198,"fs":42}],140:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -47875,59 +47959,29 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{"./util/getStep.js":184}],140:[function(require,module,exports){
+},{"./util/getStep.js":198}],141:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
 module.exports = {
-  'channel': [
-    require('./modules/Channel/Module'), require('./modules/Channel/info')
-  ],
-  'brightness': [
-    require('./modules/Brightness/Module'), require('./modules/Brightness/info')
-  ],
-  'edge-detect': [
-    require('./modules/EdgeDetect/Module'), require('./modules/EdgeDetect/info')
-  ],
-  'ndvi': [
-    require('./modules/Ndvi/Module'), require('./modules/Ndvi/info')
-  ],
-  'invert': [
-    require('./modules/Invert/Module'), require('./modules/Invert/info')
-  ],
-  'crop': [
-    require('./modules/Crop/Module'), require('./modules/Crop/info')
-  ],
-  'colormap': [
-    require('./modules/Colormap/Module'), require('./modules/Colormap/info')
-  ],
-  'decode-qr': [
-    require('./modules/DecodeQr/Module'), require('./modules/DecodeQr/info')
-  ],
-  'fisheye-gl': [
-    require('./modules/FisheyeGl/Module'), require('./modules/FisheyeGl/info')
-  ],
-  'dynamic': [
-    require('./modules/Dynamic/Module'), require('./modules/Dynamic/info')
-  ],
-  'blur': [
-    require('./modules/Blur/Module'), require('./modules/Blur/info')
-  ],
-  'saturation': [
-    require('./modules/Saturation/Module'), require('./modules/Saturation/info')
-  ],
-  'average': [
-    require('./modules/Average/Module'), require('./modules/Average/info')
-  ],
-  'blend': [
-    require('./modules/Blend/Module'), require('./modules/Blend/info')
-  ],
-  'import-image': [
-    require('./modules/ImportImage/Module'), require('./modules/ImportImage/info')
-  ]
+  'channel': require('./modules/Channel'),
+  'brightness': require('./modules/Brightness'),
+  'edge-detect': require('./modules/EdgeDetect'),
+  'ndvi': require('./modules/Ndvi'),
+  'crop': require('./modules/Crop'),
+  'colormap': require('./modules/Colormap'),
+  'decode-qr': require('./modules/DecodeQr'),
+  'fisheye-gl': require('./modules/FisheyeGl'),
+  'dynamic': require('./modules/Dynamic'),
+  'blur': require('./modules/Blur'),
+  'saturation': require('./modules/Saturation'),
+  'average': require('./modules/Average'),
+  'blend': require('./modules/Blend'),
+  'import-image': require('./modules/ImportImage'),
+  'invert': require('image-sequencer-invert')
 }
 
-},{"./modules/Average/Module":143,"./modules/Average/info":144,"./modules/Blend/Module":145,"./modules/Blend/info":146,"./modules/Blur/Module":148,"./modules/Blur/info":149,"./modules/Brightness/Module":150,"./modules/Brightness/info":151,"./modules/Channel/Module":152,"./modules/Channel/info":153,"./modules/Colormap/Module":155,"./modules/Colormap/info":156,"./modules/Crop/Module":158,"./modules/Crop/info":160,"./modules/DecodeQr/Module":161,"./modules/DecodeQr/info":162,"./modules/Dynamic/Module":163,"./modules/Dynamic/info":164,"./modules/EdgeDetect/Module":166,"./modules/EdgeDetect/info":167,"./modules/FisheyeGl/Module":168,"./modules/FisheyeGl/info":169,"./modules/ImportImage/Module":170,"./modules/ImportImage/info":172,"./modules/Invert/Module":173,"./modules/Invert/info":174,"./modules/Ndvi/Module":175,"./modules/Ndvi/info":176,"./modules/Saturation/Module":177,"./modules/Saturation/info":178}],141:[function(require,module,exports){
+},{"./modules/Average":146,"./modules/Blend":149,"./modules/Blur":153,"./modules/Brightness":156,"./modules/Channel":159,"./modules/Colormap":163,"./modules/Crop":168,"./modules/DecodeQr":171,"./modules/Dynamic":174,"./modules/EdgeDetect":178,"./modules/FisheyeGl":181,"./modules/ImportImage":185,"./modules/Ndvi":188,"./modules/Saturation":191,"image-sequencer-invert":56}],142:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -47988,11 +48042,11 @@ function ReplaceImage(ref,selector,steps,options) {
 
 module.exports = ReplaceImage;
 
-},{}],142:[function(require,module,exports){
+},{}],143:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
-function Run(ref, json_q, callback,ind, progressObj) {
-  if (!progressObj) progressObj = { stop: function () { } };
+function Run(ref, json_q, callback, ind, progressObj) {
+  if (!progressObj) progressObj = { stop: function() { } };
 
   function drawStep(drawarray, pos) {
     if (pos == drawarray.length && drawarray[pos - 1] !== undefined) {
@@ -48012,10 +48066,10 @@ function Run(ref, json_q, callback,ind, progressObj) {
       var input = ref.images[image].steps[i - 1].output;
 
       ref.images[image].steps[i].getStep = function getStep(offset) {
-        if(i + offset >= ref.images[image].steps.length) return {options:{name:undefined}};
+        if (i + offset >= ref.images[image].steps.length) return { options: { name: undefined } };
         else return ref.images[image].steps.slice(i + offset)[0];
       };
-      ref.images[image].steps[i].getIndex = function getIndex(){
+      ref.images[image].steps[i].getIndex = function getIndex() {
         return i;
       }
 
@@ -48028,8 +48082,11 @@ function Run(ref, json_q, callback,ind, progressObj) {
       // Tell UI that a step is being drawn.
       ref.images[image].steps[i].UI.onDraw(ref.images[image].steps[i].options.step);
 
+      // provides a set of standard tools for each step
+      var inputForNextStep = require('./RunToolkit')(ref.copy(input));
+
       ref.images[image].steps[i].draw(
-        ref.copy(input),
+        inputForNextStep,
         function onEachStep() {
 
           // This output is accessible by UI
@@ -48060,7 +48117,7 @@ function Run(ref, json_q, callback,ind, progressObj) {
   function filter(json_q) {
     for (var image in json_q) {
       if (json_q[image] == 0 && ref.images[image].steps.length == 1)
-      delete json_q[image];
+        delete json_q[image];
       else if (json_q[image] == 0) json_q[image]++;
     }
     for (var image in json_q) {
@@ -48080,7 +48137,22 @@ function Run(ref, json_q, callback,ind, progressObj) {
 }
 module.exports = Run;
 
-},{"./util/getStep.js":184}],143:[function(require,module,exports){
+},{"./RunToolkit":144,"./util/getStep.js":198}],144:[function(require,module,exports){
+const getPixels = require('get-pixels');
+const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
+const lodash = require('lodash');
+const dataUriToBuffer = require('data-uri-to-buffer');
+const savePixels = require('save-pixels');
+
+module.exports = function(input) {
+    input.getPixels = getPixels;
+    input.pixelManipulation = pixelManipulation;
+    input.lodash = lodash;
+    input.dataUriToBuffer = dataUriToBuffer;
+    input.savePixels = savePixels;
+    return input;
+}
+},{"./modules/_nomodule/PixelManipulation":193,"data-uri-to-buffer":13,"get-pixels":23,"lodash":62,"save-pixels":111}],145:[function(require,module,exports){
 /*
 * Average all pixel colors
 */
@@ -48158,7 +48230,12 @@ module.exports = function Average(options, UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":179}],144:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193}],146:[function(require,module,exports){
+module.exports = [
+    require('./Module'),
+    require('./info.json')
+]
+},{"./Module":145,"./info.json":147}],147:[function(require,module,exports){
 module.exports={
     "name": "Average",
     "description": "Average all pixel color",
@@ -48166,7 +48243,7 @@ module.exports={
     }
 }
 
-},{}],145:[function(require,module,exports){
+},{}],148:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
   options.func = options.func || "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }";
@@ -48231,7 +48308,9 @@ module.exports = function Dynamic(options, UI, util) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":179,"get-pixels":23}],146:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193,"get-pixels":23}],149:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":148,"./info.json":150,"dup":146}],150:[function(require,module,exports){
 module.exports={
   "name": "Blend",
   "description": "Blend the past two image steps with the given function. Defaults to using the red channel from image 1 and the green and blue and alpha channels of image 2. Easier to use interfaces coming soon!",
@@ -48244,7 +48323,7 @@ module.exports={
   }
 }
 
-},{}],147:[function(require,module,exports){
+},{}],151:[function(require,module,exports){
 module.exports = exports = function(pixels,blur){
     let kernel = kernelGenerator(blur,1)
     kernel = flipKernel(kernel)
@@ -48330,7 +48409,7 @@ function flipKernel(kernel){
     return result
 }
 }
-},{}],148:[function(require,module,exports){
+},{}],152:[function(require,module,exports){
 /*
 * Blur an Image
 */
@@ -48381,7 +48460,9 @@ module.exports = function Blur(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":179,"./Blur":147}],149:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193,"./Blur":151}],153:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":152,"./info.json":154,"dup":146}],154:[function(require,module,exports){
 module.exports={
     "name": "Blur",
     "description": "Gaussian blur an image by a given value, typically 0-5",
@@ -48394,7 +48475,7 @@ module.exports={
     }
 }
 
-},{}],150:[function(require,module,exports){
+},{}],155:[function(require,module,exports){
 /*
 * Changes the Image Brightness
 */
@@ -48450,7 +48531,9 @@ module.exports = function Brightness(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":179}],151:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193}],156:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":155,"./info.json":157,"dup":146}],157:[function(require,module,exports){
 module.exports={
     "name": "Brightness",
     "description": "Change the brightness of the image by given percent value",
@@ -48463,7 +48546,7 @@ module.exports={
     } 
 }
 
-},{}],152:[function(require,module,exports){
+},{}],158:[function(require,module,exports){
 /*
  * Display only one color channel
  */
@@ -48513,7 +48596,9 @@ module.exports = function Channel(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":179}],153:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193}],159:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":158,"./info.json":160,"dup":146}],160:[function(require,module,exports){
 module.exports={
   "name": "Channel",
   "description": "Displays only one color channel of an image -- default is green",
@@ -48527,7 +48612,7 @@ module.exports={
   }
 }
 
-},{}],154:[function(require,module,exports){
+},{}],161:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
  * from a lookup table, which can be specified as an array of [begin, end] 
@@ -48616,7 +48701,7 @@ var colormaps = {
              ])
 }
 
-},{}],155:[function(require,module,exports){
+},{}],162:[function(require,module,exports){
 module.exports = function Colormap(options,UI) {
 
   var output;
@@ -48660,7 +48745,9 @@ module.exports = function Colormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":179,"./Colormap":154}],156:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193,"./Colormap":161}],163:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":162,"./info.json":164,"dup":146}],164:[function(require,module,exports){
 module.exports={
   "name": "Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
@@ -48674,7 +48761,7 @@ module.exports={
   }
 }
 
-},{}],157:[function(require,module,exports){
+},{}],165:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Crop(input,options,callback) {
 
@@ -48720,7 +48807,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"get-pixels":23,"save-pixels":110}],158:[function(require,module,exports){
+},{"buffer":4,"get-pixels":23,"save-pixels":111}],166:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -48792,7 +48879,7 @@ module.exports = function CropModule(options, UI) {
   }
 }
 
-},{"./Crop":157,"./Ui.js":159}],159:[function(require,module,exports){
+},{"./Crop":165,"./Ui.js":167}],167:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -48891,7 +48978,9 @@ module.exports = function CropModuleUi(step, ui) {
   }
 }
 
-},{}],160:[function(require,module,exports){
+},{}],168:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":166,"./info.json":169,"dup":146}],169:[function(require,module,exports){
 module.exports={
   "name": "Crop",
   "description": "Crop image to given x, y, w, h in pixels, measured from top left",
@@ -48919,7 +49008,7 @@ module.exports={
     }
   }
 }
-},{}],161:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -48962,7 +49051,9 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":23,"jsqr":60}],162:[function(require,module,exports){
+},{"get-pixels":23,"jsqr":61}],171:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":170,"./info.json":172,"dup":146}],172:[function(require,module,exports){
 module.exports={
   "name": "Decode QR",
   "description": "Search for and decode a QR code in the image",
@@ -48975,7 +49066,7 @@ module.exports={
   }
 }
 
-},{}],163:[function(require,module,exports){
+},{}],173:[function(require,module,exports){
 module.exports = function Dynamic(options,UI) {
 
   var output;
@@ -49060,7 +49151,9 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":179}],164:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193}],174:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":173,"./info.json":175,"dup":146}],175:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -49088,7 +49181,7 @@ module.exports={
   }
 }
 
-},{}],165:[function(require,module,exports){
+},{}],176:[function(require,module,exports){
 const _ = require('lodash')
 
 //define kernels for the sobel filter
@@ -49269,7 +49362,7 @@ function hysteresis(pixels){
 
 
 
-},{"lodash":61}],166:[function(require,module,exports){
+},{"lodash":62}],177:[function(require,module,exports){
 /*
 * Detect Edges in an Image
 */
@@ -49327,7 +49420,9 @@ module.exports = function edgeDetect(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":179,"./EdgeUtils":165,"ndarray-gaussian-filter":66}],167:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193,"./EdgeUtils":176,"ndarray-gaussian-filter":67}],178:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":177,"./info.json":179,"dup":146}],179:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
@@ -49350,7 +49445,7 @@ module.exports={
     }
 }
 
-},{}],168:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -49422,7 +49517,9 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":15}],169:[function(require,module,exports){
+},{"fisheyegl":15}],181:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":180,"./info.json":182,"dup":146}],182:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
@@ -49490,7 +49587,7 @@ module.exports={
   }
 }
 
-},{}],170:[function(require,module,exports){
+},{}],183:[function(require,module,exports){
 /*
  * Import Image module; this fetches a given remote or local image via URL
  * or data-url, and overwrites the current one. It saves the original as
@@ -49550,7 +49647,7 @@ module.exports = function ImportImageModule(options, UI) {
   }
 }
 
-},{"../../util/GetFormat":183,"./Ui.js":171}],171:[function(require,module,exports){
+},{"../../util/GetFormat":197,"./Ui.js":184}],184:[function(require,module,exports){
 // hide on save
 module.exports = function ImportImageModuleUi(step, ui) {
 
@@ -49606,7 +49703,9 @@ module.exports = function ImportImageModuleUi(step, ui) {
   }
 }
 
-},{}],172:[function(require,module,exports){
+},{}],185:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":183,"./info.json":186,"dup":146}],186:[function(require,module,exports){
 module.exports={
   "name": "Import Image",
   "description": "Import a new image and replace the original with it. Future versions may enable a blend mode. Specify an image by URL or by file selector.",
@@ -49619,61 +49718,7 @@ module.exports={
     }
   }
 }
-},{}],173:[function(require,module,exports){
-/*
- * Invert the image
- */
-module.exports = function Invert(options, UI) {
-
-  var output;
-
-  // The function which is called on every draw.
-  function draw(input, callback, progressObj) {
-
-    progressObj.stop(true);
-    progressObj.overrideFlag = true;
-
-    var step = this;
-
-    function changePixel(r, g, b, a) {
-      return [255 - r, 255 - g, 255 - b, a];
-    }
-
-    function output(image, datauri, mimetype) {
-
-      // This output is accessible by Image Sequencer
-      step.output = { src: datauri, format: mimetype };
-
-    }
-
-    return require('../_nomodule/PixelManipulation.js')(input, {
-      output: output,
-      changePixel: changePixel,
-      format: input.format,
-      image: options.image,
-      inBrowser: options.inBrowser,
-      callback: callback
-    });
-
-  }
-
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"../_nomodule/PixelManipulation.js":179}],174:[function(require,module,exports){
-module.exports={
-  "name": "Invert",
-  "description": "Inverts the image.",
-  "inputs": {
-  }
-}
-
-},{}],175:[function(require,module,exports){
+},{}],187:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -49724,7 +49769,9 @@ module.exports = function Ndvi(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":179}],176:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193}],188:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":187,"./info.json":189,"dup":146}],189:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -49738,7 +49785,7 @@ module.exports={
   }
 }
 
-},{}],177:[function(require,module,exports){
+},{}],190:[function(require,module,exports){
 /*
  * Saturate an image with a value from 0 to 1
  */
@@ -49796,7 +49843,9 @@ module.exports = function Saturation(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":179}],178:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":193}],191:[function(require,module,exports){
+arguments[4][146][0].apply(exports,arguments)
+},{"./Module":190,"./info.json":192,"dup":146}],192:[function(require,module,exports){
 module.exports={
     "name": "Saturation",
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
@@ -49809,13 +49858,21 @@ module.exports={
     }
 }
 
-},{}],179:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 (function (process,Buffer){
 /*
 * General purpose per-pixel manipulation
 * accepting a changePixel() method to remix a pixel's channels
 */
 module.exports = function PixelManipulation(image, options) {
+
+  // To handle the case where pixelmanipulation is called on the input object itself
+  // like input.pixelManipulation(options)
+  if(arguments.length <= 1){
+    options = image;
+    image = this;
+  }
+
   options = options || {};
   options.changePixel =
     options.changePixel ||
@@ -49902,7 +49959,7 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":97,"buffer":4,"get-pixels":23,"pace":73,"save-pixels":110}],180:[function(require,module,exports){
+},{"_process":98,"buffer":4,"get-pixels":23,"pace":74,"save-pixels":111}],194:[function(require,module,exports){
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -50009,7 +50066,7 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
-},{"urify":131}],181:[function(require,module,exports){
+},{"urify":132}],195:[function(require,module,exports){
 // TODO: potentially move this into ImportImage module
 function setInputStepInit() {
 
@@ -50061,7 +50118,7 @@ function setInputStepInit() {
 }
 module.exports = setInputStepInit;
 
-},{}],182:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
@@ -50121,7 +50178,7 @@ module.exports = function UserInterface(events = {}) {
 
 }
 
-},{}],183:[function(require,module,exports){
+},{}],197:[function(require,module,exports){
 /*
 * Determine format from a URL or data-url, return "jpg" "png" "gif" etc
 * TODO: write a test for this using the examples
@@ -50163,7 +50220,7 @@ module.exports = function GetFormat(src) {
 
 }
 
-},{}],184:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 module.exports = {
     getPreviousStep : function () {
         return this.getStep(-1);
@@ -50182,4 +50239,4 @@ module.exports = {
         return this.getStep(offset).output;
     }
 }
-},{}]},{},[138]);
+},{}]},{},[139]);

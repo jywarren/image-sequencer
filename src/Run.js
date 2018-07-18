@@ -1,7 +1,7 @@
 const getStepUtils = require('./util/getStep.js');
 
-function Run(ref, json_q, callback,ind, progressObj) {
-  if (!progressObj) progressObj = { stop: function () { } };
+function Run(ref, json_q, callback, ind, progressObj) {
+  if (!progressObj) progressObj = { stop: function() { } };
 
   function drawStep(drawarray, pos) {
     if (pos == drawarray.length && drawarray[pos - 1] !== undefined) {
@@ -21,10 +21,10 @@ function Run(ref, json_q, callback,ind, progressObj) {
       var input = ref.images[image].steps[i - 1].output;
 
       ref.images[image].steps[i].getStep = function getStep(offset) {
-        if(i + offset >= ref.images[image].steps.length) return {options:{name:undefined}};
+        if (i + offset >= ref.images[image].steps.length) return { options: { name: undefined } };
         else return ref.images[image].steps.slice(i + offset)[0];
       };
-      ref.images[image].steps[i].getIndex = function getIndex(){
+      ref.images[image].steps[i].getIndex = function getIndex() {
         return i;
       }
 
@@ -37,8 +37,11 @@ function Run(ref, json_q, callback,ind, progressObj) {
       // Tell UI that a step is being drawn.
       ref.images[image].steps[i].UI.onDraw(ref.images[image].steps[i].options.step);
 
+      // provides a set of standard tools for each step
+      var inputForNextStep = require('./RunToolkit')(ref.copy(input));
+
       ref.images[image].steps[i].draw(
-        ref.copy(input),
+        inputForNextStep,
         function onEachStep() {
 
           // This output is accessible by UI
@@ -69,7 +72,7 @@ function Run(ref, json_q, callback,ind, progressObj) {
   function filter(json_q) {
     for (var image in json_q) {
       if (json_q[image] == 0 && ref.images[image].steps.length == 1)
-      delete json_q[image];
+        delete json_q[image];
       else if (json_q[image] == 0) json_q[image]++;
     }
     for (var image in json_q) {

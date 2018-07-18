@@ -36,7 +36,7 @@ Any module must follow this basic format:
 module.exports = function ModuleName(options,UI) {
 
   var output;
-  // Module requirements have bbeen simplified in version 3, see https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md#contributing-modules
+  // Module requirements have been simplified in version 3, see https://github.com/publiclab/image-sequencer/blob/master/CONTRIBUTING.md#contributing-modules
 
   function draw(input,callback) {
 
@@ -56,6 +56,57 @@ module.exports = function ModuleName(options,UI) {
     UI: UI
   }
 }
+```
+
+Image Sequencer modules are designed to be run either in the browser or in a Node.js environment. For dynamically loaded modules, that means that any uses of `require()` to include an external library must be compiled using a system like `browserify` or `webpack` to ensure browser compatibility. An example of this can be found here:
+
+https://github.com/tech4gt/image-sequencer
+
+If you wish to offer a module without browser-compatibility, please indicate this in the returned `info` object as:
+
+module.exports = [
+  ModuleName,
+  { only: ['node'] }
+];
+
+If you believe that full cross-compatibility is possible, but need help, please open an issue on your module's issue tracker requesting assistance (and potentially link to it from an inline comment or the module description).
+
+Any Independent Module Must follow this basic format
+```js
+function ModuleName(options,UI) {
+
+  var output;
+
+  function draw(input,callback) {
+
+    var output = function(input){
+      /* do something with the input */
+      return input;
+    }
+
+    this.output = output(input); // run the output and assign it to this.output
+    callback();
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  };
+}
+
+  module.exports = [ModuleName,{
+      "name": "ModuleName",
+      "description": "",
+      "inputs": {
+        // inputs here
+      }
+      /* Info can be defined here or imported from a json file */
+      // require('./info.json') This only works in node
+      // In a module compiled with browserify or webpack, a require() can be used to
+      // load a standard info.json file.
+      ];
 ```
 
 
@@ -79,9 +130,18 @@ The `draw` method should accept an `input` parameter, which will be an object of
 ```js
 input = {
   src: "datauri of an image here",
-  format: "jpeg/png/etc"
+  format: "jpeg/png/etc",
+  // utility functions
+  getPixels: "function to get Image pixels. Wrapper around https://npmjs.com/get-pixels",
+  savePixels: "function to save Image pixels. Wrapper around https://npmjs.com/save-pixels",
+  lodash: "wrapper around lodash library, https://github.com/lodash",
+  dataUriToBuffer: "wrapper around https://www.npmjs.com/package/data-uri-to-buffer",
+  pixelManipulation: "general purpose pixel manipulation API, see https://github.com/publiclab/image-sequencer/blob/master/src/modules/_nomodule/PixelManipulation.js"
 }
 ```
+For example usage for pixelManipulation see https://github.com/publiclab/image-sequencer/blob/master/src/modules/Invert/Module.js
+
+**The module is included in the browser inside a script tag and since the code runs directly in the browser if any other module is required apart from the apis available on the input object, it should be either bundled with the module code and imported in es6 format or the module code must be browserified before distribution for browser**
 
 The draw method is run every time the step is `run` using `sequencer.run()`.
 So any calculations must go **into** the `draw()` method's definition.
