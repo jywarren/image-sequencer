@@ -20,7 +20,7 @@ module.exports = function Dynamic(options, UI, util) {
     // save first image's pixels
     var priorStep = this.getStep(-2);
 
-    getPixels(priorStep.output.src, function (err, pixels) {
+    getPixels(priorStep.output.src, function(err, pixels) {
       options.firstImagePixels = pixels;
 
       function changePixel(r2, g2, b2, a2, x, y) {
@@ -42,7 +42,7 @@ module.exports = function Dynamic(options, UI, util) {
 
       }
 
-      // run PixelManipulatin on second image's pixels 
+      // run PixelManipulatin on second image's pixels
       return require('../_nomodule/PixelManipulation.js')(input, {
         output: output,
         changePixel: changePixel,
