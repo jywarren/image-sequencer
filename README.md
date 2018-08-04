@@ -487,6 +487,33 @@ sequencer.saveSequence(name,sequenceString)
 
 The function `sequencer.loadModules()` reloads the modules and the saved sequences into `sequencer.modules` and `sequencer.sequences`
 
+
+## String syntax
+
+Image sequencer supports stringifying a sequence which is appended to the url and hence can then be shared. An example below shows the string syntax for `channel` and `invert` module
+```
+channel{channel:green},invert{}
+```
+
+Sequencer also supports use of `()` in place of `{}` for backwards compatibility with older links.(This syntax is deprecated and should be avoided as far as possible)
+```
+channel(channel:green),invert()
+```
+
+Following are the core API functions that can be used to stringify and jsonify steps.
+```js
+sequencer.toString() //returns the stringified sequence of current steps
+sequencer.toJSON(str) // returns the JSON for the current sequence
+sequencer.stringToJSON(str) // returns the JSON for given stringified sequence
+sequencer.importString(str) //Imports the sequence of steps into sequencer
+sequencer.importJSON(obj) //Imports the given sequence of JSON steps into sequencer
+```
+
+Image Sequencer can also generate a string for usage in the CLI for the current sequence of steps:
+```js
+sequencer.toCliString()
+```
+
 ## Creating a User Interface
 
 Image Sequencer provides the following events which can be used to generate a UI:

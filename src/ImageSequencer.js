@@ -265,11 +265,11 @@ ImageSequencer = function ImageSequencer(options) {
     }
 
     var configurations = Object.keys(inputs).map(key => key + ':' + inputs[key]).join('|');
-    return `${step.options.name}(${configurations})`;
+    return `${step.options.name}{${configurations}}`;
   }
 
   // exports the current sequence as an array of JSON steps
-  function toJSON(str) {
+  function toJSON() {
     return this.stringToJSON(this.toString());
   }
 
@@ -285,18 +285,28 @@ ImageSequencer = function ImageSequencer(options) {
 
   // Converts one stringified step into JSON
   function stringToJSONstep(str) {
-    if (str.indexOf('(') === -1) { // if there are no settings specified
+    var bracesStrings;
+    if (str.includes('{'))
+      if (str.includes('(') && str.indexOf('(') < str.indexOf('{'))
+        bracesStrings = ['(', ')'];
+      else
+        bracesStrings = ['{', '}'];
+    else
+      bracesStrings = ['(', ')'];
+
+    if (str.indexOf(bracesStrings[0]) === -1) { // if there are no settings specified
       var moduleName = str.substr(0);
       stepSettings = "";
     } else {
-      var moduleName = str.substr(0, str.indexOf('('));
-      stepSettings = str.slice(str.indexOf('(') + 1, -1);
+      var moduleName = str.substr(0, str.indexOf(bracesStrings[0]));
+      stepSettings = str.slice(str.indexOf(bracesStrings[0]) + 1, -1);
     }
 
     stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i) {
       var settingName = current.substr(0, current.indexOf(':')),
         settingValue = current.substr(current.indexOf(':') + 1);
       settingValue = settingValue.replace(/^\(/, '').replace(/\)$/, ''); // strip () at start/end
+      settingValue = settingValue.replace(/^\{/, '').replace(/\}$/, ''); // strip {} at start/end
       settingValue = decodeURIComponent(settingValue);
       current = [
         settingName,

@@ -101,7 +101,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           .each(function(i, input) {
             step.options[$(input).attr("name")] = input.value;
           });
-        _sequencer.run({index: _sequencer.images.image1.steps.length - 2});
+        _sequencer.run({ index: step.index - 1 });
 
         // modify the url hash
         setUrlHashParameter("steps", _sequencer.toString());
