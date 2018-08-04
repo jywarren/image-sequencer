@@ -48,4 +48,4 @@ var info = {
   "inputs": {
   }
 }
-module.exports = [Invert,info];
+module.exports = [Invert, info];

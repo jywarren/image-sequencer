@@ -40,6 +40,7 @@ ImageSequencer = function ImageSequencer(options) {
   var image,
     steps = [],
     modules = require('./Modules'),
+    sequences = require('./SavedSequences.json'),
     formatInput = require('./FormatInput'),
     images = {},
     inputlog = [],
@@ -51,6 +52,11 @@ ImageSequencer = function ImageSequencer(options) {
   if (options.inBrowser) {
     for (o in sequencer) {
       modules[o] = sequencer[o];
+    }
+    sequences = JSON.parse(window.localStorage.getItem('sequences'));
+    if (!sequences) {
+      sequences = {};
+      window.localStorage.setItem('sequences', JSON.stringify(sequences));
     }
   }
 
@@ -208,11 +214,20 @@ ImageSequencer = function ImageSequencer(options) {
   function modulesInfo(name) {
     var modulesdata = {}
     if (name == "load-image") return {};
-    if (arguments.length == 0)
-      for (var modulename in modules) {
+    if (arguments.length == 0) {
+      for (var modulename in this.modules) {
         modulesdata[modulename] = modules[modulename][1];
       }
-    else modulesdata = modules[name][1];
+      for (var sequencename in this.sequences) {
+        modulesdata[sequencename] = { name: sequencename, steps: sequences[sequencename] };
+      }
+    }
+    else {
+      if (modules[name])
+        modulesdata = modules[name][1];
+      else
+        modulesdata = { 'inputs': sequences[name]['options'] };
+    }
     return modulesdata;
   }
 
@@ -246,7 +261,11 @@ ImageSequencer = function ImageSequencer(options) {
 
   // Coverts stringified sequence into an array of JSON steps
   function stringToJSON(str) {
-    let steps = str.split(',');
+    let steps;
+    if (str.includes(','))
+      steps = str.split(',');
+    else
+      steps = [str];
     return steps.map(stringToJSONstep);
   }
 
@@ -304,15 +323,17 @@ ImageSequencer = function ImageSequencer(options) {
 
     if (!options) {
       return this;
+
     } else if (Array.isArray(options)) {
       // contains the array of module and info
-      this.module[name] = options;
+      this.modules[name] = options;
 
     } else if (options.func && options.info) {
       // passed in options object
       this.modules[name] = [
         options.func, options.info
       ];
+
     } else if (options.path && !this.inBrowser) {
       // load from path(only in node)
       const module = [
@@ -324,12 +345,62 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
+  function saveNewModule(name, path) {
+    if (options.inBrowser) {
+      // Not for browser context
+      return;
+    }
+    var mods = fs.readFileSync('./src/Modules.js').toString();
+    mods = mods.substr(0, mods.length - 1) + "  '" + name + "': require('" + path + "'),\n}";
+    fs.writeFileSync('./src/Modules.js', mods);
+  }
+
+  function createMetaModule(stepsCollection, info) {
+    var stepsArr = stepsCollection;
+    if (typeof stepsCollection === 'string')
+      stepsArr = stringToJSON(stepsCollection);
+    var metaMod = function() {
+      this.expandSteps(stepsArr);
+      return {
+        isMeta: true
+      }
+    }
+    return [metaMod, info];
+  }
+
+  function saveSequence(name, sequenceString) {
+    const sequence = stringToJSON(sequenceString);
+    // Save the given sequence string as a module
+    if (options.inBrowser) {
+      // Inside the browser we save the meta-modules using the Web Storage API
+      var sequences = JSON.parse(window.localStorage.getItem('sequences'));
+      sequences[name] = sequence;
+      window.localStorage.setItem('sequences', JSON.stringify(sequences));
+    }
+    else {
+      // In node we save the sequences in the json file SavedSequences.json
+      var sequences = require('./SavedSequences.json');
+      sequences[name] = sequence;
+      fs.writeFileSync('./src/SavedSequences.json', JSON.stringify(sequences));
+    }
+  }
+
+  function loadModules() {
+    // This function loads the modules and saved sequences
+    this.modules = require('./Modules');
+    if (options.inBrowser)
+      this.sequences = JSON.parse(window.localStorage.getItem('sequences'));
+    else
+      this.sequences = require('./SavedSequences.json');
+  }
+
   return {
     //literals and objects
     name: "ImageSequencer",
     options: options,
     inputlog: inputlog,
     modules: modules,
+    sequences: sequences,
     images: images,
     events: events,
 
@@ -352,6 +423,10 @@ ImageSequencer = function ImageSequencer(options) {
     importString: importString,
     importJSON: importJSON,
     loadNewModule: loadNewModule,
+    saveNewModule: saveNewModule,
+    createMetaModule: createMetaModule,
+    saveSequence: saveSequence,
+    loadModules: loadModules,
 
     //other functions
     log: log,

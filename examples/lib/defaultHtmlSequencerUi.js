@@ -7,7 +7,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function onLoad() {
     importStepsFromUrlHash();
-    $(addStepSel + " button").prop("disabled",true);
+    if (!$('#selectStep').val())
+      $(addStepSel + " button").prop("disabled", true);
   }
 
   // look up needed steps from Url Hash:
@@ -16,7 +17,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
     if (hash) {
       _sequencer.importString(hash);
-      _sequencer.run({index:0});
+      _sequencer.run({ index: 0 });
     }
     setUrlHashParameter("steps", sequencer.toString());
   }
@@ -24,12 +25,12 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
   function selectNewStepUi() {
     var m = $(addStepSel + " select").val();
     $(addStepSel + " .info").html(_sequencer.modulesInfo(m).description);
-    $(addStepSel + " button").prop("disabled",false);
+    $(addStepSel + " button").prop("disabled", false);
   }
 
   function removeStepUi() {
     var index = $(removeStepSel).index(this) + 1;
-    sequencer.removeSteps(index).run({index : index-1});
+    sequencer.removeSteps(index).run({ index: index - 1 });
     // remove from URL hash too
     setUrlHashParameter("steps", sequencer.toString());
   }
@@ -44,9 +45,15 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     * and since loadImage is not a part of the drawarray the step lies at current
     * length - 2 of the drawarray
     */
+    var sequenceLength = 1;
+    if (sequencer.sequences[newStepName]) {
+      sequenceLength = sequencer.sequences[newStepName].length;
+    } else if (sequencer.modules[newStepName][1]["length"]) {
+      sequenceLength = sequencer.modules[newStepName][1]["length"];
+    }
     _sequencer
-    .addSteps(newStepName, options)
-    .run({index: _sequencer.images.image1.steps.length - 2});
+      .addSteps(newStepName, options)
+      .run({ index: _sequencer.images.image1.steps.length - sequenceLength - 1 });
 
     // add to URL hash too
     setUrlHashParameter("steps", _sequencer.toString());

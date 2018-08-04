@@ -265,3 +265,70 @@ See existing module `green-channel` for an example: https://github.com/publiclab
 The `green-channel` module is included into the core modules here: https://github.com/publiclab/image-sequencer/blob/master/src/Modules.js#L5-L7
 
 For help integrating, please open an issue.
+
+## Meta Module
+
+IMAGE SEQUENCER supports "meta modules" -- modules made of other modules. The syntax and structure of these meta modules is very similar to standard modules. Sequencer can also genarate meta modules dynamically with the function `createMetaModule` which can be called in the following ways
+
+```js
+// stepsString is a stringified sequence
+sequencer.createMetaModule(stepsString,info)
+
+/* stepsArray is the array of objects in this format
+* [
+*   {name: "moduleName",options: {}},
+*   {name: "moduleName",options: {}}
+* ]
+*/
+sequencer.createMetaModule(stepsArray,info)
+```
+
+A Meta module can also be contributed like a normal module with an info and a Module.js. A basic Meta module shall follow the following format
+
+
+```js
+// Module.js
+module.exports = function metaModuleFun(){
+  this.expandSteps([
+    { 'name': 'module-name', 'options': {} },
+    { 'name': 'module-name', options: {} }
+    ]);
+}
+```
+
+```json
+// Info
+{
+  "name": "meta-moduleName",
+  "description": "",
+  "length": //Integer representing number of steps in the metaModule
+}
+```
+
+```js
+//index.js
+module.exports = [
+  require('./Module.js'),
+  require('./info.json')
+]
+```
+
+All of the above can also be combined together to form a single file module.
+
+```js
+// MetaModule.js
+module.export = [
+  function (){
+  this.expandSteps([
+    { 'name': 'module-name', 'options': {} },
+    { 'name': 'module-name', options: {} }
+    ]);
+  },
+  {
+  "name": "meta-moduleName",
+  "description": "",
+  "length": //Integer representing number of steps in the metaModule
+  }
+]
+```
+The length is absolutely required for a meta-module, since sequencer is optimized to re-run minimum number of steps when a step is added in the UI which is 1 in the case of normal modules, if the added step is a meta-module the length of the sequence governs the number of steps to re-run.

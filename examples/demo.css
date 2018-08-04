@@ -107,3 +107,7 @@ h1 {
   text-align: center;
   margin: 10px;
 }
+#save-seq {
+  display: block;
+  margin: 0 auto;
+}

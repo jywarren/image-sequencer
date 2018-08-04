@@ -1,32 +1,31 @@
 /*
 * Blur an Image
 */
-module.exports = function Blur(options,UI){
+module.exports = function Blur(options, UI) {
 
     options.blur = options.blur || 2
-
     var output;
 
-    function draw(input,callback,progressObj){
+    function draw(input, callback, progressObj) {
 
         progressObj.stop(true);
         progressObj.overrideFlag = true;
 
         var step = this;
 
-        function changePixel(r, g, b, a){
-            return [r,g,b,a]
+        function changePixel(r, g, b, a) {
+            return [r, g, b, a]
         }
 
-        function extraManipulation(pixels){
-            pixels =  require('./Blur')(pixels,options.blur)
+        function extraManipulation(pixels) {
+            pixels = require('./Blur')(pixels, options.blur)
             return pixels
         }
 
-        function output(image,datauri,mimetype){
+        function output(image, datauri, mimetype) {
 
             // This output is accessible by Image Sequencer
-            step.output = {src:datauri,format:mimetype};
+            step.output = { src: datauri, format: mimetype };
 
         }
 
@@ -42,7 +41,7 @@ module.exports = function Blur(options,UI){
     }
     return {
         options: options,
-        draw:  draw,
+        draw: draw,
         output: output,
         UI: UI
     }

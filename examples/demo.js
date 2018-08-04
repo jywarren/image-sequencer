@@ -1,15 +1,21 @@
 window.onload = function() {
   sequencer = ImageSequencer();
 
-  // Load information of all modules (Name, Inputs, Outputs)
-  var modulesInfo = sequencer.modulesInfo();
+  function refreshOptions() {
+    // Load information of all modules (Name, Inputs, Outputs)
+    var modulesInfo = sequencer.modulesInfo();
 
-  // Add modules to the addStep dropdown
-  for (var m in modulesInfo) {
-    $("#addStep select").append(
-      '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
-    );
+    var addStepSelect = $("#addStep select");
+    addStepSelect.html("");
+
+    // Add modules to the addStep dropdown
+    for (var m in modulesInfo) {
+      addStepSelect.append(
+        '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
+      );
+    }
   }
+  refreshOptions();
 
   // UI for each step:
   sequencer.setUI(DefaultHtmlStepUi(sequencer));
@@ -22,6 +28,11 @@ window.onload = function() {
   $("#addStep select").on("change", ui.selectNewStepUi);
   $("#addStep button").on("click", ui.addStepUi);
   $('body').on('click', 'button.remove', ui.removeStepUi);
+  $('#save-seq').click(() => {
+    sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());
+    sequencer.loadModules();
+    refreshOptions();
+  });
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js
   sequencer.setInputStep({
@@ -31,7 +42,7 @@ window.onload = function() {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
       step.output.src = reader.result;
-      sequencer.run({index:0});
+      sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
     }
   });

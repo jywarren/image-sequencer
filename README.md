@@ -104,8 +104,10 @@ Image Sequencer also provides a CLI for applying operations to local files. The 
     -b  | --basic            | Basic mode only outputs the final image
     -o  | --output [PATH]    | Directory where output will be stored. (optional)
     -c  | --config {object} | Options for the step. (optional)
+    --save-sequence [string] | Name space separated with Stringified sequence to save
+    --install-module [string] | Module name space seaprated npm package name
 
-The basic format for using the CLI is as follows: 
+The basic format for using the CLI is as follows:
 
 ```
     $ ./index.js -i [PATH] -s step-name
@@ -121,15 +123,24 @@ The CLI also can take multiple steps at once, like so:
 
 But for this, double quotes must wrap the space-separated steps.
 
-Options for the steps can be passed in one line as json in the details option like 
+Options for the steps can be passed in one line as json in the details option like
 ```
 $ ./index.js -i [PATH] -s "brightness" -d '{"brightness":50}'
 
 ```
 Or the values can be given through terminal prompt like
- 
+
 <img width="1436" alt="screen shot 2018-02-14 at 5 18 50 pm" src="https://user-images.githubusercontent.com/25617855/36202790-3c6e8204-11ab-11e8-9e17-7f3387ab0158.png">
 
+`save-sequence` option can be used to save a sequence and the associated options for later usage. You should provide a string which contains a name of the sequence space separated from the sequence of steps which constitute it.
+```shell
+sequencer --save-sequence "invert-colormap invert(),colormap()"
+```
+
+`install-module` option can be used to install new modules from npm. You can register this module in your sequencer with a custom name space sepated with the npm package name. Below is an example for the `image-sequencer-invert` module.
+```shell
+sequencer --install-module "invert image-sequencer-invert"
+```
 
 The CLI is also chainable with other commands using `&&`
 
@@ -461,6 +472,20 @@ sequencer.insertSteps({
 ```
 return value: **`sequencer`** (To allow method chaining)
 
+## Saving Sequences
+
+IMAGE SEQUENCER supports saving a sequence of modules and their associated settings in a simple string syntax. These sequences can be saved in the local storage inside the browser and inside a json file in node.js. sequences can be saved in node context using the CLI option
+
+```shell
+--save-sequence "name stringified-sequence"
+```
+
+In Node and the browser the following function can be used
+```js
+sequencer.saveSequence(name,sequenceString)
+```
+
+The function `sequencer.loadModules()` reloads the modules and the saved sequences into `sequencer.modules` and `sequencer.sequences`
 
 ## Creating a User Interface
 
