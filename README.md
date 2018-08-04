@@ -125,7 +125,7 @@ But for this, double quotes must wrap the space-separated steps.
 
 Options for the steps can be passed in one line as json in the details option like
 ```
-$ ./index.js -i [PATH] -s "brightness" -d '{"brightness":50}'
+$ ./index.js -i [PATH] -s "brightness" -c '{"brightness":50}'
 
 ```
 Or the values can be given through terminal prompt like

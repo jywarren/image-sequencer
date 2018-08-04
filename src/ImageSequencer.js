@@ -231,6 +231,20 @@ ImageSequencer = function ImageSequencer(options) {
     return modulesdata;
   }
 
+  // Genates a CLI string for the current sequence
+  function toCliString() {
+    var cliStringSteps = `"`, cliOptions = {};
+    for (var step in this.steps) {
+      if (this.steps[step].options.name !== "load-image")
+        cliStringSteps += `${this.steps[step].options.name} `;
+      for (var inp in modulesInfo(this.steps[step].options.name).inputs) {
+        cliOptions[inp] = this.steps[step].options[inp];
+      }
+    }
+    cliStringSteps = cliStringSteps.substr(0, cliStringSteps.length - 1) + `"`;
+    return `sequencer -i [PATH] -s ${cliStringSteps} -d '${JSON.stringify(cliOptions)}'`
+  }
+
   // Strigifies the current sequence
   function toString(step) {
     if (step) {
@@ -415,6 +429,7 @@ ImageSequencer = function ImageSequencer(options) {
     setUI: setUI,
     exportBin: exportBin,
     modulesInfo: modulesInfo,
+    toCliString: toCliString,
     toString: toString,
     stepToString: stepToString,
     toJSON: toJSON,

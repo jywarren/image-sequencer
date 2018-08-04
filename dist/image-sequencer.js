@@ -47793,6 +47793,20 @@ ImageSequencer = function ImageSequencer(options) {
     return modulesdata;
   }
 
+  // Genates a CLI string for the current sequence
+  function toCliString() {
+    var cliStringSteps = `"`, cliOptions = {};
+    for (var step in this.steps) {
+      if (this.steps[step].options.name !== "load-image")
+        cliStringSteps += `${this.steps[step].options.name} `;
+      for (var inp in modulesInfo(this.steps[step].options.name).inputs) {
+        cliOptions[inp] = this.steps[step].options[inp];
+      }
+    }
+    cliStringSteps = cliStringSteps.substr(0, cliStringSteps.length - 1) + `"`;
+    return `sequencer -i [PATH] -s ${cliStringSteps} -d '${JSON.stringify(cliOptions)}'`
+  }
+
   // Strigifies the current sequence
   function toString(step) {
     if (step) {
@@ -47977,6 +47991,7 @@ ImageSequencer = function ImageSequencer(options) {
     setUI: setUI,
     exportBin: exportBin,
     modulesInfo: modulesInfo,
+    toCliString: toCliString,
     toString: toString,
     stepToString: stepToString,
     toJSON: toJSON,
@@ -48651,13 +48666,13 @@ module.exports={
 /*
  * Display only one color channel
  */
-module.exports = function Channel(options,UI) {
+module.exports = function Channel(options, UI) {
 
   options.channel = options.channel || "green";
 
   var output;
 
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -48665,15 +48680,15 @@ module.exports = function Channel(options,UI) {
     var step = this;
 
     function changePixel(r, g, b, a) {
-      if (options.channel == "red")   return [r, 0, 0, a];
+      if (options.channel == "red") return [r, 0, 0, a];
       if (options.channel == "green") return [0, g, 0, a];
-      if (options.channel == "blue")  return [0, 0, b, a];
+      if (options.channel == "blue") return [0, 0, b, a];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accesible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
     }
 
@@ -48691,7 +48706,7 @@ module.exports = function Channel(options,UI) {
   return {
     options: options,
     //setup: setup, // optional
-    draw:  draw,
+    draw: draw,
     output: output,
     UI: UI
   }
