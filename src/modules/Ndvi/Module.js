@@ -1,14 +1,16 @@
 /*
  * NDVI with red filter (blue channel is infrared)
  */
-module.exports = function Ndvi(options,UI) {
+module.exports = function Ndvi(options, UI) {
+
+  if (options.step.inBrowser) var ui = require('./Ui.js')(options.step, UI);
 
   options.filter = options.filter || "red";
 
   var output;
 
   // The function which is called on every draw.
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -22,11 +24,18 @@ module.exports = function Ndvi(options,UI) {
       return [x, x, x, a];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
+    }
+
+    function modifiedCallback() {
+      if (options.step.inBrowser) {
+        ui.setup();
+      }
+      callback();
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {
@@ -35,7 +44,7 @@ module.exports = function Ndvi(options,UI) {
       format: input.format,
       image: options.image,
       inBrowser: options.inBrowser,
-      callback: callback
+      callback: modifiedCallback
     });
 
   }
@@ -44,6 +53,6 @@ module.exports = function Ndvi(options,UI) {
     options: options,
     draw: draw,
     output: output,
-    UI:UI
+    UI: UI
   }
 }
