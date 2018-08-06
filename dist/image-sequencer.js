@@ -48065,15 +48065,16 @@ function InsertStep(ref, image, index, name, o) {
 
     // Tell UI that a step has been set up.
     o = o || {};
-    UI.onSetup(o.step);
     ref.modules[name].expandSteps = function expandSteps(stepsArray) {
       for (var step of stepsArray) {
         ref.addSteps(step['name'], step['options']);
       }
     }
-    var module = ref.modules[name][0](o, UI);
-    if (!module.isMeta)
-      ref.images[image].steps.splice(index, 0, module);
+    var mod = ref.modules[name][0](o, UI);
+    if (!mod.isMeta) {
+      UI.onSetup(o.step);
+      ref.images[image].steps.splice(index, 0, mod);
+    }
 
     return true;
   }
