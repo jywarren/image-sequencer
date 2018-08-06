@@ -16,6 +16,9 @@ module.exports = {
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
   'import-image': require('./modules/ImportImage'),
+  'overlay': require('./modules/Overlay'),
+  'gradient': require('./modules/Gradient'),
   'invert': require('image-sequencer-invert'),
   'ndvi-colormap': require('./modules/NdviColormap'),
+  'colorbar': require('./modules/Colorbar'),
 }

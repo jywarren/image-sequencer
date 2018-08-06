@@ -48026,7 +48026,7 @@ ImageSequencer = function ImageSequencer(options) {
 }
 module.exports = ImageSequencer;
 
-},{"./AddStep":136,"./ExportBin":137,"./FormatInput":138,"./InsertStep":140,"./Modules":141,"./ReplaceImage":142,"./Run":143,"./SavedSequences.json":145,"./ui/LoadImage":199,"./ui/SetInputStep":200,"./ui/UserInterface":201,"./util/getStep.js":203,"fs":42}],140:[function(require,module,exports){
+},{"./AddStep":136,"./ExportBin":137,"./FormatInput":138,"./InsertStep":140,"./Modules":141,"./ReplaceImage":142,"./Run":143,"./SavedSequences.json":145,"./ui/LoadImage":208,"./ui/SetInputStep":209,"./ui/UserInterface":210,"./util/getStep.js":212,"fs":42}],140:[function(require,module,exports){
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
@@ -48084,7 +48084,7 @@ function InsertStep(ref, image, index, name, o) {
 }
 module.exports = InsertStep;
 
-},{"./util/getStep.js":203}],141:[function(require,module,exports){
+},{"./util/getStep.js":212}],141:[function(require,module,exports){
 /*
 * Core modules and their info files
 */
@@ -48103,10 +48103,13 @@ module.exports = {
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
   'import-image': require('./modules/ImportImage'),
+  'overlay': require('./modules/Overlay'),
+  'gradient': require('./modules/Gradient'),
   'invert': require('image-sequencer-invert'),
   'ndvi-colormap': require('./modules/NdviColormap'),
+  'colorbar': require('./modules/Colorbar'),
 }
-},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colormap":164,"./modules/Crop":169,"./modules/DecodeQr":172,"./modules/Dynamic":175,"./modules/EdgeDetect":179,"./modules/FisheyeGl":182,"./modules/ImportImage":186,"./modules/Ndvi":190,"./modules/NdviColormap":193,"./modules/Saturation":196,"image-sequencer-invert":56}],142:[function(require,module,exports){
+},{"./modules/Average":147,"./modules/Blend":150,"./modules/Blur":154,"./modules/Brightness":157,"./modules/Channel":160,"./modules/Colorbar":163,"./modules/Colormap":167,"./modules/Crop":172,"./modules/DecodeQr":175,"./modules/Dynamic":178,"./modules/EdgeDetect":182,"./modules/FisheyeGl":185,"./modules/Gradient":188,"./modules/ImportImage":192,"./modules/Ndvi":196,"./modules/NdviColormap":199,"./modules/Overlay":202,"./modules/Saturation":205,"image-sequencer-invert":56}],142:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -48262,7 +48265,7 @@ function Run(ref, json_q, callback, ind, progressObj) {
 }
 module.exports = Run;
 
-},{"./RunToolkit":144,"./util/getStep.js":203}],144:[function(require,module,exports){
+},{"./RunToolkit":144,"./util/getStep.js":212}],144:[function(require,module,exports){
 const getPixels = require('get-pixels');
 const pixelManipulation = require('./modules/_nomodule/PixelManipulation');
 const lodash = require('lodash');
@@ -48277,7 +48280,7 @@ module.exports = function(input) {
     input.savePixels = savePixels;
     return input;
 }
-},{"./modules/_nomodule/PixelManipulation":198,"data-uri-to-buffer":13,"get-pixels":23,"lodash":62,"save-pixels":111}],145:[function(require,module,exports){
+},{"./modules/_nomodule/PixelManipulation":207,"data-uri-to-buffer":13,"get-pixels":23,"lodash":62,"save-pixels":111}],145:[function(require,module,exports){
 module.exports={"sample":[{"name":"invert","options":{}},{"name":"channel","options":{"channel":"red"}},{"name":"blur","options":{"blur":"5"}}]}
 },{}],146:[function(require,module,exports){
 /*
@@ -48357,7 +48360,7 @@ module.exports = function Average(options, UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":198}],147:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207}],147:[function(require,module,exports){
 module.exports = [
     require('./Module'),
     require('./info.json')
@@ -48435,7 +48438,7 @@ module.exports = function Dynamic(options, UI, util) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":198,"get-pixels":23}],150:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207,"get-pixels":23}],150:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
 },{"./Module":149,"./info.json":151,"dup":147}],151:[function(require,module,exports){
 module.exports={
@@ -48586,7 +48589,7 @@ module.exports = function Blur(options, UI) {
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":198,"./Blur":152}],154:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207,"./Blur":152}],154:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
 },{"./Module":153,"./info.json":155,"dup":147}],155:[function(require,module,exports){
 module.exports={
@@ -48657,7 +48660,7 @@ module.exports = function Brightness(options,UI){
     }
 }
 
-},{"../_nomodule/PixelManipulation.js":198}],157:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207}],157:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
 },{"./Module":156,"./info.json":158,"dup":147}],158:[function(require,module,exports){
 module.exports={
@@ -48722,7 +48725,7 @@ module.exports = function Channel(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":198}],160:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207}],160:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
 },{"./Module":159,"./info.json":161,"dup":147}],161:[function(require,module,exports){
 module.exports={
@@ -48739,6 +48742,59 @@ module.exports={
 }
 
 },{}],162:[function(require,module,exports){
+module.exports = function NdviColormapfunction(options, UI) {
+
+    options.x = options.x || 0;
+    options.y = options.y || 0;
+    options.colormap = options.colormap || "default";
+    options.h = options.h || 10;
+    this.expandSteps([
+        { 'name': 'gradient', 'options': {} },
+        { 'name': 'colormap', 'options': { colormap: options.colormap } },
+        { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
+        { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
+    ]);
+    return {
+        isMeta: true
+    }
+}
+},{}],163:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./Module":162,"./info.json":164,"dup":147}],164:[function(require,module,exports){
+module.exports={
+    "name": "Colorbar",
+    "description": "Generates a colorbar to lay over the image",
+    "inputs": {
+        "colormap": {
+            "type": "select",
+            "desc": "Name of the Colormap",
+            "default": "default",
+            "values": [
+                "default",
+                "greyscale",
+                "stretched",
+                "fastie"
+            ]
+        },
+        "x": {
+            "type": "integer",
+            "desc": "X-position of the image on which the new image is overlayed",
+            "default": 0
+        },
+        "y": {
+            "type": "integer",
+            "desc": "Y-position of the image on which the new image is overlayed",
+            "default": 0
+        },
+        "h": {
+            "type": "iinteger",
+            "desc": "height of the colorbar",
+            "default": 10
+        }
+    },
+    "length": 4
+}
+},{}],165:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
  * from a lookup table, which can be specified as an array of [begin, end] 
@@ -48827,7 +48883,7 @@ var colormaps = {
              ])
 }
 
-},{}],163:[function(require,module,exports){
+},{}],166:[function(require,module,exports){
 module.exports = function Colormap(options,UI) {
 
   var output;
@@ -48871,9 +48927,9 @@ module.exports = function Colormap(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":198,"./Colormap":162}],164:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207,"./Colormap":165}],167:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":163,"./info.json":165,"dup":147}],165:[function(require,module,exports){
+},{"./Module":166,"./info.json":168,"dup":147}],168:[function(require,module,exports){
 module.exports={
   "name": "Colormap",
   "description": "Maps brightness values (average of red, green & blue) to a given color lookup table, made up of a set of one more color gradients.\n\nFor example, 'cooler' colors like blue could represent low values, while 'hot' colors like red could represent high values.",
@@ -48887,7 +48943,7 @@ module.exports={
   }
 }
 
-},{}],166:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 (function (Buffer){
 module.exports = function Crop(input,options,callback) {
 
@@ -48933,7 +48989,7 @@ module.exports = function Crop(input,options,callback) {
 };
 
 }).call(this,require("buffer").Buffer)
-},{"buffer":4,"get-pixels":23,"save-pixels":111}],167:[function(require,module,exports){
+},{"buffer":4,"get-pixels":23,"save-pixels":111}],170:[function(require,module,exports){
 /*
  * Image Cropping module
  * Usage:
@@ -49005,7 +49061,7 @@ module.exports = function CropModule(options, UI) {
   }
 }
 
-},{"./Crop":166,"./Ui.js":168}],168:[function(require,module,exports){
+},{"./Crop":169,"./Ui.js":171}],171:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -49104,9 +49160,9 @@ module.exports = function CropModuleUi(step, ui) {
   }
 }
 
-},{}],169:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":167,"./info.json":170,"dup":147}],170:[function(require,module,exports){
+},{"./Module":170,"./info.json":173,"dup":147}],173:[function(require,module,exports){
 module.exports={
   "name": "Crop",
   "description": "Crop image to given x, y, w, h in pixels, measured from top left",
@@ -49134,7 +49190,7 @@ module.exports={
     }
   }
 }
-},{}],171:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
  */
@@ -49177,9 +49233,9 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"get-pixels":23,"jsqr":61}],172:[function(require,module,exports){
+},{"get-pixels":23,"jsqr":61}],175:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":171,"./info.json":173,"dup":147}],173:[function(require,module,exports){
+},{"./Module":174,"./info.json":176,"dup":147}],176:[function(require,module,exports){
 module.exports={
   "name": "Decode QR",
   "description": "Search for and decode a QR code in the image",
@@ -49192,7 +49248,7 @@ module.exports={
   }
 }
 
-},{}],174:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 module.exports = function Dynamic(options,UI) {
 
   var output;
@@ -49277,9 +49333,9 @@ module.exports = function Dynamic(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":198}],175:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207}],178:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":174,"./info.json":176,"dup":147}],176:[function(require,module,exports){
+},{"./Module":177,"./info.json":179,"dup":147}],179:[function(require,module,exports){
 module.exports={
   "name": "Dynamic",
   "description": "A module which accepts JavaScript math expressions to produce each color channel based on the original image's color. See <a href='https://publiclab.org/wiki/infragram-sandbox'>Infragrammar</a>.",
@@ -49307,7 +49363,7 @@ module.exports={
   }
 }
 
-},{}],177:[function(require,module,exports){
+},{}],180:[function(require,module,exports){
 const _ = require('lodash')
 
 //define kernels for the sobel filter
@@ -49488,7 +49544,7 @@ function hysteresis(pixels){
 
 
 
-},{"lodash":62}],178:[function(require,module,exports){
+},{"lodash":62}],181:[function(require,module,exports){
 /*
 * Detect Edges in an Image
 */
@@ -49546,9 +49602,9 @@ module.exports = function edgeDetect(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":198,"./EdgeUtils":177,"ndarray-gaussian-filter":67}],179:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207,"./EdgeUtils":180,"ndarray-gaussian-filter":67}],182:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":178,"./info.json":180,"dup":147}],180:[function(require,module,exports){
+},{"./Module":181,"./info.json":183,"dup":147}],183:[function(require,module,exports){
 module.exports={
     "name": "Detect Edges",
     "description": "this module detects edges using the Canny method, which first Gaussian blurs the image to reduce noise (amount of blur configurable in settings as `options.blur`), then applies a number of steps to highlight edges, resulting in a greyscale image where the brighter the pixel, the stronger the detected edge. Read more at: https://en.wikipedia.org/wiki/Canny_edge_detector",
@@ -49571,7 +49627,7 @@ module.exports={
     }
 }
 
-},{}],181:[function(require,module,exports){
+},{}],184:[function(require,module,exports){
 /*
  * Resolves Fisheye Effect
  */
@@ -49643,9 +49699,9 @@ module.exports = function DoNothing(options,UI) {
   }
 }
 
-},{"fisheyegl":15}],182:[function(require,module,exports){
+},{"fisheyegl":15}],185:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":181,"./info.json":183,"dup":147}],183:[function(require,module,exports){
+},{"./Module":184,"./info.json":186,"dup":147}],186:[function(require,module,exports){
 module.exports={
   "name": "Fisheye GL",
   "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
@@ -49713,7 +49769,81 @@ module.exports={
   }
 }
 
-},{}],184:[function(require,module,exports){
+},{}],187:[function(require,module,exports){
+(function (Buffer){
+module.exports = function Invert(options, UI) {
+
+    var output;
+
+    // The function which is called on every draw.
+    function draw(input, callback, progressObj) {
+        var getPixels = require('get-pixels');
+        var savePixels = require('save-pixels');
+
+        var step = this;
+
+        getPixels(input.src, function(err, pixels) {
+
+            if (err) {
+                console.log("Bad Image path");
+                return;
+            }
+            var width = 0;
+
+            for (var i = 0; i < pixels.shape[0]; i++) width++;
+
+            for (var i = 0; i < pixels.shape[0]; i++) {
+                for (var j = 0; j < pixels.shape[1]; j++) {
+                    let val = (i / width) * 255;
+                    pixels.set(i, j, 0, val);
+                    pixels.set(i, j, 1, val);
+                    pixels.set(i, j, 2, val);
+                    pixels.set(i, j, 3, 255);
+                }
+            }
+            var chunks = [];
+            var totalLength = 0;
+            var r = savePixels(pixels, input.format, { quality: 100 });
+
+            r.on("data", function(chunk) {
+                totalLength += chunk.length;
+                chunks.push(chunk);
+            });
+
+            r.on("end", function() {
+                var data = Buffer.concat(chunks, totalLength).toString("base64");
+                var datauri = "data:image/" + input.format + ";base64," + data;
+                output(input.image, datauri, input.format);
+                callback();
+            });
+        });
+
+        function output(image, datauri, mimetype) {
+
+            // This output is accessible by Image Sequencer
+            step.output = { src: datauri, format: mimetype };
+
+        }
+    }
+
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+
+}).call(this,require("buffer").Buffer)
+},{"buffer":4,"get-pixels":23,"save-pixels":111}],188:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./Module":187,"./info.json":189,"dup":147}],189:[function(require,module,exports){
+module.exports={
+    "name": "Gradient",
+    "description": "Gives a gradient of the image",
+    "inputs": {}
+}
+},{}],190:[function(require,module,exports){
 /*
  * Import Image module; this fetches a given remote or local image via URL
  * or data-url, and overwrites the current one. It saves the original as
@@ -49773,7 +49903,7 @@ module.exports = function ImportImageModule(options, UI) {
   }
 }
 
-},{"../../util/GetFormat":202,"./Ui.js":185}],185:[function(require,module,exports){
+},{"../../util/GetFormat":211,"./Ui.js":191}],191:[function(require,module,exports){
 // hide on save
 module.exports = function ImportImageModuleUi(step, ui) {
 
@@ -49829,9 +49959,9 @@ module.exports = function ImportImageModuleUi(step, ui) {
   }
 }
 
-},{}],186:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":184,"./info.json":187,"dup":147}],187:[function(require,module,exports){
+},{"./Module":190,"./info.json":193,"dup":147}],193:[function(require,module,exports){
 module.exports={
   "name": "Import Image",
   "description": "Import a new image and replace the original with it. Future versions may enable a blend mode. Specify an image by URL or by file selector.",
@@ -49844,7 +49974,7 @@ module.exports={
     }
   }
 }
-},{}],188:[function(require,module,exports){
+},{}],194:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
  */
@@ -49904,7 +50034,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":198,"./Ui.js":189}],189:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207,"./Ui.js":195}],195:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -49937,9 +50067,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],190:[function(require,module,exports){
+},{}],196:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":188,"./info.json":191,"dup":147}],191:[function(require,module,exports){
+},{"./Module":194,"./info.json":197,"dup":147}],197:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -49953,7 +50083,7 @@ module.exports={
   }
 }
 
-},{}],192:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 /*
  * Sample Meta Module for demonstration purpose only
  */
@@ -49963,16 +50093,112 @@ module.exports = function NdviColormapfunction() {
         isMeta: true
     }
 }
-},{}],193:[function(require,module,exports){
+},{}],199:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":192,"./info.json":194,"dup":147}],194:[function(require,module,exports){
+},{"./Module":198,"./info.json":200,"dup":147}],200:[function(require,module,exports){
 module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
     "length": 2
 }
-},{}],195:[function(require,module,exports){
+},{}],201:[function(require,module,exports){
+module.exports = function Dynamic(options, UI, util) {
+
+    options.x = options.x || 0;
+    options.y = options.y || 0;
+
+    var output;
+
+    // This function is called on every draw.
+    function draw(input, callback, progressObj) {
+
+        options.offset = options.offset || -2;
+
+        progressObj.stop(true);
+        progressObj.overrideFlag = true;
+
+        var step = this;
+
+        // save the pixels of the base image
+        var baseStepImage = this.getStep(options.offset).image;
+        var baseStepOutput = this.getOutput(options.offset);
+
+        var getPixels = require('get-pixels');
+
+        getPixels(input.src, function(err, pixels) {
+            options.secondImagePixels = pixels;
+
+            function changePixel(r1, g1, b1, a1, x, y) {
+
+                // overlay
+                var p = options.secondImagePixels;
+                if (x >= options.x
+                    && x < p.shape[0]
+                    && y >= options.y
+                    && y < p.shape[1])
+                    return [
+                        p.get(x, y, 0),
+                        p.get(x, y, 1),
+                        p.get(x, y, 2),
+                        p.get(x, y, 3)
+                    ];
+                else
+                    return [r1, g1, b1, a1];
+            }
+
+            function output(image, datauri, mimetype) {
+
+                // This output is accessible by Image Sequencer
+                step.output = { src: datauri, format: mimetype };
+
+            }
+
+            // run PixelManipulation on first Image pixels
+            return require('../_nomodule/PixelManipulation.js')(baseStepOutput, {
+                output: output,
+                changePixel: changePixel,
+                format: baseStepOutput.format,
+                image: baseStepImage,
+                inBrowser: options.inBrowser,
+                callback: callback
+            });
+        });
+    }
+
+    return {
+        options: options,
+        draw: draw,
+        output: output,
+        UI: UI
+    }
+}
+
+},{"../_nomodule/PixelManipulation.js":207,"get-pixels":23}],202:[function(require,module,exports){
+arguments[4][147][0].apply(exports,arguments)
+},{"./Module":201,"./info.json":203,"dup":147}],203:[function(require,module,exports){
+module.exports={
+    "name": "Overlay",
+    "description": "Overlays an Image over another at a given position(x,y)",
+    "inputs": {
+        "x": {
+            "type": "integer",
+            "desc": "X-position of the image on which the new image is overlayed",
+            "default": 0
+        },
+        "y": {
+            "type": "integer",
+            "desc": "Y-position of the image on which the new image is overlayed",
+            "default": 0
+        },
+        "offset": {
+            "type": "integer",
+            "desc": "offset to the output of the step on which the output of the last step is overlayed",
+            "default": -2
+        }
+    }
+}
+},{}],204:[function(require,module,exports){
 /*
  * Saturate an image with a value from 0 to 1
  */
@@ -50030,9 +50256,9 @@ module.exports = function Saturation(options,UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":198}],196:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":207}],205:[function(require,module,exports){
 arguments[4][147][0].apply(exports,arguments)
-},{"./Module":195,"./info.json":197,"dup":147}],197:[function(require,module,exports){
+},{"./Module":204,"./info.json":206,"dup":147}],206:[function(require,module,exports){
 module.exports={
     "name": "Saturation",
     "description": "Change the saturation of the image by given value, from 0-1, with 1 being 100% saturated.",
@@ -50045,7 +50271,7 @@ module.exports={
     }
 }
 
-},{}],198:[function(require,module,exports){
+},{}],207:[function(require,module,exports){
 (function (process,Buffer){
 /*
 * General purpose per-pixel manipulation
@@ -50146,7 +50372,7 @@ module.exports = function PixelManipulation(image, options) {
 };
 
 }).call(this,require('_process'),require("buffer").Buffer)
-},{"_process":98,"buffer":4,"get-pixels":23,"pace":74,"save-pixels":111}],199:[function(require,module,exports){
+},{"_process":98,"buffer":4,"get-pixels":23,"pace":74,"save-pixels":111}],208:[function(require,module,exports){
 // special module to load an image into the start of the sequence; used in the HTML UI
 function LoadImage(ref, name, src, main_callback) {
   function makeImage(datauri) {
@@ -50253,7 +50479,7 @@ function LoadImage(ref, name, src, main_callback) {
 
 module.exports = LoadImage;
 
-},{"urify":132}],200:[function(require,module,exports){
+},{"urify":132}],209:[function(require,module,exports){
 // TODO: potentially move this into ImportImage module
 function setInputStepInit() {
 
@@ -50305,7 +50531,7 @@ function setInputStepInit() {
 }
 module.exports = setInputStepInit;
 
-},{}],201:[function(require,module,exports){
+},{}],210:[function(require,module,exports){
 /*
  * User Interface Handling Module
  */
@@ -50365,7 +50591,7 @@ module.exports = function UserInterface(events = {}) {
 
 }
 
-},{}],202:[function(require,module,exports){
+},{}],211:[function(require,module,exports){
 /*
 * Determine format from a URL or data-url, return "jpg" "png" "gif" etc
 * TODO: write a test for this using the examples
@@ -50407,7 +50633,7 @@ module.exports = function GetFormat(src) {
 
 }
 
-},{}],203:[function(require,module,exports){
+},{}],212:[function(require,module,exports){
 module.exports = {
     getPreviousStep: function() {
         return this.getStep(-1);
