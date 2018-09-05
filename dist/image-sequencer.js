@@ -48455,36 +48455,35 @@ module.exports={
 }
 
 },{}],152:[function(require,module,exports){
-module.exports = exports = function(pixels,blur){
-    let kernel = kernelGenerator(blur,1)
-    kernel = flipKernel(kernel)
-    var oldpix = pixels
-    
-    for(let i=0;i<pixels.shape[0];i++){
-        for(let j=0;j<pixels.shape[1];j++){
-            let neighboutPos = getNeighbouringPixelPositions([i,j])
-            let acc = [0.0,0.0,0.0,0.0]
-            for(let a = 0; a < kernel.length; a++){
-                for(let b = 0; b < kernel.length; b++){
-                    acc[0] += (oldpix.get(neighboutPos[a][b][0],neighboutPos[a][b][1],0) * kernel[a][b]);
-                    acc[1] += (oldpix.get(neighboutPos[a][b][0],neighboutPos[a][b][1],1) * kernel[a][b]);
-                    acc[2] += (oldpix.get(neighboutPos[a][b][0],neighboutPos[a][b][1],2) * kernel[a][b]);
-                    acc[3] += (oldpix.get(neighboutPos[a][b][0],neighboutPos[a][b][1],3) * kernel[a][b]);
+module.exports = exports = function(pixels, blur) {
+    let kernel = kernelGenerator(blur, 1), oldpix = pixels;
+    kernel = flipKernel(kernel);
+
+    for (let i = 0; i < pixels.shape[0]; i++) {
+        for (let j = 0; j < pixels.shape[1]; j++) {
+            let neighboutPos = getNeighbouringPixelPositions([i, j]);
+            let acc = [0.0, 0.0, 0.0, 0.0];
+            for (let a = 0; a < kernel.length; a++) {
+                for (let b = 0; b < kernel.length; b++) {
+                    acc[0] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 0) * kernel[a][b]);
+                    acc[1] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 1) * kernel[a][b]);
+                    acc[2] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 2) * kernel[a][b]);
+                    acc[3] += (oldpix.get(neighboutPos[a][b][0], neighboutPos[a][b][1], 3) * kernel[a][b]);
                 }
             }
-            pixels.set(i,j,0,acc[0])
-            pixels.set(i,j,1,acc[1])
-            pixels.set(i,j,2,acc[2])
+            pixels.set(i, j, 0, acc[0]);
+            pixels.set(i, j, 1, acc[1]);
+            pixels.set(i, j, 2, acc[2]);
         }
     }
-    return pixels
-    
-    
-    
-    //Generates a 3x3 Gaussian kernel
-    function kernelGenerator(sigma,size){
+    return pixels;
 
-        /* 
+
+
+    //Generates a 3x3 Gaussian kernel
+    function kernelGenerator(sigma, size) {
+
+        /*
         Trying out a variable radius kernel not working as of now
         */
         // const coeff = (1.0/(2.0*Math.PI*sigma*sigma))
@@ -48504,41 +48503,41 @@ module.exports = exports = function(pixels,blur){
         //     })
         // })
         // result = result.map(arr=>arr.map(val=>(val + 0.0)/(sum + 0.0)))
-        
-        // return result
-        
-        return [
-            [2.0/159.0,4.0/159.0,5.0/159.0,4.0/159.0,2.0/159.0],
-            [4.0/159.0,9.0/159.0,12.0/159.0,9.0/159.0,4.0/159.0],
-            [5.0/159.0,12.0/159.0,15.0/159.0,12.0/159.0,5.0/159.0],
-            [4.0/159.0,9.0/159.0,12.0/159.0,9.0/159.0,4.0/159.0],
-            [2.0/159.0,4.0/159.0,5.0/159.0,4.0/159.0,2.0/159.0]
-        ]
-    }
-    function getNeighbouringPixelPositions(pixelPosition){
-        let x = pixelPosition[0],y=pixelPosition[1]
-        let result = []
-        for(let i=-2;i<=2;i++){
-            let arr = []
-            for(let j=-2;j<=2;j++){
-                arr.push([x + i,y + j])
-            }
-            result.push(arr)
-        }
-    return result
-}
 
-function flipKernel(kernel){
-    let result = []
-    for(let i =kernel.length-1;i>=0;i--){
-        let arr = []
-        for(let j = kernel[i].length-1;j>=0;j--){
-            arr.push(kernel[i][j])
-        }
-        result.push(arr)
+        // return result
+
+        return [
+            [2.0 / 159.0, 4.0 / 159.0, 5.0 / 159.0, 4.0 / 159.0, 2.0 / 159.0],
+            [4.0 / 159.0, 9.0 / 159.0, 12.0 / 159.0, 9.0 / 159.0, 4.0 / 159.0],
+            [5.0 / 159.0, 12.0 / 159.0, 15.0 / 159.0, 12.0 / 159.0, 5.0 / 159.0],
+            [4.0 / 159.0, 9.0 / 159.0, 12.0 / 159.0, 9.0 / 159.0, 4.0 / 159.0],
+            [2.0 / 159.0, 4.0 / 159.0, 5.0 / 159.0, 4.0 / 159.0, 2.0 / 159.0]
+        ];
     }
-    return result
-}
+    function getNeighbouringPixelPositions(pixelPosition) {
+        let x = pixelPosition[0], y = pixelPosition[1], result = [];
+
+        for (let i = -2; i <= 2; i++) {
+            let arr = [];
+            for (let j = -2; j <= 2; j++)
+                arr.push([x + i, y + j]);
+
+            result.push(arr);
+        }
+        return result;
+    }
+
+    function flipKernel(kernel) {
+        let result = [];
+        for (let i = kernel.length - 1; i >= 0; i--) {
+            let arr = [];
+            for (let j = kernel[i].length - 1; j >= 0; j--) {
+                arr.push(kernel[i][j]);
+            }
+            result.push(arr);
+        }
+        return result;
+    }
 }
 },{}],153:[function(require,module,exports){
 /*
@@ -49368,179 +49367,177 @@ module.exports={
 const _ = require('lodash')
 
 //define kernels for the sobel filter
-const kernelx = [[-1,0,1],[-2,0,2],[-1,0,1]],
-kernely = [[-1,-2,-1],[0,0,0],[1,2,1]]
+const kernelx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
+    kernely = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
 
-let angles = []
-let mags = []
-let strongEdgePixels = []
-let weakEdgePixels = []
-let notInUI
-module.exports = exports =  function(pixels,highThresholdRatio,lowThresholdRatio,inBrowser){
-    notInUI = !inBrowser
-    for(var x = 0; x < pixels.shape[0]; x++) {
-        angles.push([])
-        mags.push([])
-        for(var y = 0; y < pixels.shape[1]; y++) {
+let angles = [], mags = [], strongEdgePixels = [], weakEdgePixels = [], notInUI;
+module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, inBrowser) {
+    notInUI = !inBrowser;
+    for (var x = 0; x < pixels.shape[0]; x++) {
+        angles.push([]);
+        mags.push([]);
+        for (var y = 0; y < pixels.shape[1]; y++) {
             var result = changePixel(
                 pixels,
-                pixels.get(x,y,0),
+                pixels.get(x, y, 0),
                 pixels.get(x, y, 3),
                 x,
                 y
-            )
-            let pixel = result.pixel
-            
+            );
+            let pixel = result.pixel;
+
             pixels.set(x, y, 0, pixel[0]);
             pixels.set(x, y, 1, pixel[1]);
             pixels.set(x, y, 2, pixel[2]);
             pixels.set(x, y, 3, pixel[3]);
-            
-            mags.slice(-1)[0].push(pixel[3])
-            angles.slice(-1)[0].push(result.angle)  
+
+            mags.slice(-1)[0].push(pixel[3]);
+            angles.slice(-1)[0].push(result.angle);
         }
     }
-    
-    return hysteresis(doubleThreshold(nonMaxSupress(pixels),highThresholdRatio,lowThresholdRatio))
+
+    return doubleThreshold(nonMaxSupress(pixels), highThresholdRatio, lowThresholdRatio);
 }
 
 //changepixel function that convolutes every pixel (sobel filter)
-function changePixel(pixels,val,a,x,y){
-    let magX = 0.0
-    for(let a = 0; a < 3; a++){
-        for(let b = 0; b < 3; b++){ 
-            
+function changePixel(pixels, val, a, x, y) {
+    let magX = 0.0;
+    for (let a = 0; a < 3; a++) {
+        for (let b = 0; b < 3; b++) {
+
             let xn = x + a - 1;
             let yn = y + b - 1;
-            
-            magX += pixels.get(xn,yn,0) * kernelx[a][b];
+
+            magX += pixels.get(xn, yn, 0) * kernelx[a][b];
         }
     }
-    let magY = 0.0
-    for(let a = 0; a < 3; a++){
-        for(let b = 0; b < 3; b++){ 
-            
+    let magY = 0.0;
+    for (let a = 0; a < 3; a++) {
+        for (let b = 0; b < 3; b++) {
+
             let xn = x + a - 1;
             let yn = y + b - 1;
-            
-            magY += pixels.get(xn,yn,0) * kernely[a][b];
+
+            magY += pixels.get(xn, yn, 0) * kernely[a][b];
         }
     }
-    let mag = Math.sqrt(Math.pow(magX,2) + Math.pow(magY,2))
-    let angle = Math.atan2(magY,magX)
+    let mag = Math.sqrt(Math.pow(magX, 2) + Math.pow(magY, 2));
+    let angle = Math.atan2(magY, magX);
     return {
         pixel:
-        [val,val,val,mag],
+            [val, val, val, mag],
         angle: angle
-    }
+    };
 }
 
 //Non Maximum Supression without interpolation
-function nonMaxSupress(pixels) { 
-    angles = angles.map((arr)=>arr.map(convertToDegrees))
-    
-    for(let i = 1;i<pixels.shape[0]-1;i++){
-        for(let j=1;j<pixels.shape[1]-1;j++){
-            
-            let angle = angles[i][j]
-            let pixel = pixels.get(i,j)
-            
-            if ((angle>=-22.5 && angle<=22.5) ||
-            (angle<-157.5 && angle>=-180))
-            
-            if ((mags[i][j]>= mags[i][j+1]) && 
-            (mags[i][j] >= mags[i][j-1]))
-            pixels.set(i,j,3,mags[i][j])
-            else
-            pixels.set(i,j,3,0)
-            
-            else if ((angle>=22.5 && angle<=67.5) || 
-            (angle<-112.5 && angle>=-157.5))
-            
-            if ((mags[i][j] >= mags[i+1][j+1]) && 
-            (mags[i][j] >= mags[i-1][j-1]))
-            pixels.set(i,j,3,mags[i][j])
-            else
-            pixels.set(i,j,3,0)
-            
-            else if ((angle>=67.5 && angle<=112.5) || 
-            (angle<-67.5 && angle>=-112.5))
-            
-            if ((mags[i][i] >= mags[i+1][j]) && 
-            (mags[i][j] >= mags[i][j]))
-            pixels.set(i,j,3,mags[i][j])
-            else
-            pixels.set(i,j,3,0)
-            
-            else if ((angle>=112.5 && angle<=157.5) || 
-            (angle<-22.5 && angle>=-67.5))
-            
-            if ((mags[i][j] >= mags[i+1][j-1]) && 
-            (mags[i][j] >= mags[i-1][j+1]))
-            pixels.set(i,j,3,mags[i][j])
-            else
-            pixels.set(i,j,3,0)  
+function nonMaxSupress(pixels) {
+
+    angles = angles.map((arr) => arr.map(convertToDegrees));
+
+    for (let i = 1; i < pixels.shape[0] - 1; i++) {
+        for (let j = 1; j < pixels.shape[1] - 1; j++) {
+
+            let angle = angles[i][j];
+            let pixel = pixels.get(i, j);
+
+            if ((angle >= -22.5 && angle <= 22.5) ||
+                (angle < -157.5 && angle >= -180))
+
+                if ((mags[i][j] >= mags[i][j + 1]) &&
+                    (mags[i][j] >= mags[i][j - 1]))
+                    pixels.set(i, j, 3, mags[i][j]);
+                else
+                    pixels.set(i, j, 3, 0);
+
+            else if ((angle >= 22.5 && angle <= 67.5) ||
+                (angle < -112.5 && angle >= -157.5))
+
+                if ((mags[i][j] >= mags[i + 1][j + 1]) &&
+                    (mags[i][j] >= mags[i - 1][j - 1]))
+                    pixels.set(i, j, 3, mags[i][j]);
+                else
+                    pixels.set(i, j, 3, 0);
+
+            else if ((angle >= 67.5 && angle <= 112.5) ||
+                (angle < -67.5 && angle >= -112.5))
+
+                if ((mags[i][i] >= mags[i + 1][j]) &&
+                    (mags[i][j] >= mags[i][j]))
+                    pixels.set(i, j, 3, mags[i][j]);
+                else
+                    pixels.set(i, j, 3, 0);
+
+            else if ((angle >= 112.5 && angle <= 157.5) ||
+                (angle < -22.5 && angle >= -67.5))
+
+                if ((mags[i][j] >= mags[i + 1][j - 1]) &&
+                    (mags[i][j] >= mags[i - 1][j + 1]))
+                    pixels.set(i, j, 3, mags[i][j]);
+                else
+                    pixels.set(i, j, 3, 0);
 
         }
     }
-    return pixels
+    return pixels;
 }
 //Converts radians to degrees
-var convertToDegrees = radians => (radians * 180)/Math.PI
+var convertToDegrees = radians => (radians * 180) / Math.PI;
 
 //Finds the max value in a 2d array like mags
-var findMaxInMatrix = arr => Math.max(...arr.map(el=>el.map(val=>!!val?val:0)).map(el=>Math.max(...el)))
+var findMaxInMatrix = arr => Math.max(...arr.map(el => el.map(val => !!val ? val : 0)).map(el => Math.max(...el)));
 
 //Applies the double threshold to the image
-function doubleThreshold(pixels,highThresholdRatio,lowThresholdRatio){
-    const highThreshold = findMaxInMatrix(mags) * 0.2
-    const lowThreshold = highThreshold * lowThresholdRatio
+function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio) {
 
-    for(let i =0;i<pixels.shape[0];i++){
-        for(let j=0;j<pixels.shape[1];j++){
-            let pixelPos = [i,j]
-            
-            mags[i][j]>lowThreshold
-            ?mags[i][j]>highThreshold
-            ?strongEdgePixels.push(pixelPos)
-            :weakEdgePixels.push(pixelPos)
-            :pixels.set(i,j,3,0)
+    const highThreshold = findMaxInMatrix(mags) * 0.2;
+    const lowThreshold = highThreshold * lowThresholdRatio;
+
+    for (let i = 0; i < pixels.shape[0]; i++) {
+        for (let j = 0; j < pixels.shape[1]; j++) {
+            let pixelPos = [i, j];
+
+            mags[i][j] > lowThreshold
+                ? mags[i][j] > highThreshold
+                    ? strongEdgePixels.push(pixelPos)
+                    : weakEdgePixels.push(pixelPos)
+                : pixels.set(i, j, 3, 0);
         }
     }
 
-    strongEdgePixels.forEach(pix=>pixels.set(pix[0],pix[1],3,255))
-    
-    return pixels
+    strongEdgePixels.forEach(pix => pixels.set(pix[0], pix[1], 3, 255));
+
+    return pixels;
 }
 
-//  hysteresis edge tracking algorithm
-function hysteresis(pixels){
-    function getNeighbouringPixelPositions(pixelPosition){
-        let x = pixelPosition[0],y=pixelPosition[1]
-        return [[x+1,y+1],
-        [x+1,y],
-        [x+1,y-1],
-        [x,y+1],
-        [x,y-1],
-        [x-1,y+1],
-        [x-1,y],
-        [x-1,y-1]]
+//  hysteresis edge tracking algorithm -- not working as of now
+/* function hysteresis(pixels) {
+    function getNeighbouringPixelPositions(pixelPosition) {
+        let x = pixelPosition[0], y = pixelPosition[1]
+        return [[x + 1, y + 1],
+        [x + 1, y],
+        [x + 1, y - 1],
+        [x, y + 1],
+        [x, y - 1],
+        [x - 1, y + 1],
+        [x - 1, y],
+        [x - 1, y - 1]]
     }
 
-//This can potentially be improved see  https://en.wikipedia.org/wiki/Connected-component_labeling
-    for(weakPixel in weakEdgePixels){
-        let neighbourPixels = getNeighbouringPixelPositions(weakEdgePixels[weakPixel])
-        for(pixel in neighbourPixels){
-            if(strongEdgePixels.find(el=> _.isEqual(el,neighbourPixels[pixel]))) {
-                pixels.set(weakPixel[0],weakPixel[1],3,255)
-                weakEdgePixels.splice(weakPixel,weakPixel)
-                break
-            }
-        }
-    }
-    weakEdgePixels.forEach(pix=>pixels.set(pix[0],pix[1],3,0))
-    return pixels
-}
+    //This can potentially be improved see  https://en.wikipedia.org/wiki/Connected-component_labeling
+     for (weakPixel in weakEdgePixels) {
+         let neighbourPixels = getNeighbouringPixelPositions(weakEdgePixels[weakPixel])
+         for (pixel in neighbourPixels) {
+             if (strongEdgePixels.find(el => _.isEqual(el, neighbourPixels[pixel]))) {
+                 pixels.set(weakPixel[0], weakPixel[1], 3, 255)
+                 weakEdgePixels.splice(weakPixel, weakPixel)
+                 break
+             }
+         }
+     }
+     weakEdgePixels.forEach(pix => pixels.set(pix[0], pix[1], 3, 0))
+     return pixels
+} */
 
 
 

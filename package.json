@@ -1,6 +1,6 @@
 {
   "name": "image-sequencer",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "A modular JavaScript image manipulation library modeled on a storyboard.",
   "main": "src/ImageSequencer.js",
   "scripts": {
@@ -43,7 +43,6 @@
   },
   "devDependencies": {
     "browserify": "13.0.0",
-    "data-uri-to-buffer": "^2.0.0",
     "grunt": "^0.4.5",
     "grunt-browser-sync": "^2.2.0",
     "grunt-browserify": "^5.0.0",
