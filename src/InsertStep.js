@@ -41,10 +41,11 @@ function InsertStep(ref, image, index, name, o) {
         ref.addSteps(step['name'], step['options']);
       }
     }
-    var mod = ref.modules[name][0](o, UI);
-    if (!mod.isMeta) {
+    if (!ref.modules[name][1].length) {
       UI.onSetup(o.step);
-      ref.images[image].steps.splice(index, 0, mod);
+      ref.images[image].steps.splice(index, 0, ref.modules[name][0](o, UI));
+    } else {
+      ref.modules[name][0](o, UI);
     }
 
     return true;
