@@ -22,4 +22,5 @@ module.exports = {
   'ndvi-colormap': require('./modules/NdviColormap'),
   'colorbar': require('./modules/Colorbar'),
   'gamma-correction': require('./modules/GammaCorrection'),
+  'convolution': require('./modules/Convolution'),
 }
