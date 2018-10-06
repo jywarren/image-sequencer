@@ -66,13 +66,14 @@ function DefaultHtmlStepUi(_sequencer, options) {
           }
           html += "</select>";
         } else {
+	  let paramVal = step.options[paramName] || inputDesc.default;
           html =
             '<input class="form-control target" type="' +
             inputDesc.type +
             '" name="' +
             paramName +
             '" value="' +
-            inputDesc.default +
+            paramVal +
             '" placeholder ="' +
             (inputDesc.placeholder || "") +
             '">';
