@@ -49516,9 +49516,8 @@ const _ = require('lodash')
 const kernelx = [[-1, 0, 1], [-2, 0, 2], [-1, 0, 1]],
     kernely = [[-1, -2, -1], [0, 0, 0], [1, 2, 1]];
 
-let angles = [], mags = [], strongEdgePixels = [], weakEdgePixels = [], notInUI;
 module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, inBrowser) {
-    notInUI = !inBrowser;
+    let angles = [], mags = [], strongEdgePixels = [], weakEdgePixels = [], notInUI = !inBrowser;
     for (var x = 0; x < pixels.shape[0]; x++) {
         angles.push([]);
         mags.push([]);
@@ -49541,8 +49540,9 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, inBrows
             angles.slice(-1)[0].push(result.angle);
         }
     }
-
-    return doubleThreshold(nonMaxSupress(pixels), highThresholdRatio, lowThresholdRatio);
+    nonMaxSupress(pixels, mags, angles);
+    doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, strongEdgePixels, weakEdgePixels);
+    return pixels;
 }
 
 //changepixel function that convolutes every pixel (sobel filter)
@@ -49577,7 +49577,7 @@ function changePixel(pixels, val, a, x, y) {
 }
 
 //Non Maximum Supression without interpolation
-function nonMaxSupress(pixels) {
+function nonMaxSupress(pixels, mags, angles) {
 
     angles = angles.map((arr) => arr.map(convertToDegrees));
 
@@ -49625,7 +49625,6 @@ function nonMaxSupress(pixels) {
 
         }
     }
-    return pixels;
 }
 //Converts radians to degrees
 var convertToDegrees = radians => (radians * 180) / Math.PI;
@@ -49634,9 +49633,9 @@ var convertToDegrees = radians => (radians * 180) / Math.PI;
 var findMaxInMatrix = arr => Math.max(...arr.map(el => el.map(val => !!val ? val : 0)).map(el => Math.max(...el)));
 
 //Applies the double threshold to the image
-function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio) {
+function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, mags, strongEdgePixels, weakEdgePixels) {
 
-    const highThreshold = findMaxInMatrix(mags) * 0.2;
+    const highThreshold = findMaxInMatrix(mags) * highThresholdRatio;
     const lowThreshold = highThreshold * lowThresholdRatio;
 
     for (let i = 0; i < pixels.shape[0]; i++) {
@@ -49652,8 +49651,6 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio) {
     }
 
     strongEdgePixels.forEach(pix => pixels.set(pix[0], pix[1], 3, 255));
-
-    return pixels;
 }
 
 //  hysteresis edge tracking algorithm -- not working as of now
@@ -49692,16 +49689,16 @@ function doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio) {
 /*
 * Detect Edges in an Image
 */
-module.exports = function edgeDetect(options,UI) {
+module.exports = function edgeDetect(options, UI) {
 
   options.blur = options.blur || 2;
-  options.highThresholdRatio = options.highThresholdRatio||0.2;
-  options.lowThresholdRatio = options.lowThresholdRatio||0.15;
+  options.highThresholdRatio = options.highThresholdRatio || 0.2;
+  options.lowThresholdRatio = options.lowThresholdRatio || 0.15;
 
   var output;
 
   // The function which is called on every draw.
-  function draw(input,callback,progressObj) {
+  function draw(input, callback, progressObj) {
 
     progressObj.stop(true);
     progressObj.overrideFlag = true;
@@ -49710,19 +49707,20 @@ module.exports = function edgeDetect(options,UI) {
 
 
     //   Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
-    function extraManipulation(pixels){
-      pixels = require('ndarray-gaussian-filter')(pixels,options.blur);
-      return require('./EdgeUtils')(pixels,options.highThresholdRatio,options.lowThresholdRatio,options.inBrowser);
+    function extraManipulation(pixels) {
+      pixels = require('ndarray-gaussian-filter')(pixels, options.blur);
+      pixels = require('./EdgeUtils')(pixels, options.highThresholdRatio, options.lowThresholdRatio, options.inBrowser);
+      return pixels;
     }
 
     function changePixel(r, g, b, a) {
-      return [(r+g+b)/3, (r+g+b)/3, (r+g+b)/3, a];
+      return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
     }
 
-    function output(image,datauri,mimetype){
+    function output(image, datauri, mimetype) {
 
       // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
+      step.output = { src: datauri, format: mimetype };
 
     }
 
@@ -49740,7 +49738,7 @@ module.exports = function edgeDetect(options,UI) {
 
   return {
     options: options,
-    draw:  draw,
+    draw: draw,
     output: output,
     UI: UI
   }
