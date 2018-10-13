@@ -46,6 +46,7 @@ A diagram of this running 5 steps on a single sample image may help explain how 
 ## Installation
 
 This library works in the browser, in Node, and on the commandline (CLI), which we think is great. You can start a local environement to test the UI with `npm start`
+On Unix based environments the command should be run as root user using `sudo npm start` and on windows the command should be run as administrator.
 
 ### Browser
 
