@@ -28,10 +28,10 @@ window.onload = function() {
   $("#addStep select").on("change", ui.selectNewStepUi);
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
   $('#addStep #download-btn').click(function() {
-    $('img:last()').trigger( "click" );
- 
+    $('img:last()').trigger("click");
+
     return false;
-    });
+  });
   $('body').on('click', 'button.remove', ui.removeStepUi);
   $('#save-seq').click(() => {
     sequencer.saveSequence(window.prompt("Please give a name to your sequence..."), sequencer.toString());
@@ -50,5 +50,41 @@ window.onload = function() {
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
     }
+  });
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+      .then(function(registration) {
+        const installingWorker = registration.installing;
+        installingWorker.onstatechange = () => {
+          console.log(installingWorker)
+          if (installingWorker.state === 'installed') {
+            location.reload();
+          }
+        }
+        console.log('Registration successful, scope is:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
+  }
+
+  if ('serviceWorker' in navigator) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            $("#clear-cache").append(" " + cacheName);
+          });
+        });
+      }
+
+  $("#clear-cache").click(function() {
+      if ('serviceWorker' in navigator) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            caches.delete(cacheName);
+          });
+        });
+      }
+  location.reload();
   });
 };
