@@ -108,6 +108,14 @@ For example:
   sequencer.replaceImage('#photo',['invert','ndvi-red']);
 ```
 
+### Data URL usage
+
+Since Image Sequencer uses data-urls, you can initiate a new sequence by providing an image in the [data URL format](https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/Data_URIs), which will import into the demo and run:
+
+[Try this example link with a very small Data URL](http://sequencer.publiclab.org/examples/#src=data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAAQABADASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAf/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAABgj/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABykX//Z&steps=invert{})
+
+To produce a data URL from an HTML image, see [this nice blog post with example code](https://davidwalsh.name/convert-image-data-uri-javascript).
+
 ## CLI Usage
 
 Image Sequencer also provides a CLI for applying operations to local files. The CLI takes the following arguments:
