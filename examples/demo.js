@@ -23,7 +23,12 @@ window.onload = function() {
   // UI for the overall demo:
   var ui = DefaultHtmlSequencerUi(sequencer);
 
-  sequencer.loadImage("images/tulips.png", ui.onLoad);
+  // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
+  if (getUrlHashParameter('src')) {
+    sequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
+  } else {
+    sequencer.loadImage("images/tulips.png", ui.onLoad);
+  }
 
   $("#addStep select").on("change", ui.selectNewStepUi);
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
@@ -114,7 +119,6 @@ window.onload = function() {
 
     }
   });
-
 
   // image selection and drag/drop handling from examples/lib/imageSelection.js
   sequencer.setInputStep({
