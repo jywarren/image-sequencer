@@ -59287,7 +59287,7 @@ module.exports={
       "type": "select",
       "desc": "Name of the Colormap",
       "default": "default",
-      "values": ["default","greyscale","stretched","fastie"]
+      "values": ["default","greyscale","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
   }
 }
