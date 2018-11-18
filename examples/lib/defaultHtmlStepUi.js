@@ -7,6 +7,17 @@
 // The variable 'step' stores useful data like input and
 // output values, step information.
 // See documetation for more details.
+function stepRemovedNotify() {
+  if ($('#stepRemovedNotification').length == 0) {
+    var notification = document.createElement('span');
+    notification.innerHTML = ' <i class="fa fa-info-circle" aria-hidden="true"></i> Step Removed ';
+    notification.id = 'stepRemovedNotification';
+
+    $('body').append(notification);
+  }
+
+  $('#stepRemovedNotification').DOMNotification.fadeIn(500).delay(200).fadeOut(500);
+}
 function DefaultHtmlStepUi(_sequencer, options) {
 
   options = options || {};
@@ -37,7 +48,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     var tools =
       '<div class="tools btn-group">\
-       <button confirm="Are you sure?" class="remove btn btn btn-default">\
+       <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
     </div>';
