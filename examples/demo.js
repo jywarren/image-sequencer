@@ -14,6 +14,8 @@ window.onload = function() {
         '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
       );
     }
+    // Null option
+    addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
   }
   refreshOptions();
 
@@ -33,9 +35,21 @@ window.onload = function() {
   $("#addStep select").on("change", ui.selectNewStepUi);
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
 
+  //Module button radio selection
+  $('.radio-group .radio').on("click", function(){
+    $(this).parent().find('.radio').removeClass('selected');
+    $(this).addClass('selected');
+    newStep = $(this).attr('data-value');
+    console.log(newStep);
+    //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
+    $("#addStep select").val(newStep);
+    ui.selectNewStepUi();
+    ui.addStepUi();
+    $(this).removeClass('selected');
+  });
+
   $('#download-btn').click(function() {
     $('.img-thumbnail:last()').trigger("click");
-
     return false;
   });
 
