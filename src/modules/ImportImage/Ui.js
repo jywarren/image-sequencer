@@ -8,14 +8,31 @@ module.exports = function ImportImageModuleUi(step, ui) {
 
     // add a file input listener
     var dropZone ='\
-    <div style="padding: 30px;margin: 10px 20% 30px;border: 4px dashed #ccc;border-radius: 8px;text-align: center;color: #444;" id="' + dropzoneId + '">\
+    <div class="border" id="' + dropzoneId + '">\
       <p>\
         <i>Select or drag in an image to overlay.</i>\
       </p>\
       <center>\
         <input type="file" class="file-input" value="">\
       </center>\
-    </div>';
+    </div>\
+    <style>\
+    .file-input{\
+      left:0px;\
+    }\
+    .border{\
+      padding: 0px;\
+      margin: 10px 20% 30px;\
+      border: 4px dashed #ccc;\
+      border-radius: 8px;\
+      text-align: center;\
+      color: #444;\
+      display: flex;\
+      flex-wrap: wrap;\
+      word-wrap: break-word;\
+      min-width:200px;\
+    }\
+    </style>';
 
     // insert into .details area
     // TODO: develop API-based consistent way to add UI elements
