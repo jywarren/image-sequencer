@@ -2850,7 +2850,14 @@ ignore-walk@^3.0.1:
   dependencies:
     minimatch "^3.0.4"
 
-image-filter-core@^1.0.0, image-filter-core@~1.0.0:
+image-filter-core@^2.0.0:
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/image-filter-core/-/image-filter-core-2.0.2.tgz#1b994c9b9e34476530de9ca8450e85f87a81bd10"
+  integrity sha1-G5lMm540R2Uw3pyoRQ6F+HqBvRA=
+  dependencies:
+    es6-promise "^4.0.5"
+
+image-filter-core@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/image-filter-core/-/image-filter-core-1.0.0.tgz#7a81477b299cc910db67ff7c2c000ca1da44aa4f"
   integrity sha1-eoFHeymcyRDbZ/98LAAModpEqk8=
@@ -2858,12 +2865,12 @@ image-filter-core@^1.0.0, image-filter-core@~1.0.0:
     es6-promise "^4.0.5"
     webworkify "^1.2.1"
 
-image-filter-threshold@~1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/image-filter-threshold/-/image-filter-threshold-1.0.0.tgz#2ab59ff397a7886966d73f938eb1e972fc898532"
-  integrity sha1-KrWf85eniGlm1z+TjrHpcvyJhTI=
+image-filter-threshold@~2.0.1:
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/image-filter-threshold/-/image-filter-threshold-2.0.1.tgz#4714ddd9afad507cb28239b346236e2c2a6fbb4c"
+  integrity sha1-RxTd2a+tUHyygjmzRiNuLCpvu0w=
   dependencies:
-    image-filter-core "^1.0.0"
+    image-filter-core "^2.0.0"
 
 image-sequencer-invert@^1.0.0:
   version "1.0.0"
