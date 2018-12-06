@@ -21,15 +21,12 @@ module.exports = function ImportImageModuleUi(step, ui) {
       left:0px;\
     }\
     .border{\
-      padding: 0px;\
+      padding: 30px;\
       margin: 10px 20% 30px;\
       border: 4px dashed #ccc;\
       border-radius: 8px;\
       text-align: center;\
       color: #444;\
-      display: flex;\
-      flex-wrap: wrap;\
-      word-wrap: break-word;\
       min-width:200px;\
     }\
     </style>';
