@@ -1,4 +1,20 @@
 window.onload = function() {
+  function generatePreview(previewStepName, customValues, path) {
+    var previewSequencer = ImageSequencer();
+
+    function insertPreview(src) {
+      var img = document.createElement('img');
+      img.classList.add('img-thumbnail')
+      img.src = src;
+      $('#preview-column').append(img);
+    }
+    function loadPreview() {
+      previewSequencer.addSteps('resize', {resize:"40%"}).addSteps(previewStepName, {[previewStepName]: customValues}).run(insertPreview);
+    }
+    previewSequencer.loadImage(path, loadPreview);
+  }
+
+
   sequencer = ImageSequencer();
 
   function refreshOptions() {
@@ -144,6 +160,7 @@ window.onload = function() {
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
+      updatePreviews(reader.result);
     }
   });
 
@@ -182,4 +199,24 @@ window.onload = function() {
       }
   location.reload();
   });
+
+  function updatePreviews(src) {
+    $("#preview-column").html("");
+    var previewSequencerSteps = {
+      "brightness": "20",
+      "invert": "",
+      "rotate": 90,
+      "contrast": 90
+    }
+  
+    Object.keys(previewSequencerSteps).forEach(function(step, index) {
+      generatePreview(step, Object.values(previewSequencerSteps)[index], src);
+    });
+  } 
+
+  if (getUrlHashParameter('src')) {
+    updatePreviews(getUrlHashParameter('src'));
+  } else {
+    updatePreviews("images/tulips.png");
+  }
 };
