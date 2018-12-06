@@ -17,9 +17,6 @@ module.exports = function ImportImageModuleUi(step, ui) {
       </center>\
     </div>\
     <style>\
-    .file-input{\
-      left:0px;\
-    }\
     .border{\
       padding: 30px;\
       margin: 10px 20% 30px;\
