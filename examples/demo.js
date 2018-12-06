@@ -5,11 +5,24 @@ window.onload = function() {
     function insertPreview(src) {
       var img = document.createElement('img');
       img.classList.add('img-thumbnail')
+      img.classList.add('no-border');
       img.src = src;
-      $('#preview-column').append(img);
+      var stepDiv = $('#addStep .row').find('div').each(function() {
+        if($(this).find('button').attr('data-value') === previewStepName) {
+          $(this).find('button').append(img);
+        }
+      });
     }
     function loadPreview() {
-      previewSequencer.addSteps('resize', {resize:"40%"}).addSteps(previewStepName, {[previewStepName]: customValues}).run(insertPreview);
+      previewSequencer = previewSequencer.addSteps('resize', {resize:"40%"});
+
+      if(previewStepName === "crop") {
+        console.log(customValues);
+        previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
+      }
+      else {
+        previewSequencer.addSteps(previewStepName, {[previewStepName]: customValues}).run(insertPreview);
+      }
     }
     previewSequencer.loadImage(path, loadPreview);
   }
@@ -201,12 +214,20 @@ window.onload = function() {
   });
 
   function updatePreviews(src) {
-    $("#preview-column").html("");
+    $('#addStep img').remove();
+
     var previewSequencerSteps = {
       "brightness": "20",
-      "invert": "",
+      "saturation": "5",
       "rotate": 90,
-      "contrast": 90
+      "contrast": 90,
+      "crop": {
+        "x": 0,
+        "y": 0,
+        "w": "(50%)",
+        "h": "(50%)",
+        "noUI": true
+      }
     }
   
     Object.keys(previewSequencerSteps).forEach(function(step, index) {
