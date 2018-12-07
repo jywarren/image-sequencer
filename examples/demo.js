@@ -8,8 +8,8 @@ window.onload = function() {
       img.classList.add('no-border');
       img.src = src;
       var stepDiv = $('#addStep .row').find('div').each(function() {
-        if($(this).find('button').attr('data-value') === previewStepName) {
-          $(this).find('button').append(img);
+        if($(this).find('div').attr('data-value') === previewStepName) {
+          $(this).find('div').append(img);
         }
       });
     }
@@ -229,11 +229,11 @@ window.onload = function() {
         "noUI": true
       }
     }
-  
+
     Object.keys(previewSequencerSteps).forEach(function(step, index) {
       generatePreview(step, Object.values(previewSequencerSteps)[index], src);
     });
-  } 
+  }
 
   if (getUrlHashParameter('src')) {
     updatePreviews(getUrlHashParameter('src'));

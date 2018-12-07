@@ -187,15 +187,12 @@ h1 {
   margin-left: 5px;
   margin-right: 5px;
 }
-.radio button{
+.radio{
   cursor:pointer;
+  min-width: 80px;
+  min-height: 80px;
 }
-.radio.selected button{
-  color: #fff;
-  background-color: #5cb85c;
-  border-color: #5cb85c;
-  outline: none;
-}
+
 .radio-group {
   margin-bottom: 20px;
 }
@@ -216,4 +213,16 @@ h1 {
 
 .no-border {
   border: 0px;
+}
+
+.i-over {
+  position: absolute;
+  left: 25px;
+  top: 10px;
+  z-index: 2;
+  color: white;
+}
+
+.i-small {
+  left: 30px;
 }
