@@ -192,6 +192,8 @@ h1 {
   overflow: hidden;
   height: 80px;
   width: 80px;
+  margin-left: 5px;
+  margin-right: 5px;
 }
 
 .radio-group {
@@ -218,12 +220,12 @@ h1 {
 
 .i-over {
   position: absolute;
-  left: 25px;
-  top: 10px;
+  left: 15px;
+  top: 15px;
   z-index: 2;
   color: white;
 }
 
 .i-small {
-  left: 35px;
+  left: 25px;
 }
