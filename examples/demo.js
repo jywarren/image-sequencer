@@ -7,8 +7,8 @@ window.onload = function() {
       img.classList.add('img-thumbnail')
       img.classList.add('no-border');
       img.src = src;
-      $(img).css("object-fit", "cover");
-      $(img).css("max-width", "150%");
+      $(img).css("max-width", "200%");
+      $(img).css("transform", "translateX(-20%)");
       var stepDiv = $('#addStep .row').find('div').each(function() {
         if($(this).find('div').attr('data-value') === previewStepName) {
           $(this).find('div').append(img);
