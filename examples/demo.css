@@ -189,8 +189,9 @@ h1 {
 }
 .radio{
   cursor:pointer;
-  min-width: 80px;
-  min-height: 80px;
+  overflow: hidden;
+  height: 80px;
+  width: 80px;
 }
 
 .radio-group {
@@ -224,5 +225,5 @@ h1 {
 }
 
 .i-small {
-  left: 30px;
+  left: 35px;
 }
