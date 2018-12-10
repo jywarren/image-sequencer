@@ -157,14 +157,18 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelector("div.details .input-form")).on('submit', saveOptions);
     }
 
-    if (step.name != "load-image")
+    if (step.name != "load-image"){
       step.ui
         .querySelector("div.details")
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
 
-    stepsEl.appendChild(step.ui);
+      stepsEl.appendChild(step.ui);
+    }
+    else {
+      $("#load-image").append(step.ui);
+    }
     
     var inputs = document.querySelectorAll('input[type="range"]')
     for(i in inputs)

@@ -69,7 +69,9 @@
       </center>
     </div>
 
-    <section id="steps" class="row"></section>
+    <section id="steps" class="row">
+      <div id="load-image"></div>
+    </section>
 
     <hr />
   <div class="row">
@@ -80,33 +82,33 @@
           <p class="info">Select a new module to add to your sequence.</p>
           <div class="row center-align radio-group">
             <div>
-              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="brightness">
-                <i class="fa fa-sun-o fa-4x"></i>
-              </button>
+              <div class="radio" data-value="brightness">
+                <i class="fa fa-sun-o fa-4x i-over"></i>
+              </div>
               <p>Brightness</p>
             </div>
             <div>
-              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="contrast">
-                <i class="fa fa-adjust fa-4x"></i>
-              </button>
+              <div class="radio" data-value="contrast">
+                <i class="fa fa-adjust fa-4x i-over"></i>
+              </div>
               <p>Contrast</p>
             </div>
             <div>
-              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="saturation">
-                <i class="fa fa-tint fa-4x"></i>
-              </button>
+              <div class="radio" data-value="saturation">
+                <i class="fa fa-tint fa-4x i-over i-small"></i>
+              </div>
               <p>Saturation</p>
             </div>
             <div>
-              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="rotate">
-                <i class="fa fa-rotate-right fa-4x"></i>
-              </button>
+              <div class="radio" data-value="rotate">
+                <i class="fa fa-rotate-right fa-4x i-over"></i>
+              </div>
               <p>Rotate</p>
             </div>
             <div>
-              <button type="button" class="btn btn-default btn-circle btn-xl radio" data-value="crop">
-                <i class="fa fa-crop fa-4x"></i>
-              </button>
+              <div class="radio" data-value="crop">
+                <i class="fa fa-crop fa-4x i-over"></i>
+              </div>
               <p>Crop</p>
             </div>
           </div>
@@ -163,7 +165,7 @@
   <form class="move-up" action="#up">
     <button><i class="fa fa-arrow-circle-o-up"></i></button>
   </form>
-  
+
   <footer>
     <hr style="margin:20px;"><center><a class="color:grey;" id="clear-cache">Clear offline cache</a></center>
   </footer>
