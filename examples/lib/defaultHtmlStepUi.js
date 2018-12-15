@@ -137,7 +137,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelectorAll(".target")).on('change',toggleSaveButton);
 
       $(step.ui.querySelector("div.details")).append(
-        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press save to see changes</span></p>"
+        "<p><button class='btn btn-default btn-save' disabled = 'true' >Apply</button><span> Press apply to see changes</span></p>"
       );
 
       function focusInput(){
@@ -164,9 +164,8 @@ function DefaultHtmlStepUi(_sequencer, options) {
       $(step.ui.querySelector("div.details .input-form")).on('submit', saveOptions);
     }
 
-    if (step.name != "load-image")
-      {
-        step.ui
+    if (step.name != "load-image"){
+      step.ui
         .querySelector("div.details")
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
@@ -176,7 +175,11 @@ function DefaultHtmlStepUi(_sequencer, options) {
         },500)
       }
 
-    stepsEl.appendChild(step.ui);
+      stepsEl.appendChild(step.ui);
+    }
+    else {
+      $("#load-image").append(step.ui);
+    }
     
     var inputs = document.querySelectorAll('input[type="range"]')
     for(i in inputs)
