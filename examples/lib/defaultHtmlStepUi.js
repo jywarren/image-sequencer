@@ -23,13 +23,13 @@ function DefaultHtmlStepUi(_sequencer, options) {
   options = options || {};
   var stepsEl = options.stepsEl || document.querySelector("#steps");
   var selectStepSel = options.selectStepSel = options.selectStepSel || "#selectStep";
-
   function onSetup(step) {
     if (step.options && step.options.description)
       step.description = step.options.description;
 
     step.ui =
       '\
+      <div class="container">\
     <div class="row step">\
     <div class="col-md-4 details">\
     <h3>' +
@@ -44,18 +44,25 @@ function DefaultHtmlStepUi(_sequencer, options) {
     <a><img alt="" style="max-width=100%" class="img-thumbnail" /></a>\
     </div>\
     </div>\
-    ';
+    </div>\
+    </div>';
 
     var tools =
       '<div class="tools btn-group">\
        <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
-    </div>';
+       <button class="btn btn-success btn-lg insert-step" style="margin-left:10px;border-radius:6px" >Insert Step</button>\
+       </div>';
 
+       var util;
+       setTimeout(()=>{
+         util=IntermediateHtmlStepUi(_sequencer,step)
+       },500)
+ 
     var parser = new DOMParser();
     step.ui = parser.parseFromString(step.ui, "text/html");
-    step.ui = step.ui.querySelector("div.row");
+    step.ui = step.ui.querySelector("div.container");
     step.linkElements = step.ui.querySelectorAll("a");
     step.imgElement = step.ui.querySelector("a img");
 
@@ -158,11 +165,16 @@ function DefaultHtmlStepUi(_sequencer, options) {
     }
 
     if (step.name != "load-image")
-      step.ui
+      {
+        step.ui
         .querySelector("div.details")
         .appendChild(
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
+        setTimeout(()=>{
+          $(step.ui.querySelectorAll(".insert-step")).on('click',()=>util.insertStep(step.ID));
+        },500)
+      }
 
     stepsEl.appendChild(step.ui);
     
