@@ -52,7 +52,9 @@ function DefaultHtmlStepUi(_sequencer, options) {
        <button confirm="Are you sure?" onclick="stepRemovedNotify()" class="remove btn btn btn-default">\
          <i class="fa fa-trash"></i>\
        </button>\
-       <button class="btn btn-success btn-lg insert-step" style="margin-left:10px;border-radius:6px" >Insert Step</button>\
+       <button class="btn  insert-step" style="margin-left:10px;border-radius:6px;background-color:#fff;border:solid #bababa 1.1px;" >\
+         <i class="fa fa-plus"></i> Add\
+       </button>\
        </div>';
 
        var util;
