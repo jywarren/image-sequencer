@@ -88,7 +88,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       $(this).removeClass('selected');
     });
     $(step.ui.querySelector("#insertStep select")).on('change', selectNewStepUi);
-    $(step.ui.querySelector("#insertStep #add-step-btn")).on('click', () => doIt(id));
+    $(step.ui.querySelector("#insertStep #add-step-btn")).on('click', function(){ doIt(id)});
   }
 
   function doIt(id) {

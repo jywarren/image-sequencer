@@ -56,7 +56,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
        </div>';
 
        var util;
-       setTimeout(()=>{
+       setTimeout(function(){
          util=IntermediateHtmlStepUi(_sequencer,step)
        },500)
  
@@ -172,7 +172,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
           parser.parseFromString(tools, "text/html").querySelector("div")
         );
         setTimeout(()=>{
-          $(step.ui.querySelectorAll(".insert-step")).on('click',()=>util.insertStep(step.ID));
+          $(step.ui.querySelectorAll(".insert-step")).on('click',function(){util.insertStep(step.ID)});
         },500)
       }
 
