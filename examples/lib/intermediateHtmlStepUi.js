@@ -55,7 +55,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     $("#insertStep .info").html(_sequencer.modulesInfo(m).description);
     $("#insertStep #add-step-btn").prop("disabled", false);
   }
-  insertStep = function (id) {
+  insertStep = function(id) {
     var modulesInfo = _sequencer.modulesInfo();
     var parser = new DOMParser();
     var addStepUI = stepUI();
@@ -78,7 +78,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
     $('#insertStep #add-step-btn').prop('disabled', true);
 
     insertStepSelect.append('<option value="none" disabled selected>More modules...</option>');
-    $('#insertStep .radio-group .radio').on("click", function () {
+    $('#insertStep .radio-group .radio').on("click", function() {
       $(this).parent().find('.radio').removeClass('selected');
       $(this).addClass('selected');
       newStep = $(this).attr('data-value');
@@ -88,7 +88,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       $(this).removeClass('selected');
     });
     $(step.ui.querySelector("#insertStep select")).on('change', selectNewStepUi);
-    $(step.ui.querySelector("#insertStep #add-step-btn")).on('click', function(){ doIt(id)});
+    $(step.ui.querySelector("#insertStep #add-step-btn")).on('click', function() { doIt(id) });
   }
 
   function doIt(id) {
@@ -106,12 +106,11 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       sequenceLength = sequencer.modules[newStepName][1]["length"];
     }
     _sequencer
-      .insertSteps("image1", id + 1, newStepName)
-      .run({ index: 0 });
+      .insertSteps(id + 1, newStepName).run({ index: id });
 
     // add to URL hash too
     setUrlHashParameter("steps", _sequencer.toString());
-    location.reload();
+
   }
   return {
     insertStep
