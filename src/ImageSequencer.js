@@ -219,7 +219,7 @@ ImageSequencer = function ImageSequencer(options) {
         modulesdata[modulename] = modules[modulename][1];
       }
       for (var sequencename in this.sequences) {
-        modulesdata[sequencename] = { name: sequencename, steps: sequences[sequencename] };
+        modulesdata[sequencename] = { name: sequencename, steps: this.sequences[sequencename] };
       }
     }
     else {
@@ -255,7 +255,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   // Stringifies one step of the sequence
-   function stepToString(step) {
+  function stepToString(step) {
     let inputs = modulesInfo(step.options.name).inputs || {}, op = {};
 
     for (let input in inputs) {
