@@ -10,20 +10,20 @@ window.onload = function() {
       $(img).css("max-width", "200%");
       $(img).css("transform", "translateX(-20%)");
       var stepDiv = $('#addStep .row').find('div').each(function() {
-        if($(this).find('div').attr('data-value') === previewStepName) {
+        if ($(this).find('div').attr('data-value') === previewStepName) {
           $(this).find('div').append(img);
         }
       });
     }
     function loadPreview() {
-      previewSequencer = previewSequencer.addSteps('resize', {resize:"40%"});
+      previewSequencer = previewSequencer.addSteps('resize', { resize: "40%" });
 
-      if(previewStepName === "crop") {
+      if (previewStepName === "crop") {
         console.log(customValues);
         previewSequencer.addSteps(previewStepName, customValues).run(insertPreview);
       }
       else {
-        previewSequencer.addSteps(previewStepName, {[previewStepName]: customValues}).run(insertPreview);
+        previewSequencer.addSteps(previewStepName, { [previewStepName]: customValues }).run(insertPreview);
       }
     }
     previewSequencer.loadImage(path, loadPreview);
@@ -35,15 +35,18 @@ window.onload = function() {
   function refreshOptions() {
     // Load information of all modules (Name, Inputs, Outputs)
     var modulesInfo = sequencer.modulesInfo();
+    console.log(modulesInfo)
 
     var addStepSelect = $("#addStep select");
     addStepSelect.html("");
 
     // Add modules to the addStep dropdown
     for (var m in modulesInfo) {
-      addStepSelect.append(
-        '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
-      );
+      console.log(m)
+      if (modulesInfo[m] && modulesInfo[m].name)
+        addStepSelect.append(
+          '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
+        );
     }
     // Null option
     addStepSelect.append('<option value="none" disabled selected>More modules...</option>');
@@ -67,7 +70,7 @@ window.onload = function() {
   $("#addStep #add-step-btn").on("click", ui.addStepUi);
 
   //Module button radio selection
-  $('.radio-group .radio').on("click", function(){
+  $('.radio-group .radio').on("click", function() {
     $(this).parent().find('.radio').removeClass('selected');
     $(this).addClass('selected');
     newStep = $(this).attr('data-value');
@@ -121,7 +124,7 @@ window.onload = function() {
       }
 
       gifshot.createGIF(options, function(obj) {
-        if(!obj.error) {
+        if (!obj.error) {
           // Final gif encoded with base64 format
           var image = obj.image;
           var animatedImage = document.createElement('img');
@@ -157,7 +160,7 @@ window.onload = function() {
         }
       });
     }
-    catch(e) {
+    catch (e) {
       console.error(e);
       button.disabled = false;
       isWorkingOnGifGeneration = false;
@@ -197,22 +200,22 @@ window.onload = function() {
   }
 
   if ('serviceWorker' in navigator) {
-        caches.keys().then(function(cacheNames) {
-          cacheNames.forEach(function(cacheName) {
-            $("#clear-cache").append(" " + cacheName);
-          });
-        });
-      }
+    caches.keys().then(function(cacheNames) {
+      cacheNames.forEach(function(cacheName) {
+        $("#clear-cache").append(" " + cacheName);
+      });
+    });
+  }
 
   $("#clear-cache").click(function() {
-      if ('serviceWorker' in navigator) {
-        caches.keys().then(function(cacheNames) {
-          cacheNames.forEach(function(cacheName) {
-            caches.delete(cacheName);
-          });
+    if ('serviceWorker' in navigator) {
+      caches.keys().then(function(cacheNames) {
+        cacheNames.forEach(function(cacheName) {
+          caches.delete(cacheName);
         });
-      }
-  location.reload();
+      });
+    }
+    location.reload();
   });
 
   function updatePreviews(src) {
