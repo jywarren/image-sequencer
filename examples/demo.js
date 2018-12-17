@@ -42,7 +42,6 @@ window.onload = function() {
 
     // Add modules to the addStep dropdown
     for (var m in modulesInfo) {
-      console.log(m)
       if (modulesInfo[m] && modulesInfo[m].name)
         addStepSelect.append(
           '<option value="' + m + '">' + modulesInfo[m].name + "</option>"
