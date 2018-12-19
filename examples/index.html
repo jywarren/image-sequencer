@@ -66,7 +66,12 @@
         <i>Select or drag in an image to start!</i>
       </p>
       <center>
-        <input type="file" id="fileInput" value="" accept="image/*">
+        <input type="file" id="fileInput" value="" accept="image/*"><br />
+        <button type="button" id="take-photo">Take a Photo</button>
+        <video  id="video" width="400" height="300" style="display:none"></video>
+        <a href="#" id="capture" style="display:none" class="btn btn-primary btn-md">Click Picture</a>
+        <a href="#" id="close" style="display:none" class="btn btn-default btn-md">Close</a>
+        <canvas id="canvas" width="400" height="300" style="display:none"></canvas>
       </center>
     </div>
 
