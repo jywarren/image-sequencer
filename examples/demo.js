@@ -9,7 +9,7 @@ window.onload = function() {
       img.src = src;
       $(img).css("max-width", "200%");
       $(img).css("transform", "translateX(-20%)");
-      var stepDiv = $('#addStep .row').find('div').each(function() {
+      var stepDiv = $('#addStep #quick-btn-row').find('div').each(function() {
         if ($(this).find('div').attr('data-value') === previewStepName) {
           $(this).find('div').append(img);
         }
@@ -82,7 +82,7 @@ window.onload = function() {
   });
 
   $('#download-btn').click(function() {
-    $('.img-thumbnail:last()').trigger("click");
+    $('.step-thumbnail:last()').trigger("click");
     return false;
   });
 
