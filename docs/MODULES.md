@@ -32,7 +32,7 @@ List of Module Documentations
 
 
 
-##crop-module
+## crop-module
 
 This module is used to crop an image.
 
@@ -55,7 +55,7 @@ Where `options` is an object having the properties `x`, `y`, `w`, `h`. This diag
 * `options.h` : half of image height
 
 
-##segmented-colormap-module
+## segmented-colormap-module
 
 This module is used to map the pixels of the image to a segmented colormap.
 
@@ -79,7 +79,7 @@ where `options` is an object with the property `colormap`. `options.colormap` ca
 
 * A custom array.
 
-##fisheyeGl-module
+## fisheyeGl-module
 
 This module is used for correcting Fisheye or Lens Distortion
 
@@ -100,7 +100,7 @@ where `options` is an object with the following properties:
 * x : Field of View x (0 to 2; default 1)
 * y : Field of View y (0 to 2; default 1)
 
-##average-module
+## average-module
 
 This module is used for averaging all the pixels of the image.
 
@@ -112,7 +112,7 @@ This module is used for averaging all the pixels of the image.
            .run()
 ```
 
-##blend-module
+## blend-module
 
 This module is used for blending two images .
 #### Usage
@@ -127,7 +127,7 @@ where `options` is an object with the following properties:
 * offset: step of image with which current image is to be blended(Two steps back is -2, three                steps back is -3 etc; default -2) 
 * func: function used to blend two images (default : function(r1, g1, b1, a1, r2, g2, b2, a2) {            return [ r1, g2, b2, a2 ] })
 
-##blur-module
+## blur-module
 
 This module is used for applying a Gaussian blur effect.
 #### Usage
@@ -141,7 +141,7 @@ This module is used for applying a Gaussian blur effect.
 where `options` is an object with the following property:
 * blur : Intensity of Gaussian blur (0 to 5; default 2)
 
-##brightness-module
+## brightness-module
 
 This module is used for changing the brightness of the image.
 
@@ -157,7 +157,7 @@ This module is used for changing the brightness of the image.
 where `options` is an object with the following property:
 * brightness : brightness of the image in percentage (0 to 100; default 100)
 
-##channel-module
+## channel-module
 
 This module is used for forming a grayscale image by applying one of the three primary colors.
 
@@ -172,7 +172,7 @@ This module is used for forming a grayscale image by applying one of the three p
 where `options` is an object with the following property:
 * channel : color of the channel (red, green, blue; default green)
 
-##colorbar-module
+## colorbar-module
 
 This module is used for displaying an image with a colorbar.
 
@@ -190,7 +190,7 @@ where `options` is an object with the following properties:
 * y : Y-position of the image on which the new image is overlayed (default 0)
 * h : height of resulting cropped image (default : 50% of input image width )
 
-##colormap-module
+## colormap-module
 
 This module is used for mapping brightness values (average of red, green & blue) to a given color  lookup table, made up of a set of one more color gradients.
 
@@ -205,7 +205,7 @@ This module is used for mapping brightness values (average of red, green & blue)
 where `options` is an object with the following property:
 * colormap : Name of the Colormap ( greyscale, stretched, fastie, brntogrn, blutoredjet,                        colors16)
 
-##contrast-module
+## contrast-module
 
 This module is used for changing the contrast of the image.
 
@@ -220,7 +220,7 @@ This module is used for changing the contrast of the image.
 where `options` is an object with the following property:
 * contrast : contrast for the given image (-100 to 100; default : 70)
 
-##convolution-module
+## convolution-module
 
 This module is used for performing image-convolution.
 
@@ -236,7 +236,7 @@ where `options` is an object with the following properties:
 * constantFactor : a constant factor, multiplies all the kernel values by that factor (default :                     1/9)
 * kernelValues : nine space separated numbers representing the kernel values in left to right and                   top to bottom format(default : 1 1 1 1 1 1 1 1 1)
 
-##decodeQr-module
+## decodeQr-module
 
 This module is used for decoding a QR in image (if present).
 
@@ -247,7 +247,7 @@ This module is used for decoding a QR in image (if present).
            .addSteps('decode-qr',options)
            .run()
 ```
-##dynamic-module
+## dynamic-module
 
 This module is used for producing each color channel based on the original image's color.
 
@@ -265,7 +265,7 @@ where `options` is an object with the following properties:
 * blue : expression for blue channel (R, G, B and A as inputs; default b)
 * monochrome: fallback for other channels if none provided (default : r+g+b/3)
 
-##edge-detect-module
+## edge-detect-module
 
 This module is used for detecting images.
 #### Usage
@@ -281,7 +281,7 @@ where `options` is an object with the following properties:
 * highThresholdRatio : Upper Threshold Ratio ( default : 0.2)
 * lowThresholdratio : Lower Threshold Ratio ( default : 0.2)
 
-##gamma-correction-module
+## gamma-correction-module
 
 This module is used for applying gamma correction.
 #### Usage
@@ -295,7 +295,7 @@ This module is used for applying gamma correction.
 where `options` is an object with the following property:
 * adjustement : Inverse of actual gamma factor (default 0.2)
 
-##gradient-module
+## gradient-module
 
 This module is used for finding gradient of the image.
 #### Usage
@@ -306,7 +306,7 @@ This module is used for finding gradient of the image.
            .run()
 ```
 
-##histogram-module
+## histogram-module
 
 This module is used for calculating histogram of the image.
 #### Usage
@@ -320,7 +320,7 @@ This module is used for calculating histogram of the image.
 where `options` is an object with the following property:
 * gradient : boolean value used to toggle gradient along x-axis (true or false; default true)
 
-##import-image-module
+## import-image-module
 
 This module is used for importing a new image and replacing the original with it.
 #### Usage
@@ -334,7 +334,7 @@ This module is used for importing a new image and replacing the original with it
 where `options` is an object with the following property:
 * url : url of the  new image (local image url or data url;default : "./images/monarch.png")
 
-##invert-module
+## invert-module
 
 This module is used for inverting the image.
 #### Usage
@@ -345,7 +345,7 @@ This module is used for inverting the image.
            .run()
 ```
 
-##ndvi-module  
+## ndvi-module  
 
 This module is used for applying ndvi technique to the image.
 #### Usage
@@ -359,7 +359,7 @@ This module is used for applying ndvi technique to the image.
 where `options` is an object with the following property:
 * filter : filter for NDVI (blue or red; default red)
 
-##ndvi-colormap-module
+## ndvi-colormap-module
 
 This module is used for demonstrating ndvi and colormap properties consecutively.
 #### Usage
@@ -370,7 +370,7 @@ This module is used for demonstrating ndvi and colormap properties consecutively
            .run()
 ```
 
-##overlay-module
+## overlay-module
 
 This module is used for overlaying an Image over another .
 #### Usage
@@ -386,7 +386,7 @@ where `options` is an object with the following properties:
 * y : Y-position of the image on which the new image is overlayed (default 0)
 * offset : offset to the step on which the output of the last step is overlayed (default -2)
 
-##resize-module
+## resize-module
 
 This module is used for resizing an image.
 #### Usage
@@ -400,7 +400,7 @@ This module is used for resizing an image.
 where `options` is an object with the following property:
 * resize : Percentage value of resize (default 125%)
 
-##rotate-module
+## rotate-module
 
 This module is used for rotating an image.
 #### Usage
@@ -414,7 +414,7 @@ This module is used for rotating an image.
 where `options` is an object with the following property:
 * rotate : angular value for rotation in degrees (between 0 and 360; default 0)
 
-##saturation-module
+## saturation-module
 
 This module is used for changing the saturation of the image.
 #### Usage
