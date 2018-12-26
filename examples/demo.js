@@ -82,7 +82,7 @@ window.onload = function() {
   });
 
   $('#download-btn').click(function() {
-    $('.img-thumbnail:last()').trigger("click");
+    $('.step-thumbnail:last()').trigger("click");
     return false;
   });
 
