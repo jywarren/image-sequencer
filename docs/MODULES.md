@@ -293,7 +293,7 @@ This module is used for applying gamma correction.
 ```
 
 where `options` is an object with the following property:
-* adjustement : Inverse of actual gamma factor (default 0.2)
+* adjustment : Inverse of actual gamma factor (default 0.2)
 
 ## gradient-module
 
