@@ -84,7 +84,7 @@ function IntermediateHtmlStepUi(_sequencer, step, options) {
       newStep = $(this).attr('data-value');
       insertStepSelect.val(newStep);
       selectNewStepUi();
-      doIt(id);
+      insert(id);
       $(this).removeClass('selected');
     });
     $(step.ui.querySelector("#insertStep select")).on('change', selectNewStepUi);

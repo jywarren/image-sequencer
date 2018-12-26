@@ -82,7 +82,7 @@ window.onload = function() {
   });
 
   $('#download-btn').click(function() {
-    $('.img-thumbnail:last()').trigger("click");
+    $('.step-thumbnail:last()').trigger("click");
     return false;
   });
 
@@ -171,6 +171,7 @@ window.onload = function() {
   sequencer.setInputStep({
     dropZoneSelector: "#dropzone",
     fileInputSelector: "#fileInput",
+    takePhotoSelector: "#take-photo",
     onLoad: function onFileReaderLoad(progress) {
       var reader = progress.target;
       var step = sequencer.images.image1.steps[0];
@@ -178,6 +179,12 @@ window.onload = function() {
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
       updatePreviews(reader.result);
+    },
+    onTakePhoto: function (url) {
+      var step = sequencer.images.image1.steps[0];
+      step.output.src = url;
+      sequencer.run({ index: 0 });
+      step.options.step.imgElement.src = url;
     }
   });
 
