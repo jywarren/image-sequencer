@@ -54,7 +54,7 @@
     "grunt-contrib-watch": "^1.1.0",
     "image-filter-core": "~2.0.2",
     "image-filter-threshold": "~2.0.1",
-    "looks-same": "^4.1.0",
+    "looks-same": "^5.0.1",
     "matchdep": "^2.0.0",
     "tap-spec": "^5.0.0",
     "tape": ">=4.7.0",
