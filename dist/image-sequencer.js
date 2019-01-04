@@ -59907,30 +59907,41 @@ module.exports = exports = function(pixels, options){
 	options.endY = Number(options.endY) || ih - 1;
 	var ex = options.endX;
 	var ey = options.endY;
-    for(var n = oy*4*iw + 4*ox ; n < oy*4*iw + 4*(ex); n = n+4){
-       pixels.data[n] = 0;
-       pixels.data[n+1] = 0;
-       pixels.data[n+2] = 0;
-       pixels.data[n+3] = 255;
+  var thickness = Number(options.thickness) || 1;
+  var color = options.color || "0 0 0 255";
+  color = color.split(" ");
+  for(var i = 0; i<thickness; i++){
+    for(var n = (oy+i)*4*iw + 4*ox ; n < (oy+i)*4*iw + 4*(ex); n = n+4){
+       pixels.data[n] = color[0];
+       pixels.data[n+1] = color[1];
+       pixels.data[n+2] = color[2];
+       pixels.data[n+3] = color[3];
     } 
-    for(var n = ey*4*iw + 4*ox ; n < ey*4*iw + 4*(ex); n = n+4){
-       pixels.data[n] = 0;
-       pixels.data[n+1] = 0;
-       pixels.data[n+2] = 0;
-       pixels.data[n+3] = 255;
+  }
+  for(var i = 0; i<thickness; i++){
+    for(var n = (ey-i)*4*iw + 4*ox ; n < (ey-i)*4*iw + 4*(ex); n = n+4){
+       pixels.data[n] = color[0];
+       pixels.data[n+1] = color[1];
+       pixels.data[n+2] = color[2];
+       pixels.data[n+3] = color[3];
     }
-    for(var n = oy*4*iw + 4*ox ; n < ey*4*iw + 4*ox; n = n+ 4*iw){
-       pixels.data[n] = 0;
-       pixels.data[n+1] = 0;
-       pixels.data[n+2] = 0;
-       pixels.data[n+3] = 255;
+  }
+  for(var i = 0; i < thickness; i++){  
+    for(var n = oy*4*iw + 4*(ox+i) ; n < ey*4*iw + 4*(ox+i); n = n+ 4*iw){
+       pixels.data[n] = color[0];
+       pixels.data[n+1] = color[1];
+       pixels.data[n+2] = color[2];
+       pixels.data[n+3] = color[3];
     }
-    for(var n = oy*4*iw + 4*ex ; n < ey*4*iw + 4*ex; n = n+ 4*iw){
-       pixels.data[n] = 0;
-       pixels.data[n+1] = 0;
-       pixels.data[n+2] = 0;
-       pixels.data[n+3] = 255;
+  }
+  for(var i = 0; i < thickness; i++){
+    for(var n = oy*4*iw + 4*(ex - i) ; n < ey*4*iw + 4*(ex - i); n = n+ 4*iw){
+       pixels.data[n] = color[0];
+       pixels.data[n+1] = color[1];
+       pixels.data[n+2] = color[2];
+       pixels.data[n+3] = color[3];
     }
+  }
     return pixels;
 }
 },{}],201:[function(require,module,exports){
@@ -60008,6 +60019,18 @@ module.exports={
         "type": "integer",
         "desc": "last y position of the rectangle",
         "default": "height"
+      },
+
+      "thickness":{
+        "type": "integer",
+        "desc": "thickness of border",
+        "default": 1
+      },
+
+      "color":{
+        "type": "String",
+        "desc": "RGBA values separated by a space",
+        "default": "0 0 0 255"
       }
     },
 }
