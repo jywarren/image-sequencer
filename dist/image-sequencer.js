@@ -66222,7 +66222,7 @@ module.exports={
       "brightness": {
           "type": "range",
           "desc": "% brightness for the new image",
-          "default": "100",
+          "default": "175",
           "min": "0",
           "max": "200",
           "step": "1"
@@ -67136,12 +67136,12 @@ module.exports={
     "w": {
       "type": "integer",
       "desc": "Width of crop",
-      "default": "(100%)"
+      "default": "(50%)"
     },
     "h": {
       "type": "integer",
       "desc": "Height of crop",
-      "default": "(100%)"
+      "default": "(50%)"
     },
     "backgroundColor": {
       "type": "String",
@@ -67152,6 +67152,7 @@ module.exports={
   },
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
+
 },{}],197:[function(require,module,exports){
 /*
  * Decodes QR from a given image.
@@ -68756,7 +68757,7 @@ module.exports={
         "saturation": {
             "type": "range",
             "desc": "saturation for the new image between 0 and 2, 0 being black and white and 2 being highly saturated",
-            "default": "0",
+            "default": "0.5",
             "min": "0",
             "max": "2",
             "step": "0.1"
