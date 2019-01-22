@@ -48,3 +48,8 @@ function generatePreview(previewStepName, customValues, path, selector) {
       generatePreview(step, Object.values(previewSequencerSteps)[index], src, selector);
     });
   }
+
+module.exports = {
+  generatePreview : generatePreview,
+  updatePreviews : updatePreviews
+}

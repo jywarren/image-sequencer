@@ -1,3 +1,9 @@
+var defaultHtmlSequencerUi = require('./lib/defaultHtmlSequencerUi.js'),
+    setupCache = require('./lib/cache.js'),
+    DefaultHtmlStepUi = require('./lib/defaultHtmlStepUi.js'),
+    urlHash = require('./lib/urlHash.js'),
+    insertPreview = require('./lib/insertPreview.js');
+
 window.onload = function() {
   sequencer = ImageSequencer();
 
@@ -43,11 +49,11 @@ window.onload = function() {
   sequencer.setUI(DefaultHtmlStepUi(sequencer));
 
   // UI for the overall demo:
-  var ui = DefaultHtmlSequencerUi(sequencer);
+  var ui = defaultHtmlSequencerUi(sequencer);
 
   // find any `src` parameters in URL hash and attempt to source image from them and run the sequencer
-  if (getUrlHashParameter('src')) {
-    sequencer.loadImage(getUrlHashParameter('src'), ui.onLoad);
+  if (urlHash.getUrlHashParameter('src')) {
+    sequencer.loadImage(urlHash.getUrlHashParameter('src'), ui.onLoad);
   } else {
     sequencer.loadImage("images/tulips.png", ui.onLoad);
   }
@@ -184,8 +190,8 @@ window.onload = function() {
       step.output.src = reader.result;
       sequencer.run({ index: 0 });
       step.options.step.imgElement.src = reader.result;
-      updatePreviews(reader.result,'addStep');
-      updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
+      insertPreview.updatePreviews(reader.result,'addStep');
+      insertPreview.updatePreviews(sequencer.images.image1.steps[0].options.step.imgElement.src,'insertStep');
     },
     onTakePhoto: function (url) {
       var step = sequencer.images.image1.steps[0];
@@ -197,9 +203,9 @@ window.onload = function() {
 
   setupCache();
 
-  if (getUrlHashParameter('src')) {
-    updatePreviews(getUrlHashParameter('src'),'addStep');
+  if (urlHash.getUrlHashParameter('src')) {
+    insertPreview.updatePreviews(urlHash.getUrlHashParameter('src'),'addStep');
   } else {
-    updatePreviews("images/tulips.png",'addStep');
+    insertPreview.updatePreviews("images/tulips.png",'addStep');
   }
 };
