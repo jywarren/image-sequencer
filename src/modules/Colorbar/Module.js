@@ -8,7 +8,7 @@ module.exports = function Colorbar(options, UI) {
   options.colormap = options.colormap || defaults.colormap;
   options.h = options.h || defaults.h;
 
-console.log('added colorbar 13');
+  console.log('added colorbar 13');
   var steps = [
     { 'name': 'gradient', 'options': {} },
     { 'name': 'colormap', 'options': { colormap: options.colormap } },
@@ -16,15 +16,15 @@ console.log('added colorbar 13');
     { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
   ];
 
-  var internalSequencer = ImageSequencer();
-console.log('colorbar setup is', internalSequencer);
+  var internalSequencer = ImageSequencer({ inBrowser: false });
+  console.log('colorbar setup is', internalSequencer);
 
-  function draw(input,callback) {
+  function draw(input, callback) {
 
     var step = this;
-console.log('colorbar draw', input);
+    console.log('colorbar draw', input);
 
-    internalSequencer.addImage(input.src, function onAddImage() {
+    internalSequencer.loadImage(input.src, function onAddImage() {
       internalSequencer.importJSON(steps);
       internalSequencer.run(function onCallback(internalOutput) {
         step.output = { src: internalOutput, format: input.format };
