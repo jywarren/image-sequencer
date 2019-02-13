@@ -65102,7 +65102,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
   options = options || {};
-  options.inBrowser = options.inBrowser || isBrowser;
+  options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
   options.sequencerCounter = 0;
 
   function objTypeOf(object) {
@@ -65668,7 +65668,7 @@ module.exports = {
   'white-balance': require('./modules/WhiteBalance')
 }
 
-},{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Contrast":186,"./modules/Convolution":190,"./modules/Crop":195,"./modules/DecodeQr":198,"./modules/Dither":202,"./modules/DrawRectangle":206,"./modules/Dynamic":209,"./modules/EdgeDetect":213,"./modules/FisheyeGl":216,"./modules/GammaCorrection":219,"./modules/Gradient":222,"./modules/Histogram":225,"./modules/ImportImage":229,"./modules/Ndvi":236,"./modules/NdviColormap":232,"./modules/Overlay":239,"./modules/PaintBucket":243,"./modules/Resize":246,"./modules/Rotate":249,"./modules/Saturation":252,"./modules/Threshold":256,"./modules/Tint":259,"./modules/WhiteBalance":262,"image-sequencer-invert":61}],157:[function(require,module,exports){
+},{"./modules/Average":162,"./modules/Blend":165,"./modules/Blur":169,"./modules/Brightness":172,"./modules/Channel":175,"./modules/Colorbar":178,"./modules/Colormap":182,"./modules/Contrast":186,"./modules/Convolution":190,"./modules/Crop":195,"./modules/DecodeQr":198,"./modules/Dither":202,"./modules/DrawRectangle":206,"./modules/Dynamic":209,"./modules/EdgeDetect":213,"./modules/FisheyeGl":216,"./modules/GammaCorrection":219,"./modules/Gradient":222,"./modules/Histogram":225,"./modules/ImportImage":229,"./modules/Ndvi":233,"./modules/NdviColormap":236,"./modules/Overlay":239,"./modules/PaintBucket":243,"./modules/Resize":246,"./modules/Rotate":249,"./modules/Saturation":252,"./modules/Threshold":256,"./modules/Tint":259,"./modules/WhiteBalance":262,"image-sequencer-invert":61}],157:[function(require,module,exports){
 // Uses a given image as input and replaces it with the output.
 // Works only in the browser.
 function ReplaceImage(ref,selector,steps,options) {
@@ -65751,28 +65751,29 @@ function Run(ref, json_q, callback, ind, progressObj) {
       var image = drawarray[pos].image;
       var i = drawarray[pos].i;
       var input = ref.images[image].steps[i - 1].output;
+      var step = ref.images[image].steps[i];
 
-      ref.images[image].steps[i].getStep = function getStep(offset) {
+      step.getStep = function getStep(offset) {
         if (i + offset >= ref.images[image].steps.length) return { options: { name: undefined } };
         else return ref.images[image].steps.slice(i + offset)[0];
       };
-      ref.images[image].steps[i].getIndex = function getIndex() {
+      step.getIndex = function getIndex() {
         return i;
       }
 
       for (var util in getStepUtils) {
         if (getStepUtils.hasOwnProperty(util)) {
-          ref.images[image].steps[i][util] = getStepUtils[util];
+          step[util] = getStepUtils[util];
         }
       }
 
       // Tell UI that a step is being drawn.
-      ref.images[image].steps[i].UI.onDraw(ref.images[image].steps[i].options.step);
+      step.UI.onDraw(step.options.step);
 
       // provides a set of standard tools for each step
       var inputForNextStep = require('./RunToolkit')(ref.copy(input));
 
-      ref.images[image].steps[i].draw(
+      step.draw(
         inputForNextStep,
         function onEachStep() {
 
@@ -66333,24 +66334,48 @@ module.exports={
 }
 
 },{}],177:[function(require,module,exports){
-module.exports = function NdviColormapfunction(options, UI) {
+module.exports = function Colorbar(options, UI) {
 
-    var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  var output;
 
-    options.x = options.x || defaults.x;
-    options.y = options.y || defaults.y;
-    options.colormap = options.colormap || defaults.colormap;
-    options.h = options.h || defaults.h;
-    this.expandSteps([
-        { 'name': 'gradient', 'options': {} },
-        { 'name': 'colormap', 'options': { colormap: options.colormap } },
-        { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
-        { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
-    ]);
-    return {
-        isMeta: true
-    }
+  options.x = options.x || defaults.x;
+  options.y = options.y || defaults.y;
+  options.colormap = options.colormap || defaults.colormap;
+  options.h = options.h || defaults.h;
+
+  var steps = [
+    { 'name': 'gradient', 'options': {} },
+    { 'name': 'colormap', 'options': { colormap: options.colormap } },
+    { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
+    { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
+  ];
+
+  // ui: false prevents internal logs
+  var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
+
+  function draw(input, callback) {
+
+    var step = this;
+
+    internalSequencer.loadImage(input.src, function onAddImage() {
+      internalSequencer.importJSON(steps);
+      internalSequencer.run(function onCallback(internalOutput) {
+        step.output = { src: internalOutput, format: input.format };
+        callback();
+      });
+    });
+
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  }
 }
+
 },{"./../../util/getDefaults.js":270,"./info.json":179}],178:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":177,"./info.json":179,"dup":162}],179:[function(require,module,exports){
@@ -66385,8 +66410,7 @@ module.exports={
             "default": 10
         }
     },
-    "length": 4,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 },{}],180:[function(require,module,exports){
 /*
@@ -68445,26 +68469,6 @@ module.exports={
 }
 },{}],231:[function(require,module,exports){
 /*
- * Sample Meta Module for demonstration purpose only
- */
-module.exports = function NdviColormapfunction() {
-    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
-    return {
-        isMeta: true
-    }
-}
-},{}],232:[function(require,module,exports){
-arguments[4][162][0].apply(exports,arguments)
-},{"./Module":231,"./info.json":233,"dup":162}],233:[function(require,module,exports){
-module.exports={
-    "name": "NDVI-Colormap",
-    "description": "Sequentially Applies NDVI and Colormap steps",
-    "inputs": {},
-    "length": 2,
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
-}
-},{}],234:[function(require,module,exports){
-/*
  * NDVI with red filter (blue channel is infrared)
  */
 module.exports = function Ndvi(options, UI) {
@@ -68524,7 +68528,7 @@ module.exports = function Ndvi(options, UI) {
   }
 }
 
-},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./Ui.js":235,"./info.json":237}],235:[function(require,module,exports){
+},{"../_nomodule/PixelManipulation.js":264,"./../../util/getDefaults.js":270,"./Ui.js":232,"./info.json":234}],232:[function(require,module,exports){
 // hide on save
 module.exports = function CropModuleUi(step, ui) {
 
@@ -68560,9 +68564,9 @@ module.exports = function CropModuleUi(step, ui) {
     }
 }
 
-},{}],236:[function(require,module,exports){
+},{}],233:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
-},{"./Module":234,"./info.json":237,"dup":162}],237:[function(require,module,exports){
+},{"./Module":231,"./info.json":234,"dup":162}],234:[function(require,module,exports){
 module.exports={
   "name": "NDVI",
   "description": "Normalized Difference Vegetation Index, or NDVI, is an image analysis technique used with aerial photography. It's a way to visualize the amounts of infrared and other wavelengths of light reflected from vegetation by comparing ratios of blue and red light absorbed versus green and IR light reflected. NDVI is used to evaluate the health of vegetation in satellite imagery, where it correlates with how much photosynthesis is happening. This is helpful in assessing vegetative health or stress. <a href='https://publiclab.org/ndvi'>Read more</a>.<br /><br/>This is designed for use with red-filtered single camera <a href='http://publiclab.org/infragram'>DIY Infragram cameras</a>; change to 'blue' for blue filters",
@@ -68577,6 +68581,26 @@ module.exports={
   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
 }
 
+},{}],235:[function(require,module,exports){
+/*
+ * Sample Meta Module for demonstration purpose only
+ */
+module.exports = function NdviColormapfunction() {
+    this.expandSteps([{ 'name': 'ndvi', 'options': {} }, { 'name': 'colormap', options: {} }]);
+    return {
+        isMeta: true
+    }
+}
+},{}],236:[function(require,module,exports){
+arguments[4][162][0].apply(exports,arguments)
+},{"./Module":235,"./info.json":237,"dup":162}],237:[function(require,module,exports){
+module.exports={
+    "name": "NDVI-Colormap",
+    "description": "Sequentially Applies NDVI and Colormap steps",
+    "inputs": {},
+    "length": 2,
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+}
 },{}],238:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
