@@ -18,7 +18,7 @@ test('benchmark all modules',function(t){
 
   console.log("############ Benchmarks ############");
 
-  sequencer.modules.forEach(function forEachModule(moduleName) {
+  Object.keys(sequencer.modules).forEach(function forEachModule(moduleName) {
     start = Date.new();
     sequencer.addSteps(moduleName);
     end = Date.new();
