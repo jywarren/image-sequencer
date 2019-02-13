@@ -5,7 +5,7 @@ module.exports = function createMetaModule(mapFunction, moduleOptions){
 
   function MetaModule(options, UI) {
 
-    var defaults = require('./getDefaults.js')(require(infoJson));
+    var defaults = require('./getDefaults.js')(require(moduleOptions.infoJson));
     var output;
 
     // map inputs to internal step options;
