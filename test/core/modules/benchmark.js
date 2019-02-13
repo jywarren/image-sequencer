@@ -23,7 +23,7 @@ test('benchmark all modules',function(t){
     sequencer.addSteps(moduleName);
     end = Date.now();
     console.log("Module " + moduleName + " ran in: " + (end-start) + " milliseconds");
-    sequencer.removeStep(imageName, 0); // remove the step after we're done
+    sequencer.removeSteps(imageName, 0); // remove the step after we're done
   });
 
   console.log("####################################");
