@@ -1,5 +1,6 @@
 module.exports = function createMetaModule(mapFunction, moduleOptions){
 
+  moduleOptions = moduleOptions || {};
   moduleOptions.infoJson = moduleOptions.infoJson || 'info.json';
 
   function MetaModule(options, UI) {

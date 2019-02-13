@@ -69833,6 +69833,7 @@ module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
 },{"get-pixels":29}],270:[function(require,module,exports){
 module.exports = function createMetaModule(mapFunction, moduleOptions){
 
+  moduleOptions = moduleOptions || {};
   moduleOptions.infoJson = moduleOptions.infoJson || 'info.json';
 
   function MetaModule(options, UI) {
