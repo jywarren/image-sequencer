@@ -19,9 +19,9 @@ test('benchmark all modules',function(t){
   console.log("############ Benchmarks ############");
 
   Object.keys(sequencer.modules).forEach(function forEachModule(moduleName) {
-    start = Date.new();
+    start = Date.now();
     sequencer.addSteps(moduleName);
-    end = Date.new();
+    end = Date.now();
     console.log("Module " + moduleName + " ran in: " + (end-start) + " milliseconds");
     sequencer.removeStep(imageName, 0); // remove the step after we're done
   });
