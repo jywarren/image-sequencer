@@ -54,7 +54,7 @@ module.exports = function createMetaModule(mapFunction, moduleOptions){
       output: output,
       UI: UI
     }
-    }
+  }
 
-  return createMetaModule;
+  return MetaModule;
 }
