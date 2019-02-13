@@ -1,4 +1,6 @@
-module.exports = function createMetaModule(mapFunction, moduleOptions, infoJson){
+module.exports = function createMetaModule(mapFunction, moduleOptions){
+
+  moduleOptions.infoJson = moduleOptions.infoJson || 'info.json';
 
   function MetaModule(options, UI) {
 
@@ -7,8 +9,9 @@ module.exports = function createMetaModule(mapFunction, moduleOptions, infoJson)
 
     // map inputs to internal step options;
     // use this to set defaults for internal steps
-    // and to expose internal settings as external meta-module parameters
-    if (mapFunction) mapFunction(options, defaults);
+    // and to expose internal settings as external meta-module parameters;
+    // it must return a steps object
+    var steps = mapFunction(options, defaults);
 
     /* example:
     function mapFunction(opt, _defaults) { 

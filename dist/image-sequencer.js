@@ -66321,49 +66321,25 @@ module.exports={
 }
 
 },{}],177:[function(require,module,exports){
-module.exports = function Colorbar(options, UI) {
+module.exports = require('../../util/createMetaModule.js')(
+  function mapFunction(options, defaults) { 
 
-  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
-  var output;
-
-  options.x = options.x || defaults.x;
-  options.y = options.y || defaults.y;
-  options.colormap = options.colormap || defaults.colormap;
-  options.h = options.h || defaults.h;
-
-  var steps = [
-    { 'name': 'gradient', 'options': {} },
-    { 'name': 'colormap', 'options': { colormap: options.colormap } },
-    { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
-    { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
-  ];
-
-  // ui: false prevents internal logs
-  var internalSequencer = ImageSequencer({ inBrowser: false, ui: false });
-
-  function draw(input, callback) {
-
-    var step = this;
-
-    internalSequencer.loadImage(input.src, function onAddImage() {
-      internalSequencer.importJSON(steps);
-      internalSequencer.run(function onCallback(internalOutput) {
-        step.output = { src: internalOutput, format: input.format };
-        callback();
-      });
-    });
-
+    options.x = options.x || defaults.x;
+    options.y = options.y || defaults.y;
+    options.colormap = options.colormap || defaults.colormap;
+    options.h = options.h || defaults.h;
+ 
+    // return steps with options: 
+    return [
+      { 'name': 'gradient', 'options': {} },
+      { 'name': 'colormap', 'options': { colormap: options.colormap } },
+      { 'name': 'crop', 'options': { 'y': 0, 'h': options.h } },
+      { 'name': 'overlay', 'options': { 'x': options.x, 'y': options.y, 'offset': -4 } }
+    ];
   }
+)
 
-  return {
-    options: options,
-    draw: draw,
-    output: output,
-    UI: UI
-  }
-}
-
-},{"./../../util/getDefaults.js":271,"./info.json":179}],178:[function(require,module,exports){
+},{"../../util/createMetaModule.js":270}],178:[function(require,module,exports){
 arguments[4][162][0].apply(exports,arguments)
 },{"./Module":177,"./info.json":179,"dup":162}],179:[function(require,module,exports){
 module.exports={
@@ -69855,7 +69831,9 @@ module.exports = function parseCornerCoordinateInputs(options,coord,callback) {
     })
   }
 },{"get-pixels":29}],270:[function(require,module,exports){
-module.exports = function createMetaModule(mapFunction, moduleOptions, infoJson){
+module.exports = function createMetaModule(mapFunction, moduleOptions){
+
+  moduleOptions.infoJson = moduleOptions.infoJson || 'info.json';
 
   function MetaModule(options, UI) {
 
@@ -69864,8 +69842,9 @@ module.exports = function createMetaModule(mapFunction, moduleOptions, infoJson)
 
     // map inputs to internal step options;
     // use this to set defaults for internal steps
-    // and to expose internal settings as external meta-module parameters
-    if (mapFunction) mapFunction(options, defaults);
+    // and to expose internal settings as external meta-module parameters;
+    // it must return a steps object
+    var steps = mapFunction(options, defaults);
 
     /* example:
     function mapFunction(opt, _defaults) { 
