@@ -382,19 +382,6 @@ ImageSequencer = function ImageSequencer(options) {
     fs.writeFileSync('./src/Modules.js', mods);
   }
 
-  function createMetaModule(stepsCollection, info) {
-    var stepsArr = stepsCollection;
-    if (typeof stepsCollection === 'string')
-      stepsArr = stringToJSON(stepsCollection);
-    var metaMod = function() {
-      this.expandSteps(stepsArr);
-      return {
-        isMeta: true
-      }
-    }
-    return [metaMod, info];
-  }
-
   function saveSequence(name, sequenceString) {
     const sequence = stringToJSON(sequenceString);
     // Save the given sequence string as a module
@@ -452,7 +439,7 @@ ImageSequencer = function ImageSequencer(options) {
     importJSON: importJSON,
     loadNewModule: loadNewModule,
     saveNewModule: saveNewModule,
-    createMetaModule: createMetaModule,
+    createMetaModule: require('./util/createMetaModule'),
     saveSequence: saveSequence,
     loadModules: loadModules,
 
