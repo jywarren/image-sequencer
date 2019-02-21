@@ -67,14 +67,15 @@ module.exports = function PixelManipulation(image, options) {
         }
       }
     }
-
     // perform any extra operations on the entire array:
-    if (options.extraManipulation) pixels = options.extraManipulation(pixels);
-
+    var res;
+    if (options.extraManipulation) res = options.extraManipulation(pixels,generateOutput);
     // there may be a more efficient means to encode an image object,
     // but node modules and their documentation are essentially arcane on this point
-    var chunks = [];
+    function generateOutput(){
+      var chunks = [];
     var totalLength = 0;
+    
     var r = savePixels(pixels, options.format, { quality: 100 });
 
     r.on("data", function(chunk) {
@@ -89,5 +90,11 @@ module.exports = function PixelManipulation(image, options) {
         options.output(options.image, datauri, options.format);
       if (options.callback) options.callback();
     });
+    }
+    if(res){
+      pixels=res;
+      generateOutput();
+    }
+    else if(!options.extraManipulation) generateOutput();
   });
 };
