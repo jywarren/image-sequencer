@@ -68208,8 +68208,8 @@ arguments[4][43][0].apply(exports,arguments)
 arguments[4][44][0].apply(exports,arguments)
 },{"./support/isBuffer":179,"_process":118,"dup":44,"inherits":71}],181:[function(require,module,exports){
 // add steps to the sequencer
-function AddStep(_sequencer, image, name, o) {
-  return require('./InsertStep')(_sequencer,image,-1,name,o);
+function AddStep(_sequencer, name, o) {
+  return require('./InsertStep')(_sequencer,-1,name,o);
 }
 module.exports = AddStep;
 
@@ -68248,13 +68248,11 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
     if (err) console.error(err)
   });
   if (filename && basic) {
-    for (var image in ref.images) {
-      var steps = ref.images[image].steps;
+      var steps = ref.steps;
       var datauri = steps.slice(-1)[0].output.src;
       var ext = steps.slice(-1)[0].output.format;
       var buffer = require('data-uri-to-buffer')(datauri);
       fs.writeFile(dir + filename, buffer, function() { });
-    }
   }
   else {
     getDirectories(dir, function(dirs) {
@@ -68266,8 +68264,7 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
       }
       fs.mkdir(dir + 'sequencer' + num, function() {
         var root = dir + 'sequencer' + num + '/';
-        for (var image in ref.images) {
-          var steps = ref.images[image].steps;
+          var steps = ref.steps;
           if (basic) {
             var datauri = steps.slice(-1)[0].output.src;
             var ext = steps.slice(-1)[0].output.format;
@@ -68282,7 +68279,6 @@ module.exports = function ExportBin(dir = "./output/", ref, basic, filename) {
               fs.writeFile(root + image + "_" + i + "." + ext, buffer, function() { });
             }
           }
-        }
       });
     });
   }
@@ -68315,42 +68311,19 @@ function copy(a) {
 }
 
 function formatInput(args,format,images) {
-  images = [];
-  for (var image in this.images) {
-    images.push(image);
-  }
   var json_q = {};
   var format_i = format;
   if (format == "+")
-    format = ['o_string_a', 'string_a', 'o_object'];
+    format = ['string_a', 'o_object'];
   else if (format == "-")
-    format = ['o_string_a', 'number_a'];
+    format = ['number_a'];
   else if (format == "^")
-    format = ['o_string_a', 'number', 'string', 'o_object'];
+    format = ['number', 'string', 'o_object'];
   else if (format == "r")
-    format = ['o_string_a', 'o_number'];
+    format = ['o_number'];
   else if (format == "l")
-    format = ['o_string','string','o_function'];
-
-  /*
-    formats:
-      addSteps :: o_image_a, name_a, o_o
-        o_string_a, string_a, o_object => { image: [{name,o}] }
-      removeSteps :: o_image_a, index_a
-        o_string_a, number_a => { image: [index] }
-      insertSteps :: o_image_a, index, name, o_o
-        o_string_a, number, string, o_object => { image: [{index,name,o}] }
-      run :: o_image_a, o_from
-        o_string_a, o_number => { image: index }
-      loadImages :: image, src, o_function
-        string, string, o_function => { images: [{image:src}], callback }
-
-    optionals:
-      image: o_string_a
-      options: o_object
-      from: o_number
-      callback: o_function
-  */
+    format = ['string','o_function'];
+    
 
   if(format[format.length-1] == "o_object") {
     if(objTypeOf(args[args.length-1]) != "Object")
@@ -68365,88 +68338,54 @@ function formatInput(args,format,images) {
       args.push(function(){});
   }
 
-  if(format[0] == "o_string_a") {
-    if(args.length == format.length - 1) {
-      var insert = false;
-      for (var i in args) {
-        if (format[parseInt(i)+1].includes( typeof(getPrimitive(args[i])) )){
-          insert = true;
-        }
-        else {insert = false; break;}
-      }
-      if(insert)
-        args.splice(0,0,copy(images));
-    }
-  }
-  else if (format[0] == "o_string" && format_i == "l" && args.length == 2) {
-    if (typeof(args[0]) == "string") {
-      var identifier = "image";
-      var number = 1;
-      while (this.images.hasOwnProperty(identifier+number)) number++;
-      args.splice(0,0,identifier+number);
-    }
-  }
 
-  if(args.length == format.length) {
+  if(args.length == format.length) {//making of arrays
     for (var i in format) {
       if (format[i].substr(format[i].length-2,2)=="_a")
         args[i] = makeArray(args[i]);
     }
   }
 
-  if (args.length == 1) {
-    json_q = copy(args[0]);
-    if(!(format_i == "r" || format_i == "l")) {
-      for (var img in json_q)
-        json_q[img] = makeArray(json_q[img]);
+  if (args.length == 1 ) {
+    if(format_i == "r") json_q = {0:copy(args[0])};
+    else if(format_i == "-") {
+      json_q=[];
+      json_q= copy(args[0]);
     }
   }
-  else if (format_i == "r") {
-    for (var img in args[0]) json_q[args[0][img]] = args[1];
+  else if (format_i == "r" ) {
+    for (var img in args[0]) json_q = {0:args[0]};
   }
   else if (format_i == "l") {
     json_q = {
-      images: {},
-      callback: args[2]
+      image: args[0],
+      callback: args[1]
     }
-    json_q.images[args[0]] = args[1];
   }
   else {
-    for (var img in args[0]) {
-      var image = args[0][img];
-      json_q[image] = [];
-
+      json_q = [];
       if(format_i == "+") {
-        for(var s in args[1]) {
-          json_q[image].push({
-            name: args[1][s],
-            o: args[2]
+        for(var s in args[0]) {
+          json_q.push({
+            name: args[0][s],
+            o: args[1]
           });
         }
       }
 
-      if(format_i == "-") {
-        json_q[image] = args[1];
-      }
 
       if(format_i == "^") {
-        var size = this.images[image].steps.length;
-        var index = args[1];
+        var size = this.steps.length;
+        var index = args[0];
         index = (index==size)?index:index%size;
         if (index<0) index += size+1;
-        json_q[image].push({
+        json_q.push({
           index: index,
-          name: args[2],
-          o: args[3]
+          name: args[1],
+          o: args[2]
         });
-      }
 
     }
-  }
-
-  if(format_i == "l") {
-    json_q.loadedimages = [];
-    for (var i in json_q.images) json_q.loadedimages.push(i);
   }
 
   return json_q;
@@ -68481,7 +68420,7 @@ ImageSequencer = function ImageSequencer(options) {
     if (!typeof (a) == "object") return a;
     if (objTypeOf(a) == "Array") return a.slice();
     if (objTypeOf(a) == "Object") {
-      var b = {};
+      var b = {}; 
       for (var v in a) {
         b[v] = copy(a[v]);
       }
@@ -68499,7 +68438,6 @@ ImageSequencer = function ImageSequencer(options) {
     modules = require('./Modules'),
     sequences = require('./SavedSequences.json'),
     formatInput = require('./FormatInput'),
-    images = {},
     inputlog = [],
     events = require('./ui/UserInterface')(),
     fs = require('fs');
@@ -68523,66 +68461,55 @@ ImageSequencer = function ImageSequencer(options) {
 
   function addSteps() {
     var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var args = [];
     var json_q = {};
     for (var arg in arguments) { args.push(copy(arguments[arg])); }
     json_q = formatInput.call(this_, args, "+");
 
     inputlog.push({ method: "addSteps", json_q: copy(json_q) });
-
-    for (var i in json_q)
-      for (var j in json_q[i])
-        require("./AddStep")(this_, i, json_q[i][j].name, json_q[i][j].o);
-
+      for (var j in json_q)
+        require("./AddStep")(this_, json_q[j].name, json_q[j].o);
     return this;
   }
 
-  function removeStep(image, index) {
+  function removeStep(ref, index) {
     //remove the step from images[image].steps and redraw remaining images
     if (index > 0) {
-      thisStep = images[image].steps[index];
+      //var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
+      thisStep = ref.steps[index];
       thisStep.UI.onRemove(thisStep.options.step);
-      images[image].steps.splice(index, 1);
+      ref.steps.splice(index, 1);
     }
     //tell the UI a step has been removed
   }
 
-  function removeSteps(image, index) {
-    var run = {}, indices;
+  function removeSteps(index) {
+    var   indices;
     var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var args = [];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
     var json_q = formatInput.call(this_, args, "-");
     inputlog.push({ method: "removeSteps", json_q: copy(json_q) });
 
-    for (var img in json_q) {
-      indices = json_q[img].sort(function(a, b) { return b - a });
-      run[img] = indices[indices.length - 1];
+      indices = json_q.sort(function(a, b) { return b - a });
       for (var i in indices)
-        removeStep(img, indices[i]);
-    }
-    // this.run(run); // This is creating problems
+        removeStep(this_, indices[i]);
     return this;
   }
 
   function insertSteps(image, index, name, o) {
-    var run = {};
     var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var args = []
     for (var arg in arguments) args.push(arguments[arg]);
 
     var json_q = formatInput.call(this_, args, "^");
     inputlog.push({ method: "insertSteps", json_q: copy(json_q) });
 
-    for (var img in json_q) {
-      var details = json_q[img];
+      var details = json_q;
       details = details.sort(function(a, b) { return b.index - a.index });
       for (var i in details)
-        require("./InsertStep")(this_, img, details[i].index, details[i].name, details[i].o);
-      run[img] = details[details.length - 1].index;
-    }
-    // this.run(run); // This is Creating issues
+        require("./InsertStep")(this_, details[i].index, details[i].name, details[i].o);
     return this;
   }
 
@@ -68593,24 +68520,19 @@ ImageSequencer = function ImageSequencer(options) {
     config = config || { mode: 'no-arg' };
     if (config.index) index = config.index;
 
-    if (config.mode != 'test') {
       if (config.mode != "no-arg" && typeof config != 'function') {
         if (config.progressObj) progressObj = config.progressObj;
         delete arguments['0'];
       }
-    }
-    else {
-      arguments['0'] = config.mode;
-    }
 
     var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var args = [];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
     var callback = function() { };
     for (var arg in args)
       if (objTypeOf(args[arg]) == "Function")
-        callback = args.splice(arg, 1)[0];
+        callback = args.splice(arg, 1)[0]; //callback is formed
 
     var json_q = formatInput.call(this_, args, "r");
 
@@ -68621,13 +68543,17 @@ ImageSequencer = function ImageSequencer(options) {
 
   function loadImages() {
     var args = [];
+    var prevSteps = this.getSteps().slice(1).map(step=>step.options.name)
     var sequencer = this;
+    sequencer.image = arguments[0];
     for (var arg in arguments) args.push(copy(arguments[arg]));
     var json_q = formatInput.call(this, args, "l");
-
+    if(this.getSteps().length!=0){
+      this.options.sequencerCounter = 0;
+      inputlog = [];
+      this.steps = [];
+    }
     inputlog.push({ method: "loadImages", json_q: copy(json_q) });
-    var loadedimages = this.copy(json_q.loadedimages);
-
     var ret = {
       name: "ImageSequencer Wrapper",
       sequencer: this,
@@ -68636,22 +68562,19 @@ ImageSequencer = function ImageSequencer(options) {
       insertSteps: this.insertSteps,
       run: this.run,
       UI: this.UI,
-      setUI: this.setUI,
-      images: loadedimages
+      setUI: this.setUI
     };
-
-    function load(i) {
-      if (i == loadedimages.length) {
-        json_q.callback.call(ret);
-        return;
+    function loadPrevSteps(ref){
+      if(prevSteps.length!=0){
+        ref.addSteps(prevSteps)
+        prevSteps=[];
       }
-      var img = loadedimages[i];
-      require('./ui/LoadImage')(sequencer, img, json_q.images[img], function() {
-        load(++i);
-      });
     }
-
-    load(0);
+    require('./ui/LoadImage')(sequencer, "image", json_q.image, function() {
+      loadPrevSteps(sequencer);
+      json_q.callback.call(ret);
+    });
+    
   }
 
   function replaceImage(selector, steps, options) {
@@ -68662,12 +68585,7 @@ ImageSequencer = function ImageSequencer(options) {
 
   //returns the steps added
   function getSteps(){
-    var steps;
-    if(arguments[0])
-    steps= this.images.test.steps;
-    else
-    steps = this.images.image1.steps;
-    return [...steps];
+    return this.steps;
   }
 
   function setUI(UI) {
@@ -68690,8 +68608,9 @@ ImageSequencer = function ImageSequencer(options) {
       }
     }
     else {
-      if (modules[name])
-        modulesdata = modules[name][1];
+      if (modules[name]){ 
+         modulesdata = modules[name][1];
+        }
       else
         modulesdata = { 'inputs': sequences[name]['options'] };
     }
@@ -68702,9 +68621,11 @@ ImageSequencer = function ImageSequencer(options) {
   function toCliString() {
     var cliStringSteps = `"`, cliOptions = {};
     for (var step in this.steps) {
-      if (this.steps[step].options.name !== "load-image")
-        cliStringSteps += `${this.steps[step].options.name} `;
-      for (var inp in modulesInfo(this.steps[step].options.name).inputs) {
+      var name = (typeof this.steps[step].options !== "undefined")? this.steps[step].options.name : this.steps[step].name
+      if (name !== "load-image"){
+        cliStringSteps += `${name} `;
+      }
+      for (var inp in modulesInfo(name).inputs) {
         cliOptions[inp] = this.steps[step].options[inp];
       }
     }
@@ -68717,13 +68638,14 @@ ImageSequencer = function ImageSequencer(options) {
     if (step) {
       return stepToString(step);
     } else {
-      return copy(this.images.image1.steps).map(stepToString).slice(1).join(',');
+      return copy(this.steps.map(stepToString).slice(1).join(','));
     }
   }
-
+  
   // Stringifies one step of the sequence
   function stepToString(step) {
-    let inputs = modulesInfo(step.options.name).inputs || {}, op = {};
+    var arg = (step.name)?step.name:step.options.name;
+    let inputs = modulesInfo(arg).inputs || {}, op = {};
 
     for (let input in inputs) {
 
@@ -68735,7 +68657,7 @@ ImageSequencer = function ImageSequencer(options) {
     }
 
     var configurations = Object.keys(op).map(key => key + ':' + op[key]).join('|');
-    return `${step.options.name}{${configurations}}`;
+    return `${arg}{${configurations}}`;
   }
 
   // exports the current sequence as an array of JSON steps
@@ -68882,8 +68804,9 @@ ImageSequencer = function ImageSequencer(options) {
     inputlog: inputlog,
     modules: modules,
     sequences: sequences,
-    images: images,
     events: events,
+    steps: steps,
+    image: image,
 
     //user functions
     loadImages: loadImages,
@@ -68926,33 +68849,33 @@ module.exports = ImageSequencer;
 const getStepUtils = require('./util/getStep.js');
 
 // insert one or more steps at a given index in the sequencer
-function InsertStep(ref, image, index, name, o) {
+function InsertStep(ref, index, name, o) {
   if (ref.sequences[name]) {
     return ref.importJSON(ref.sequences[name]);
   }
 
-  function insertStep(image, index, name, o_) {
+
+  function insertStep(index, name, o_) {
     if (ref.modules[name]) var moduleInfo = ref.modules[name][1];
     else {
       console.log('Module ' + name + ' not found.');
     }
 
     var o = ref.copy(o_);
+
     o.number = ref.options.sequencerCounter++; //Gives a Unique ID to each step
     o.name = o_.name || name || moduleInfo.name;
     o.description = o_.description || moduleInfo.description;
     o.selector = o_.selector || 'ismod-' + name;
     o.container = o_.container || ref.options.selector;
-    o.image = image;
     o.inBrowser = ref.options.inBrowser;
 
-    if (index == -1) index = ref.images[image].steps.length;
+    if (index == -1) index = ref.steps.length;
 
     o.step = {
       name: o.name,
       description: o.description,
       ID: o.number,
-      imageName: o.image,
       inBrowser: ref.options.inBrowser,
       ui: ref.options.ui,
       options: o
@@ -68964,7 +68887,6 @@ function InsertStep(ref, image, index, name, o) {
       for (var i in stepsArray) {
         let step = stepsArray[i];
         ref.insertSteps(index + Number.parseInt(i), step['name'], step['options']);
-        // ref.addSteps(step['name'], step['options']);
       }
     }
 
@@ -68973,7 +68895,7 @@ function InsertStep(ref, image, index, name, o) {
 
     if (!ref.modules[name][1].length) {
       UI.onSetup(o.step, { index: index });
-      ref.images[image].steps.splice(index, 0, ref.modules[name][0](o, UI));
+      ref.steps.splice(index, 0, ref.modules[name][0](o, UI));
     } else {
       ref.modules[name][0](o, UI);
     }
@@ -68981,8 +68903,8 @@ function InsertStep(ref, image, index, name, o) {
     return true;
   }
 
-  insertStep(image, index, name, o);
-  ref.steps = ref.images[image].steps;
+  insertStep(index, name, o);
+  ref.steps = ref.steps;
 
 }
 module.exports = InsertStep;
@@ -69096,9 +69018,8 @@ function Run(ref, json_q, callback, ind, progressObj) {
 
   function drawStep(drawarray, pos) {
     if (pos == drawarray.length && drawarray[pos - 1] !== undefined) {
-      var image = drawarray[pos - 1].image;
-      if (ref.objTypeOf(callback) == "Function" && ref.images[image].steps.slice(-1)[0].output) {
-        var steps = ref.images[image].steps;
+      if (ref.objTypeOf(callback) == "Function" && ref.steps.slice(-1)[0].output) {
+        var steps = ref.steps;
         var out = steps[steps.length - 1].output.src;
         callback(out);
         return true;
@@ -69107,14 +69028,13 @@ function Run(ref, json_q, callback, ind, progressObj) {
 
     // so we don't run on the loadImage module:
     if (drawarray[pos] !== undefined) {
-      var image = drawarray[pos].image;
       var i = drawarray[pos].i;
-      var input = ref.images[image].steps[i - 1].output;
-      var step = ref.images[image].steps[i];
+      var input = ref.steps[i - 1].output;
+      var step = ref.steps[i];
 
       step.getStep = function getStep(offset) {
-        if (i + offset >= ref.images[image].steps.length) return { options: { name: undefined } };
-        else return ref.images[image].steps.slice(i + offset)[0];
+        if (i + offset >= ref.steps.length) return { options: { name: undefined } };
+        else return ref.steps.slice(i + offset)[0];
       };
       step.getIndex = function getIndex() {
         return i;
@@ -69136,11 +69056,11 @@ function Run(ref, json_q, callback, ind, progressObj) {
         inputForNextStep,
         function onEachStep() {
 
-          // This output is accessible by UI
-          ref.images[image].steps[i].options.step.output = ref.images[image].steps[i].output.src;
+          // This output is accessible by UI        
+          ref.steps[i].options.step.output = ref.steps[i].output.src;
 
           // Tell UI that step has been drawn.
-          ref.images[image].steps[i].UI.onComplete(ref.images[image].steps[i].options.step);
+          ref.steps[i].UI.onComplete(ref.steps[i].options.step);
 
           drawStep(drawarray, ++pos);
         },
@@ -69151,35 +69071,32 @@ function Run(ref, json_q, callback, ind, progressObj) {
 
   function drawSteps(json_q) {
     var drawarray = [];
-    for (var image in json_q) {
-      var no_steps = ref.images[image].steps.length;
-      var init = json_q[image];
+      var no_steps = ref.steps.length;
+      var init = json_q[0];
       for (var i = 0; i < no_steps - init; i++) {
-        drawarray.push({ image: image, i: init + i });
+        drawarray.push({i: init + i });
       }
-    }
     drawStep(drawarray, ind);
   }
 
   function filter(json_q) {
-    for (var image in json_q) {
-      if (json_q[image] == 0 && ref.images[image].steps.length == 1)
-        delete json_q[image];
-      else if (json_q[image] == 0) json_q[image]++;
-    }
-    for (var image in json_q) {
-      var prevstep = ref.images[image].steps[json_q[image] - 1];
+ 
+      if (json_q[0] == 0 && ref.steps.length == 1)
+        delete json_q[0];
+      else if (json_q[0] == 0) json_q[0]++;
+      var prevstep = ref.steps[json_q[0] - 1];
       while (
         typeof prevstep == "undefined" ||
         typeof prevstep.output == "undefined"
-      ) {
-        prevstep = ref.images[image].steps[--json_q[image] - 1];
+      ) {        
+        prevstep = ref.steps[--json_q[0] - 1];
       }
-    }
+    
     return json_q;
   }
-
+  
   var json_q = filter(json_q);
+  
   return drawSteps(json_q);
 }
 module.exports = Run;
@@ -69325,9 +69242,10 @@ module.exports={
         "default": "https://github.com/publiclab/image-sequencer"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#add-qr-module"
   }
   
+
 },{}],195:[function(require,module,exports){
 /*
 * Average all pixel colors
@@ -69412,7 +69330,7 @@ module.exports={
     "description": "Average all pixel color",
     "inputs": {
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#average-module"
 }
 
 },{}],198:[function(require,module,exports){
@@ -69510,7 +69428,7 @@ module.exports={
       "default": "function(r1, g1, b1, a1, r2, g2, b2, a2) { return [ r1, g2, b2, a2 ] }"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blend-module"
 }
 
 },{}],201:[function(require,module,exports){
@@ -69660,7 +69578,7 @@ module.exports={
             "step": 0.25
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#blur-module"
 }
 
 },{}],205:[function(require,module,exports){
@@ -69737,7 +69655,7 @@ module.exports={
           "max": "200"
       }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#brightness-module"
 }
 
 },{}],208:[function(require,module,exports){
@@ -69806,7 +69724,7 @@ module.exports={
       "values": ["red", "green", "blue"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#channel-module"
 }
 
 },{}],211:[function(require,module,exports){
@@ -69859,8 +69777,9 @@ module.exports={
             "default": 10
         }
     },
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#colorbar-module"
 }
+
 },{}],214:[function(require,module,exports){
 /*
  * Accepts a value from 0-255 and returns the new color-mapped pixel 
@@ -70117,7 +70036,7 @@ module.exports={
       "values": ["default","greyscale","bluwhtgrngis","stretched","fastie","brntogrn","blutoredjet","colors16"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#colormap-module"
 }
 
 },{}],218:[function(require,module,exports){
@@ -70230,7 +70149,7 @@ module.exports={
             "max": 100
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#contrast-module"
 }
 
 },{}],222:[function(require,module,exports){
@@ -70370,7 +70289,7 @@ module.exports={
         "placeholder": "1 1 1 1 1 1 1 1 1"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#convolution-module"
 }
 
 },{}],226:[function(require,module,exports){
@@ -70651,7 +70570,7 @@ module.exports={
       "placeholder": "255 255 255 255"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#crop-module"
 }
 
 },{}],231:[function(require,module,exports){
@@ -70722,7 +70641,7 @@ module.exports={
       "type": "string"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#decodeqr-module"
 }
 
 },{}],234:[function(require,module,exports){
@@ -70855,9 +70774,11 @@ module.exports={
         "default": "none",
         "values": ["none","floydsteinberg","bayer","Atkinson"]
       }
-    }
+    },
+	"docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dither-module"
 }
   
+
 },{}],238:[function(require,module,exports){
 module.exports = exports = function(pixels, options){
   var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
@@ -70979,7 +70900,8 @@ module.exports={
         "desc": "RGBA values separated by a space",
         "default": "0 0 0 255"
       }
-    }
+    },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#draw-rectangle-module"
 }
 
 },{}],242:[function(require,module,exports){
@@ -71111,7 +71033,7 @@ module.exports={
       "default": "r + g + b"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#dynamic-module"
 }
 
 },{}],245:[function(require,module,exports){
@@ -71382,7 +71304,7 @@ module.exports={
             "step": 0.05
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#edge-detect-module"
 }
 
 },{}],249:[function(require,module,exports){
@@ -71525,7 +71447,7 @@ module.exports={
       "default": "(inbuilt)"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#fisheyegl-module"
 }
 
 },{}],252:[function(require,module,exports){
@@ -71626,7 +71548,8 @@ module.exports={
       "default": "Vertical",
       "values": ["Horizontal", "Vertical"]
     }
-  }
+  },
+   "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#flipimage-module"
 }
 
 },{}],256:[function(require,module,exports){
@@ -71693,7 +71616,7 @@ module.exports={
             "max": 1
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#gamma-correction-module"
 }
 
 },{}],259:[function(require,module,exports){
@@ -71768,8 +71691,9 @@ module.exports={
     "name": "Gradient",
     "description": "Gives a gradient of the image",
     "inputs": {},
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#gradient-module"
 }
+
 },{}],262:[function(require,module,exports){
 /*
  * Calculates the histogram of the image
@@ -71886,8 +71810,9 @@ module.exports={
             ]
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#histogram-module"
 }
+
 },{}],265:[function(require,module,exports){
 /*
  * Import Image module; this fetches a given remote or local image via URL
@@ -72024,8 +71949,9 @@ module.exports={
       "default": "./images/monarch.png"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#import-image-module"
 }
+
 },{}],269:[function(require,module,exports){
 /*
  * NDVI with red filter (blue channel is infrared)
@@ -72137,7 +72063,7 @@ module.exports={
       "values": ["red", "blue"]
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-module"
 }
 
 },{}],273:[function(require,module,exports){
@@ -72162,8 +72088,9 @@ module.exports={
     "name": "NDVI-Colormap",
     "description": "Sequentially Applies NDVI and Colormap steps",
     "inputs": {},
-    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link": "https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#ndvi-colormap-module"
 }
+
 },{}],276:[function(require,module,exports){
 module.exports = function Dynamic(options, UI, util) {
 
@@ -72272,8 +72199,9 @@ module.exports={
             "default": -2
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#overlay-module"
 }
+
 },{}],279:[function(require,module,exports){
 module.exports = function PaintBucket(options, UI) {
 
@@ -72415,8 +72343,10 @@ module.exports={
         "max": "100",
         "step": "1"
       }
-  } 
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#paint-bucket-module" 
 }
+
 },{}],283:[function(require,module,exports){
 module.exports = function ReplaceColor(options, UI) {
 
@@ -72540,8 +72470,10 @@ module.exports={
           "max": "100",
           "step": "1"
         }
-    } 
+    },
+	"docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#replacecolor-module" 
   }
+
 },{}],287:[function(require,module,exports){
 /*
  * Resize the image by given percentage value
@@ -72629,8 +72561,9 @@ module.exports={
       "default": "125%"
     }
   },
-  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#resize-module"
 }
+
 },{}],290:[function(require,module,exports){
 /*
  * Rotates image 
@@ -72712,7 +72645,7 @@ module.exports={
         "step": "1"
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#rotate-modul"
   }
 
 },{}],293:[function(require,module,exports){
@@ -72792,7 +72725,7 @@ module.exports={
             "step": 0.1
         }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#saturation-module"
 }
 
 },{}],296:[function(require,module,exports){
@@ -72932,7 +72865,8 @@ module.exports={
       "max": "255",
       "step": "1"
     }
-  }
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#threshold"
 }
 
 },{}],300:[function(require,module,exports){
@@ -73006,7 +72940,8 @@ module.exports={
           "max": "1",
           "step": "0.01"
       }
-  }
+  },
+ "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#tint"
 }
 
 },{}],303:[function(require,module,exports){
@@ -73104,8 +73039,9 @@ module.exports={
         "default": 6000
       }
     },
-    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md"
+    "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#white-balance"
 }
+
 },{}],306:[function(require,module,exports){
 (function (process,Buffer){
 /*
@@ -73220,11 +73156,11 @@ function LoadImage(ref, name, src, main_callback) {
     }
     return image;
   }
-  function CImage(src, callback) {
+  function CImage(src, step, callback) {
     var datauri;
     if (!!src.match(/^data:/i)) {
       datauri = src;
-      callback(datauri);
+      callback(datauri, step);
     }
     else if (!ref.options.inBrowser && !!src.match(/^https?:\/\//i)) {
       require( src.match(/^(https?):\/\//i)[1] ).get(src,function(res){
@@ -73233,7 +73169,7 @@ function LoadImage(ref, name, src, main_callback) {
         res.setEncoding('base64');
         res.on('data',function(chunk) {data += chunk;});
         res.on('end',function() {
-          callback("data:"+contentType+";base64,"+data);
+          callback("data:"+contentType+";base64,"+data, step);
         });
       });
     }
@@ -73246,66 +73182,36 @@ function LoadImage(ref, name, src, main_callback) {
         canvas.width = image.naturalWidth;
         canvas.height = image.naturalHeight;
         context.drawImage(image,0,0);
-        datauri = canvas.toDataURL(ext);
-        callback(datauri);
-      }
+        datauri = canvas.toDataURL(ext);        
+        callback(datauri, step);
+      }  
       image.src = src;
     }
     else {
       datauri = require('urify')(src);
-      callback(datauri);
+      callback(datauri, step);
     }
   }
 
   function loadImage(name, src) {
     var step = {
       name: "load-image",
-      description: "This initial step loads and displays the original image without any modifications.<br /><br />To work with a new or different image, drag one into the drop zone.",
+      description: "This initial step loads and displays the original image without any modifications.",
       ID: ref.options.sequencerCounter++,
-      imageName: name,
       inBrowser: ref.options.inBrowser,
-      ui: ref.options.ui
+      ui: ref.options.ui,
+      UI: ref.events,
+      output : ''
     };
 
-    var image = {
-      src: src,
-      steps: [{
-        options: {
-          id: step.ID,
-          name: "load-image",
-          description: "This initial step loads and displays the original image without any modifications.",
-          title: "Load Image",
-          step: step
-        },
-        UI: ref.events,
-        draw: function() {
-          UI.onDraw(options.step);
-          if(arguments.length==1){
-            this.output = CImage(arguments[0]);
-            options.step.output = this.output;
-            UI.onComplete(options.step);
-            return true;
-          }
-          else if(arguments.length==2) {
-            this.output = CImage(arguments[0]);
-            options.step.output = this.output;
-            arguments[1]();
-            UI.onComplete(options.step);
-            return true;
-          }
-          return false;
-        },
-      }]
-    };
-    CImage(src, function(datauri) {
+
+    CImage(src, step, function(datauri, step) {
       var output = makeImage(datauri);
-      ref.images[name] = image;
-      var loadImageStep = ref.images[name].steps[0];
-      loadImageStep.output = output;
-      loadImageStep.options.step.output = loadImageStep.output.src;
-      loadImageStep.UI.onSetup(loadImageStep.options.step);
-      loadImageStep.UI.onDraw(loadImageStep.options.step);
-      loadImageStep.UI.onComplete(loadImageStep.options.step);
+      ref.steps.push(step);
+      ref.steps[0].output = output;
+      ref.steps[0].UI.onSetup(ref.steps[0]);
+      ref.steps[0].UI.onDraw(ref.steps[0]);
+      ref.steps[0].UI.onComplete(ref.steps[0]);
 
       main_callback();
       return true;
@@ -73316,6 +73222,7 @@ function LoadImage(ref, name, src, main_callback) {
 }
 
 module.exports = LoadImage;
+
 
 },{"urify":177}],308:[function(require,module,exports){
 // TODO: potentially move this into ImportImage module
@@ -73428,10 +73335,10 @@ module.exports = function UserInterface(events = {}) {
         // No UI
     } else if(step.inBrowser) {
       // Create and append an HTML Element
-      console.log("Added Step \""+step.name+"\" to \""+step.imageName+"\".");
+      console.log("Added Step \""+step.name+"\"");
     } else {
       // Create a NodeJS Object
-      console.log('\x1b[36m%s\x1b[0m',"Added Step \""+step.name+"\" to \""+step.imageName+"\".");
+      console.log('\x1b[36m%s\x1b[0m',"Added Step \""+step.name+"\"");
     }
   }
 
@@ -73440,10 +73347,10 @@ module.exports = function UserInterface(events = {}) {
       // No UI
     } else if(step.inBrowser) {
       // Overlay a loading spinner
-      console.log("Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
+      console.log("Drawing Step \""+step.name+"\"");
     } else {
       // Don't do anything
-      console.log('\x1b[33m%s\x1b[0m',"Drawing Step \""+step.name+"\" on \""+step.imageName+"\".");
+      console.log('\x1b[33m%s\x1b[0m',"Drawing Step \""+step.name+"\"");
     }
   }
 
@@ -73453,10 +73360,10 @@ module.exports = function UserInterface(events = {}) {
     } else if(step.inBrowser) {
       // Update the DIV Element
       // Hide the laoding spinner
-      console.log("Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
+      console.log("Drawn Step \""+step.name+"\"");
     } else {
       // Update the NodeJS Object
-      console.log('\x1b[32m%s\x1b[0m',"Drawn Step \""+step.name+"\" on \""+step.imageName+"\".");
+      console.log('\x1b[32m%s\x1b[0m',"Drawn Step \""+step.name+"\"");
     }
   }
 
@@ -73465,10 +73372,10 @@ module.exports = function UserInterface(events = {}) {
       // No UI
     } else if(step.inBrowser) {
       // Remove the DIV Element
-      console.log("Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
+      console.log("Removing Step \""+step.name+"\"");
     } else {
       // Delete the NodeJS Object
-      console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+step.name+"\" of \""+step.imageName+"\".");
+      console.log('\x1b[31m%s\x1b[0m',"Removing Step \""+step.name+"\"");
     }
   }
 
