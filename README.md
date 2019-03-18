@@ -410,6 +410,29 @@ Image Sequencer can also generate a string for usage in the CLI for the current 
 sequencer.toCliString()
 ```
 
+
+## Importing steps using JSON array
+
+Image sequencer provides the following core API function to import the given sequence of JSON steps into sequencer.
+
+```js
+sequencer.importJSON(obj)
+```
+It can be implemented the following way for example:
+
+```js
+sequencer.importJSON([
+    { name: 'blur', options: {} }
+  ]);
+  ```
+  where name is the name of step to be added, options object can be the one used to provide various params to the sequencer which can customise the default ones.
+
+To see this in action, please refer to line # 51 of the following:
+
+[test/core/modules/import-export.js](https://github.com/publiclab/image-sequencer/blob/main/test/core/modules/import-export.js)
+ 
+
+
 ## Creating a User Interface
 
 Image Sequencer provides the following events which can be used to generate a UI:
