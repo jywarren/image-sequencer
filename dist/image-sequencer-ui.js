@@ -80,8 +80,8 @@ window.onload = function() {
     newStep = $(this).attr('data-value');
     //$("#addStep option[value=" + newStep + "]").attr('selected', 'selected');
     $("#addStep select").val(newStep);
-    ui.selectNewStepUi();
-    ui.addStepUi();
+    ui.selectNewStepUi(newStep);
+    ui.addStepUi(newStep);
     $(this).removeClass('selected');
   });
 
@@ -291,6 +291,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function selectNewStepUi() {
     var m = $(addStepSel + " select").val();
+    if(!m) m = arguments[0];
     $(addStepSel + " .info").html(_sequencer.modulesInfo(m).description);
     $(addStepSel + " #add-step-btn").prop("disabled", false);
   }
@@ -308,6 +309,8 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
     if ($(addStepSel + " select").val() == "none") return;
 
     var newStepName = $(addStepSel + " select").val();
+  
+    if(!newStepName) newStepName = arguments[0]
 
     /*
     * after adding the step we run the sequencer from defined step
