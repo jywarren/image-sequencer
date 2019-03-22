@@ -63,6 +63,8 @@ Image Sequencer modules are designed to be run either in the browser or in a Nod
 
 https://github.com/tech4gt/image-sequencer
 
+### Browser/node compatibility
+
 If you wish to offer a module without browser-compatibility, please indicate this in the returned `info` object as:
 
 module.exports = [
