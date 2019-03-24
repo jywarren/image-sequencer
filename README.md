@@ -18,7 +18,7 @@ Image Sequencer is different from other image processing systems because it's _n
 
 The following diagrams attempt to explain how the applications various components interconnect:
 
-![general diagram](https://i.imgur.com/S3Dou2M.jpg)
+![general diagram](https://publiclab.org/i/30547.png?s=o)
 
 ![workflow diagram](https://raw.githubusercontent.com/publiclab/image-sequencer/master/examples/images/diagram-workflows.png)
 
