@@ -25,7 +25,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
 
     step.ui =
       '\
-      <div class="container">\
+      <div>\
         <form class="input-form">\
           <div class="panel panel-default">\
             <div class="panel-heading">\
