@@ -9,6 +9,7 @@ module.exports = {
   'brightness': require('./modules/Brightness'),
   'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
+  'color-temperature': require('./modules/ColorTemperature'),
   'colormap': require('./modules/Colormap'),
   'contrast': require('./modules/Contrast'),
   'convolution': require('./modules/Convolution'),
@@ -31,12 +32,12 @@ module.exports = {
   'ndvi-colormap': require('./modules/NdviColormap'),
   'paint-bucket': require('./modules/PaintBucket'),
   'overlay': require('./modules/Overlay'),
-  'replace-color':require('./modules/ReplaceColor'),
+  'replace-color': require('./modules/ReplaceColor'),
   'resize': require('./modules/Resize'),
   'rotate': require('./modules/Rotate'),
   'saturation': require('./modules/Saturation'),
   'text-overlay': require('./modules/TextOverlay'),
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),
-  'color-temperature': require('./modules/ColorTemperature')
+  'canvas-resize': require('./modules/CanvasResize')
 }
