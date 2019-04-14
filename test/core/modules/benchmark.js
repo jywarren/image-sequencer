@@ -18,6 +18,8 @@ test('benchmark all modules', function(t) {
   var mods = Object.keys(sequencer.modules);
 
   sequencer.loadImages(image);
+  while ((mods[0] === 'import-image' || (!!sequencer.modulesInfo(mods[0]).requires && sequencer.modulesInfo(mods[0]).requires.includes("webgl"))))
+    mods.splice(0, 1);
   sequencer.addSteps(mods[0]);
   global.start = Date.now()
   global.idx = 0
@@ -30,7 +32,7 @@ test('benchmark all modules', function(t) {
     if (mods.length > 1) { //Last one is test module, we need not benchmark it
       sequencer.steps[global.idx].output.src = image;
       global.idx++;
-      if (mods[0] === 'import-image') {
+      if (mods[0] === 'import-image' || (!!sequencer.modulesInfo(mods[0]).requires && sequencer.modulesInfo(mods[0]).requires.includes("webgl"))) {
         /* Not currently working */
         console.log("Bypassing import-image");
         mods.splice(0, 1);

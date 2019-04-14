@@ -111,7 +111,20 @@ function ModuleName(options,UI) {
       // load a standard info.json file.
       ];
 ```
+### Running a browser-only module in node
+If your module has browser specific code or you are consuming a dependency which does the `gl-context` api. We designed this api especially for webl based modules but since it runs the module in a headless browser, ti supports all browser specific APIs.
 
+The api must be used in the following format
+```js
+var step = this;
+
+    if (!options.inBrowser) {
+      require('../_nomodule/gl-context')(input, callback, step, options);
+    }
+    else {
+      /* Browser specific code */
+    }
+```
 
 ### options
 

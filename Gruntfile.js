@@ -15,7 +15,7 @@ module.exports = function(grunt) {
         livereload: true
       },
       source: {
-        files: ["src/**/*", "Gruntfile.js", "examples/lib/*","examples/demo.js"],
+        files: ["src/**/*", "Gruntfile.js", "examples/lib/*", "examples/demo.js"],
         tasks: ["compile"]
       }
     },
@@ -24,7 +24,7 @@ module.exports = function(grunt) {
       core: {
         src: ["src/ImageSequencer.js"],
         dest: "dist/image-sequencer.js"
-      }, 
+      },
       ui: {
         src: ["examples/demo.js"],
         dest: "dist/image-sequencer-ui.js"
