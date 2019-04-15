@@ -7,6 +7,7 @@ module.exports = {
   'blend': require('./modules/Blend'),
   'blur': require('./modules/Blur'),
   'brightness': require('./modules/Brightness'),
+  'canvas-resize': require('./modules/CanvasResize'),
   'channel': require('./modules/Channel'),
   'colorbar': require('./modules/Colorbar'),
   'color-temperature': require('./modules/ColorTemperature'),
@@ -39,5 +40,5 @@ module.exports = {
   'text-overlay': require('./modules/TextOverlay'),
   'threshold': require('./modules/Threshold'),
   'tint': require('./modules/Tint'),
-  'canvas-resize': require('./modules/CanvasResize')
+  'white-balance': require('./modules/WhiteBalance')
 }
