@@ -12,6 +12,7 @@ Most contribution (we imagine) would be in the form of API-compatible modules, w
 * [Info File](#info-file)
 * [Ideas](#Contribution-ideas)
 * [Grunt Tasks](#grunt-tasks)
+* [UI Helper Methods](#ui-helper-methods)
 
 ****
 
@@ -375,3 +376,56 @@ The following command is used for running the tasks: `grunt [task-name]`. Here `
 4. **serve**: Compiles the dist files as in the **compile** task and starts a local server on `localhost:3000` to host the demo site in `/examples/` directory. Also runs the **watch** task.
 5. **production**: Compiles and minifies dist files in `/dist/image-sequencer.js` and `/dist/image-sequencer-ui.js` without the `.min.js` extension to include minified files in the demo site. This script should only be used in production mode while deploying.
 6. **default**: Runs the **watch** task as default.
+
+## UI Helper Methods
+
+### scopeQuery
+
+###### Path: `/examples/lib/scopeQuery.js`
+
+The method returns a scoped `jQuery` object which only searches for elements inside a given scope (a DOM element).
+
+To use the method, 
+* import the `scopeSelector` and `scopeSelectorAll` methods from `lib/scopeQuery.js`
+* call the methods with scope as a parameter
+	
+```js
+var scopeQuery = require('./scopeQuery');
+
+var $step = scopeQuery.scopeSelector(scope),
+    $stepAll = scopeQuery.scopeSelectorAll(scope);	
+```
+This will return an object with a constructor which returns a `jQuery` object (from inside the scope) but with new `elem` and `elemAll` methods.
+
+#### Methods of the Returned Object
+* `elem()`: Selects an element inside the scope; 
+* `elemAll()`: Selects all the instances of a given element inside the scope;
+
+#### Example
+
+```js
+//The scope is a div element with id=“container“ and there are three divs in it 
+//with ids „1“, „2“, and „3“, and all of them have a „child“ class attribute
+
+var $step = require('./scopeQuery').scopeSelector(document.getElementById('container'));
+
+$step('#1'); // returns the div element with id=“1“
+$step('#1').hide().elemAll('.child').fadeOut(); // abruptly hides the div element with id=“1“ and fades out all other div elements
+```
+
+These two methods are chainable and will always return elements from inside the scope.
+
+#### Usage
+
+Instead of using
+
+```js
+$(step.ui.querySelector('query')).show().hide();
+$(step.ui.querySelectorAll('q2')).show().hide();
+```
+The following code can be used
+
+```js
+$step('query').show().hide();
+$stepAll('q2').show().hide();
+```
