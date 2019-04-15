@@ -1,4 +1,4 @@
-Fixes #[Add issue number here.]
+Fixes #0000  (<=== Replace `0000` with the Issue Number)
 
 Make sure these boxes are checked before your pull request (PR) is ready to be reviewed and merged. Thanks!
 
