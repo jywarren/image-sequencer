@@ -115,7 +115,7 @@ Note: Browser CORS Restrictions apply. Some browsers may not allow local images
 from other folders, and throw a Security Error instead.
 
 ```js
-  sequencer.replaceImage(selector,steps,optional_options);
+sequencer.replaceImage(selector,steps,optional_options);
 ```
 
 `optional_options` allows passing additional arguments to the module itself.
@@ -123,8 +123,8 @@ from other folders, and throw a Security Error instead.
 For example:
 
 ```js
-  sequencer.replaceImage('#photo','invert');
-  sequencer.replaceImage('#photo',['invert','ndvi-red']);
+sequencer.replaceImage('#photo','invert');
+sequencer.replaceImage('#photo',['invert','ndvi-red']);
 ```
 
 ### Data URL usage
@@ -150,7 +150,7 @@ Image Sequencer also provides a CLI for applying operations to local files. The 
 The basic format for using the CLI is as follows:
 
 ```
-    $ ./index.js -i [PATH] -s step-name
+$ ./index.js -i [PATH] -s step-name
 ```
 
 *NOTE:* On Windows you'll have to use `node index.js` instead of `./index.js`.
@@ -158,7 +158,7 @@ The basic format for using the CLI is as follows:
 The CLI also can take multiple steps at once, like so:
 
 ```
-    $ ./index.js -i [PATH] -s "step-name-1 step-name-2 ..."
+$ ./index.js -i [PATH] -s "step-name-1 step-name-2 ..."
 ```
 
 But for this, double quotes must wrap the space-separated steps.
