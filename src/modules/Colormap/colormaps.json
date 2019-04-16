@@ -3,7 +3,7 @@
     "author": "publiclab",
     "description": "A simple linear greyscale colormap, black to white.",
     "url": "https://publiclab.org/colormaps#greyscale",
-    "colormap": [
+    "colormapRanges": [
       [0,     [0,   0,   0],   [255, 255, 255] ],
       [1,     [255, 255, 255], [255, 255, 255] ]
     ]
@@ -13,7 +13,7 @@
     "author": "publiclab",
     "description": "A full-colorwheel colormap, covering the colors in the spectrum.",
     "url": "https://publiclab.org/colormaps#default",
-    "colormap": [
+    "colormapRanges": [
       [0,       [45,1,121],     [25,1,137]    ],
       [0.125,   [25,1,137],     [0,6,156]     ],
       [0.1875,  [0,6,156],      [7,41,172]    ],
@@ -38,7 +38,7 @@
     "author": "publiclab",
     "description": "A simple colormap from blue to red, with no purple overlap.",
     "url": "https://publiclab.org/colormaps#stretched",
-    "colormap": [
+    "colormapRanges": [
       [0,     [0,   0,   255], [0,   0,   255] ],
       [0.1,   [0,   0,   255], [38,  195, 195] ],
       [0.5,   [0,   150, 0],   [255, 255, 0]   ],
@@ -51,7 +51,7 @@
    "author": "MaggPi",
    "description": "A colormap from blue to white to green to....",
    "url": "https://publiclab.org/colormaps#bluwhtgrngis",
-   "colormap": [
+   "colormapRanges": [
      [0,      [6,23,86],    [6,25, 84]    ],
      [0.0625, [6,25,84],    [6,25, 84]    ],
      [0.125,  [6,25,84],    [6,25, 84]    ],
@@ -80,7 +80,7 @@
     "author": "MaggPi",
     "description": "A colormap from brown to green.",
     "url": "https://publiclab.org/colormaps#brntogrn",
-    "colormap": [
+    "colormapRanges": [
       [0,      [110,12,3],   [118,6,1]      ],
       [0.0625, [118,6,1],    [141,19,6]     ],
       [0.125,  [141,19,6],   [165,35,13]    ],
@@ -106,7 +106,7 @@
     "author": "MaggPi",
     "description": "A colormap from blue to red.",
     "url": "https://publiclab.org/colormaps#blutoredjet",
-    "colormap": [
+    "colormapRanges": [
       [0,       [0,0,140],    [1,1,186]    ],
       [0.0625,  [1,1,186],    [0,1,248]    ],
       [0.125,   [0,1,248],    [0,70,254]   ],
@@ -136,7 +136,7 @@
     "author": "publiclab",
     "description": "A segmented colormap of the full color spectrum, divided into 16 colors.",
     "url": "https://publiclab.org/colormaps#colors16",
-    "colormap": [
+    "colormapRanges": [
       [0,      [0,0,0],       [0,0,0]       ],
       [0.0625, [3,1,172],     [3,1,172]     ],
       [0.125,  [3,1,222],     [3,1, 222]    ],
@@ -160,7 +160,7 @@
     "author": "cfastie",
     "description": "A colormap for highlighting NDVI values over 0 on a scale from -1 to 1; in this scale, values from 0-0.5 are greyscale, while those over 0.5 are color.",
     "url": "https://publiclab.org/colormaps#fastie",
-    "colormap": [
+    "colormapRanges": [
       [0,     [255, 255, 255], [0,   0,   0]   ],
       [0.167, [0,   0,   0],   [255, 255, 255] ],
       [0.33,  [255, 255, 255], [0,   0,   0]   ],
