@@ -201,15 +201,17 @@ var sequencer = ImageSequencer();
 ### Loading an Image into the Sequencer
 
 The `loadImage` method is used to load an image into the sequencer. It accepts
-a name and an image. The method also accepts an optional callback.
+an image `src`, either a URL or a data-url. The method also accepts an optional callback.
 
 ```js
-sequencer.loadImage(image_src,optional_callback);
+sequencer.loadImage(image_src, optional_callback);
 ```
+
 On `Node.js` the `image_src` may be a DataURI or a local path or a URL.
 
 On browsers, it may be a DatURI, a local image or a URL (Unless this violates
 CORS Restrictions). To sum up, these are accepted:
+
 * Images in the same domain (or directory - for a local implementation)
 * CORS-Proof images in another domain.
 * DataURLs
@@ -219,7 +221,7 @@ The callback is called within the scope of a sequencer. For example:
 (addSteps is defined later)
 
 ```js
-sequencer.loadImage('SRC',function(){
+sequencer.loadImage('SRC', function(){
   this.addSteps('module-name');
 });
 ```
