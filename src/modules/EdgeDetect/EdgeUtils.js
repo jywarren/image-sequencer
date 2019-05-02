@@ -12,8 +12,9 @@ kernely = [
 
 let pixelsToBeSupressed = [];
 
-module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, hysteresis) {
+module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, useHysteresis) {
   let angles = [], grads = [], strongEdgePixels = [], weakEdgePixels = [];
+  
   for (var x = 0; x < pixels.shape[0]; x++) {
     grads.push([]);
     angles.push([]);
@@ -31,7 +32,7 @@ module.exports = function(pixels, highThresholdRatio, lowThresholdRatio, hystere
   }
   nonMaxSupress(pixels, grads, angles);
   doubleThreshold(pixels, highThresholdRatio, lowThresholdRatio, grads, strongEdgePixels, weakEdgePixels);
-  if(hysteresis.toLowerCase() == 'true') hysteresis(strongEdgePixels, weakEdgePixels);
+  if(useHysteresis.toLowerCase() == 'true') hysteresis(strongEdgePixels, weakEdgePixels);
 
   strongEdgePixels.forEach(pixel => preserve(pixels, pixel));
   weakEdgePixels.forEach(pixel => supress(pixels, pixel));
@@ -83,7 +84,7 @@ function sobelFilter(pixels, x, y) {
   return {
     pixel: [val, val, val, grad],
     angle: angle
-  };
+  }
 }
 
 function categorizeAngle(angle){

@@ -4,6 +4,7 @@ module.exports = function Convolution(options, UI) {
 
     options.kernelValues = options.kernelValues || defaults.kernelValues;
     options.constantFactor = options.constantFactor || defaults.constantFactor;
+    options.texMode = options.texMode || defaults.texMode;
     var output;
 
     function draw(input, callback, progressObj) {
@@ -14,7 +15,7 @@ module.exports = function Convolution(options, UI) {
         var step = this;
 
         function extraManipulation(pixels) {
-            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues);
+            pixels = require('./Convolution')(pixels, options.constantFactor, options.kernelValues, options.texMode);
             return pixels;
         }
 

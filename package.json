@@ -5,7 +5,7 @@
   "main": "src/ImageSequencer.js",
   "scripts": {
     "debug": "TEST=true node ./index.js -i ./examples/images/monarch.png -s invert",
-    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/canvas-resize.js test/core/modules/QR.js test/core/modules/crop.js | tap-spec; browserify test/core/modules/image-sequencer.js test/core/modules/chain.js test/core/modules/meta-modules.js test/core/modules/replace.js test/core/modules/import-export.js test/core/modules/run.js test/core/modules/dynamic-imports.js test/core/util/parse-input.js test/core/modules/benchmark.js| tape-run --render=\"tap-spec\"",
+    "test": "TEST=true istanbul cover tape test/core/*.js test/core/ui/user-interface.js test/core/modules/canvas-resize.js test/core/modules/QR.js test/core/modules/crop.js | tap-spec; browserify test/core/modules/image-sequencer.js test/core/modules/chain.js test/core/modules/meta-modules.js test/core/modules/replace.js test/core/modules/import-export.js test/core/modules/run.js test/core/modules/dynamic-imports.js test/core/util/*.js test/core/modules/benchmark.js| tape-run --render=\"tap-spec\"",
     "test-ui": "jasmine test/spec/*.js",
     "setup": "npm i && npm i -g grunt grunt-cli && grunt build",
     "start": "grunt serve"
@@ -24,6 +24,7 @@
     "url": "https://github.com/publiclab/image-sequencer/issues"
   },
   "dependencies": {
+    "base64-img": "^1.0.4",
     "bootstrap": "~3.4.0",
     "buffer": "~5.2.1",
     "commander": "^2.11.0",
@@ -35,6 +36,7 @@
     "get-pixels": "~3.3.0",
     "gifshot": "^0.4.5",
     "glfx": "0.0.4",
+    "gpu.js": "^2.0.0-rc.12",
     "image-sequencer-invert": "^1.0.0",
     "imagejs": "0.0.9",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
@@ -44,7 +46,6 @@
     "jsqr": "^1.1.1",
     "lodash": "^4.17.11",
     "ndarray": "^1.0.18",
-    "ndarray-gaussian-filter": "^1.0.0",
     "ora": "^3.0.0",
     "pace": "0.0.4",
     "puppeteer": "^1.14.0",
@@ -56,7 +57,10 @@
     "webgl-distort": "0.0.2"
   },
   "devDependencies": {
-    "base64-img": "^1.0.4",
+    "@babel/core": "^7.4.3",
+    "@babel/plugin-proposal-object-rest-spread": "^7.4.3",
+    "@babel/plugin-syntax-object-rest-spread": "^7.2.0",
+    "babelify": "^10.0.0",
     "browserify": "16.2.3",
     "grunt": "^1.0.3",
     "grunt-browser-sync": "^2.2.0",

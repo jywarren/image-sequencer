@@ -5,6 +5,7 @@ module.exports = function Blur(options, UI) {
 
     var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
     options.blur = options.blur || defaults.blur;
+    options.blur = parseFloat(options.blur);
     var output;
 
     function draw(input, callback, progressObj) {
