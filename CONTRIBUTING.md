@@ -3,6 +3,10 @@ Contributing to Image Sequencer
 
 Happily accepting pull requests; to edit the core library, modify files in `./src/`. To build, run `npm install` followed by `grunt build`.
 
+On ARM based devices, the `gl` module may require some libraries to be re-installed:
+
+`sudo apt-get install -y build-essential libxi-dev libglu1-mesa-dev libglew-dev pkg-config` -- see https://github.com/stackgl/headless-gl#ubuntudebian for more.
+
 Most contribution (we imagine) would be in the form of API-compatible modules, which need not be directly included.
 
 ## Jump To
