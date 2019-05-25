@@ -368,7 +368,12 @@ module.exports =
     });
 ```
 
+## Linting
+
+We are now using `eslint` and `husky` to help lint and format our code each time we commit. If we want `husky` to not verify the commit and push it, it's possible to use `git commit -m "message" --no-verify.`
+
 ## Grunt Tasks
+
 This repository has different grunt tasks for different uses. The source code is in the [Gruntfile](https://github.com/publiclab/image-sequencer/blob/main/Gruntfile.js).
 
 The following command is used for running the tasks: `grunt [task-name]`. Here `[task-name]` should be replaced by the name of the task to be run. To run the default task run `grunt` without any options.
