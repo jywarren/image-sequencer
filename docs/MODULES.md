@@ -628,7 +628,7 @@ Noise in an image are atypical pixels that are not representing the color or the
              .addSteps('Noise-Reduction','options')
              .run()
 ```
-where 'options' is an object with the property 'method'. 'options.method' can be:
+where `options` is an object with the property `method`. `options.method` can be:
 * Median Filtering: Set the RGB value of the pixel to the median RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
 * Mean Filtering: Set the RGB value of the pixel to the mean RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
 # Text Overlay
