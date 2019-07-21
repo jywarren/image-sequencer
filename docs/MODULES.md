@@ -40,7 +40,8 @@ List of Module Documentations
 35. [ColorTemperature](#color-temperature)
 36. [Grid-Overlay](#grid-overlay)
 37. [MinifyImage](#minify-image)
-38. [Text-Overlay](#text-overlay)
+38. [NoiseReduction][#noise-reduction]
+39. [Text-Overlay](#text-overlay)
 
 
 ## crop-module
@@ -617,6 +618,19 @@ sequencer.loadImage('PATH')
            .addSteps('minify-image')
            .run()
 ```
+# Noise-Reduction
+
+Noise in an image are atypical pixels that are not representing the color or the exposure of the scene correctly. This Noise Reduction module reduces the noise in the image by using different techniques to change the RGB value of the pixels to create a smoother and fuller image.
+
+## Usage
+```js
+    sequencer.loadImage('PATH')
+             .addSteps('Noise-Reduction','options')
+             .run()
+```
+where 'options' is an object with the property 'method'. 'options.method' can be:
+* Median Filtering: Set the RGB value of the pixel to the median RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
+* Mean Filtering: Set the RGB value of the pixel to the mean RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
 # Text Overlay
 
 The modules allows to add text to image in both browser and node environment. We have the options to modify the font-size and also support few font-styles. The text color can also be modified.
