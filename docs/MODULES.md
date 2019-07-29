@@ -40,7 +40,7 @@ List of Module Documentations
 35. [ColorTemperature](#color-temperature)
 36. [Grid-Overlay](#grid-overlay)
 37. [MinifyImage](#minify-image)
-38. [NoiseReduction][#noise-reduction]
+38. [NoiseReduction](#noise-reduction)
 39. [Text-Overlay](#text-overlay)
 
 
@@ -625,7 +625,7 @@ Noise in an image are atypical pixels that are not representing the color or the
 ## Usage
 ```js
     sequencer.loadImage('PATH')
-             .addSteps('Noise-Reduction','options')
+             .addSteps('noise-reduction','options')
              .run()
 ```
 where `options` is an object with the property `method`. `options.method` can be:
