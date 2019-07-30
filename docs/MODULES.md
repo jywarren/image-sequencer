@@ -620,7 +620,7 @@ sequencer.loadImage('PATH')
 ```
 # Noise-Reduction
 
-Noise in an image are atypical pixels that are not representing the color or the exposure of the scene correctly. This Noise Reduction module reduces the noise in the image by using different techniques to change the RGB value of the pixels to create a smoother and fuller image.
+Noise in an image are atypical pixels that are not representing the color or the exposure of the scene correctly. This Noise Reduction module reduces the noise in the image by using either median filtering or mean filtering techniques to change the RGB value of the pixels to create a smoother and fuller image.
 
 ## Usage
 ```js
