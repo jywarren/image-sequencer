@@ -661,7 +661,7 @@ Noise in an image are atypical pixels that are not representing the color or the
 #### Usage
 ```js
     sequencer.loadImage('PATH')
-             .addSteps('noise-reduction','options')
+             .addSteps('noise-reduction',options)
              .run()
 ```
 where `options` is an object with the property `method`. `options.method` can be:
