@@ -39,4 +39,10 @@ describe('Default sequencer HTML', function() {
   it('import options from url', function() {
     expect(defaultHtmlSequencerUi.importStepsFromUrlHash).toHaveBeenCalled();
   });
+  
+  it('adds a step from the quick selector', function() {
+    expect($('.step').length).toBe(1);
+    $("[data-value='brightness']").click()
+    expect($('.step').length).toBe(2);
+  });
 });
