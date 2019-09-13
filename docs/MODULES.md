@@ -31,17 +31,17 @@ List of Module Documentations
 26. [MinifyImage](#minify-image)
 27. [Ndvi](#ndvi-module)
 28. [Ndvi-Colormap](#ndvi-colormap-module)
-29. [Overlay](#overlay-module)
-30. [PaintBucket](#paint-bucket-module)
-31. [ReplaceColor](#replacecolor-module)
-32. [Resize](#resize-module)
-33. [Rotate](#rotate-module)
-34. [Saturation](#saturation-module)
-35. [Segmented-Colormap](#segmented-colormap-module)
-36. [Text-Overlay](#text-overlay)
-37. [Threshold](#threshold)
-38. [Tint](#tint)
-39. [NoiseReduction](#noise-reduction)
+29. [NoiseReduction](#noise-reduction)
+30. [Overlay](#overlay-module)
+31. [PaintBucket](#paint-bucket-module)
+32. [ReplaceColor](#replacecolor-module)
+33. [Resize](#resize-module)
+34. [Rotate](#rotate-module)
+35. [Saturation](#saturation-module)
+36. [Segmented-Colormap](#segmented-colormap-module)
+37. [Text-Overlay](#text-overlay)
+38. [Threshold](#threshold)
+39. [Tint](#tint)
 
 
 ## add-qr-module
@@ -489,6 +489,21 @@ This module is used for demonstrating ndvi and colormap properties consecutively
 ```
 
 
+## Noise-Reduction
+
+Noise in an image are atypical pixels that are not representing the color or the exposure of the scene correctly. This Noise Reduction module reduces the noise in the image by using either median filtering or mean filtering techniques to change the RGB value of the pixels to create a smoother and fuller image.
+
+#### Usage
+```js
+    sequencer.loadImage('PATH')
+             .addSteps('noise-reduction',options)
+             .run()
+```
+where `options` is an object with the property `method`. `options.method` can be:
+* Median Filtering: Set the RGB value of the pixel to the median RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
+* Mean Filtering: Set the RGB value of the pixel to the mean RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
+
+
 ## overlay-module
 
 This module is used for overlaying an Image over another .
@@ -654,16 +669,3 @@ where `options` is an object with the following property:
 * factor : amount of tint (default 0.5)
 
 
-## Noise-Reduction
-
-Noise in an image are atypical pixels that are not representing the color or the exposure of the scene correctly. This Noise Reduction module reduces the noise in the image by using either median filtering or mean filtering techniques to change the RGB value of the pixels to create a smoother and fuller image.
-
-#### Usage
-```js
-    sequencer.loadImage('PATH')
-             .addSteps('noise-reduction',options)
-             .run()
-```
-where `options` is an object with the property `method`. `options.method` can be:
-* Median Filtering: Set the RGB value of the pixel to the median RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
-* Mean Filtering: Set the RGB value of the pixel to the mean RGB pixel value of all adjacent pixels (maximum 8 adjacent pixels and itself)
