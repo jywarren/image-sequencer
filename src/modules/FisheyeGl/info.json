@@ -1,5 +1,5 @@
 {
-  "name": "Fisheye GL",
+  "name": "fisheye-gl",
   "description": "Correct fisheye, or barrel distortion, in images (with WebGL -- adapted from fisheye-correction-webgl by @bluemir).",
   "requires": [ "webgl" ],
   "inputs": {
@@ -54,13 +54,14 @@
     },
     "fragmentSrc": {
       "type": "PATH",
-      "desc": "Patht to a WebGL fragment shader file",
+      "desc": "Path to a WebGL fragment shader file",
       "default": "(inbuilt)"
     },
     "vertexSrc": {
       "type": "PATH",
-      "desc": "Patht to a WebGL vertex shader file",
+      "desc": "Path to a WebGL vertex shader file",
       "default": "(inbuilt)"
     }
-  }
+  },
+  "docs-link":"https://github.com/publiclab/image-sequencer/blob/main/docs/MODULES.md#fisheyegl-module"
 }
