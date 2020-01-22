@@ -2,6 +2,7 @@
 * Core modules and their info files
 */
 module.exports = {
+<<<<<<< HEAD
   'add-qr': require('./modules/AddQR'),
   'average': require('./modules/Average'),
   'blend': require('./modules/Blend'),
@@ -48,3 +49,25 @@ module.exports = {
   'webgl-distort': require('./modules/WebglDistort'),
   'white-balance': require('./modules/WhiteBalance')
 };
+=======
+  'average': require('./modules/Average'),
+  'blend': require('./modules/Blend'),
+  'blur': require('./modules/Blur'),
+  'brightness': require('./modules/Brightness'),
+  'channel': require('./modules/Channel'),
+  'colorbar': require('./modules/Colorbar'),
+  'colormap': require('./modules/Colormap'),
+  'crop': require('./modules/Crop'),
+  'decode-qr': require('./modules/DecodeQr'),
+  'dynamic': require('./modules/Dynamic'),
+  'edge-detect': require('./modules/EdgeDetect'),
+  'fisheye-gl': require('./modules/FisheyeGl'),
+  'gradient': require('./modules/Gradient'),
+  'import-image': require('./modules/ImportImage'),
+  'invert': require('image-sequencer-invert'),
+  'ndvi': require('./modules/Ndvi'),
+  'ndvi-colormap': require('./modules/NdviColormap'),
+  'overlay': require('./modules/Overlay'),
+  'saturation': require('./modules/Saturation'),
+}
+>>>>>>> 4d996b9968f95fd7f6158bde3034d9f5c43f6737

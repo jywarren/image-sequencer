@@ -138,6 +138,16 @@ window.onload = function () {
     }, 3000);
   }
 
+<<<<<<< HEAD
+=======
+  $("#addStep select").on("change", ui.selectNewStepUi);
+  $("#addStep #add-step-btn").on("click", ui.addStepUi);
+  $('#addStep #download-btn').click(function() {
+    $('img:last()').trigger("click");
+
+    return false;
+  });
+>>>>>>> 4d996b9968f95fd7f6158bde3034d9f5c43f6737
   $('body').on('click', 'button.remove', ui.removeStepUi);
   function saveSequence() { // 1. save seq
     var result = window.prompt('Please give a name to your sequence... (Saved sequence will only be available in this browser).');
@@ -343,6 +353,7 @@ window.onload = function () {
     }
   });
 
+<<<<<<< HEAD
   setupCache();
 
   if (urlHash.getUrlHashParameter('src')) {  // Gets the sequence from the URL
@@ -351,3 +362,41 @@ window.onload = function () {
     insertPreview.updatePreviews('images/tulips.png', document.querySelector('#addStep'));
   }
 };
+=======
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js', { scope: '/examples/' })
+      .then(function(registration) {
+        const installingWorker = registration.installing;
+        installingWorker.onstatechange = () => {
+          console.log(installingWorker)
+          if (installingWorker.state === 'installed') {
+            location.reload();
+          }
+        }
+        console.log('Registration successful, scope is:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Service worker registration failed, error:', error);
+      });
+  }
+
+  if ('serviceWorker' in navigator) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            $("#clear-cache").append(" " + cacheName);
+          });
+        });
+      }
+
+  $("#clear-cache").click(function() {
+      if ('serviceWorker' in navigator) {
+        caches.keys().then(function(cacheNames) {
+          cacheNames.forEach(function(cacheName) {
+            caches.delete(cacheName);
+          });
+        });
+      }
+  location.reload();
+  });
+};
+>>>>>>> 4d996b9968f95fd7f6158bde3034d9f5c43f6737

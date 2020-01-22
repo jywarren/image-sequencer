@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 const staticCacheName = 'image-sequencer-static-v3.5.1';
+=======
+const staticCacheName = 'image-sequencer-static-v3';
+
+>>>>>>> 4d996b9968f95fd7f6158bde3034d9f5c43f6737
 self.addEventListener('install', event => {
   console.log('Attempting to install service worker');
 });
@@ -16,7 +21,11 @@ self.addEventListener('activate', function(e) {
         })
       );
     })
+<<<<<<< HEAD
   );
+=======
+  );      
+>>>>>>> 4d996b9968f95fd7f6158bde3034d9f5c43f6737
 });
 
 self.addEventListener('fetch', function(event) {
@@ -24,13 +33,18 @@ self.addEventListener('fetch', function(event) {
     caches.open(staticCacheName).then(function(cache) {
       return cache.match(event.request).then(function (response) {
         return response || fetch(event.request).then(function(response) {
+<<<<<<< HEAD
           if(event.request.method == 'GET')
+=======
+          if(event.request.method == "GET")
+>>>>>>> 4d996b9968f95fd7f6158bde3034d9f5c43f6737
             cache.put(event.request, response.clone());
           return response;
         });
       });
     })
   );
+<<<<<<< HEAD
 });
 
 // When the update modal sends a 'skipWaiting' message, call the skipWaiting method.
@@ -39,3 +53,6 @@ self.addEventListener('message', function(event) {
     self.skipWaiting();
   }
 });
+=======
+});
+>>>>>>> 4d996b9968f95fd7f6158bde3034d9f5c43f6737
