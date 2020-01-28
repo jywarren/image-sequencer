@@ -119,4 +119,4 @@
   "bin": {
     "sequencer": "./index.js"
   }
-}
+} 
