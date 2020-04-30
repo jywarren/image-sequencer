@@ -31,7 +31,7 @@
     "get-pixels": "~3.3.0",
     "image-sequencer-invert": "^1.0.0",
     "imgareaselect": "git://github.com/jywarren/imgareaselect.git#v1.0.0-rc.2",
-    "jquery": "~2",
+    "jquery": "~3",
     "jsqr": "^0.2.2",
     "lodash": "^4.17.5",
     "ndarray-gaussian-filter": "^1.0.0",
