@@ -1,29 +1,47 @@
-if (typeof window !== 'undefined') { isBrowser = true }
-else { var isBrowser = false }
+if (typeof window !== 'undefined') { isBrowser = true; }
+else { var isBrowser = false; }
 require('./util/getStep.js');
 
+/**
+ * @method ImageSequencer
+ * @param {Object|Float32Array} options Optional options
+ * @returns {Object}
+ */
 ImageSequencer = function ImageSequencer(options) {
 
-  var sequencer = (this.name == "ImageSequencer") ? this : this.sequencer;
-  options = options || {};
-  options.inBrowser = options.inBrowser || isBrowser;
-  options.sequencerCounter = 0;
+  var str = require('./Strings.js')(this.steps, modulesInfo, addSteps, copy);
 
+  var sequencer = (this.name == 'ImageSequencer') ? this : this.sequencer;
+  options = options || {};
+  options.inBrowser = options.inBrowser === undefined ? isBrowser : options.inBrowser;
+  options.sequencerCounter = 0;
   function objTypeOf(object) {
-    return Object.prototype.toString.call(object).split(" ")[1].slice(0, -1)
+    return Object.prototype.toString.call(object).split(' ')[1].slice(0, -1);
   }
 
+  /**
+   * @method log
+   * @description Logs colored messages to the console using ASCII color codes
+   * @param {String} color ASCII color code
+   * @param {String} msg Message to be logged to the console
+   */
   function log(color, msg) {
-    if (options.ui != "none") {
+    if (options.ui != 'none') {
       if (arguments.length == 1) console.log(arguments[0]);
       else if (arguments.length == 2) console.log(color, msg);
     }
   }
 
+  /**
+   * @method copy
+   * @description Returns a clone of the input object.
+   * @param {Object|Float32Array} a The Object/Array to be cloned
+   * @returns {Object|Float32Array}
+   */
   function copy(a) {
-    if (!typeof (a) == "object") return a;
-    if (objTypeOf(a) == "Array") return a.slice();
-    if (objTypeOf(a) == "Object") {
+    if (!typeof (a) == 'object') return a;
+    if (objTypeOf(a) == 'Array') return a.slice();
+    if (objTypeOf(a) == 'Object') {
       var b = {};
       for (var v in a) {
         b[v] = copy(a[v]);
@@ -34,7 +52,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function makeArray(input) {
-    return (objTypeOf(input) == "Array") ? input : [input];
+    return (objTypeOf(input) == 'Array') ? input : [input];
   }
 
   var image,
@@ -42,7 +60,6 @@ ImageSequencer = function ImageSequencer(options) {
     modules = require('./Modules'),
     sequences = require('./SavedSequences.json'),
     formatInput = require('./FormatInput'),
-    images = {},
     inputlog = [],
     events = require('./ui/UserInterface')(),
     fs = require('fs');
@@ -53,10 +70,10 @@ ImageSequencer = function ImageSequencer(options) {
     for (o in sequencer) {
       modules[o] = sequencer[o];
     }
-    sequences = JSON.parse(window.localStorage.getItem('sequences'));
+    sequences = JSON.parse(window.localStorage.getItem('sequences')); // Get saved sequences from localStorage
     if (!sequences) {
       sequences = {};
-      window.localStorage.setItem('sequences', JSON.stringify(sequences));
+      window.localStorage.setItem('sequences', JSON.stringify(sequences)); // Set the localStorage entry as an empty Object by default
     }
   }
 
@@ -64,302 +81,241 @@ ImageSequencer = function ImageSequencer(options) {
   // if (options.imageSelect || options.inBrowser) addStep('image-select');
   // else if (options.imageUrl) loadImage(imageUrl);
 
+  /**
+   * @method addSteps
+   * @description Adds one of more steps to the sequence.
+   * @return {Object}
+   */
   function addSteps() {
-    var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
+    var args = [];
     var json_q = {};
-    for (var arg in arguments) { args.push(copy(arguments[arg])); }
-    json_q = formatInput.call(this_, args, "+");
+    for (var arg in arguments) { args.push(copy(arguments[arg])); } // Get all the module names from the arguments
+    json_q = formatInput.call(this_, args, '+');
 
-    inputlog.push({ method: "addSteps", json_q: copy(json_q) });
-
-    for (var i in json_q)
-      for (var j in json_q[i])
-        require("./AddStep")(this_, i, json_q[i][j].name, json_q[i][j].o);
-
+    inputlog.push({ method: 'addSteps', json_q: copy(json_q) });
+    for (var j in json_q)
+      require('./AddStep')(this_, json_q[j].name, json_q[j].o);
     return this;
   }
 
-  function removeStep(image, index) {
-    //remove the step from images[image].steps and redraw remaining images
+  /**
+   * @method removeStep
+   * @description Removes the step at the specified index from the sequence.
+   * @param {Object} ref ImageSequencer instance
+   * @param {Number} index Index of the step to be removed
+   * @returns {Null}
+   */
+  function removeStep(ref, index) {
+    // Remove the step from images[image].steps and redraw remaining images
     if (index > 0) {
-      thisStep = images[image].steps[index];
+      // var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
+      thisStep = ref.steps[index];
       thisStep.UI.onRemove(thisStep.options.step);
-      images[image].steps.splice(index, 1);
+      ref.steps.splice(index, 1);
     }
-    //tell the UI a step has been removed
   }
 
-  function removeSteps(image, index) {
-    var run = {}, indices;
-    var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+  /**
+   * @method removeSteps
+   * @description Removes one or more steps from the sequence
+   * @returns {Object}
+   */
+  function removeSteps() {
+    var   indices;
+    var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
+    var args = [];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
-    var json_q = formatInput.call(this_, args, "-");
-    inputlog.push({ method: "removeSteps", json_q: copy(json_q) });
+    var json_q = formatInput.call(this_, args, '-');
+    inputlog.push({ method: 'removeSteps', json_q: copy(json_q) });
 
-    for (var img in json_q) {
-      indices = json_q[img].sort(function(a, b) { return b - a });
-      run[img] = indices[indices.length - 1];
-      for (var i in indices)
-        removeStep(img, indices[i]);
-    }
-    // this.run(run); // This is creating problems
+    indices = json_q.sort(function(a, b) { return b - a; });
+    for (var i in indices)
+      removeStep(this_, indices[i]);
     return this;
   }
 
-  function insertSteps(image, index, name, o) {
-    var run = {};
-    var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+  /**
+   * @method insertSteps
+   * @description Inserts steps at the specified index
+   * @returns {Object}
+   */
+  function insertSteps() {
+    var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
+    var args = [];
     for (var arg in arguments) args.push(arguments[arg]);
 
-    var json_q = formatInput.call(this_, args, "^");
-    inputlog.push({ method: "insertSteps", json_q: copy(json_q) });
+    var json_q = formatInput.call(this_, args, '^');
+    inputlog.push({ method: 'insertSteps', json_q: copy(json_q) });
 
-    for (var img in json_q) {
-      var details = json_q[img];
-      details = details.sort(function(a, b) { return b.index - a.index });
-      for (var i in details)
-        require("./InsertStep")(this_, img, details[i].index, details[i].name, details[i].o);
-      run[img] = details[details.length - 1].index;
-    }
-    // this.run(run); // This is Creating issues
+    var details = json_q;
+    details = details.sort(function(a, b) { return b.index - a.index; });
+    for (var i in details)
+      require('./InsertStep')(this_, details[i].index, details[i].name, details[i].o);
     return this;
   }
 
-  // Config is an object which contains the runtime configuration like progress bar
-  // information and index from which the sequencer should run
-  function run(config, t_image, t_from) {
-    let progressObj, index = 0;
+  /**
+   * @method run
+   * @param {Object} config Object which contains the runtime configuration like progress bar information and index from which the sequencer should run.
+   * @returns {Boolean}
+   */
+  function run(config) {
+    var progressObj, index = 0;
     config = config || { mode: 'no-arg' };
     if (config.index) index = config.index;
 
-    if (config.mode != 'test') {
-      if (config.mode != "no-arg" && typeof config != 'function') {
-        if (config.progressObj) progressObj = config.progressObj;
-        delete arguments['0'];
-      }
-    }
-    else {
-      arguments['0'] = config.mode;
+    if (config.mode != 'no-arg' && typeof config != 'function') {
+      if (config.progressObj) progressObj = config.progressObj;
+      delete arguments['0'];
     }
 
-    var this_ = (this.name == "ImageSequencer") ? this : this.sequencer;
-    var args = (this.name == "ImageSequencer") ? [] : [this.images];
+    var this_ = (this.name == 'ImageSequencer') ? this : this.sequencer;
+    var args = [];
     for (var arg in arguments) args.push(copy(arguments[arg]));
 
     var callback = function() { };
     for (var arg in args)
-      if (objTypeOf(args[arg]) == "Function")
-        callback = args.splice(arg, 1)[0];
+      if (objTypeOf(args[arg]) == 'Function')
+        callback = args.splice(arg, 1)[0]; // Callback is formed
 
-    var json_q = formatInput.call(this_, args, "r");
+    var json_q = formatInput.call(this_, args, 'r');
 
     require('./Run')(this_, json_q, callback, index, progressObj);
 
     return true;
   }
 
+  /**
+   * @method loadImages
+   * @description Loads an image via dataURL or normal URL. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/README.md) for more info.
+   * @returns {Null}
+   */
   function loadImages() {
     var args = [];
+    var prevSteps = this.getSteps().slice(1).map(step=>step.options.name);
     var sequencer = this;
+    sequencer.image = arguments[0];
     for (var arg in arguments) args.push(copy(arguments[arg]));
-    var json_q = formatInput.call(this, args, "l");
-
-    inputlog.push({ method: "loadImages", json_q: copy(json_q) });
-    var loadedimages = this.copy(json_q.loadedimages);
-
+    var json_q = formatInput.call(this, args, 'l');
+    if(this.getSteps().length != 0){
+      this.options.sequencerCounter = 0;
+      inputlog = [];
+      this.steps = [];
+    }
+    inputlog.push({ method: 'loadImages', json_q: copy(json_q) });
     var ret = {
-      name: "ImageSequencer Wrapper",
+      name: 'ImageSequencer Wrapper',
       sequencer: this,
       addSteps: this.addSteps,
       removeSteps: this.removeSteps,
       insertSteps: this.insertSteps,
       run: this.run,
       UI: this.UI,
-      setUI: this.setUI,
-      images: loadedimages
+      setUI: this.setUI
     };
-
-    function load(i) {
-      if (i == loadedimages.length) {
-        json_q.callback.call(ret);
-        return;
+    function loadPrevSteps(ref){
+      if(prevSteps.length != 0){
+        ref.addSteps(prevSteps);
+        prevSteps = [];
       }
-      var img = loadedimages[i];
-      require('./ui/LoadImage')(sequencer, img, json_q.images[img], function() {
-        load(++i);
-      });
     }
+    require('./ui/LoadImage')(sequencer, 'image', json_q.image, function() {
+      loadPrevSteps(sequencer);
+      json_q.callback.call(ret);
+    });
 
-    load(0);
   }
 
+  /**
+   * @method replaceImage
+   * @description Replaces the current image in the sequencer
+   * @param {String} selector DOM selector string for the image input
+   * @param {*} steps Current steps Object
+   * @param {Object} options
+   * @returns {*}
+   */
   function replaceImage(selector, steps, options) {
     options = options || {};
     options.callback = options.callback || function() { };
     return require('./ReplaceImage')(this, selector, steps, options);
   }
 
+  /**
+   * @method getSteps
+   * @description Returns the current sequence of steps
+   * @returns {Object}
+   */
+  function getSteps(){
+    return this.steps;
+  }
+
+  /**
+   * @method setUI
+   * @description To set up a UI for ImageSequencer via different callback methods. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/README.md) for more info.
+   * @param {Object} UI Object containing UI callback methods. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/README.md) for more info.
+   * @returns {Null}
+   */
   function setUI(UI) {
     this.events = require('./ui/UserInterface')(UI);
   }
 
   var exportBin = function(dir, basic, filename) {
     return require('./ExportBin')(dir, this, basic, filename);
-  }
+  };
 
+  /**
+   * @method modulesInfo
+   * @description Returns information about the given module or all the available modules
+   * @param {String} name Module name
+   * @returns {Object}
+   */
   function modulesInfo(name) {
-    var modulesdata = {}
-    if (name == "load-image") return {};
+    var modulesdata = {};
+    if (name == 'load-image') return {};
     if (arguments.length == 0) {
       for (var modulename in this.modules) {
         modulesdata[modulename] = modules[modulename][1];
       }
       for (var sequencename in this.sequences) {
-        modulesdata[sequencename] = { name: sequencename, steps: sequences[sequencename] };
+        modulesdata[sequencename] = { name: sequencename, steps: this.sequences[sequencename] };
       }
     }
     else {
-      if (modules[name])
+      if (modules[name]){
         modulesdata = modules[name][1];
+      }
       else
         modulesdata = { 'inputs': sequences[name]['options'] };
     }
     return modulesdata;
   }
 
-  // Genates a CLI string for the current sequence
-  function toCliString() {
-    var cliStringSteps = `"`, cliOptions = {};
-    for (var step in this.steps) {
-      if (this.steps[step].options.name !== "load-image")
-        cliStringSteps += `${this.steps[step].options.name} `;
-      for (var inp in modulesInfo(this.steps[step].options.name).inputs) {
-        cliOptions[inp] = this.steps[step].options[inp];
-      }
-    }
-    cliStringSteps = cliStringSteps.substr(0, cliStringSteps.length - 1) + `"`;
-    return `sequencer -i [PATH] -s ${cliStringSteps} -d '${JSON.stringify(cliOptions)}'`
-  }
-
-  // Strigifies the current sequence
-  function toString(step) {
-    if (step) {
-      return stepToString(step);
-    } else {
-      return copy(this.images.image1.steps).map(stepToString).slice(1).join(',');
-    }
-  }
-
-  // Stringifies one step of the sequence
-  function stepToString(step) {
-    let inputs = copy(modulesInfo(step.options.name).inputs);
-    inputs = inputs || {};
-
-    for (let input in inputs) {
-      inputs[input] = step.options[input] || inputs[input].default;
-      inputs[input] = encodeURIComponent(inputs[input]);
-    }
-
-    var configurations = Object.keys(inputs).map(key => key + ':' + inputs[key]).join('|');
-    return `${step.options.name}{${configurations}}`;
-  }
-
-  // exports the current sequence as an array of JSON steps
-  function toJSON() {
-    return this.stringToJSON(this.toString());
-  }
-
-  // Coverts stringified sequence into an array of JSON steps
-  function stringToJSON(str) {
-    let steps;
-    if (str.includes(','))
-      steps = str.split(',');
-    else
-      steps = [str];
-    return steps.map(stringToJSONstep);
-  }
-
-  // Converts one stringified step into JSON
-  function stringToJSONstep(str) {
-    var bracesStrings;
-    if (str.includes('{'))
-      if (str.includes('(') && str.indexOf('(') < str.indexOf('{'))
-        bracesStrings = ['(', ')'];
-      else
-        bracesStrings = ['{', '}'];
-    else
-      bracesStrings = ['(', ')'];
-
-    if (str.indexOf(bracesStrings[0]) === -1) { // if there are no settings specified
-      var moduleName = str.substr(0);
-      stepSettings = "";
-    } else {
-      var moduleName = str.substr(0, str.indexOf(bracesStrings[0]));
-      stepSettings = str.slice(str.indexOf(bracesStrings[0]) + 1, -1);
-    }
-
-    stepSettings = stepSettings.split('|').reduce(function formatSettings(accumulator, current, i) {
-      var settingName = current.substr(0, current.indexOf(':')),
-        settingValue = current.substr(current.indexOf(':') + 1);
-      settingValue = settingValue.replace(/^\(/, '').replace(/\)$/, ''); // strip () at start/end
-      settingValue = settingValue.replace(/^\{/, '').replace(/\}$/, ''); // strip {} at start/end
-      settingValue = decodeURIComponent(settingValue);
-      current = [
-        settingName,
-        settingValue
-      ];
-      if (!!settingName) accumulator[settingName] = settingValue;
-      return accumulator;
-    }, {});
-
-    return {
-      name: moduleName,
-      options: stepSettings
-    }
-  }
-
-  // imports a string into the sequencer steps
-  function importString(str) {
-    let sequencer = this;
-    if (this.name != "ImageSequencer")
-      sequencer = this.sequencer;
-    var stepsFromString = stringToJSON(str);
-    stepsFromString.forEach(function eachStep(stepObj) {
-      sequencer.addSteps(stepObj.name, stepObj.options);
-    });
-  }
-
-  // imports a array of JSON steps into the sequencer steps
-  function importJSON(obj) {
-    let sequencer = this;
-    if (this.name != "ImageSequencer")
-      sequencer = this.sequencer;
-    obj.forEach(function eachStep(stepObj) {
-      sequencer.addSteps(stepObj.name, stepObj.options);
-    });
-  }
-
+  /**
+   * @method loadNewModule
+   * @description Adds a new local module to sequencer. Read the docs(https://github.com/publiclab/image-sequencer/blob/main/README.md) for mode info.
+   * @param {String} name Name of the new module
+   * @param {Object} options An Object containing path and info about the new module.
+   * @returns {Object}
+   */
   function loadNewModule(name, options) {
 
     if (!options) {
       return this;
 
     } else if (Array.isArray(options)) {
-      // contains the array of module and info
+      // Contains the array of module and info
       this.modules[name] = options;
 
     } else if (options.func && options.info) {
-      // passed in options object
+      // Passed in options object
       this.modules[name] = [
         options.func, options.info
       ];
 
     } else if (options.path && !this.inBrowser) {
-      // load from path(only in node)
+      // Load from path(only in node)
       const module = [
         require(`${options.path}/Module.js`),
         require(`${options.path}/info.json`)
@@ -369,31 +325,32 @@ ImageSequencer = function ImageSequencer(options) {
     return this;
   }
 
+  /**
+   * @method saveNewModule
+   * @description Saves a new local module to ImageSequencer
+   * @param {String} name Name of the new module
+   * @param {String} path Path to the new module
+   * @returns {Null}
+   */
   function saveNewModule(name, path) {
     if (options.inBrowser) {
       // Not for browser context
       return;
     }
     var mods = fs.readFileSync('./src/Modules.js').toString();
-    mods = mods.substr(0, mods.length - 1) + "  '" + name + "': require('" + path + "'),\n}";
+    mods = mods.substr(0, mods.length - 1) + '  \'' + name + '\': require(\'' + path + '\'),\n}';
     fs.writeFileSync('./src/Modules.js', mods);
   }
 
-  function createMetaModule(stepsCollection, info) {
-    var stepsArr = stepsCollection;
-    if (typeof stepsCollection === 'string')
-      stepsArr = stringToJSON(stepsCollection);
-    var metaMod = function() {
-      this.expandSteps(stepsArr);
-      return {
-        isMeta: true
-      }
-    }
-    return [metaMod, info];
-  }
-
-  function saveSequence(name, sequenceString) {
-    const sequence = stringToJSON(sequenceString);
+  /**
+   * @method saveSequence
+   * @description Saves a sequence on the browser localStorage.
+   * @param {String} name Name for the sequence
+   * @param {String} sequenceString Sequence data as a string
+   * @returns {Null}
+   */
+  function saveSequence(name, sequenceString) { // 4. save sequence
+    const sequence = str.stringToJSON(sequenceString);
     // Save the given sequence string as a module
     if (options.inBrowser) {
       // Inside the browser we save the meta-modules using the Web Storage API
@@ -410,7 +367,7 @@ ImageSequencer = function ImageSequencer(options) {
   }
 
   function loadModules() {
-    // This function loads the modules and saved sequences
+    // loadModules function loads the modules and saved sequences.
     this.modules = require('./Modules');
     if (options.inBrowser)
       this.sequences = JSON.parse(window.localStorage.getItem('sequences'));
@@ -418,17 +375,19 @@ ImageSequencer = function ImageSequencer(options) {
       this.sequences = require('./SavedSequences.json');
   }
 
+
   return {
-    //literals and objects
-    name: "ImageSequencer",
+    // Literals and objects
+    name: 'ImageSequencer',
     options: options,
     inputlog: inputlog,
     modules: modules,
     sequences: sequences,
-    images: images,
     events: events,
+    steps: steps,
+    image: image,
 
-    //user functions
+    // User functions
     loadImages: loadImages,
     loadImage: loadImages,
     addSteps: addSteps,
@@ -439,27 +398,32 @@ ImageSequencer = function ImageSequencer(options) {
     setUI: setUI,
     exportBin: exportBin,
     modulesInfo: modulesInfo,
-    toCliString: toCliString,
-    toString: toString,
-    stepToString: stepToString,
-    toJSON: toJSON,
-    stringToJSON: stringToJSON,
-    stringToJSONstep: stringToJSONstep,
-    importString: importString,
-    importJSON: importJSON,
+    toCliString: str.toCliString,
+    detectStringSyntax: str.detectStringSyntax,
+    parseStringSyntax: str.parseStringSyntax,
+    stringToSteps: str.stringToSteps,
+    toString: str.toString,
+    stepToString: str.stepToString,
+    toJSON: str.toJSON,
+    stringToJSON: str.stringToJSON,
+    stringToJSONstep: str.stringToJSONstep,
+    importString: str.importString,
+    importJSON: str.importJSON,
     loadNewModule: loadNewModule,
     saveNewModule: saveNewModule,
-    createMetaModule: createMetaModule,
+    createMetaModule: require('./util/createMetaModule'),
     saveSequence: saveSequence,
     loadModules: loadModules,
+    getSteps:getSteps,
 
-    //other functions
+    // Other functions
     log: log,
     objTypeOf: objTypeOf,
     copy: copy,
+    getImageDimensions: require('./util/getImageDimensions'),
 
     setInputStep: require('./ui/SetInputStep')(sequencer)
-  }
+  };
 
-}
+};
 module.exports = ImageSequencer;

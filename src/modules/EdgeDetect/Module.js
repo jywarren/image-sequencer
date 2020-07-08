@@ -1,56 +1,58 @@
+const Blur = require('../Blur/Blur');
 /*
 * Detect Edges in an Image
+* Uses Canny method for the same
+* Read more: https://en.wikipedia.org/wiki/Canny_edge_detector
 */
-module.exports = function edgeDetect(options,UI) {
+module.exports = function edgeDetect(options, UI) {
 
-  options.blur = options.blur || 2;
-  options.highThresholdRatio = options.highThresholdRatio||0.2;
-  options.lowThresholdRatio = options.lowThresholdRatio||0.15;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.blur = options.blur || defaults.blur;
+  options.highThresholdRatio = options.highThresholdRatio || defaults.highThresholdRatio;
+  options.lowThresholdRatio = options.lowThresholdRatio || defaults.lowThresholdRatio;
+  options.hysteresis = options.hysteresis || defaults.hysteresis;
 
   var output;
 
   // The function which is called on every draw.
-  function draw(input,callback,progressObj) {
-
+  function draw(input, callback, progressObj) {
     progressObj.stop(true);
     progressObj.overrideFlag = true;
 
     var step = this;
 
-
-    //   Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
-    function extraManipulation(pixels){
-      pixels = require('ndarray-gaussian-filter')(pixels,options.blur);
-      return require('./EdgeUtils')(pixels,options.highThresholdRatio,options.lowThresholdRatio,options.inBrowser);
-    }
-
+    // Makes the image greyscale
     function changePixel(r, g, b, a) {
-      return [(r+g+b)/3, (r+g+b)/3, (r+g+b)/3, a];
+      return [(r + g + b) / 3, (r + g + b) / 3, (r + g + b) / 3, a];
     }
 
-    function output(image,datauri,mimetype){
+    // Extra Manipulation function used as an enveloper for applying gaussian blur and Convolution
+    function extraManipulation(pixels) {
+      const blurPixels = Blur(pixels, options.blur);
+      return require('./EdgeUtils')(blurPixels, options.highThresholdRatio, options.lowThresholdRatio, options.hysteresis);
+    }
 
-      // This output is accessible by Image Sequencer
-      step.output = {src:datauri,format:mimetype};
-
+    function output(image, datauri, mimetype, wasmSuccess) {
+      step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
     }
 
     return require('../_nomodule/PixelManipulation.js')(input, {
       output: output,
+      ui: options.step.ui,
       changePixel: changePixel,
       extraManipulation: extraManipulation,
       format: input.format,
       image: options.image,
       inBrowser: options.inBrowser,
-      callback: callback
+      callback: callback,
+      useWasm: options.useWasm
     });
-
   }
 
   return {
     options: options,
-    draw:  draw,
+    draw: draw,
     output: output,
     UI: UI
-  }
-}
+  };
+};

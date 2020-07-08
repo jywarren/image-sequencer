@@ -1,42 +1,71 @@
-module.exports = function Crop(input,options,callback) {
+const ndarray = require('ndarray'),
+  pixelSetter = require('../../util/pixelSetter'),
+  parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-  var getPixels = require('get-pixels'),
-      savePixels = require('save-pixels');
+module.exports = function Crop(pixels, options, cb) {
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.x = options.x || defaults.x;
+  options.y = options.y || defaults.y;
 
-  options.x = parseInt(options.x) || 0;
-  options.y = parseInt(options.y) || 0;
+  options.w = options.w || defaults.w;
+  options.h = options.h || defaults.h;
 
-  getPixels(input.src,function(err,pixels){
-    options.w = parseInt(options.w) || Math.floor(pixels.shape[0]);
-    options.h = parseInt(options.h) || Math.floor(pixels.shape[1]);
-    var ox = options.x;
-    var oy = options.y;
-    var w = options.w;
-    var h = options.h;
-    var iw = pixels.shape[0]; //Width of Original Image
-    var newarray = new Uint8Array(4*w*h);
-    for (var n = oy; n < oy + h; n++) {
-      newarray.set(pixels.data.slice(n*4*iw + ox, n*4*iw + ox + 4*w),4*w*(n-oy));
+  options.backgroundColor = options.backgroundColor || defaults.backgroundColor;
+
+  const bg = options.backgroundColor.replace('rgba', '').replace('(', '').replace(')', '').split(',');
+
+  let iw = pixels.shape[0], // Width of Original Image
+    ih = pixels.shape[1], // Height of Original Image
+    offsetX,
+    offsetY,
+    w,
+    h;
+
+  // Parse the inputs
+  parseCornerCoordinateInputs({iw, ih},
+    {
+      x: { valInp: options.x, type: 'horizontal' },
+      y: { valInp: options.y, type: 'vertical' },
+      w: { valInp: options.w, type: 'horizontal' },
+      h: { valInp: options.h, type: 'vertical' },
+    }, function (opt, coord) {
+      offsetX = Math.floor(coord.x.valInp);
+      offsetY = Math.floor(coord.y.valInp);
+      w = Math.floor(coord.w.valInp);
+      h = Math.floor(coord.h.valInp);
+    });
+
+  const newPixels = new ndarray([], [w, h, 4]);
+
+  for (let x = 0; x < w; x++) {
+    for (let y = 0; y < h; y++) {
+      pixelSetter(x, y, bg, newPixels); // Set the background color
     }
-    pixels.data = newarray;
-    pixels.shape = [w,h,4];
-    pixels.stride[1] = 4*w;
+  }
 
-    options.format = input.format;
+  for (
+    let x = 0;
+    x < Math.min(w - 1, offsetX + iw - 1);
+    x++
+  ) {
+    for (
+      let y = 0;
+      y < Math.min(h - 1, offsetY + ih - 1);
+      y++
+    ) {
+      const inputImgX = x + offsetX,
+        inputImgY = y + offsetY;
+      
+      pixelSetter(x, y, [
+        pixels.get(inputImgX, inputImgY, 0),
+        pixels.get(inputImgX, inputImgY, 1),
+        pixels.get(inputImgX, inputImgY, 2),
+        pixels.get(inputImgX, inputImgY, 3)
+      ], newPixels); // Set the background color
+    }
+  }
 
-    var chunks = [];
-    var totalLength = 0;
-    var r = savePixels(pixels, options.format);
+  if (cb) cb();
 
-    r.on('data', function(chunk){
-      totalLength += chunk.length;
-      chunks.push(chunk);
-    });
-
-    r.on('end', function(){
-      var data = Buffer.concat(chunks, totalLength).toString('base64');
-      var datauri = 'data:image/' + options.format + ';base64,' + data;
-      callback(datauri,options.format);
-    });
-  });
+  return newPixels;
 };

@@ -1,70 +1,97 @@
 module.exports = function Dynamic(options, UI, util) {
 
-    options.x = options.x || 0;
-    options.y = options.y || 0;
+  var defaults = require('./../../util/getDefaults.js')(require('./info.json'));
+  options.x = options.x || defaults.x;
+  options.y = options.y || defaults.y;
 
-    var output;
+  if(options.step.inBrowser && !options.noUI && sequencer.getSteps().length < 2)
+    options.offset = -1;
 
-    // This function is called on every draw.
-    function draw(input, callback, progressObj) {
+  if (options.step.inBrowser && !options.noUI) var ui = require('./Ui.js')(options.step, UI);
 
-        options.offset = options.offset || -2;
+  var output;
 
-        progressObj.stop(true);
-        progressObj.overrideFlag = true;
+  // This function is called on every draw.
+  function draw(input, callback, progressObj) {
 
-        var step = this;
+    options.offset = parseInt(options.offset || defaults.offset);
 
-        // save the pixels of the base image
-        var baseStepImage = this.getStep(options.offset).image;
-        var baseStepOutput = this.getOutput(options.offset);
+    progressObj.stop(true);
+    progressObj.overrideFlag = true;
 
-        var getPixels = require('get-pixels');
+    var step = this;
 
-        getPixels(input.src, function(err, pixels) {
-            options.secondImagePixels = pixels;
+    var parseCornerCoordinateInputs = require('../../util/ParseInputCoordinates');
 
-            function changePixel(r1, g1, b1, a1, x, y) {
+    // save the pixels of the base image
+    var baseStepImage = this.getStep(options.offset).image;
+    var baseStepOutput = this.getOutput(options.offset);
 
-                // overlay
-                var p = options.secondImagePixels;
-                if (x >= options.x
-                    && x < p.shape[0]
-                    && y >= options.y
-                    && y < p.shape[1])
-                    return [
-                        p.get(x, y, 0),
-                        p.get(x, y, 1),
-                        p.get(x, y, 2),
-                        p.get(x, y, 3)
-                    ];
-                else
-                    return [r1, g1, b1, a1];
-            }
+    var getPixels = require('get-pixels');
 
-            function output(image, datauri, mimetype) {
+    getPixels(input.src, function(err, pixels) {
+      // parse the inputs
+      parseCornerCoordinateInputs({
+        iw: pixels.shape[0],
+        ih: pixels.shape[1]
+      },
+      {
+        x: { valInp: options.x, type: 'horizontal' },
+        y: { valInp: options.y, type: 'vertical' },
+      }, function(opt, input) {
+        options.x = parseInt(input.x.valInp);
+        options.y = parseInt(input.y.valInp);
+      });
 
-                // This output is accessible by Image Sequencer
-                step.output = { src: datauri, format: mimetype };
+      options.secondImagePixels = pixels;
 
-            }
+      function changePixel(r1, g1, b1, a1, x, y) {
 
-            // run PixelManipulation on first Image pixels
-            return require('../_nomodule/PixelManipulation.js')(baseStepOutput, {
-                output: output,
-                changePixel: changePixel,
-                format: baseStepOutput.format,
-                image: baseStepImage,
-                inBrowser: options.inBrowser,
-                callback: callback
-            });
-        });
-    }
+        // overlay
+        var p = options.secondImagePixels;
+        if (x >= options.x
+          && x - options.x < p.shape[0]
+          && y >= options.y
+          && y - options.y < p.shape[1])
+          return [
+            p.get(x - options.x, y - options.y, 0),
+            p.get(x - options.x, y - options.y, 1),
+            p.get(x - options.x, y - options.y, 2),
+            p.get(x - options.x, y - options.y, 3)
+          ];
+        else
+          return [r1, g1, b1, a1];
+      }
 
-    return {
-        options: options,
-        draw: draw,
+      function output(image, datauri, mimetype, wasmSuccess) {
+        step.output = { src: datauri, format: mimetype, wasmSuccess, useWasm: options.useWasm };
+      }
+
+      function modifiedCallback() {
+        if (options.step.inBrowser && !options.noUI) {
+          ui.setup();
+        }
+        callback();
+      }
+
+      // run PixelManipulation on first Image pixels
+      return require('../_nomodule/PixelManipulation.js')(baseStepOutput, {
         output: output,
-        UI: UI
-    }
-}
+        ui: options.step.ui,
+        changePixel: changePixel,
+        format: baseStepOutput.format,
+        image: baseStepImage,
+        inBrowser: options.inBrowser,
+        callback: modifiedCallback,
+        useWasm:options.useWasm
+      });
+    });
+  }
+
+  return {
+    options: options,
+    draw: draw,
+    output: output,
+    UI: UI
+  };
+};
