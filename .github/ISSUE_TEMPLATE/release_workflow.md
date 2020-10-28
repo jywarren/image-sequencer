@@ -1,5 +1,5 @@
 ---
-name: New release checklist 🐞
+name: New release checklist ✅
 about: Coordinate steps to publish a new release
 title: 'Checklist and coordination for v0.0.0 major/minor/patch release'
 labels: release
