@@ -46,6 +46,7 @@
     "data-uri-to-buffer": "^3.0.0",
     "downloadjs": "^1.4.7",
     "eslint": "^6.1.0",
+    "expr-eval": "^2.0.2",
     "fisheyegl": "^0.1.2",
     "font-awesome": "~4.7.0",
     "geotiff": "^1.0.0-beta.6",
