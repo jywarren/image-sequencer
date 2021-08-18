@@ -27,6 +27,7 @@ function DefaultHtmlSequencerUi(_sequencer, options) {
 
   function selectNewStepUi() {
     var m = $(addStepSel + ' select').val();
+    //if so that whenever the module dropdown is empty it will not show error it will take first value.
     if(!m) m = arguments[0];
     else $(addStepSel + ' .info').html(_sequencer.modulesInfo(m).description);
     $(addStepSel + ' #add-step-btn').prop('disabled', false);
