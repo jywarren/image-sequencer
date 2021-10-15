@@ -5112,12 +5112,12 @@ grunt-cli@~1.4.2:
     nopt "~4.0.1"
     v8flags "~3.2.0"
 
-grunt-contrib-concat@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/grunt-contrib-concat/-/grunt-contrib-concat-1.0.1.tgz#61509863084e871d7e86de48c015259ed97745bd"
-  integrity sha1-YVCYYwhOhx1+ht5IwBUlntl3Rb0=
+grunt-contrib-concat@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/grunt-contrib-concat/-/grunt-contrib-concat-2.0.0.tgz#3af65e4663186abce6052a6bed345b53c0551090"
+  integrity sha512-/cfWwsGiprVTOl7c2bZwMdQ8hIf3e1f4szm1i7qhY9hOnR/X2KL+Xe7dynNweTYHa6aWPZx2B5GPsUpxAXNCaA==
   dependencies:
-    chalk "^1.0.0"
+    chalk "^4.1.2"
     source-map "^0.5.3"
 
 grunt-contrib-uglify-es@^3.3.0:
