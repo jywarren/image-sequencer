@@ -30,19 +30,24 @@ RUN sudo apt-get update && apt-get install -y apt-transport-https \
     libatk1.0-0 \
     libc6 \
     libcairo2 \
+    libcairo2-dev \
     libcups2 \
     libdbus-1-3 \
     libexpat1 \
     libfontconfig1 \
     libgbm1 \
     libgcc1 \
+    libgif-dev \
     libglib2.0-0 \
     libgtk-3-0 \
+    libjpeg-dev \
     libnspr4 \
     libnss3 \
     libpango-1.0-0 \
+    libpango1.0-dev \
     libpangocairo-1.0-0 \
     libstdc++6 \
+    librsvg2-dev \
     libx11-6 \
     libx11-xcb1 \
     libxcb1 \

@@ -1,4 +1,4 @@
-const staticCacheName = 'image-sequencer-static-v3.6.0';
+const staticCacheName = 'image-sequencer-static-v3.7.0';
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(staticCacheName).then(function(cache) {
@@ -38,19 +38,19 @@ self.addEventListener('fetch', function(event) {
               cache.put(event.request.url, response.clone());
             }
             return response;
-        })
+          });
       })
       .catch(function(err) {
       // Now the request has been failed so show cached data.
         return caches.match(event.request).then(function(res){
-          if (res === undefined) { 
+          if (res === undefined) {
             // Display offline page
             return caches.match('offline.html');
           }
           return res;
         });
-    })
-  )
+      })
+  );
 });
 
 // When the update modal sends a 'skipWaiting' message, call the skipWaiting method.
