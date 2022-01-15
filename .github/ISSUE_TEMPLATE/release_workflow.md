@@ -16,9 +16,10 @@ Discuss with @publiclab/is-maintainers if anything is ambiguous!
 * [ ] create a release [project](https://github.com/publiclab/image-sequencer/projects) from [this template](https://github.com/publiclab/image-sequencer/projects/5). You can copy a project from its menu.
 * [ ] compile release notes below from corresponding [release project](https://github.com/publiclab/image-sequencer/projects).
 * [ ] open a pull request with updated version numbers
-    * [ ] update version number in `examples/sw.js` (ex #1734) and `package.json` (ex #1695)
-    * [ ] update version number in `package.json`
+    * [ ] update version number in `package.json` (ex #1695)
+    * [ ] update version number in `examples/sw.js` (ex #1734)
     * [ ] run `npm install` to update `package-lock.json` (from recent node version - 16 at time of writing, in GitPod should work)
+    * [ ] check in `package-lock.json`
 * [ ] finalize and merge to `main` branch (freeze merges to `main` branch until next step)
 
 Now, move to `stable` branch:
@@ -26,13 +27,12 @@ Now, move to `stable` branch:
 * [ ] force push from `main` to `stable`
 * [ ] then in `stable` branch, compile `/dist/` files with `grunt build`
 * [ ] add `/dist/` files with `git add -f /dist/*` and commit them to `stable` branch
-* [ ] run `npm publish`
+* [ ] publish `stable` branch to `npm` with `npm publish` (logging in first as necessary)
 
 Draft a release:
 
 * [ ] [create a release on GitHub](https://github.com/publiclab/image-sequencer/releases) and use features description + release notes from below
 * [ ] tag version number branch (i.e. `v0.0.0`) based on `stable` or choose `stable`
-* [ ] publish tagged branch to `npm` with `npm publish` (logging in first as necessary)
 * [ ] publish to live Github pages [demo](https://sequencer.publiclab.org) (with [bash script](https://github.com/publiclab/image-sequencer/pull/1703) from `/scripts/update-demo`) (from within GitPod works well)
 * [ ] move anything necessary to next release project, i.e. <!-- Update this link -->https://github.com/publiclab/image-sequencer/projects/[insert project number]
 * [ ] close this issue!
