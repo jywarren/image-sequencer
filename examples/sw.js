@@ -1,4 +1,4 @@
-const staticCacheName = 'image-sequencer-static-v3.7.0';
+const staticCacheName = 'image-sequencer-static-v3.7.1';
 self.addEventListener('install', function(e) {
   e.waitUntil(
     caches.open(staticCacheName).then(function(cache) {
