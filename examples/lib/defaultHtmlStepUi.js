@@ -407,7 +407,7 @@ function DefaultHtmlStepUi(_sequencer, options) {
    */
   function updateDimensions(step){
     _sequencer.getImageDimensions(step.imgElement.src, function (dim) {
-      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width}<br>Image Height: ${dim.height}</br>${isGIF(step.output) ? `Frames: ${dim.frames}` : ''}</div>`;
+      step.ui.querySelector('.' + step.name).attributes['data-original-title'].value = `<div style="text-align: center"><p>Image Width: ${dim.width} px<br>Image Height: ${dim.height} px</br>${isGIF(step.output) ? `Frames: ${dim.frames}` : ''}</div>`;
     });
   }
 
