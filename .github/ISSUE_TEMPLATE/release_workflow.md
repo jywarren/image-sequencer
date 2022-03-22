@@ -28,6 +28,7 @@ Now, move to `stable` branch:
 * [ ] then in `stable` branch, compile `dist/` files with `grunt build`
 * [ ] add `dist/` files with `git add -f dist/*` and commit them to `stable` branch
 * [ ] publish `stable` branch to `npm` with `npm publish` (logging in first as necessary)
+* [ ] push local `stable` branch up to origin github.com/publiclab/image-sequencer.git with `git push`
 
 Draft a release:
 
