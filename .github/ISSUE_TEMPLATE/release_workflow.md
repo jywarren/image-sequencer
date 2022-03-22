@@ -31,7 +31,7 @@ Now, move to `stable` branch:
 
 Draft a release:
 
-* [ ] [create a release on GitHub](https://github.com/publiclab/image-sequencer/releases) and use features description + release notes from below
+* [ ] [create a release on GitHub](https://github.com/publiclab/image-sequencer/releases) and reconcile with features description + release notes from below
 * [ ] tag version number branch (i.e. `v0.0.0`) based on `stable` or choose `stable`
 * [ ] publish to live Github pages [demo](https://sequencer.publiclab.org) (with [bash script](https://github.com/publiclab/image-sequencer/pull/1703) from `/scripts/update-demo`) (from within GitPod works well)
 * [ ] move anything necessary to next release project, i.e. <!-- Update this link -->https://github.com/publiclab/image-sequencer/projects/[insert project number]
