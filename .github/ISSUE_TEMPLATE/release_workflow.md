@@ -13,8 +13,8 @@ Discuss with @publiclab/is-maintainers if anything is ambiguous!
 <!-- NOTE: Change v0.0.0 to the appropriate release version -->
 
 * [x] open an issue using the "release" template with this checklist with title `Checklist and coordination for v0.0.0 major/minor/patch release` (see [semantic versioning](https://docs.npmjs.com/about-semantic-versioning/))
-* [ ] create a release [project](https://github.com/publiclab/image-sequencer/projects) from [this template](https://github.com/publiclab/image-sequencer/projects/5). You can copy a project from its menu.
-* [ ] compile release notes below from corresponding [release project](https://github.com/publiclab/image-sequencer/projects).
+* [ ] create a release draft in https://github.com/publiclab/image-sequencer/releases
+* [ ] auto-compile release notes and copy below from corresponding release draft
 * [ ] open a pull request with updated version numbers
     * [ ] update version number in `package.json` (ex #1695)
     * [ ] update version number in `examples/sw.js` (ex #1734)
@@ -25,8 +25,8 @@ Discuss with @publiclab/is-maintainers if anything is ambiguous!
 Now, move to `stable` branch:
 
 * [ ] force push from `main` to `stable`
-* [ ] then in `stable` branch, compile `/dist/` files with `grunt build`
-* [ ] add `/dist/` files with `git add -f /dist/*` and commit them to `stable` branch
+* [ ] then in `stable` branch, compile `dist/` files with `grunt build`
+* [ ] add `dist/` files with `git add -f dist/*` and commit them to `stable` branch
 * [ ] publish `stable` branch to `npm` with `npm publish` (logging in first as necessary)
 
 Draft a release:
